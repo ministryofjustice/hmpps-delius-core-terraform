@@ -12,6 +12,9 @@ terraform {
 provider "aws" {
   region  = "eu-west-2"
   version = "~> 1.16"
+  assume_role {
+    role_arn = "arn:aws:iam::723123699647:role/terraform"
+  }
 }
 
 locals { # Environment
