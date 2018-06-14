@@ -16,7 +16,7 @@ export TG_BUSINESS_UNIT="hmpps"
 export TG_PROJECT="delius-core"
 
 # ENVIRONMENT
-export TG_ENVIRONMENT_TYPE="dev"
+export TG_ENVIRONMENT_TYPE="sandpit"
 
 ## TERRAGUNT VARIABLES
 
