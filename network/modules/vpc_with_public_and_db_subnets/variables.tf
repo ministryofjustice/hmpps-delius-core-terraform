@@ -17,4 +17,3 @@ variable "az_a" {
 variable "az_b" {
   type = "string"
 }
-
