@@ -9,7 +9,7 @@ locals {
 # The VPC, subnets etc
 
 module "network" {
-  source           = "modules/vpc_with_public_and_db_subnets"
+  source           = "../modules/network/vpc_with_public_and_db_subnets"
   vpc_cidr         = "${var.vpc_cidr}"
   tags             = "${var.tags}"
   environment_name = "${local.environment_name}"
