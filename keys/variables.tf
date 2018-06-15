@@ -11,6 +11,6 @@ variable "environment_type" {
 }
 
 variable "tags" {
-  type = "map"
+  type        = "map"
   description = "Default tag set"
 }
