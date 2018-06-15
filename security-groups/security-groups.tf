@@ -1,11 +1,3 @@
-# Shared data and constants
-
-data "aws_vpc" "vpc" {
-  tags = {
-    Name = "${local.environment_name}"
-  }
-}
-
 # Security groups
 
 resource "aws_security_group" "elb" {

@@ -14,3 +14,9 @@ provider "aws" {
 locals {
   environment_name = "${var.project_name}-${var.environment_type}"
 }
+
+data "aws_vpc" "vpc" {
+  tags = {
+    Name = "${local.environment_name}"
+  }
+}
