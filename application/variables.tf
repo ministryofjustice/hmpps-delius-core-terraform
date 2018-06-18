@@ -26,3 +26,7 @@ variable "route53_domain_private" {
 variable "instance_type_weblogic" {
   description = "The ec2 instance type"
 }
+
+variable "instance_type_db" {
+  description =  "The ec2 instance type"
+}

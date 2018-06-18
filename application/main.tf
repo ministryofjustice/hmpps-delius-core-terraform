@@ -53,6 +53,16 @@ data "aws_security_group" "egress_all" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
+data "aws_security_group" "db_in" {
+  name = "${local.environment_name}-db-in"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "db_out" {
+  name = "${local.environment_name}-db-out"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
 data "aws_ami" "centos" {
   owners      = ["679593333241"]
   most_recent = true

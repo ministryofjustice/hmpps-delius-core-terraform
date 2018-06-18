@@ -10,3 +10,11 @@ resource "aws_route53_record" "weblogic" {
   ttl     = "300"
   records = ["${aws_instance.weblogic.public_ip}"]
 }
+
+resource "aws_route53_record" "db" {
+  zone_id = "${data.aws_route53_zone.zone.zone_id}"
+  name    = "db"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_instance.db.public_ip}"]
+}
