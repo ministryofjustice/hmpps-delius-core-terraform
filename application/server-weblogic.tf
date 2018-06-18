@@ -21,7 +21,7 @@ resource "aws_instance" "weblogic" {
   tags = "${merge(var.tags, map("Name", "${local.environment_name}-weblogic"))}"
 }
 
-resource "aws_ebs_volume" "weblogic-xvdc" {
+resource "aws_ebs_volume" "weblogic_xvdc" {
   availability_zone = "${aws_instance.weblogic.availability_zone}"
   type              = "gp2"
   size              = 200
