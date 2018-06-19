@@ -14,8 +14,8 @@ resource "aws_instance" "weblogic" {
 
   root_block_device = {
     delete_on_termination = true
-    volume_size = 50
-    volume_type = "gp2"
+    volume_size           = 50
+    volume_type           = "gp2"
   }
 
   tags = "${merge(var.tags, map("Name", "${local.environment_name}-weblogic"))}"
@@ -31,7 +31,8 @@ resource "aws_ebs_volume" "weblogic_xvdc" {
 }
 
 resource "aws_volume_attachment" "weblogic-xvdc" {
-  device_name = "/dev/xvdc"
-  instance_id = "${aws_instance.weblogic.id}"
-  volume_id   = "${aws_ebs_volume.weblogic_xvdc.id}"
+  device_name  = "/dev/xvdc"
+  instance_id  = "${aws_instance.weblogic.id}"
+  volume_id    = "${aws_ebs_volume.weblogic_xvdc.id}"
+  force_detach = true
 }

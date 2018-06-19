@@ -28,5 +28,5 @@ variable "instance_type_weblogic" {
 }
 
 variable "instance_type_db" {
-  description =  "The ec2 instance type"
+  description = "The ec2 instance type"
 }

@@ -34,4 +34,5 @@ resource "aws_volume_attachment" "db_xvdc" {
   device_name = "/dev/xvdc"
   instance_id = "${aws_instance.db.id}"
   volume_id   = "${aws_ebs_volume.db_xvdc.id}"
+  force_detach = true
 }
