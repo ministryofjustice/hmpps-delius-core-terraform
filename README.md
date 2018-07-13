@@ -2,8 +2,7 @@
 Infrastructure and provisioning of Delius Core environments
 
 ### Purpose
-This repo contains terraform code to create VCMS environments.
-It expects that each environment will be created in a separate AWS account.
+This repo contains terraform code to create Delius Core testing environments.
 
 ### Structure
 The repo contains top level directories,
