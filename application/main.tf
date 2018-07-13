@@ -72,12 +72,12 @@ data "aws_security_group" "db_out" {
 }
 
 data "aws_ami" "centos" {
-  owners      = ["679593333241"]
+  owners      = ["895523100917"]
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["CentOS Linux 7 x86_64 HVM EBS *"]
+    values = ["HMPPS Base CentOS master *"]
   }
 
   filter {
