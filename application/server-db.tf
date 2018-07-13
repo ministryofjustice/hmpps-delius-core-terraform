@@ -8,6 +8,7 @@ resource "aws_instance" "db" {
 
   vpc_security_group_ids = [
     "${data.aws_security_group.ssh_in.id}",
+    "${data.aws_security_group.wls_mstr_in_whitelist.id}",
     "${data.aws_security_group.egress_all.id}",
     "${data.aws_security_group.db_in.id}",
   ]
