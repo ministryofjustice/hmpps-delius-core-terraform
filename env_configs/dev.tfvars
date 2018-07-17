@@ -4,6 +4,9 @@ project_name = "delius-core"
 
 environment_type = "dev"
 
+bastion_account_id = "895523100917"
+bastion_vpc_id = "vpc-00d48e9851c261b47"
+
 tags = {
   owner                  = "Digital Studio"
   environment-name       = "delius-core-dev"

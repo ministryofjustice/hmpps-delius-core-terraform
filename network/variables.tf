@@ -18,3 +18,13 @@ variable "tags" {
   type        = "map"
   description = "Default tag set"
 }
+
+variable "bastion_account_id" {
+  description = "Account ID the bastion lives in"
+  type = "string"
+}
+
+variable "bastion_vpc_id" {
+  description = "VPC ID of the bastion VPC"
+  type = "string"
+}
