@@ -37,6 +37,22 @@ data "aws_subnet" "public_a" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
+data "aws_subnet" "db_a" {
+  tags {
+    Name = "${local.environment_name}_db_a"
+  }
+
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_subnet" "private_a" {
+  tags {
+    Name = "${local.environment_name}_private_a"
+  }
+
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
 data "aws_security_group" "ssh_in" {
   tags = {
     Type = "SSH"

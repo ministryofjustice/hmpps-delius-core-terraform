@@ -1,14 +1,11 @@
 resource "aws_instance" "db" {
   ami                         = "${data.aws_ami.centos.id}"
   instance_type               = "${var.instance_type_db}"
-  subnet_id                   = "${data.aws_subnet.public_a.id}"
+  subnet_id                   = "${data.aws_subnet.db_a.id}"
   key_name                    = "${local.environment_name}"
-  associate_public_ip_address = true
   source_dest_check           = false
 
   vpc_security_group_ids = [
-    "${data.aws_security_group.ssh_in.id}",
-    "${data.aws_security_group.wls_mstr_in_whitelist.id}",
     "${data.aws_security_group.egress_all.id}",
     "${data.aws_security_group.db_in.id}",
   ]
