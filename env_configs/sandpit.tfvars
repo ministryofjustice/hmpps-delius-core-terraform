@@ -3,6 +3,9 @@ vpc_cidr = "10.161.128.128/25"
 project_name = "delius-core"
 environment_type = "sandpit"
 
+bastion_account_id = "895523100917"
+bastion_vpc_id = "vpc-00d48e9851c261b47"
+
 tags = {
   owner = "Digital Studio",
   environment-name = "delius-core-sandpit",
