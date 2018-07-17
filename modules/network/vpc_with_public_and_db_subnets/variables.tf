@@ -17,3 +17,11 @@ variable "az_a" {
 variable "az_b" {
   type = "string"
 }
+
+variable "bastion_account_id" {
+  type = "string"
+}
+
+variable "bastion_vpc_id" {
+  type = "string"
+}
