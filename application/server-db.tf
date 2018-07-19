@@ -35,3 +35,11 @@ resource "aws_volume_attachment" "db_xvdc" {
   volume_id    = "${aws_ebs_volume.db_xvdc.id}"
   force_detach = true
 }
+
+resource "aws_route53_record" "db" {
+  zone_id = "${data.aws_route53_zone.zone.zone_id}"
+  name    = "db"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_instance.db.private_ip}"]
+}

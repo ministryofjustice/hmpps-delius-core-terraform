@@ -35,3 +35,11 @@ resource "aws_volume_attachment" "weblogic-xvdc" {
   volume_id    = "${aws_ebs_volume.weblogic_xvdc.id}"
   force_detach = true
 }
+
+resource "aws_route53_record" "weblogic" {
+  zone_id = "${data.aws_route53_zone.zone.zone_id}"
+  name    = "weblogic"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_instance.weblogic.private_ip}"]
+}
