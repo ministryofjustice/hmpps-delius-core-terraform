@@ -18,6 +18,11 @@ resource "aws_instance" "weblogic" {
   }
 
   tags = "${merge(var.tags, map("Name", "${local.environment_name}-weblogic"))}"
+
+  lifecycle {
+    ignore_changes = ["ami"]
+  }
+
 }
 
 resource "aws_ebs_volume" "weblogic_xvdc" {

@@ -46,5 +46,5 @@ resource "aws_route53_record" "oid_db" {
   name    = "oid-db"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.oid_db.public_ip}"]
+  records = ["${aws_instance.oid_db.private_ip}"]
 }

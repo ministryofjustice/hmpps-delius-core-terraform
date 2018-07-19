@@ -46,5 +46,5 @@ resource "aws_route53_record" "oid_weblogic" {
   name    = "oid-weblogic"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.oid_weblogic.public_ip}"]
+  records = ["${aws_instance.oid_weblogic.private_ip}"]
 }
