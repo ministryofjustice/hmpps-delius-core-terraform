@@ -28,3 +28,8 @@ variable "bastion_vpc_id" {
   description = "VPC ID of the bastion VPC"
   type = "string"
 }
+
+variable "bastion_cidrs" {
+  description = "A list of the subnets the bastion can be in"
+  type = "list"
+}

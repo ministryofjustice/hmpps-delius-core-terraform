@@ -15,7 +15,9 @@ variable "tags" {
   description = "Default tag set"
 }
 
-variable "whitelist_cidrs" {
+variable "bastion_cidrs" {
   type        = "list"
-  description = "Permitted ingress from the internet"
+  description = "Permitted subnets allowed in"
 }
+
+

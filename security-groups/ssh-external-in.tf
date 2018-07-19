@@ -15,5 +15,5 @@ resource "aws_security_group_rule" "ssh_external_in" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["${var.whitelist_cidrs}"]
+  cidr_blocks       = "${var.bastion_cidrs}"
 }

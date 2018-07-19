@@ -26,5 +26,5 @@ resource "aws_security_group_rule" "wls_mstr_in_whitelist" {
   from_port         = 7001
   to_port           = 7002
   protocol          = "tcp"
-  cidr_blocks       = ["${var.whitelist_cidrs}"]
+  cidr_blocks       = ["${var.bastion_cidrs}"]
 }

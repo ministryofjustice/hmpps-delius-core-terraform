@@ -25,3 +25,7 @@ variable "bastion_account_id" {
 variable "bastion_vpc_id" {
   type = "string"
 }
+
+variable "bastion_cidrs" {
+  type = "list"
+}

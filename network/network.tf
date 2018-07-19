@@ -17,4 +17,5 @@ module "network" {
   az_b               = "${local.az_b}"
   bastion_account_id = "${var.bastion_account_id}"
   bastion_vpc_id     = "${var.bastion_vpc_id}"
+  bastion_cidrs      = "${var.bastion_cidrs}"
 }

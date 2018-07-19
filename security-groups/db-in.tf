@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "db_in_tmp" {
   from_port         = 1521
   to_port           = 1521
   protocol          = "tcp"
-  cidr_blocks       = ["${var.whitelist_cidrs}"]
+  cidr_blocks       = ["${var.bastion_cidrs}"]
 }
 
 resource "aws_security_group_rule" "db_in_enterprise_manager" {
@@ -33,5 +33,5 @@ resource "aws_security_group_rule" "db_in_enterprise_manager" {
   from_port         = 1158
   to_port           = 1158
   protocol          = "tcp"
-  cidr_blocks       = ["${var.whitelist_cidrs}"]
+  cidr_blocks       = ["${var.bastion_cidrs}"]
 }
