@@ -29,9 +29,33 @@ data "aws_subnet_ids" "private" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
+data aws_subnet_ids "public" {
+  tags = {
+    Type = "public"
+  }
+
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
 data "aws_subnet" "public_a" {
   tags = {
     Name = "${local.environment_name}_public_a"
+  }
+
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_subnet" "db_a" {
+  tags {
+    Name = "${local.environment_name}_db_a"
+  }
+
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_subnet" "private_a" {
+  tags {
+    Name = "${local.environment_name}_private_a"
   }
 
   vpc_id = "${data.aws_vpc.vpc.id}"
@@ -53,9 +77,17 @@ data "aws_security_group" "egress_all" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "wls_mstr_in_whitelist" {
+data "aws_security_group" "weblogic_in" {
   tags = {
     Type = "WLS"
+  }
+
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "oid_in" {
+  tags = {
+    Type = "OID"
   }
 
   vpc_id = "${data.aws_vpc.vpc.id}"
@@ -68,6 +100,11 @@ data "aws_security_group" "db_in" {
 
 data "aws_security_group" "db_out" {
   name   = "${local.environment_name}-db-out"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "elb" {
+  name = "${local.environment_name}-weblogic-elb"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 

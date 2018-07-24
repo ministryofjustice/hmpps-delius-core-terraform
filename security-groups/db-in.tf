@@ -17,21 +17,3 @@ resource "aws_security_group_rule" "db_in" {
   protocol          = "tcp"
   source_security_group_id = "${aws_security_group.db_out.id}"
 }
-
-resource "aws_security_group_rule" "db_in_tmp" {
-  security_group_id = "${aws_security_group.db_in.id}"
-  type              = "ingress"
-  from_port         = 1521
-  to_port           = 1521
-  protocol          = "tcp"
-  cidr_blocks       = ["${var.whitelist_cidrs}"]
-}
-
-resource "aws_security_group_rule" "db_in_enterprise_manager" {
-  security_group_id = "${aws_security_group.db_in.id}"
-  type              = "ingress"
-  from_port         = 1158
-  to_port           = 1158
-  protocol          = "tcp"
-  cidr_blocks       = ["${var.whitelist_cidrs}"]
-}
