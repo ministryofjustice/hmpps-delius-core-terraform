@@ -34,7 +34,7 @@ resource "aws_ebs_volume" "weblogic_xvdc" {
   tags              = "${merge(var.tags, map("Name", "${local.environment_name}-weblogic-xvdc"))}"
 }
 
-resource "aws_volume_attachment" "weblogic-xvdc" {
+resource "aws_volume_attachment" "weblogic_xvdc" {
   device_name  = "/dev/xvdc"
   instance_id  = "${aws_instance.weblogic.id}"
   volume_id    = "${aws_ebs_volume.weblogic_xvdc.id}"
@@ -47,41 +47,4 @@ resource "aws_route53_record" "weblogic" {
   type    = "A"
   ttl     = "300"
   records = ["${aws_instance.weblogic.private_ip}"]
-}
-
-resource "aws_lb" "weblogic-lb" {
-  internal        = false
-  ip_address_type = "ipv4"
-  security_groups = ["${data.aws_security_group.elb.id}"]
-  subnets         = ["${data.aws_subnet_ids.public.ids}"]
-}
-
-resource "aws_lb_target_group" "weblogic-lb-target-group" {
-  port     = 9704
-  protocol = "HTTP"
-  vpc_id   = "${data.aws_vpc.vpc.id}"
-}
-
-resource "aws_lb_target_group_attachment" "weblogic-lb-target-group-attach" {
-  port             = 9704
-  target_group_arn = "${aws_lb_target_group.weblogic-lb-target-group.arn}"
-  target_id        = "${aws_instance.weblogic.id}"
-}
-
-resource "aws_lb_listener" "weblogic-lb-listener" {
-  "default_action" {
-    target_group_arn = "${aws_lb_target_group.weblogic-lb-target-group.arn}"
-    type             = "forward"
-  }
-
-  load_balancer_arn = "${aws_lb.weblogic-lb.arn}"
-  port              = 9704
-}
-
-resource "aws_route53_record" "weblogic-lb" {
-  zone_id = "${data.aws_route53_zone.zone.zone_id}"
-  name    = "www"
-  type    = "CNAME"
-  ttl     = "300"
-  records = ["${aws_lb.weblogic-lb.dns_name}"]
 }

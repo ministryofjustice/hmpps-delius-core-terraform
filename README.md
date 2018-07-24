@@ -36,3 +36,7 @@ It is also possible to run all configurations with the terragrunt *-all commands
 It is recommended to use the containerised teraform/terragrunt tooling, to ensure consistency with the automated CI build.
 
 It is even more recommended to use the automated CI build directly.
+
+### Bastion
+
+To access an environment you will need to use the bastion host.
