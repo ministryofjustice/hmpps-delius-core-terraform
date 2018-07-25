@@ -57,7 +57,7 @@ resource "aws_route_table_association" "private_a" {
 resource "aws_route" "private_a_internet" {
   route_table_id         = "${aws_route_table.private_a.id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.main.id}"
+  nat_gateway_id         = "${aws_nat_gateway.gw.id}"
 }
 
 resource "aws_route" "private_a_bastion" {
@@ -80,7 +80,7 @@ resource "aws_route_table_association" "private_b" {
 resource "aws_route" "private_b_internet" {
   route_table_id         = "${aws_route_table.private_b.id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.main.id}"
+  nat_gateway_id         = "${aws_nat_gateway.gw.id}"
 }
 
 resource "aws_route" "private_b_bastion" {
@@ -103,7 +103,7 @@ resource "aws_route_table_association" "db_a" {
 resource "aws_route" "db_a_internet" {
   route_table_id         = "${aws_route_table.db_a.id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.main.id}"
+  nat_gateway_id         = "${aws_nat_gateway.gw.id}"
 }
 
 resource "aws_route" "db_a_bastion" {
@@ -126,7 +126,7 @@ resource "aws_route_table_association" "db_b" {
 resource "aws_route" "db_b_internet" {
   route_table_id         = "${aws_route_table.db_b.id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.main.id}"
+  nat_gateway_id         = "${aws_nat_gateway.gw.id}"
 }
 
 resource "aws_route" "db_b_bastion" {
