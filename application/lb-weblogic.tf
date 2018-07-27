@@ -1,7 +1,10 @@
 resource "aws_lb" "weblogic_lb" {
   internal        = false
   ip_address_type = "ipv4"
-  security_groups = ["${data.aws_security_group.elb.id}"]
+  security_groups = [
+    "${data.aws_security_group.elb_in.id}",
+    "${data.aws_security_group.elb_out.id}",
+  ]
   subnets         = ["${data.aws_subnet_ids.public.ids}"]
 }
 

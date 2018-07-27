@@ -7,8 +7,8 @@ resource "aws_instance" "oid_db" {
 
   vpc_security_group_ids = [
     "${data.aws_security_group.ssh_in.id}",
-    "${data.aws_security_group.egress_all.id}",
     "${data.aws_security_group.db_in.id}",
+    "${data.aws_security_group.db_out.id}",
   ]
 
   root_block_device = {
