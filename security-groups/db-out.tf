@@ -12,7 +12,7 @@ resource "aws_security_group" "db_out" {
 }
 
 ## egress rules
-resource "aws_security_group_rule" "db_out_weblogic_in" {
+resource "aws_security_group_rule" "egress_db_out_weblogic_in" {
   security_group_id         = "${aws_security_group.db_out.id}"
   type                      = "egress"
   from_port                 = 61616

@@ -48,7 +48,7 @@ resource "aws_security_group_rule" "weblogic_out_weblogic_in_3060" {
   source_security_group_id  = "${aws_security_group.weblogic_out.id}"
 }
 
-resource "aws_security_group_rule" "db_out_weblogic_in" {
+resource "aws_security_group_rule" "ingress_db_out_weblogic_in" {
   security_group_id         = "${aws_security_group.weblogic_in.id}"
   type                      = "ingress"
   from_port                 = 61616
