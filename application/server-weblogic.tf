@@ -6,7 +6,7 @@ resource "aws_instance" "weblogic" {
   source_dest_check = false
 
   vpc_security_group_ids = [
-    "${data.aws_security_group.ssh_in.id}",
+    "${data.aws_security_group.ssh_external_in.id}",
     "${data.aws_security_group.weblogic_in.id}",
     "${data.aws_security_group.weblogic_out.id}",
   ]
