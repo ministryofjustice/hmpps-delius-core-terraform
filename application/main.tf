@@ -131,3 +131,8 @@ data "aws_ami" "centos" {
 data "aws_kms_key" "master" {
   key_id = "alias/${local.environment_name}-master"
 }
+
+data "aws_route53_zone" "zone" {
+  name         = "${var.environment_type}.${var.project_name}.${var.route53_domain_private}."
+  private_zone = false
+}
