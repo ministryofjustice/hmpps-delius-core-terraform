@@ -61,35 +61,18 @@ data "aws_subnet" "private_a" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "ssh_in" {
-  tags = {
-    Type = "SSH"
-  }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "egress_all" {
-  tags = {
-    Type = "ALL"
-  }
-
+data "aws_security_group" "ssh_external_in" {
+  name   = "${local.environment_name}-ssh-external-in"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
 data "aws_security_group" "weblogic_in" {
-  tags = {
-    Type = "WLS"
-  }
-
+  name   = "${local.environment_name}-weblogic-in"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "oid_in" {
-  tags = {
-    Type = "OID"
-  }
-
+data "aws_security_group" "weblogic_out" {
+  name   = "${local.environment_name}-weblogic-out"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
@@ -103,8 +86,13 @@ data "aws_security_group" "db_out" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "elb" {
-  name = "${local.environment_name}-weblogic-elb"
+data "aws_security_group" "weblogic_lb_in" {
+  name = "${local.environment_name}-weblogic-lb-in"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_lb_out" {
+  name = "${local.environment_name}-weblogic-lb-out"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 

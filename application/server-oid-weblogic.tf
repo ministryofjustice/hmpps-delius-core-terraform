@@ -6,10 +6,9 @@ resource "aws_instance" "oid_weblogic" {
   source_dest_check = false
 
   vpc_security_group_ids = [
-    "${data.aws_security_group.ssh_in.id}",
-    "${data.aws_security_group.oid_in.id}",
-    "${data.aws_security_group.egress_all.id}",
-    "${data.aws_security_group.db_out.id}",
+    "${data.aws_security_group.ssh_external_in.id}",
+    "${data.aws_security_group.weblogic_in.id}",
+    "${data.aws_security_group.weblogic_out.id}",
   ]
 
   root_block_device = {
