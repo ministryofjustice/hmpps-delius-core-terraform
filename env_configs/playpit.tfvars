@@ -1,4 +1,4 @@
-vpc_cidr = "10.161.128.128/25"
+vpc_cidr = "10.161.130.0/24"
 
 project_name = "delius-core"
 
