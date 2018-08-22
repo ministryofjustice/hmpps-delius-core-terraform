@@ -37,62 +37,118 @@ data aws_subnet_ids "public" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_subnet" "public_a" {
+data aws_subnet_ids "db" {
   tags = {
-    Name = "${local.environment_name}_public_a"
+    Type = "db"
   }
 
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_subnet" "db_a" {
-  tags {
-    Name = "${local.environment_name}_db_a"
-  }
-
+#Allow bastion in on SSH
+data "aws_security_group" "ssh_bastion_in" {
+  name   = "${local.environment_name}-ssh-bastion-in"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_subnet" "private_a" {
-  tags {
-    Name = "${local.environment_name}_private_a"
-  }
-
+#Delius DB
+data "aws_security_group" "delius_db_in" {
+  name   = "${local.environment_name}-delius-db-in"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "ssh_external_in" {
-  name   = "${local.environment_name}-ssh-external-in"
+#OID DB
+data "aws_security_group" "oid_db_in" {
+  name   = "${local.environment_name}-oid-db-in"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "weblogic_in" {
-  name   = "${local.environment_name}-weblogic-in"
+data "aws_security_group" "oid_db_out" {
+  name   = "${local.environment_name}-oid-db-out"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "weblogic_out" {
-  name   = "${local.environment_name}-weblogic-out"
+#Interface security groups
+data "aws_security_group" "weblogic_interface_managed_elb" {
+  name   = "${local.environment_name}-weblogic-interface-managed-elb"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "db_in" {
-  name   = "${local.environment_name}-db-in"
+data "aws_security_group" "weblogic_interface_admin_elb" {
+  name   = "${local.environment_name}-weblogic-interface-admin-elb"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "db_out" {
-  name   = "${local.environment_name}-db-out"
+data "aws_security_group" "weblogic_interface_admin" {
+  name   = "${local.environment_name}-weblogic-interface-admin"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "weblogic_lb_in" {
-  name = "${local.environment_name}-weblogic-lb-in"
+data "aws_security_group" "weblogic_interface_managed" {
+  name   = "${local.environment_name}-weblogic-interface-managed"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data "aws_security_group" "weblogic_lb_out" {
-  name = "${local.environment_name}-weblogic-lb-out"
+#ndelius security groups
+data "aws_security_group" "weblogic_ndelius_managed_elb" {
+  name   = "${local.environment_name}-weblogic-ndelius-managed-elb"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_ndelius_admin_elb" {
+  name   = "${local.environment_name}-weblogic-ndelius-admin-elb"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_ndelius_admin" {
+  name   = "${local.environment_name}-weblogic-ndelius-admin"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_ndelius_managed" {
+  name   = "${local.environment_name}-weblogic-ndelius-managed"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+#oid security groups
+data "aws_security_group" "weblogic_oid_managed_elb" {
+  name   = "${local.environment_name}-weblogic-oid-managed-elb"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_oid_admin_elb" {
+  name   = "${local.environment_name}-weblogic-oid-admin-elb"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_oid_admin" {
+  name   = "${local.environment_name}-weblogic-oid-admin"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_oid_managed" {
+  name   = "${local.environment_name}-weblogic-oid-managed"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+#spg security groups
+data "aws_security_group" "weblogic_spg_managed_elb" {
+  name   = "${local.environment_name}-weblogic-spg-managed-elb"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_spg_admin_elb" {
+  name   = "${local.environment_name}-weblogic-spg-admin-elb"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_spg_admin" {
+  name   = "${local.environment_name}-weblogic-spg-admin"
+  vpc_id = "${data.aws_vpc.vpc.id}"
+}
+
+data "aws_security_group" "weblogic_spg_managed" {
+  name   = "${local.environment_name}-weblogic-spg-managed"
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
 

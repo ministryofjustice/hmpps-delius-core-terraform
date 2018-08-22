@@ -30,3 +30,8 @@ variable "instance_type_weblogic" {
 variable "instance_type_db" {
   description = "The ec2 instance type"
 }
+
+variable "weblogic_domain_ports" {
+  description = "List of the weblogic domain ports"
+  type = "map"
+}

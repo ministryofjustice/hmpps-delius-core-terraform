@@ -1,14 +1,13 @@
-resource "aws_instance" "db" {
+resource "aws_instance" "delius_db" {
   ami               = "${data.aws_ami.centos.id}"
   instance_type     = "${var.instance_type_db}"
-  subnet_id         = "${data.aws_subnet.db_a.id}"
+  subnet_id         = "${element(data.aws_subnet_ids.private.ids, 0)}"
   key_name          = "${local.environment_name}"
   source_dest_check = false
 
   vpc_security_group_ids = [
-    "${data.aws_security_group.ssh_external_in.id}",
-    "${data.aws_security_group.db_in.id}",
-    "${data.aws_security_group.db_out.id}",
+    "${data.aws_security_group.ssh_bastion_in.id}",
+    "${data.aws_security_group.delius_db_in}",
   ]
 
   root_block_device = {
@@ -17,7 +16,7 @@ resource "aws_instance" "db" {
     volume_type           = "gp2"
   }
 
-  tags = "${merge(var.tags, map("Name", "${local.environment_name}-db"))}"
+  tags = "${merge(var.tags, map("Name", "${local.environment_name}-delius-db"))}"
 
   lifecycle {
     ignore_changes = ["ami"]
@@ -25,8 +24,8 @@ resource "aws_instance" "db" {
 
 }
 
-resource "aws_ebs_volume" "db_xvdc" {
-  availability_zone = "${aws_instance.db.availability_zone}"
+resource "aws_ebs_volume" "delius_db_xvdc" {
+  availability_zone = "${aws_instance.delius_db.availability_zone}"
   type              = "gp2"
   size              = 200
   encrypted         = true
@@ -34,17 +33,17 @@ resource "aws_ebs_volume" "db_xvdc" {
   tags              = "${merge(var.tags, map("Name", "${local.environment_name}-db-xvdc"))}"
 }
 
-resource "aws_volume_attachment" "db_xvdc" {
+resource "aws_volume_attachment" "delius_db_xvdc" {
   device_name  = "/dev/xvdc"
-  instance_id  = "${aws_instance.db.id}"
+  instance_id  = "${aws_instance.delius_db.id}"
   volume_id    = "${aws_ebs_volume.db_xvdc.id}"
   force_detach = true
 }
 
-resource "aws_route53_record" "db" {
+resource "aws_route53_record" "delius_db" {
   zone_id = "${data.aws_route53_zone.zone.zone_id}"
   name    = "db"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.db.private_ip}"]
+  records = ["${aws_instance.delius_db.private_ip}"]
 }

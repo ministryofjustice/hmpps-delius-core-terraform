@@ -51,7 +51,7 @@ resource "aws_route53_record" "admin_instance" {
 resource "aws_lb" "admin" {
   internal        = false
   ip_address_type = "ipv4"
-  security_groups = ["${var.elb_sg_id}"]
+  security_groups = ["${var.admin_elb_sg_id}"]
   subnets         = ["${var.public_subnets}"]
 }
 

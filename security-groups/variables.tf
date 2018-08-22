@@ -20,4 +20,7 @@ variable "bastion_cidrs" {
   description = "Permitted subnets allowed in"
 }
 
-
+variable "weblogic_domain_ports" {
+  type        = "map"
+  description = "Map of the ports that the weblogic domains use"
+}

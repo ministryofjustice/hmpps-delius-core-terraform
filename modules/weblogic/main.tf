@@ -27,3 +27,5 @@ data "aws_vpc" "vpc" {
 data "aws_kms_key" "master" {
   key_id = "alias/${var.environment_name}-master"
 }
+
+#TODO: ASG for managed should nightly cycle boxes

@@ -1,14 +1,15 @@
+#TODO: add oracle RDS for OID
+
 resource "aws_instance" "oid_db" {
   ami                         = "${data.aws_ami.centos.id}"
   instance_type               = "${var.instance_type_db}"
-  subnet_id                   = "${data.aws_subnet.db_a.id}"
+  subnet_id                   = "${element(data.aws_subnet_ids.private.ids, 0)}"
   key_name                    = "${local.environment_name}"
   source_dest_check           = false
 
   vpc_security_group_ids = [
-    "${data.aws_security_group.ssh_external_in.id}",
-    "${data.aws_security_group.db_in.id}",
-    "${data.aws_security_group.db_out.id}",
+    "${data.aws_security_group.ssh_bastion_in.id}",
+    "${data.aws_security_group.oid_db_in.id}",
   ]
 
   root_block_device = {

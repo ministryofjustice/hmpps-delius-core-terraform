@@ -43,7 +43,12 @@ variable "dns_zone_id" {
   type = "string"
 }
 
-variable "elb_sg_id" {
+variable "managed_elb_sg_id" {
+  description = "ID for the security group for the ELB"
+  type = "string"
+}
+
+variable "admin_elb_sg_id" {
   description = "ID for the security group for the ELB"
   type = "string"
 }
