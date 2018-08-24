@@ -11,7 +11,7 @@ resource "aws_security_group" "weblogic_ndelius_managed_elb" {
 
 #Allow users into the managed boxes on the useful port
 #TODO: Do we build a list of allowed source in or?
-resource "aws_security_group_rule" "managed_elb_in" {
+resource "aws_security_group_rule" "wnme_managed_elb_in" {
   from_port         = "${var.weblogic_domain_ports["ndelius_managed"]}"
   protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_ndelius_managed_elb.id}"
@@ -32,7 +32,7 @@ resource "aws_security_group" "weblogic_ndelius_admin_elb" {
 }
 
 #Allow admins into the admin box
-resource "aws_security_group_rule" "admin_elb_in" {
+resource "aws_security_group_rule" "wnae_admin_elb_in" {
   from_port         = "${var.weblogic_domain_ports["ndelius_admin"]}"
   protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_ndelius_admin_elb.id}"
@@ -53,7 +53,7 @@ resource "aws_security_group" "weblogic_ndelius_admin" {
 }
 
 #Allow the ELB into the Admin port
-resource "aws_security_group_rule" "admin_elb" {
+resource "aws_security_group_rule" "wnae_admin_elb" {
   from_port                = "${var.weblogic_domain_ports["ndelius_admin"]}"
   protocol                 = "tcp"
   security_group_id        = "${aws_security_group.weblogic_ndelius_admin.id}"

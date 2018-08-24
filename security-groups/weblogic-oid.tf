@@ -50,7 +50,7 @@ resource "aws_security_group" "weblogic_oid_admin_elb" {
 }
 
 #Allow admins into the admin box
-resource "aws_security_group_rule" "admin_elb_in" {
+resource "aws_security_group_rule" "woae_admin_elb_in" {
   from_port         = "${var.weblogic_domain_ports["oid_admin"]}"
   protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
@@ -71,7 +71,7 @@ resource "aws_security_group" "weblogic_oid_admin" {
 }
 
 #Allow the ELB into the Admin port
-resource "aws_security_group_rule" "admin_elb" {
+resource "aws_security_group_rule" "woae_admin_elb" {
   from_port                = "${var.weblogic_domain_ports["oid_admin"]}"
   protocol                 = "tcp"
   security_group_id        = "${aws_security_group.weblogic_oid_admin.id}"

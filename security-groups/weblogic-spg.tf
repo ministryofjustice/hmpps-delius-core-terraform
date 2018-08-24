@@ -11,7 +11,7 @@ resource "aws_security_group" "weblogic_spg_managed_elb" {
 
 #Allow users into the managed boxes on the useful port
 #TODO: Do we build a list of allowed source in or?
-resource "aws_security_group_rule" "managed_elb_in" {
+resource "aws_security_group_rule" "wsme_managed_elb_in" {
   from_port         = "${var.weblogic_domain_ports["spg_managed"]}"
   protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
@@ -32,7 +32,7 @@ resource "aws_security_group" "weblogic_spg_admin_elb" {
 }
 
 #Allow admins into the admin box
-resource "aws_security_group_rule" "admin_elb_in" {
+resource "aws_security_group_rule" "wsae_admin_elb_in" {
   from_port         = "${var.weblogic_domain_ports["spg_admin"]}"
   protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
@@ -53,7 +53,7 @@ resource "aws_security_group" "weblogic_spg_admin" {
 }
 
 #Allow the ELB into the Admin port
-resource "aws_security_group_rule" "admin_elb" {
+resource "aws_security_group_rule" "wsae_admin_elb" {
   from_port                = "${var.weblogic_domain_ports["spg_admin"]}"
   protocol                 = "tcp"
   security_group_id        = "${aws_security_group.weblogic_spg_admin.id}"
