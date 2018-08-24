@@ -7,7 +7,7 @@ resource "aws_instance" "delius_db" {
 
   vpc_security_group_ids = [
     "${data.aws_security_group.ssh_bastion_in.id}",
-    "${data.aws_security_group.delius_db_in}",
+    "${data.aws_security_group.delius_db_in.id}",
   ]
 
   root_block_device = {
