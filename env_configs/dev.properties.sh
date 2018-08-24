@@ -2,7 +2,7 @@
 
 # AWS ROLE ARN
 # AWS subaccount 723123699647 delius-core-non-prod
-export TERRAGRUNT_IAM_ROLE="arn:aws:iam::723123699647:role/admin"
+export TERRAGRUNT_IAM_ROLE="arn:aws:iam::723123699647:role/terraform"
 
 ## GENERIC VARIABLES
 
