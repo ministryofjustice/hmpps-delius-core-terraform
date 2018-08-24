@@ -36,7 +36,7 @@ resource "aws_ebs_volume" "delius_db_xvdc" {
 resource "aws_volume_attachment" "delius_db_xvdc" {
   device_name  = "/dev/xvdc"
   instance_id  = "${aws_instance.delius_db.id}"
-  volume_id    = "${aws_ebs_volume.db_xvdc.id}"
+  volume_id    = "${aws_ebs_volume.delius_db_xvdc.id}"
   force_detach = true
 }
 

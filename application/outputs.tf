@@ -1,9 +1,9 @@
-output "db_public_dns" {
-  value = "${aws_route53_record.db.fqdn}"
+output "delius_db_public_dns" {
+  value = "${aws_route53_record.delius_db.fqdn}"
 }
 
-output "db_private_ip" {
-  value = "${aws_instance.db.private_ip}"
+output "delius_db_private_ip" {
+  value = "${aws_instance.delius_db.private_ip}"
 }
 
 output "oid_db_public_dns" {
