@@ -26,7 +26,6 @@ resource "aws_security_group_rule" "weblogic_interface_admin_db_in" {
   protocol                 = "tcp"
   from_port                = "1521"
   to_port                  = "1521"
-  protocol                 = "tcp"
   source_security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
 }
 
