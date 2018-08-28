@@ -10,19 +10,19 @@ resource "aws_security_group" "oid_db_in" {
 }
 
 resource "aws_security_group_rule" "weblogic_oid_managed_db_in" {
-  from_port                = "1521"
-  protocol                 = "tcp"
-  source_security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
-  to_port                  = "1521"
-  type                     = "ingress"
   security_group_id        = "${aws_security_group.oid_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
 }
 
 resource "aws_security_group_rule" "weblogic_oid_admin_db_in" {
-  from_port                = "1521"
-  protocol                 = "tcp"
-  source_security_group_id = "${aws_security_group.weblogic_oid_admin.id}"
-  to_port                  = "1521"
-  type                     = "ingress"
   security_group_id        = "${aws_security_group.oid_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${aws_security_group.weblogic_oid_admin.id}"  
 }

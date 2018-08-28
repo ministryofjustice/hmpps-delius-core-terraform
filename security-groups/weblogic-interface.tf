@@ -12,11 +12,11 @@ resource "aws_security_group" "weblogic_interface_managed_elb" {
 #Allow users into the managed boxes on the useful port
 #TODO: Do we build a list of allowed source in or?
 resource "aws_security_group_rule" "wime_managed_elb_in" {
-  from_port         = "${var.weblogic_domain_ports["interface_managed"]}"
-  protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_interface_managed_elb.id}"
-  to_port           = "${var.weblogic_domain_ports["interface_managed"]}"
   type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.weblogic_domain_ports["interface_managed"]}"
+  to_port           = "${var.weblogic_domain_ports["interface_managed"]}"
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -33,11 +33,11 @@ resource "aws_security_group" "weblogic_interface_admin_elb" {
 
 #Allow admins into the admin box
 resource "aws_security_group_rule" "wiae_admin_elb_in" {
-  from_port         = "${var.weblogic_domain_ports["interface_admin"]}"
-  protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_interface_admin_elb.id}"
-  to_port           = "${var.weblogic_domain_ports["interface_admin"]}"
   type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.weblogic_domain_ports["interface_admin"]}"
+  to_port           = "${var.weblogic_domain_ports["interface_admin"]}"
   cidr_blocks       = "${var.bastion_cidrs}"
 }
 
@@ -54,11 +54,11 @@ resource "aws_security_group" "weblogic_interface_admin" {
 
 #Allow the ELB into the Admin port
 resource "aws_security_group_rule" "wia_admin_elb" {
-  from_port                = "${var.weblogic_domain_ports["interface_admin"]}"
-  protocol                 = "tcp"
   security_group_id        = "${aws_security_group.weblogic_interface_admin.id}"
-  to_port                  = "${var.weblogic_domain_ports["interface_admin"]}"
   type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["interface_admin"]}"
+  to_port                  = "${var.weblogic_domain_ports["interface_admin"]}"
   source_security_group_id = "${aws_security_group.weblogic_interface_admin_elb.id}"
 }
 
@@ -77,8 +77,8 @@ resource "aws_security_group" "weblogic_interface_managed" {
 resource "aws_security_group_rule" "interface_elb" {
   security_group_id        = "${aws_security_group.weblogic_interface_managed.id}"
   type                     = "ingress"
-  from_port                = "${var.weblogic_domain_ports["interface_managed"]}"
-  to_port                  = "${var.weblogic_domain_ports["interface_managed"]}"
   protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["interface_managed"]}"
+  to_port                  = "${var.weblogic_domain_ports["interface_managed"]}"  
   source_security_group_id = "${aws_security_group.weblogic_interface_managed_elb.id}"
 }

@@ -12,11 +12,11 @@ resource "aws_security_group" "weblogic_spg_managed_elb" {
 #Allow users into the managed boxes on the useful port
 #TODO: Do we build a list of allowed source in or?
 resource "aws_security_group_rule" "wsme_managed_elb_in" {
-  from_port         = "${var.weblogic_domain_ports["spg_managed"]}"
-  protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
-  to_port           = "${var.weblogic_domain_ports["spg_managed"]}"
   type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.weblogic_domain_ports["spg_managed"]}"
+  to_port           = "${var.weblogic_domain_ports["spg_managed"]}"
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -33,11 +33,11 @@ resource "aws_security_group" "weblogic_spg_admin_elb" {
 
 #Allow admins into the admin box
 resource "aws_security_group_rule" "wsae_admin_elb_in" {
-  from_port         = "${var.weblogic_domain_ports["spg_admin"]}"
-  protocol          = "tcp"
   security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
-  to_port           = "${var.weblogic_domain_ports["spg_admin"]}"
   type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.weblogic_domain_ports["spg_admin"]}"
+  to_port           = "${var.weblogic_domain_ports["spg_admin"]}"
   cidr_blocks       = "${var.bastion_cidrs}"
 }
 
@@ -54,11 +54,11 @@ resource "aws_security_group" "weblogic_spg_admin" {
 
 #Allow the ELB into the Admin port
 resource "aws_security_group_rule" "wsae_admin_elb" {
-  from_port                = "${var.weblogic_domain_ports["spg_admin"]}"
-  protocol                 = "tcp"
   security_group_id        = "${aws_security_group.weblogic_spg_admin.id}"
-  to_port                  = "${var.weblogic_domain_ports["spg_admin"]}"
   type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["spg_admin"]}"
+  to_port                  = "${var.weblogic_domain_ports["spg_admin"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
 }
 
@@ -77,8 +77,8 @@ resource "aws_security_group" "weblogic_spg_managed" {
 resource "aws_security_group_rule" "spg_elb" {
   security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
   type                     = "ingress"
-  from_port                = "${var.weblogic_domain_ports["spg_managed"]}"
-  to_port                  = "${var.weblogic_domain_ports["spg_managed"]}"
   protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["spg_managed"]}"
+  to_port                  = "${var.weblogic_domain_ports["spg_managed"]}"  
   source_security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
 }
