@@ -11,6 +11,10 @@ resource "aws_security_group" "weblogic_oid_managed_elb" {
   }
 }
 
+output "sg_weblogic_oid_managed_elb_id" {
+  value = "${aws_security_group.weblogic_oid_managed_elb.id}"
+}
+
 # #Allow other weblogic domains into the managed boxes on the LDAP port
 #
 # resource "aws_security_group_rule" "managed_elb_in_spg_managed" {
@@ -51,6 +55,10 @@ resource "aws_security_group" "weblogic_oid_admin_elb" {
   }
 }
 
+output "sg_weblogic_oid_admin_elb_id" {
+  value = "${aws_security_group.weblogic_oid_admin_elb.id}"
+}
+
 # #Allow admins into the admin box
 # resource "aws_security_group_rule" "woae_admin_elb_in" {
 #   security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
@@ -72,6 +80,10 @@ resource "aws_security_group" "weblogic_oid_admin" {
   }
 }
 
+output "sg_weblogic_oid_admin_id" {
+  value = "${aws_security_group.weblogic_oid_admin.id}"
+}
+
 # #Allow the ELB into the Admin port
 # resource "aws_security_group_rule" "woae_admin_elb" {
 #   security_group_id        = "${aws_security_group.weblogic_oid_admin.id}"
@@ -91,6 +103,10 @@ resource "aws_security_group" "weblogic_oid_managed" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+output "sg_weblogic_oid_managed_id" {
+  value = "${aws_security_group.weblogic_oid_managed.id}"
 }
 
 # #Allow the ELB into the managed port

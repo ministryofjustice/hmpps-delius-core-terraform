@@ -11,6 +11,10 @@ resource "aws_security_group" "weblogic_interface_managed_elb" {
   }
 }
 
+output "sg_weblogic_interface_managed_elb_id" {
+  value = "${aws_security_group.weblogic_interface_managed_elb.id}"
+}
+
 # #Allow users into the managed boxes on the useful port
 # #TODO: Do we build a list of allowed source in or?
 # resource "aws_security_group_rule" "wime_managed_elb_in" {
@@ -31,6 +35,10 @@ resource "aws_security_group" "weblogic_interface_admin_elb" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+output "sg_weblogic_interface_admin_elb_id" {
+  value = "${aws_security_group.weblogic_interface_admin_elb.id}"
 }
 
 # #Allow admins into the admin box
@@ -54,6 +62,10 @@ resource "aws_security_group" "weblogic_interface_admin" {
   }
 }
 
+output "sg_weblogic_interface_admin_id" {
+  value = "${aws_security_group.weblogic_interface_admin.id}"
+}
+
 # #Allow the ELB into the Admin port
 # resource "aws_security_group_rule" "wia_admin_elb" {
 #   security_group_id        = "${aws_security_group.weblogic_interface_admin.id}"
@@ -73,6 +85,10 @@ resource "aws_security_group" "weblogic_interface_managed" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+output "sg_weblogic_interface_managed_id" {
+  value = "${aws_security_group.weblogic_interface_managed.id}"
 }
 
 # #Allow the ELB into the managed port

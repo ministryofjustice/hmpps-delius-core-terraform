@@ -11,6 +11,10 @@ resource "aws_security_group" "oid_db_in" {
   }
 }
 
+output "sg_oid_db_in_id" {
+  value = "${aws_security_group.oid_db_in.id}"
+}
+
 # resource "aws_security_group_rule" "weblogic_oid_managed_db_in" {
 #   security_group_id        = "${aws_security_group.oid_db_in.id}"
 #   type                     = "ingress"
