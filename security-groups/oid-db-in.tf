@@ -15,20 +15,20 @@ output "sg_oid_db_in_id" {
   value = "${aws_security_group.oid_db_in.id}"
 }
 
-# resource "aws_security_group_rule" "weblogic_oid_managed_db_in" {
-#   security_group_id        = "${aws_security_group.oid_db_in.id}"
-#   type                     = "ingress"
-#   protocol                 = "tcp"
-#   from_port                = "1521"
-#   to_port                  = "1521"
-#   source_security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
-# }
-#
-# resource "aws_security_group_rule" "weblogic_oid_admin_db_in" {
-#   security_group_id        = "${aws_security_group.oid_db_in.id}"
-#   type                     = "ingress"
-#   protocol                 = "tcp"
-#   from_port                = "1521"
-#   to_port                  = "1521"
-#   source_security_group_id = "${aws_security_group.weblogic_oid_admin.id}"
-# }
+resource "aws_security_group_rule" "weblogic_oid_managed_db_in" {
+  security_group_id        = "${aws_security_group.oid_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
+}
+
+resource "aws_security_group_rule" "weblogic_oid_admin_db_in" {
+  security_group_id        = "${aws_security_group.oid_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${aws_security_group.weblogic_oid_admin.id}"
+}
