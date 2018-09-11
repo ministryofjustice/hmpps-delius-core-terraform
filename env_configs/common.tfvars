@@ -20,4 +20,3 @@ weblogic_domain_ports = {
 #SPG has activeMQ running incomming
 #database talks to activemq on spg weblogic domain
 #spg talks to spg-weblogic-domain over activemq
-

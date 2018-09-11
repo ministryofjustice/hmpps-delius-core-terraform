@@ -1,5 +1,5 @@
-variable "region" {
-  description = "The AWS region"
+variable "environment_name" {
+  type = "string"
 }
 
 variable "project_name" {
@@ -10,13 +10,21 @@ variable "environment_type" {
   description = "The environment type - e.g. dev"
 }
 
-variable "vpc_cidr" {
-  description = "The CIDR block assigned to the VPC"
+variable "region" {
+  description = "The AWS region."
 }
 
-variable "tags" {
+variable "remote_state_bucket_name" {
+  description = "Terraform remote state bucket name"
+}
+
+variable "environment_identifier" {
+  description = "resource label or name"
+}
+
+variable "weblogic_domain_ports" {
   type        = "map"
-  description = "Default tag set"
+  description = "Map of the ports that the weblogic domains use"
 }
 
 variable "route53_domain_private" {
@@ -29,9 +37,4 @@ variable "instance_type_weblogic" {
 
 variable "instance_type_db" {
   description = "The ec2 instance type"
-}
-
-variable "weblogic_domain_ports" {
-  description = "List of the weblogic domain ports"
-  type = "map"
 }
