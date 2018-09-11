@@ -1,23 +1,17 @@
+variable "environment_name" {
+  type = "string"
+}
+
 variable "region" {
-  description = "The AWS region"
+  description = "The AWS region."
 }
 
-variable "project_name" {
-  description = "The project name - delius-core"
+variable "remote_state_bucket_name" {
+  description = "Terraform remote state bucket name"
 }
 
-variable "environment_type" {
-  description = "The environment type - e.g. dev"
-}
-
-variable "tags" {
-  type        = "map"
-  description = "Default tag set"
-}
-
-variable "bastion_cidrs" {
-  type        = "list"
-  description = "Permitted subnets allowed in"
+variable "environment_identifier" {
+  description = "resource label or name"
 }
 
 variable "weblogic_domain_ports" {
