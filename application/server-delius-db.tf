@@ -23,23 +23,23 @@ resource "aws_instance" "delius_db" {
   }
 }
 
-# resource "aws_ebs_volume" "delius_db_xvdc" {
-#   availability_zone = "${aws_instance.delius_db.availability_zone}"
-#   type              = "gp2"
-#   size              = 200
-#   encrypted         = true
-#   kms_key_id        = "${data.aws_kms_key.master.arn}"
-#   tags              = "${merge(var.tags, map("Name", "${local.environment_name}-db-xvdc"))}"
-# }
-#
-# resource "aws_volume_attachment" "delius_db_xvdc" {
-#   device_name  = "/dev/xvdc"
-#   instance_id  = "${aws_instance.delius_db.id}"
-#   volume_id    = "${aws_ebs_volume.delius_db_xvdc.id}"
-#   force_detach = true
-# }
+resource "aws_ebs_volume" "delius_db_xvdc" {
+  availability_zone = "${aws_instance.delius_db.availability_zone}"
+  type              = "gp2"
+  size              = 200
+  encrypted         = true
+  kms_key_id        = "${module.kms_key_app.kms_arn}"
+  tags = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-delius-db-xvdc"))}"
+}
 
-resource "aws_route53_record" "delius_db" {
+resource "aws_volume_attachment" "delius_db_xvdc" {
+  device_name  = "/dev/xvdc"
+  instance_id  = "${aws_instance.delius_db.id}"
+  volume_id    = "${aws_ebs_volume.delius_db_xvdc.id}"
+  force_detach = true
+}
+
+resource "aws_route53_record" "delius_db_internal" {
   zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
   name    = "db"
   type    = "A"
