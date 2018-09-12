@@ -27,10 +27,6 @@ variable "weblogic_domain_ports" {
   description = "Map of the ports that the weblogic domains use"
 }
 
-variable "route53_domain_private" {
-  description = "The DNS domain for all HMPPS probation services"
-}
-
 variable "instance_type_weblogic" {
   description = "The ec2 instance type"
 }
