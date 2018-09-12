@@ -1,10 +1,10 @@
 # Managed server (TODO: ASG)
 
 resource "aws_instance" "managed" {
-  ami               = "${data.aws_ami.centos.id}"
+  ami               = "${var.ami_id}"
   instance_type     = "${var.managed_instance_type}"
   subnet_id         = "${var.private_subnet}"
-  key_name          = "${var.environment_name}"
+  key_name          = "${var.key_name}"
   source_dest_check = false
 
   vpc_security_group_ids = ["${var.managed_security_groups}"]
@@ -15,7 +15,7 @@ resource "aws_instance" "managed" {
     volume_type           = "gp2"
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.environment_name}-managed"))}"
+  tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-managed"))}"
 
   lifecycle {
     ignore_changes = ["ami"]
@@ -27,8 +27,8 @@ resource "aws_ebs_volume" "managed_xvdc" {
   type              = "gp2"
   size              = 200
   encrypted         = true
-  kms_key_id        = "${data.aws_kms_key.master.arn}"
-  tags              = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-xvdc"))}"
+  kms_key_id        = "${var.kms_key_id}"
+  tags              = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-managed-xvdc"))}"
 }
 
 resource "aws_volume_attachment" "managed_xvdc" {
@@ -38,12 +38,32 @@ resource "aws_volume_attachment" "managed_xvdc" {
   force_detach = true
 }
 
-resource "aws_route53_record" "managed_instance" {
-  zone_id = "${var.dns_zone_id}"
+resource "aws_route53_record" "managed_instance_internal" {
+  zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}-managed-instance"
   type    = "A"
   ttl     = "300"
   records = ["${aws_instance.managed.private_ip}"]
+}
+
+resource "aws_route53_record" "managed_instance_public" {
+  zone_id = "${var.public_zone_id}"
+  name    = "${var.tier_name}-managed-instance"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_instance.managed.private_ip}"]
+}
+
+output "internal_fqdn_managed" {
+  value = "${aws_route53_record.managed_instance_internal.fqdn}"
+}
+
+output "public_fqdn_managed" {
+  value = "${aws_route53_record.managed_instance_public.fqdn}"
+}
+
+output "private_ip_managed" {
+  value = "${aws_instance.managed.private_ip}"
 }
 
 # Managed ELB
@@ -58,7 +78,7 @@ resource "aws_lb" "managed" {
 resource "aws_lb_target_group" "managed" {
   port     = "${var.managed_port}"
   protocol = "HTTP"
-  vpc_id   = "${data.aws_vpc.vpc.id}"
+  vpc_id   = "${var.vpc_id}"
 }
 
 resource "aws_lb_target_group_attachment" "managed" {
@@ -77,10 +97,26 @@ resource "aws_lb_listener" "managed" {
   port              = "${var.managed_port}"
 }
 
-resource "aws_route53_record" "managed_lb" {
-  zone_id = "${var.dns_zone_id}"
+resource "aws_route53_record" "managed_lb_internal" {
+  zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}-managed"
   type    = "CNAME"
   ttl     = "300"
   records = ["${aws_lb.managed.dns_name}"]
+}
+
+resource "aws_route53_record" "managed_lb_public" {
+  zone_id = "${var.public_zone_id}"
+  name    = "${var.tier_name}-managed"
+  type    = "CNAME"
+  ttl     = "300"
+  records = ["${aws_lb.managed.dns_name}"]
+}
+
+output "internal_fqdn_managed_lb" {
+  value = "${aws_route53_record.managed_lb_internal.fqdn}"
+}
+
+output "public_fqdn_managed_lb" {
+  value = "${aws_route53_record.managed_lb_public.fqdn}"
 }
