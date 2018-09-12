@@ -29,7 +29,7 @@ resource "aws_ebs_volume" "delius_db_xvdc" {
   size              = 200
   encrypted         = true
   kms_key_id        = "${module.kms_key_app.kms_arn}"
-  tags = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-delius-db-xvdc"))}"
+  tags              = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-delius-db-xvdc"))}"
 }
 
 resource "aws_volume_attachment" "delius_db_xvdc" {

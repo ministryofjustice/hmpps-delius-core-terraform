@@ -1,8 +1,8 @@
 #TODO: add oracle RDS for OID
 
 resource "aws_instance" "oid_db" {
-  ami                         = "${data.aws_ami.centos.id}"
-  instance_type               = "${var.instance_type_db}"
+  ami               = "${data.aws_ami.centos.id}"
+  instance_type     = "${var.instance_type_db}"
   subnet_id         = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
   key_name          = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   source_dest_check = false
@@ -14,14 +14,14 @@ resource "aws_instance" "oid_db" {
 
   root_block_device = {
     delete_on_termination = true
-    volume_size = 50
-    volume_type = "gp2"
+    volume_size           = 50
+    volume_type           = "gp2"
   }
 
   tags = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db"))}"
 
   lifecycle {
-    ignore_changes = [ "ami" ]
+    ignore_changes = ["ami"]
   }
 }
 
@@ -31,13 +31,13 @@ resource "aws_ebs_volume" "oid_db_xvdc" {
   size              = 200
   encrypted         = true
   kms_key_id        = "${module.kms_key_app.kms_arn}"
-  tags = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-xvdc"))}"
+  tags              = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-xvdc"))}"
 }
 
 resource "aws_volume_attachment" "oid_db_xvdc" {
-  device_name = "/dev/xvdc"
-  instance_id = "${aws_instance.oid_db.id}"
-  volume_id   = "${aws_ebs_volume.oid_db_xvdc.id}"
+  device_name  = "/dev/xvdc"
+  instance_id  = "${aws_instance.oid_db.id}"
+  volume_id    = "${aws_ebs_volume.oid_db_xvdc.id}"
   force_detach = true
 }
 
