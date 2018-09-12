@@ -48,7 +48,7 @@ resource "aws_route53_record" "delius_db_internal" {
 }
 
 resource "aws_route53_record" "delius_db_public" {
-  zone_id = "${data.aws_route53_zone.zone.zone_id}"
+  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
   name    = "db"
   type    = "A"
   ttl     = "300"

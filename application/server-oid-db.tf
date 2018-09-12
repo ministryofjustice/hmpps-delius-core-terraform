@@ -50,7 +50,7 @@ resource "aws_route53_record" "oid_db_internal" {
 }
 
 resource "aws_route53_record" "oid_db_public" {
-  zone_id = "${data.aws_route53_zone.zone.zone_id}"
+  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
   name    = "oid-db"
   type    = "A"
   ttl     = "300"

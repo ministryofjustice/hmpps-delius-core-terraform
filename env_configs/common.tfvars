@@ -1,7 +1,3 @@
-route53_domain_private = "probation.hmpps.dsd.io"
-
-whitelist_cidrs = ["217.33.148.210/32", "81.134.202.29/32"] # Studio, VPN
-
 weblogic_domain_ports = {
   oid_admin         = "7005" #user admin
   oid_managed       = "7001" #not used
