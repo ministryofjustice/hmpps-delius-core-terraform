@@ -60,6 +60,10 @@ hs_err_pid*
 # Terraform
 **/terraform.plan
 **/.terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+**.plan
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/

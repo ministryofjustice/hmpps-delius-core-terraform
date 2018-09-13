@@ -1,7 +1,28 @@
+# terraform {
+#   # The configuration for this backend will be filled in by Terragrunt
+#   backend          "s3"             {}
+#   required_version = "~> 0.11"
+# }
+#
+# provider "aws" {
+#   region  = "${var.region}"
+#   version = "~> 1.16"
+# }
+#
+# # Shared data and constants
+#
+# locals {
+#   environment_name = "${var.project_name}-${var.environment_type}"
+# }
+#
+# data "aws_vpc" "vpc" {
+#   tags = {
+#     Name = "${local.environment_name}"
+#   }
+# }
 terraform {
   # The configuration for this backend will be filled in by Terragrunt
-  backend          "s3"             {}
-  required_version = "~> 0.11"
+  backend "s3" {}
 }
 
 provider "aws" {
@@ -9,91 +30,43 @@ provider "aws" {
   version = "~> 1.16"
 }
 
-# Shared data and constants
+#-------------------------------------------------------------
+### Getting the current vpc
+#-------------------------------------------------------------
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
 
-locals {
-  environment_name = "${var.project_name}-${var.environment_type}"
-}
-
-data "aws_vpc" "vpc" {
-  tags = {
-    Name = "${local.environment_name}"
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "vpc/terraform.tfstate"
+    region = "${var.region}"
   }
 }
 
-data "aws_subnet_ids" "private" {
-  tags = {
-    Type = "private"
+#-------------------------------------------------------------
+### Getting the shared vpc security groups
+#-------------------------------------------------------------
+data "terraform_remote_state" "vpc_security_groups" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "security-groups/terraform.tfstate"
+    region = "${var.region}"
   }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
-data aws_subnet_ids "public" {
-  tags = {
-    Type = "public"
+#-------------------------------------------------------------
+### Getting the sub project security groups
+#-------------------------------------------------------------
+data "terraform_remote_state" "delius_core_security_groups" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/security-groups/terraform.tfstate"
+    region = "${var.region}"
   }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_subnet" "public_a" {
-  tags = {
-    Name = "${local.environment_name}_public_a"
-  }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_subnet" "db_a" {
-  tags {
-    Name = "${local.environment_name}_db_a"
-  }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_subnet" "private_a" {
-  tags {
-    Name = "${local.environment_name}_private_a"
-  }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "ssh_external_in" {
-  name   = "${local.environment_name}-ssh-external-in"
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "weblogic_in" {
-  name   = "${local.environment_name}-weblogic-in"
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "weblogic_out" {
-  name   = "${local.environment_name}-weblogic-out"
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "db_in" {
-  name   = "${local.environment_name}-db-in"
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "db_out" {
-  name   = "${local.environment_name}-db-out"
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "weblogic_lb_in" {
-  name = "${local.environment_name}-weblogic-lb-in"
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_security_group" "weblogic_lb_out" {
-  name = "${local.environment_name}-weblogic-lb-out"
-  vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
 data "aws_ami" "centos" {
@@ -114,8 +87,4 @@ data "aws_ami" "centos" {
     name   = "root-device-type"
     values = ["ebs"]
   }
-}
-
-data "aws_kms_key" "master" {
-  key_id = "alias/${local.environment_name}-master"
 }

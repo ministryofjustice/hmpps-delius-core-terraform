@@ -1,31 +1,33 @@
-output "weblogic_public_dns" {
-  value = "${aws_route53_record.weblogic.fqdn}"
+output "public_fqdn_delius_db" {
+  value = "${aws_route53_record.delius_db_public.fqdn}"
 }
 
-output "weblogic_private_ip" {
-  value = "${aws_instance.weblogic.private_ip}"
+output "internal_fqdn_delius_db" {
+  value = "${aws_route53_record.delius_db_internal.fqdn}"
 }
 
-output "db_public_dns" {
-  value = "${aws_route53_record.db.fqdn}"
+output "private_ip_delius_db" {
+  value = "${aws_instance.delius_db.private_ip}"
 }
 
-output "db_private_ip" {
-  value = "${aws_instance.db.private_ip}"
+output "public_fqdn_oid_db" {
+  value = "${aws_route53_record.oid_db_public.fqdn}"
 }
 
-output "oid_weblogic_public_dns" {
-  value = "${aws_route53_record.oid_weblogic.fqdn}"
+output "internal_fqdn_oid_db" {
+  value = "${aws_route53_record.oid_db_internal.fqdn}"
 }
 
-output "oid_weblogic_private_ip" {
-  value = "${aws_instance.oid_weblogic.private_ip}"
-}
-
-output "oid_db_public_dns" {
-  value = "${aws_route53_record.oid_db.fqdn}"
-}
-
-output "oid_db_private_ip" {
+output "private_ip_oid_db" {
   value = "${aws_instance.oid_db.private_ip}"
 }
+
+#
+# output "oid_db_public_dns" {
+#   value = "${aws_route53_record.oid_db.fqdn}"
+# }
+#
+# output "oid_db_private_ip" {
+#   value = "${aws_instance.oid_db.private_ip}"
+# }
+

@@ -1,7 +1,6 @@
 terraform {
   # The configuration for this backend will be filled in by Terragrunt
-  backend          "s3"             {}
-  required_version = "~> 0.11"
+  backend "s3" {}
 }
 
 provider "aws" {
@@ -9,30 +8,15 @@ provider "aws" {
   version = "~> 1.16"
 }
 
-# Shared data and constants
+#-------------------------------------------------------------
+### Getting the current vpc
+#-------------------------------------------------------------
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
 
-locals {
-  environment_name = "${var.project_name}-${var.environment_type}"
-}
-
-data "aws_vpc" "vpc" {
-  tags = {
-    Name = "${local.environment_name}"
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "vpc/terraform.tfstate"
+    region = "${var.region}"
   }
-}
-
-data "aws_subnet" "public_a" {
-  tags = {
-    Name = "${local.environment_name}_public_a"
-  }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
-}
-
-data "aws_subnet" "public_b" {
-  tags = {
-    Name = "${local.environment_name}_public_b"
-  }
-
-  vpc_id = "${data.aws_vpc.vpc.id}"
 }
