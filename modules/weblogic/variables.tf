@@ -92,3 +92,8 @@ variable "ami_id" {
   description = "AWS AMI ID"
   type        = "string"
 }
+
+variable "iam_instance_profile" {
+  description = "iam instance profile id"
+  type        = "string"
+}

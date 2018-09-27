@@ -1,11 +1,12 @@
 #TODO: add oracle RDS for OID
 
 resource "aws_instance" "oid_db" {
-  ami               = "${data.aws_ami.centos.id}"
-  instance_type     = "${var.instance_type_db}"
-  subnet_id         = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
-  key_name          = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
-  source_dest_check = false
+  ami                  = "${data.aws_ami.centos.id}"
+  instance_type        = "${var.instance_type_db}"
+  subnet_id            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
+  key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
+  iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
+  source_dest_check    = false
 
   vpc_security_group_ids = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",

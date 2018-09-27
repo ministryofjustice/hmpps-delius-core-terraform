@@ -16,3 +16,8 @@ weblogic_domain_ports = {
 #SPG has activeMQ running incomming
 #database talks to activemq on spg weblogic domain
 #spg talks to spg-weblogic-domain over activemq
+#  # engineering
+# dependencies_bucket_arn = "arn:aws:s3:::tf-eu-west-2-hmpps-eng-dev-artefacts-s3bucket"
+
+# dev
+dependencies_bucket_arn = "arn:aws:s3:::tf-eu-west-2-hmpps-eng-dev-delius-core-dependencies-s3bucket"

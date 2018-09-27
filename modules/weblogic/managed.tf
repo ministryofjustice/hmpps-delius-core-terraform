@@ -1,11 +1,12 @@
 # Managed server (TODO: ASG)
 
 resource "aws_instance" "managed" {
-  ami               = "${var.ami_id}"
-  instance_type     = "${var.managed_instance_type}"
-  subnet_id         = "${var.private_subnet}"
-  key_name          = "${var.key_name}"
-  source_dest_check = false
+  ami                  = "${var.ami_id}"
+  instance_type        = "${var.managed_instance_type}"
+  subnet_id            = "${var.private_subnet}"
+  key_name             = "${var.key_name}"
+  iam_instance_profile = "${var.iam_instance_profile}"
+  source_dest_check    = false
 
   vpc_security_group_ids = ["${var.managed_security_groups}"]
 
