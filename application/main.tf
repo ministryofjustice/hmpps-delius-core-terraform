@@ -88,3 +88,23 @@ data "aws_ami" "centos" {
     values = ["ebs"]
   }
 }
+
+data "aws_ami" "centos_wls" {
+  owners      = ["895523100917"]
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["HMPPS Delius-Core Weblogic Managed adminAndManagedAmis *"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+}
