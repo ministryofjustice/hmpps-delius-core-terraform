@@ -1,7 +1,7 @@
 #TODO: add oracle RDS for OID
 
 resource "aws_instance" "oid_db" {
-  ami                  = "${data.aws_ami.centos.id}"
+  ami                  = "${data.aws_ami.centos_oracle_db.id}"
   instance_type        = "${var.instance_type_db}"
   subnet_id            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"

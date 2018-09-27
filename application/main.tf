@@ -108,3 +108,23 @@ data "aws_ami" "centos_wls" {
     values = ["ebs"]
   }
 }
+
+data "aws_ami" "centos_oracle_db" {
+  owners      = ["895523100917"]
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["HMPPS Delius-Core OracleDB master *"] 
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+}
