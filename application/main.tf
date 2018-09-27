@@ -95,7 +95,7 @@ data "aws_ami" "centos_wls" {
 
   filter {
     name   = "name"
-    values = ["HMPPS Delius-Core Weblogic Managed adminAndManagedAmis *"]
+    values = ["HMPPS Delius-Core Weblogic Managed adminAndManagedAmis master *"]
   }
 
   filter {
