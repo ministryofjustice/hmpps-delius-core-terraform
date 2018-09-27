@@ -48,7 +48,7 @@ resource "aws_security_group_rule" "wsae_admin_elb_in" {
   protocol          = "tcp"
   from_port         = "${var.weblogic_domain_ports["spg_admin"]}"
   to_port           = "${var.weblogic_domain_ports["spg_admin"]}"
-  cidr_blocks       = [ "${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}" ]
+  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
 }
 
 resource "aws_security_group" "weblogic_spg_admin" {
@@ -76,6 +76,32 @@ resource "aws_security_group_rule" "wsae_admin_elb" {
   source_security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
 }
 
+# This is a temp solution to enable quick access to yum repos from dev env
+# during discovery.
+resource "aws_security_group_rule" "spg_admin_egress_80" {
+  count             = "${var.egress_80}"
+  security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "yum repos"
+}
+
+# This is a temp solution to enable quick access to S3 bucket from dev env
+# during discovery.
+resource "aws_security_group_rule" "spg_admin_egress_443" {
+  count             = "${var.egress_443}"
+  security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "s3"
+}
+
 resource "aws_security_group" "weblogic_spg_managed" {
   name        = "${var.environment_name}-weblogic-spg-managed"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
@@ -99,4 +125,30 @@ resource "aws_security_group_rule" "spg_elb" {
   from_port                = "${var.weblogic_domain_ports["spg_managed"]}"
   to_port                  = "${var.weblogic_domain_ports["spg_managed"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
+}
+
+# This is a temp solution to enable quick access to yum repos from dev env
+# during discovery.
+resource "aws_security_group_rule" "spg_egress_80" {
+  count             = "${var.egress_80}"
+  security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "yum repos"
+}
+
+# This is a temp solution to enable quick access to S3 bucket from dev env
+# during discovery.
+resource "aws_security_group_rule" "spg_egress_443" {
+  count             = "${var.egress_443}"
+  security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "s3"
 }

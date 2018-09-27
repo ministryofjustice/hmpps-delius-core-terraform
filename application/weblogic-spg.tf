@@ -27,16 +27,17 @@ module "spg" {
     data.terraform_remote_state.vpc.vpc_public-subnet-az3,
   )}"
 
-  tags              = "${data.terraform_remote_state.vpc.tags}"
-  environment_name  = "${var.environment_name}"
-  vpc_id            = "${data.terraform_remote_state.vpc.vpc_id}"
-  key_name          = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
-  kms_key_id        = "${module.kms_key_app.kms_arn}"
-  public_zone_id    = "${data.terraform_remote_state.vpc.public_zone_id}"
-  private_zone_id   = "${data.terraform_remote_state.vpc.public_zone_id}"
-  ami_id            = "${data.aws_ami.centos_wls.id}"
-  managed_elb_sg_id = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_elb_id}"
-  admin_elb_sg_id   = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_admin_elb_id}"
+  tags                 = "${data.terraform_remote_state.vpc.tags}"
+  environment_name     = "${var.environment_name}"
+  vpc_id               = "${data.terraform_remote_state.vpc.vpc_id}"
+  key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
+  kms_key_id           = "${module.kms_key_app.kms_arn}"
+  public_zone_id       = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_zone_id      = "${data.terraform_remote_state.vpc.public_zone_id}"
+  ami_id               = "${data.aws_ami.centos_wls.id}"
+  managed_elb_sg_id    = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_elb_id}"
+  admin_elb_sg_id      = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_admin_elb_id}"
+  iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
 }
 
 output "internal_fqdn_spg_admin" {

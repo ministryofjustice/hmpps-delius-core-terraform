@@ -48,7 +48,7 @@ resource "aws_security_group_rule" "wnae_admin_elb_in" {
   protocol          = "tcp"
   from_port         = "${var.weblogic_domain_ports["ndelius_admin"]}"
   to_port           = "${var.weblogic_domain_ports["ndelius_admin"]}"
-  cidr_blocks       = [ "${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}" ]
+  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
 }
 
 resource "aws_security_group" "weblogic_ndelius_admin" {
