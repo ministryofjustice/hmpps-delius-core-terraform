@@ -34,7 +34,7 @@ module "ndelius" {
   kms_key_id        = "${module.kms_key_app.kms_arn}"
   public_zone_id    = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id   = "${data.terraform_remote_state.vpc.public_zone_id}"
-  ami_id            = "${data.aws_ami.centos.id}"
+  ami_id            = "${data.aws_ami.centos_wls.id}"
   managed_elb_sg_id = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_managed_elb_id}"
   admin_elb_sg_id   = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_admin_elb_id}"
 }
