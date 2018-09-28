@@ -56,7 +56,7 @@ resource "aws_security_group_rule" "spg_admin_elb_ingress" {
   from_port         = "${var.weblogic_domain_ports["spg_admin"]}"
   to_port           = "${var.weblogic_domain_ports["spg_admin"]}"
   cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
-  description       = "admins in via bastion"
+  description       = "Admins in via bastion"
 }
 
 ################################################################################
@@ -95,7 +95,7 @@ resource "aws_security_group_rule" "spg_admin_egress_1521" {
   from_port                = 1521
   to_port                  = 1521
   source_security_group_id = "${aws_security_group.delius_db_in.id}"
-  description              = "delius db"
+  description              = "Delius db"
 }
 
 # This is a temp solution to enable quick access to yum repos from dev env
@@ -160,7 +160,7 @@ resource "aws_security_group_rule" "spg_managed_egress_1521" {
   from_port                = 1521
   to_port                  = 1521
   source_security_group_id = "${aws_security_group.delius_db_in.id}"
-  description              = "delius db"
+  description              = "Delius db"
 }
 
 # This is a temp solution to enable quick access to yum repos from dev env
