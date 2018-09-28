@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "spg_managed_elb_ingress" {
   from_port         = "${var.weblogic_domain_ports["spg_managed"]}"
   to_port           = "${var.weblogic_domain_ports["spg_managed"]}"
   cidr_blocks       = ["0.0.0.0/0"]
-  description       = "world in"
+  description       = "World in"
 }
 
 ################################################################################
