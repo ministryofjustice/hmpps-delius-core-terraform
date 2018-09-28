@@ -26,19 +26,37 @@ resource "aws_instance" "oid_db" {
   }
 }
 
-resource "aws_ebs_volume" "oid_db_xvdc" {
+resource "aws_ebs_volume" "oid_db_xvdd" {
   availability_zone = "${aws_instance.oid_db.availability_zone}"
-  type              = "gp2"
-  size              = 200
+  type              = "io1"
+  iops              = 1000
+  size              = 50
   encrypted         = true
   kms_key_id        = "${module.kms_key_app.kms_arn}"
-  tags              = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-xvdc"))}"
+  tags              = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-xvdd"))}"
 }
 
-resource "aws_volume_attachment" "oid_db_xvdc" {
-  device_name  = "/dev/xvdc"
+resource "aws_volume_attachment" "oid_db_xvdd" {
+  device_name  = "/dev/xvdd"
   instance_id  = "${aws_instance.oid_db.id}"
-  volume_id    = "${aws_ebs_volume.oid_db_xvdc.id}"
+  volume_id    = "${aws_ebs_volume.oid_db_xvdd.id}"
+  force_detach = true
+}
+
+resource "aws_ebs_volume" "oid_db_xvde" {
+  availability_zone = "${aws_instance.oid_db.availability_zone}"
+  type              = "io1"
+  iops              = 1000
+  size              = 50
+  encrypted         = true
+  kms_key_id        = "${module.kms_key_app.kms_arn}"
+  tags              = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-xvde"))}"
+}
+
+resource "aws_volume_attachment" "oid_db_xvde" {
+  device_name  = "/dev/xvde"
+  instance_id  = "${aws_instance.oid_db.id}"
+  volume_id    = "${aws_ebs_volume.oid_db_xvde.id}"
   force_detach = true
 }
 
