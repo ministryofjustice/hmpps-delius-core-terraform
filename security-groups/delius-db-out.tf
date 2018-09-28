@@ -1,5 +1,8 @@
 # delius-db-out.tf
 
+################################################################################
+## delius_db_out
+################################################################################
 resource "aws_security_group" "delius_db_out" {
   name        = "${var.environment_name}-delius-db-out"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"

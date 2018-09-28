@@ -1,5 +1,8 @@
 # weblogic-oid.tf
 
+################################################################################
+## weblogic_oid_managed_elb
+################################################################################
 resource "aws_security_group" "weblogic_oid_managed_elb" {
   name        = "${var.environment_name}-weblogic-oid-managed-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
@@ -17,33 +20,39 @@ output "sg_weblogic_oid_managed_elb_id" {
 
 #Allow other weblogic domains into the managed boxes on the LDAP port
 
-resource "aws_security_group_rule" "managed_elb_in_spg_managed" {
-  security_group_id        = "${aws_security_group.weblogic_oid_managed_elb.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
-}
-
-resource "aws_security_group_rule" "managed_elb_in_interface_managed" {
+resource "aws_security_group_rule" "managed_elb_ingress_interface_managed" {
   security_group_id        = "${aws_security_group.weblogic_oid_managed_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
   to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_interface_managed.id}"
+  description              = "Interface managed in"
 }
 
-resource "aws_security_group_rule" "managed_elb_in_ndelius_managed" {
+resource "aws_security_group_rule" "managed_elb_ingress_ndelius_managed" {
   security_group_id        = "${aws_security_group.weblogic_oid_managed_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
   to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
+  description              = "Delius managed in"
 }
 
+resource "aws_security_group_rule" "managed_elb_ingress_spg_managed" {
+  security_group_id        = "${aws_security_group.weblogic_oid_managed_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
+  to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
+  description              = "SPG managed in"
+}
+
+################################################################################
+## weblogic_oid_admin_elb
+################################################################################
 resource "aws_security_group" "weblogic_oid_admin_elb" {
   name        = "${var.environment_name}-weblogic-oid-admin-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
@@ -60,15 +69,19 @@ output "sg_weblogic_oid_admin_elb_id" {
 }
 
 #Allow admins into the admin box
-resource "aws_security_group_rule" "woae_admin_elb_in" {
+resource "aws_security_group_rule" "oid_admin_elb_ingress" {
   security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "${var.weblogic_domain_ports["oid_admin"]}"
   to_port           = "${var.weblogic_domain_ports["oid_admin"]}"
   cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
+  description       = "Admins in via bastion"
 }
 
+################################################################################
+## weblogic_oid_admin
+################################################################################
 resource "aws_security_group" "weblogic_oid_admin" {
   name        = "${var.environment_name}-weblogic-oid-admin"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
@@ -85,7 +98,7 @@ output "sg_weblogic_oid_admin_id" {
 }
 
 #Allow the ELB into the Admin port
-resource "aws_security_group_rule" "woae_admin_elb" {
+resource "aws_security_group_rule" "oid_admin_ingress_elb" {
   security_group_id        = "${aws_security_group.weblogic_oid_admin.id}"
   type                     = "ingress"
   protocol                 = "tcp"
@@ -94,6 +107,45 @@ resource "aws_security_group_rule" "woae_admin_elb" {
   source_security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
 }
 
+resource "aws_security_group_rule" "oid_admin_egress_1521" {
+  security_group_id        = "${aws_security_group.weblogic_oid_admin.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = "${aws_security_group.oid_db_in.id}"
+  description              = "OID db"
+}
+
+# This is a temp solution to enable quick access to yum repos from dev env
+# during discovery.
+resource "aws_security_group_rule" "oid_admin_egress_80" {
+  count             = "${var.egress_80}"
+  security_group_id = "${aws_security_group.weblogic_oid_admin.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "yum repos"
+}
+
+# This is a temp solution to enable quick access to S3 bucket from dev env
+# during discovery.
+resource "aws_security_group_rule" "oid_admin_egress_443" {
+  count             = "${var.egress_443}"
+  security_group_id = "${aws_security_group.weblogic_oid_admin.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "s3"
+}
+
+################################################################################
+## weblogic_oid_managed
+################################################################################
 resource "aws_security_group" "weblogic_oid_managed" {
   name        = "${var.environment_name}-weblogic-oid-managed"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
@@ -110,11 +162,47 @@ output "sg_weblogic_oid_managed_id" {
 }
 
 #Allow the ELB into the managed port
-resource "aws_security_group_rule" "oid_elb" {
+resource "aws_security_group_rule" "oid_managed_ingress_elb" {
   security_group_id        = "${aws_security_group.weblogic_oid_managed.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["oid_managed"]}"
   to_port                  = "${var.weblogic_domain_ports["oid_managed"]}"
   source_security_group_id = "${aws_security_group.weblogic_oid_managed_elb.id}"
+}
+
+resource "aws_security_group_rule" "oid_managed_egress_1521" {
+  security_group_id        = "${aws_security_group.weblogic_oid_managed.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = "${aws_security_group.oid_db_in.id}"
+  description              = "OID db"
+}
+
+# This is a temp solution to enable quick access to yum repos from dev env
+# during discovery.
+resource "aws_security_group_rule" "oid_managed_egress_80" {
+  count             = "${var.egress_80}"
+  security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "yum repos"
+}
+
+# This is a temp solution to enable quick access to S3 bucket from dev env
+# during discovery.
+resource "aws_security_group_rule" "oid_managed_egress_443" {
+  count             = "${var.egress_443}"
+  security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "s3"
 }
