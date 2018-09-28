@@ -68,29 +68,3 @@ resource "aws_security_group_rule" "weblogic_spg_admin_db_in" {
   to_port                  = "1521"
   source_security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
 }
-
-# This is a temp solution to enable quick access to yum repos from dev env
-# during discovery.
-resource "aws_security_group_rule" "delius_db_egress_80" {
-  count             = "${var.egress_80}"
-  security_group_id = "${aws_security_group.delius_db_in.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "yum repos"
-}
-
-# This is a temp solution to enable quick access to S3 bucket from dev env
-# during discovery.
-resource "aws_security_group_rule" "delius_db_egress_443" {
-  count             = "${var.egress_443}"
-  security_group_id = "${aws_security_group.delius_db_in.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 443
-  to_port           = 443
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "s3"
-}

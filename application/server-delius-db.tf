@@ -9,6 +9,7 @@ resource "aws_instance" "delius_db" {
   vpc_security_group_ids = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_delius_db_in_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_delius_db_out_id}",
   ]
 
   root_block_device = {
