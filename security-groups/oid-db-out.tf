@@ -1,5 +1,8 @@
 # oid-db-out.tf
 
+################################################################################
+## oid_db_out
+################################################################################
 resource "aws_security_group" "oid_db_out" {
   name        = "${var.environment_name}-oid-db-out"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
@@ -37,6 +40,7 @@ resource "aws_security_group_rule" "oid_db_egress_80" {
   from_port         = 80
   to_port           = 80
   cidr_blocks       = ["0.0.0.0/0"]
+  description       = "yum repos"
 }
 
 # This is a temp solution to enable quick access to S3 bucket from dev env
@@ -49,4 +53,5 @@ resource "aws_security_group_rule" "oid_db_egress_443" {
   from_port         = 443
   to_port           = 443
   cidr_blocks       = ["0.0.0.0/0"]
+  description       = "s3"
 }
