@@ -38,6 +38,22 @@ variable "environment_name" {
   type        = "string"
 }
 
+variable "environment_type" {
+  description = "The environment type - e.g. dev"
+}
+
+variable "region" {
+  description = "The AWS region."
+}
+
+variable "environment_identifier" {
+  description = "resource label or name"
+}
+
+variable "short_environment_identifier" {
+  description = "shortend resource label or name"
+}
+
 variable "managed_elb_sg_id" {
   description = "ID for the security group for the ELB"
   type        = "string"
@@ -62,9 +78,14 @@ variable "tier_name" {
   description = "Name of the Weblogic tier"
   type        = "string"
 }
-
+# TODO use one of "vpc_id" or "vpc_account_id"
 variable "vpc_id" {
   description = "VPC ID"
+  type        = "string"
+}
+
+variable "vpc_account_id" {
+  description = "VPC Account ID"
   type        = "string"
 }
 
@@ -85,6 +106,11 @@ variable "public_zone_id" {
 
 variable "private_zone_id" {
   description = "Private internal zone id"
+  type        = "string"
+}
+
+variable "private_domain" {
+  description = "Private internal zone name"
   type        = "string"
 }
 

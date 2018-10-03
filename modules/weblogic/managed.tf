@@ -7,8 +7,8 @@ resource "aws_instance" "managed" {
   key_name             = "${var.key_name}"
   iam_instance_profile = "${var.iam_instance_profile}"
   source_dest_check    = false
-
   vpc_security_group_ids = ["${var.managed_security_groups}"]
+  user_data = "${data.template_file.user_data.rendered}"
 
   root_block_device = {
     delete_on_termination = true
