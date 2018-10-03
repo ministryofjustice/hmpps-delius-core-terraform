@@ -1,78 +1,42 @@
 #TODO: add oracle RDS for OID
 
-resource "aws_instance" "oid_db" {
-  ami                  = "${data.aws_ami.centos_oracle_db.id}"
+module "oid_db" {
+  source              = "../modules/oracle-database"
+  server_name           = "oid-db"
+
+  ami_id                  = "${data.aws_ami.centos_oracle_db.id}"
   instance_type        = "${var.instance_type_db}"
-  subnet_id            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
+  db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
-  source_dest_check    = false
 
-  vpc_security_group_ids = [
+  security_group_ids = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_oid_db_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_oid_db_out_id}",
   ]
 
-  root_block_device = {
-    delete_on_termination = true
-    volume_size           = 50
-    volume_type           = "gp2"
-  }
+  tags                 = "${data.terraform_remote_state.vpc.tags}"
+  environment_name     = "${data.terraform_remote_state.vpc.environment_name}"
+  environment_identifier = "${var.environment_identifier}"
+  short_environment_identifier = "${var.short_environment_identifier}"
 
-  tags = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db"))}"
+  environment_type = "${var.environment_type}"
+  region               = "${var.region}"
 
-  lifecycle {
-    ignore_changes = ["ami"]
-  }
+  kms_key_id           = "${module.kms_key_app.kms_arn}"
+  public_zone_id       = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_zone_id      = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_domain       = "${data.terraform_remote_state.vpc.private_zone_name}"
+  vpc_account_id       = "${data.terraform_remote_state.vpc.vpc_account_id}"
 }
 
-resource "aws_ebs_volume" "oid_db_xvdd" {
-  availability_zone = "${aws_instance.oid_db.availability_zone}"
-  type              = "io1"
-  iops              = 1000
-  size              = 50
-  encrypted         = true
-  kms_key_id        = "${module.kms_key_app.kms_arn}"
-  tags              = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-xvdd"))}"
+output "public_fqdn_oid_db" {
+  value = "${module.oid_db.public_fqdn}"
 }
-
-resource "aws_volume_attachment" "oid_db_xvdd" {
-  device_name  = "/dev/xvdd"
-  instance_id  = "${aws_instance.oid_db.id}"
-  volume_id    = "${aws_ebs_volume.oid_db_xvdd.id}"
-  force_detach = true
+output "internal_fqdn_oid_db" {
+  value = "${module.oid_db.internal_fqdn}"
 }
-
-resource "aws_ebs_volume" "oid_db_xvde" {
-  availability_zone = "${aws_instance.oid_db.availability_zone}"
-  type              = "io1"
-  iops              = 1000
-  size              = 50
-  encrypted         = true
-  kms_key_id        = "${module.kms_key_app.kms_arn}"
-  tags              = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-xvde"))}"
-}
-
-resource "aws_volume_attachment" "oid_db_xvde" {
-  device_name  = "/dev/xvde"
-  instance_id  = "${aws_instance.oid_db.id}"
-  volume_id    = "${aws_ebs_volume.oid_db_xvde.id}"
-  force_detach = true
-}
-
-resource "aws_route53_record" "oid_db_internal" {
-  zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
-  name    = "oid-db"
-  type    = "A"
-  ttl     = "300"
-  records = ["${aws_instance.oid_db.private_ip}"]
-}
-
-resource "aws_route53_record" "oid_db_public" {
-  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
-  name    = "oid-db"
-  type    = "A"
-  ttl     = "300"
-  records = ["${aws_instance.oid_db.private_ip}"]
+output "private_ip_oid_db" {
+  value = "${module.oid_db.private_ip}"
 }
