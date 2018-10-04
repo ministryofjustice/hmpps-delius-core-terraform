@@ -78,6 +78,7 @@ variable "tier_name" {
   description = "Name of the Weblogic tier"
   type        = "string"
 }
+
 # TODO use one of "vpc_id" or "vpc_account_id"
 variable "vpc_id" {
   description = "VPC ID"
