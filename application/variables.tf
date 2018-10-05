@@ -42,5 +42,3 @@ variable "instance_type_db" {
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
-
-# variable "user_data" {}

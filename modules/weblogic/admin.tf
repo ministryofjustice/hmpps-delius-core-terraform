@@ -1,14 +1,14 @@
 # Admin server (TODO: ASG of one)
 
 resource "aws_instance" "admin" {
-  ami                  = "${var.ami_id}"
-  instance_type        = "${var.admin_instance_type}"
-  subnet_id            = "${var.private_subnet}"
-  key_name             = "${var.key_name}"
-  iam_instance_profile = "${var.iam_instance_profile}"
-  source_dest_check    = false
+  ami                    = "${var.ami_id}"
+  instance_type          = "${var.admin_instance_type}"
+  subnet_id              = "${var.private_subnet}"
+  key_name               = "${var.key_name}"
+  iam_instance_profile   = "${var.iam_instance_profile}"
+  source_dest_check      = false
   vpc_security_group_ids = ["${var.admin_security_groups}"]
-  user_data = "${data.template_file.user_data.rendered}"
+  user_data              = "${data.template_file.user_data.rendered}"
 
   root_block_device = {
     delete_on_termination = true

@@ -3,27 +3,25 @@ data "template_file" "user_data" {
   template = "${file("${path.module}/user_data/user_data.sh")}"
 
   vars {
-    env_identifier          = "${var.environment_identifier}"
-    short_env_identifier    = "${var.short_environment_identifier}"
-    region                  = "${var.region}"
-    app_name                = "${var.server_name}"
-    route53_sub_domain      = "${var.environment_name}"
-    private_domain          = "${var.private_domain}"
-    account_id              = "${var.vpc_account_id}"
+    env_identifier       = "${var.environment_identifier}"
+    short_env_identifier = "${var.short_environment_identifier}"
+    region               = "${var.region}"
+    app_name             = "${var.server_name}"
+    route53_sub_domain   = "${var.environment_name}"
+    private_domain       = "${var.private_domain}"
+    account_id           = "${var.vpc_account_id}"
   }
 }
 
-
-
 resource "aws_instance" "oracle_db" {
-  ami                  = "${var.ami_id}"
-  instance_type        = "${var.instance_type}"
-  subnet_id            = "${var.db_subnet}"
-  key_name             = "${var.key_name}"
-  iam_instance_profile = "${var.iam_instance_profile}"
-  source_dest_check    = false
+  ami                    = "${var.ami_id}"
+  instance_type          = "${var.instance_type}"
+  subnet_id              = "${var.db_subnet}"
+  key_name               = "${var.key_name}"
+  iam_instance_profile   = "${var.iam_instance_profile}"
+  source_dest_check      = false
   vpc_security_group_ids = ["${var.security_group_ids}"]
-  user_data = "${data.template_file.user_data.rendered}"
+  user_data              = "${data.template_file.user_data.rendered}"
 
   root_block_device = {
     delete_on_termination = true
@@ -45,7 +43,7 @@ resource "aws_ebs_volume" "oracle_db_xvdd" {
   size              = 50
   encrypted         = true
   kms_key_id        = "${var.kms_key_id}"
-  tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.server_name}-xvdd"))}"
+  tags              = "${merge(var.tags, map("Name", "${var.environment_name}-${var.server_name}-xvdd"))}"
 }
 
 resource "aws_volume_attachment" "oracle_db_xvdd" {
@@ -62,7 +60,7 @@ resource "aws_ebs_volume" "oracle_db_xvde" {
   size              = 50
   encrypted         = true
   kms_key_id        = "${var.kms_key_id}"
-  tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.server_name}-xvde"))}"
+  tags              = "${merge(var.tags, map("Name", "${var.environment_name}-${var.server_name}-xvde"))}"
 }
 
 resource "aws_volume_attachment" "oracle_db_xvde" {

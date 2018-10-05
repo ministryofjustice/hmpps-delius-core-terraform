@@ -1,8 +1,8 @@
 module "delius_db" {
-  source              = "../modules/oracle-database"
-  server_name           = "delius-db"
+  source      = "../modules/oracle-database"
+  server_name = "delius-db"
 
-  ami_id                  = "${data.aws_ami.centos_oracle_db.id}"
+  ami_id               = "${data.aws_ami.centos_oracle_db.id}"
   instance_type        = "${var.instance_type_db}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
@@ -14,27 +14,29 @@ module "delius_db" {
     "${data.terraform_remote_state.delius_core_security_groups.sg_delius_db_out_id}",
   ]
 
-  tags                 = "${data.terraform_remote_state.vpc.tags}"
-  environment_name     = "${data.terraform_remote_state.vpc.environment_name}"
-  environment_identifier = "${var.environment_identifier}"
+  tags                         = "${data.terraform_remote_state.vpc.tags}"
+  environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
+  environment_identifier       = "${var.environment_identifier}"
   short_environment_identifier = "${var.short_environment_identifier}"
 
   environment_type = "${var.environment_type}"
-  region               = "${var.region}"
+  region           = "${var.region}"
 
-  kms_key_id           = "${module.kms_key_app.kms_arn}"
-  public_zone_id       = "${data.terraform_remote_state.vpc.public_zone_id}"
-  private_zone_id      = "${data.terraform_remote_state.vpc.public_zone_id}"
-  private_domain       = "${data.terraform_remote_state.vpc.private_zone_name}"
-  vpc_account_id       = "${data.terraform_remote_state.vpc.vpc_account_id}"
+  kms_key_id      = "${module.kms_key_app.kms_arn}"
+  public_zone_id  = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
+  vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
 }
 
 output "public_fqdn_delius_db" {
   value = "${module.delius_db.public_fqdn}"
 }
+
 output "internal_fqdn_delius_db" {
   value = "${module.delius_db.internal_fqdn}"
 }
+
 output "private_ip_delius_db" {
   value = "${module.delius_db.private_ip}"
 }
