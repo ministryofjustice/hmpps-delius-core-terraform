@@ -32,7 +32,7 @@ resource "aws_instance" "oracle_db" {
   tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.server_name}"))}"
 
   lifecycle {
-    ignore_changes = ["ami"]
+    ignore_changes = ["ami", "user_data"]
   }
 }
 

@@ -19,7 +19,7 @@ resource "aws_instance" "admin" {
   tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-admin"))}"
 
   lifecycle {
-    ignore_changes = ["ami"]
+    ignore_changes = ["ami", "user_data"]
   }
 }
 
