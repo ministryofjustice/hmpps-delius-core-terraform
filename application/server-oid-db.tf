@@ -1,7 +1,7 @@
 #TODO: add oracle RDS for OID
 
 module "oid_db" {
-  source      = "../modules/oracle-database"
+  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
   server_name = "oid-db"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"

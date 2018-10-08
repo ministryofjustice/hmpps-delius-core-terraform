@@ -1,7 +1,7 @@
 # Weblogic tier oid
 
 module "oid" {
-  source              = "../modules/weblogic"
+  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-managed"
   tier_name           = "oid"
   admin_port          = "${var.weblogic_domain_ports["oid_admin"]}"
   admin_instance_type = "${var.instance_type_weblogic}"

@@ -1,7 +1,7 @@
 # Weblogic tier spg
 
 module "spg" {
-  source              = "../modules/weblogic"
+  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-managed"
   tier_name           = "spg"
   admin_port          = "${var.weblogic_domain_ports["spg_admin"]}"
   admin_instance_type = "${var.instance_type_weblogic}"

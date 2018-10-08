@@ -1,5 +1,5 @@
 module "delius_db" {
-  source      = "../modules/oracle-database"
+  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
   server_name = "delius-db"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
