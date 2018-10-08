@@ -1,7 +1,7 @@
 # Weblogic tier ndelius
 
 module "ndelius" {
-  source              = "../modules/weblogic"
+  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-managed"
   tier_name           = "ndelius"
   admin_port          = "${var.weblogic_domain_ports["ndelius_admin"]}"
   admin_instance_type = "${var.instance_type_weblogic}"

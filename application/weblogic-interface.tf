@@ -1,7 +1,7 @@
 # Weblogic tier interface
 
 module "interface" {
-  source              = "../modules/weblogic"
+  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-managed"
   tier_name           = "interface"
   admin_port          = "${var.weblogic_domain_ports["interface_admin"]}"
   admin_instance_type = "${var.instance_type_weblogic}"
