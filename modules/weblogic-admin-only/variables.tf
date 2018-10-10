@@ -38,6 +38,16 @@ variable "public_subnets" {
   type        = "list"
 }
 
+variable "device_name" {
+  description = "EBS volume device name"
+  type        = "string"
+}
+
+variable "mount_point" {
+  description = "EBS volume mounting point"
+  type        = "string"
+}
+
 variable "admin_port" {
   description = "TCP port for the admin server"
   type        = "string"

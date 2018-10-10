@@ -23,6 +23,9 @@ module "interface" {
     data.terraform_remote_state.vpc.vpc_public-subnet-az3,
   )}"
 
+  device_name = "${var.weblogic_ebs["oid_device_name"]}"
+  mount_point = "${var.weblogic_ebs["oid_mount_point"]}"
+
   admin_port   = "${var.weblogic_domain_ports["interface_admin"]}"
   managed_port = "${var.weblogic_domain_ports["interface_managed"]}"
 
@@ -84,4 +87,3 @@ output "public_fqdn_interface_wls_admin_lb" {
 # output "public_fqdn_interface_managed_lb" {
 #   value = "${module.interface.public_fqdn_managed_lb}"
 # }
-

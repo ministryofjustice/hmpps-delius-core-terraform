@@ -33,7 +33,7 @@ resource "aws_ebs_volume" "wls_xvdc" {
 }
 
 resource "aws_volume_attachment" "wls_xvdc" {
-  device_name  = "/dev/xvdc"
+  device_name  = "${var.device_name}"
   instance_id  = "${aws_instance.wls.id}"
   volume_id    = "${aws_ebs_volume.wls_xvdc.id}"
   force_detach = true

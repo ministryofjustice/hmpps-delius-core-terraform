@@ -31,6 +31,11 @@ variable "weblogic_domain_ports" {
   description = "Map of the ports that the weblogic domains use"
 }
 
+variable "weblogic_ebs" {
+  type        = "map"
+  description = "Map of the device names and mount points the weblogic servers use"
+}
+
 variable "instance_type_weblogic" {
   description = "The ec2 instance type"
 }
