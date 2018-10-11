@@ -34,7 +34,12 @@ variable "private_subnet" {
 }
 
 variable "public_subnets" {
-  description = "Subnet for load balancers"
+  description = "Subnet for Managed load balancers"
+  type        = "list"
+}
+
+variable "private_subnets" {
+  description = "Subnet for Admin load balancers"
   type        = "list"
 }
 

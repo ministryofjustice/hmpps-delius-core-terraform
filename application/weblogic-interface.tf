@@ -23,6 +23,12 @@ module "interface" {
     data.terraform_remote_state.vpc.vpc_public-subnet-az3,
   )}"
 
+  private_subnets = "${list(
+    data.terraform_remote_state.vpc.vpc_private-subnet-az1,
+    data.terraform_remote_state.vpc.vpc_private-subnet-az2,
+    data.terraform_remote_state.vpc.vpc_private-subnet-az3,
+  )}"
+
   device_name = "${var.weblogic_ebs["oid_device_name"]}"
   mount_point = "${var.weblogic_ebs["oid_mount_point"]}"
 
@@ -67,23 +73,11 @@ output "public_fqdn_interface_wls_admin_lb" {
   value = "${module.interface.public_fqdn_wls_lb}"
 }
 
-#
-# output "internal_fqdn_interface_managed" {
-#   value = "${module.interface.*.internal_fqdn_managed}"
-# }
-#
-# output "public_fqdn_interface_managed" {
-#   value = "${module.interface.public_fqdn_managed}"
-# }
-#
-# output "private_ip_interface_managed" {
-#   value = "${module.interface.private_ip_managed}"
-# }
-#
-# output "internal_fqdn_interface_managed_lb" {
-#   value = "${module.interface.*.internal_fqdn_managed_lb}"
-# }
-#
-# output "public_fqdn_interface_managed_lb" {
-#   value = "${module.interface.public_fqdn_managed_lb}"
-# }
+
+output "internal_fqdn_interface_managed_lb" {
+  value = "${module.interface.internal_fqdn_managed_lb}"
+}
+
+output "public_fqdn_interface_managed_lb" {
+  value = "${module.interface.public_fqdn_managed_lb}"
+}

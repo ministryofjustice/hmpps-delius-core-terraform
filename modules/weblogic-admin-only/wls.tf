@@ -70,10 +70,11 @@ output "private_ip_wls" {
 # Managed ELB
 
 resource "aws_lb" "wls" {
-  internal        = false
+  name            = "${var.tier_name}-admin"
+  internal        = true
   ip_address_type = "ipv4"
   security_groups = ["${var.admin_elb_sg_id}"]
-  subnets         = ["${var.public_subnets}"]
+  subnets         = ["${var.private_subnets}"]
   tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-wls"))}"
 }
 

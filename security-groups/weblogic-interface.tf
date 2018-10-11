@@ -108,6 +108,16 @@ resource "aws_security_group_rule" "interface_admin_elb_elb_ingress" {
   description              = "Admins via ELB in"
 }
 
+resource "aws_security_group_rule" "interface_admin_bastion_ingress" {
+  security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.weblogic_domain_ports["interface_admin"]}"
+  to_port           = "${var.weblogic_domain_ports["interface_admin"]}"
+  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
+  description       = "Admins in direct via bastion"
+}
+
 resource "aws_security_group_rule" "interface_admin_egress_1521" {
   security_group_id        = "${aws_security_group.weblogic_interface_admin.id}"
   type                     = "egress"
