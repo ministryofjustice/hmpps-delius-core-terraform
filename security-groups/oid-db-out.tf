@@ -29,29 +29,3 @@ output "sg_oid_db_out_id" {
 #   from_port         = "61616"
 #   to_port           = "61617"
 # }
-
-# This is a temp solution to enable quick access to yum repos from dev env
-# during discovery.
-resource "aws_security_group_rule" "oid_db_egress_80" {
-  count             = "${var.egress_80}"
-  security_group_id = "${aws_security_group.oid_db_out.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "yum repos"
-}
-
-# This is a temp solution to enable quick access to S3 bucket from dev env
-# during discovery.
-resource "aws_security_group_rule" "oid_db_egress_443" {
-  count             = "${var.egress_443}"
-  security_group_id = "${aws_security_group.oid_db_out.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 443
-  to_port           = 443
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "s3"
-}

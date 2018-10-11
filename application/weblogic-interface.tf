@@ -13,6 +13,7 @@ module "interface" {
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_admin_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_managed_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
   public_subnets = "${list(
@@ -64,11 +65,11 @@ output "private_ip_interface_wls" {
 }
 
 output "internal_fqdn_interface_wls_admin_lb" {
-  value = "${module.interface.internal_fqdn_wls_lb}"
+  value = "${module.interface.internal_fqdn_admin_lb}"
 }
 
 output "public_fqdn_interface_wls_admin_lb" {
-  value = "${module.interface.public_fqdn_wls_lb}"
+  value = "${module.interface.public_fqdn_admin_lb}"
 }
 
 

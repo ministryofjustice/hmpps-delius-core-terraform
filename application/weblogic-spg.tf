@@ -9,6 +9,7 @@ module "spg" {
   admin_security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_admin_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
   managed_port          = "${var.weblogic_domain_ports["spg_managed"]}"
@@ -17,6 +18,7 @@ module "spg" {
   managed_security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
   private_subnet = "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}"
