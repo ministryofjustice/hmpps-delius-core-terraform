@@ -9,9 +9,9 @@ resource "aws_security_group" "delius_db_out" {
   description = "Delius database out"
   tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-delius-db-out", "Type", "DB"))}"
 
-  # lifecycle {
-  #   create_before_destroy = true
-  # }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 output "sg_delius_db_out_id" {
