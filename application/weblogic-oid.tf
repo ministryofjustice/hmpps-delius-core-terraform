@@ -1,7 +1,7 @@
 # Weblogic tier oid
 
 module "oid" {
-  # source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-managed"
+  # source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-only"
   source               = "../modules/weblogic-admin-only"
   tier_name            = "oid"
   ami_id               = "${data.aws_ami.centos_wls.id}"
