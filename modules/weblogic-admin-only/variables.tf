@@ -28,11 +28,6 @@ variable "security_groups" {
   type        = "list"
 }
 
-variable "private_subnet" {
-  description = "Subnet for the servers"
-  type        = "string"
-}
-
 variable "public_subnets" {
   description = "Subnet for Managed load balancers"
   type        = "list"

@@ -15,8 +15,6 @@ module "interface" {
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_managed_id}",
   ]
 
-  private_subnet = "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}"
-
   public_subnets = "${list(
     data.terraform_remote_state.vpc.vpc_public-subnet-az1,
     data.terraform_remote_state.vpc.vpc_public-subnet-az2,

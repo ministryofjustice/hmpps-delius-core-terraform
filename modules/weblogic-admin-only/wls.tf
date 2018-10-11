@@ -6,7 +6,7 @@ resource "aws_instance" "wls" {
   key_name               = "${var.key_name}"
   iam_instance_profile   = "${var.iam_instance_profile}"
   vpc_security_group_ids = ["${var.security_groups}"]
-  subnet_id              = "${var.private_subnet}"
+  subnet_id              = "${var.private_subnets[0]}"
   user_data              = "${data.template_file.user_data.rendered}"
   source_dest_check      = false
 
