@@ -30,6 +30,16 @@ resource "aws_security_group_rule" "interface_managed_elb_ingress" {
   description       = "World in"
 }
 
+resource "aws_security_group_rule" "interface_managed_elb_egress" {
+  security_group_id        = "${aws_security_group.weblogic_interface_managed_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["interface_managed"]}"
+  to_port                  = "${var.weblogic_domain_ports["interface_managed"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_managed.id}"
+  description              = "ELB out"
+}
+
 ################################################################################
 ## weblogic_interface_admin_elb
 ################################################################################
