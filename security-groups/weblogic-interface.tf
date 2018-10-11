@@ -69,6 +69,16 @@ resource "aws_security_group_rule" "interface_admin_elb_ingress" {
   description       = "Admins in via bastion"
 }
 
+resource "aws_security_group_rule" "interface_admin_elb_egress" {
+  security_group_id        = "${aws_security_group.weblogic_interface_admin_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["interface_admin"]}"
+  to_port                  = "${var.weblogic_domain_ports["interface_admin"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
+  description              = "ELB out"
+}
+
 ################################################################################
 ## weblogic_interface_admin
 ################################################################################
