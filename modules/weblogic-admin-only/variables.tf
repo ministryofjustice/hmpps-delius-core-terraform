@@ -84,7 +84,6 @@ variable "region" {
   description = "The AWS region."
 }
 
-# TODO use one of "vpc_id" or "vpc_account_id"
 variable "vpc_id" {
   description = "VPC ID"
   type        = "string"
