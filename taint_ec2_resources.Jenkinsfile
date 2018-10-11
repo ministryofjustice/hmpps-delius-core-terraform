@@ -24,14 +24,10 @@ def taint_actions = [
 ]
 
 def resources = [
-  '-module="interface" aws_instance.admin',
-  '-module="interface" aws_instance.managed',
-  '-module="ndelius" aws_instance.admin',
-  '-module="ndelius" aws_instance.managed',
-  '-module="oid" aws_instance.admin',
-  '-module="oid" aws_instance.managed',
-  '-module="spg" aws_instance.admin',
-  '-module="spg" aws_instance.managed',
+  '-module="interface" aws_instance.wls',
+  '-module="ndelius" aws_instance.wls',
+  '-module="oid" aws_instance.wls',
+  '-module="spg" aws_instance.wls',
   '-module="delius_db" aws_instance.oracle_db',
   '-module="oid_db" aws_instance.oracle_db'
 ]

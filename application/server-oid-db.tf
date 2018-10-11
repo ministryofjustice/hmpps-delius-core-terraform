@@ -14,6 +14,7 @@ module "oid_db" {
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_oid_db_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_oid_db_out_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
   tags                         = "${data.terraform_remote_state.vpc.tags}"
