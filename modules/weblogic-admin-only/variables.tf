@@ -23,6 +23,16 @@ variable "iam_instance_profile" {
   type        = "string"
 }
 
+variable "device_name" {
+  description = "EBS volume device name"
+  type        = "string"
+}
+
+variable "mount_point" {
+  description = "EBS volume mounting point"
+  type        = "string"
+}
+
 variable "security_groups" {
   description = "Security groups for the admin server"
   type        = "list"
@@ -36,26 +46,6 @@ variable "public_subnets" {
 variable "private_subnets" {
   description = "Subnet for Admin load balancers"
   type        = "list"
-}
-
-variable "device_name" {
-  description = "EBS volume device name"
-  type        = "string"
-}
-
-variable "mount_point" {
-  description = "EBS volume mounting point"
-  type        = "string"
-}
-
-variable "admin_port" {
-  description = "TCP port for the admin server"
-  type        = "string"
-}
-
-variable "managed_port" {
-  description = "TCP port for the managed server"
-  type        = "string"
 }
 
 variable "tags" {
@@ -121,5 +111,15 @@ variable "admin_elb_sg_id" {
 
 variable "managed_elb_sg_id" {
   description = "ID for the security group for the ELB"
+  type        = "string"
+}
+
+variable "admin_port" {
+  description = "TCP port for the admin server"
+  type        = "string"
+}
+
+variable "managed_port" {
+  description = "TCP port for the managed server"
   type        = "string"
 }
