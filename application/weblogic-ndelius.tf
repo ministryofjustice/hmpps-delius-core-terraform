@@ -8,8 +8,6 @@ module "ndelius" {
   instance_type        = "${var.instance_type_weblogic}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
-  device_name          = "${var.weblogic_ebs["ndelius_device_name"]}"
-  mount_point          = "${var.weblogic_ebs["ndelius_mount_point"]}"
 
   security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
@@ -46,6 +44,10 @@ module "ndelius" {
   managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_managed_elb_id}"
   admin_port                   = "${var.weblogic_domain_ports["ndelius_admin"]}"
   managed_port                 = "${var.weblogic_domain_ports["ndelius_managed"]}"
+}
+
+output "ami_ndelius_wls" {
+  value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
 output "internal_fqdn_ndelius_wls" {

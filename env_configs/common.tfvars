@@ -10,17 +10,6 @@ weblogic_domain_ports = {
   spg_managed       = "8080" #TODO: check port for api calls
 }
 
-weblogic_ebs = {
-  oid_device_name       = "/dev/xvdc"
-  oid_mount_point       = "/u01"
-  ndelius_device_name   = "/dev/xvdc"
-  ndelius_mount_point   = "/u01"
-  interface_device_name = "/dev/xvdc"
-  interface_mount_point = "/u01"
-  spg_device_name       = "/dev/xvdc"
-  spg_mount_point       = "/u01"
-}
-
 #TODO: allow JMX ports for weblogic domains from bastion or admin
 
 

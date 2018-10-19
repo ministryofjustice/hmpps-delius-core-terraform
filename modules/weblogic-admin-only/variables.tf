@@ -23,16 +23,6 @@ variable "iam_instance_profile" {
   type        = "string"
 }
 
-variable "device_name" {
-  description = "EBS volume device name"
-  type        = "string"
-}
-
-variable "mount_point" {
-  description = "EBS volume mounting point"
-  type        = "string"
-}
-
 variable "security_groups" {
   description = "Security groups for the admin server"
   type        = "list"

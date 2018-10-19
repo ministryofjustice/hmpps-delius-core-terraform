@@ -32,6 +32,10 @@ module "oid_db" {
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
 }
 
+output "ami_oid_db" {
+  value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
+}
+
 output "public_fqdn_oid_db" {
   value = "${module.oid_db.public_fqdn}"
 }
