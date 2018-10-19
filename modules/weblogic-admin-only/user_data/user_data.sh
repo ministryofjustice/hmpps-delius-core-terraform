@@ -50,8 +50,8 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
-mount_point: "${mount_point}"
-device_name: "${device_name}"
+#mount_point: "${mount_point}"
+#device_name: "${device_name}"
 
 
 EOF
