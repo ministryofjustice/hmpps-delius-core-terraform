@@ -23,22 +23,6 @@ resource "aws_instance" "wls" {
   }
 }
 
-# resource "aws_ebs_volume" "wls_xvdc" {
-#   availability_zone = "${aws_instance.wls.availability_zone}"
-#   type              = "gp2"
-#   size              = 200
-#   encrypted         = true
-#   kms_key_id        = "${var.kms_key_id}"
-#   tags              = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-wls-xvdc"))}"
-# }
-#
-# resource "aws_volume_attachment" "wls_xvdc" {
-#   device_name  = "${var.device_name}"
-#   instance_id  = "${aws_instance.wls.id}"
-#   volume_id    = "${aws_ebs_volume.wls_xvdc.id}"
-#   force_detach = true
-# }
-
 resource "aws_route53_record" "wls_instance_internal" {
   zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}-wls-instance"

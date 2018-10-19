@@ -30,6 +30,10 @@ module "delius_db" {
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
 }
 
+output "ami_delius_db" {
+  value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
+}
+
 output "public_fqdn_delius_db" {
   value = "${module.delius_db.public_fqdn}"
 }
