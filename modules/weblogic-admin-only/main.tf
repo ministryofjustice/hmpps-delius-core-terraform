@@ -11,5 +11,6 @@ data "template_file" "user_data" {
     route53_sub_domain   = "${var.environment_name}"
     private_domain       = "${var.private_domain}"
     account_id           = "${var.vpc_account_id}"
+    bastion_inventory    = "${var.bastion_inventory}"
   }
 }

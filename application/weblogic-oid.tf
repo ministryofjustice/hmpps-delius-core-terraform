@@ -4,7 +4,7 @@ module "oid" {
   # source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-only"
   source               = "../modules/weblogic-admin-only"
   tier_name            = "oid"
-  ami_id               = "${data.aws_ami.centos_wls.id}"
+  ami_id               = "${data.aws_ami.centos_apacheds.id}"
   instance_type        = "${var.instance_type_weblogic}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
@@ -30,6 +30,7 @@ module "oid" {
 
   tags                         = "${data.terraform_remote_state.vpc.tags}"
   environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
+  bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
   environment_identifier       = "${var.environment_identifier}"
   short_environment_identifier = "${var.short_environment_identifier}"
   environment_type             = "${var.environment_type}"
@@ -47,7 +48,7 @@ module "oid" {
 }
 
 output "ami_oid_wls" {
-  value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
+  value = "${data.aws_ami.centos_apacheds.id} - ${data.aws_ami.centos_apacheds.name}"
 }
 
 output "internal_fqdn_oid_wls" {
