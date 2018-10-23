@@ -1,5 +1,7 @@
 weblogic_domain_ports = {
-  oid_admin         = "7005" #user admin
+  # oid_admin         = "7005" #user admin
+  oid_admin         = "10389" #user admin
+  oid_admin_tls     = "10636" #user admin
   oid_managed       = "7001" #not used
   oid_ldap          = "3060" #app talking to oid
   ndelius_admin     = "7001"

@@ -79,6 +79,17 @@ resource "aws_security_group_rule" "oid_admin_elb_ingress" {
   description       = "Admins in via bastion"
 }
 
+#Allow admins into the admin box
+resource "aws_security_group_rule" "oid_admin_tls_elb_ingress" {
+  security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.weblogic_domain_ports["oid_admin_tls"]}"
+  to_port           = "${var.weblogic_domain_ports["oid_admin_tls"]}"
+  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
+  description       = "Admins in via bastion"
+}
+
 ################################################################################
 ## weblogic_oid_admin
 ################################################################################
@@ -105,6 +116,16 @@ resource "aws_security_group_rule" "oid_admin_ingress_elb" {
   from_port                = "${var.weblogic_domain_ports["oid_admin"]}"
   to_port                  = "${var.weblogic_domain_ports["oid_admin"]}"
   source_security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
+}
+
+resource "aws_security_group_rule" "oid_admin_ingress_bastion" {
+  security_group_id        = "${aws_security_group.weblogic_oid_admin.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["oid_admin"]}"
+  to_port                  = "${var.weblogic_domain_ports["oid_admin"]}"
+  cidr_blocks              = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
+  description              = "Admins in via bastion"
 }
 
 resource "aws_security_group_rule" "oid_admin_egress_1521" {
