@@ -1,5 +1,9 @@
 # hmpps-delius-core-terraform
-Infrastructure and provisioning of Delius Core environments
+Infrastructure and provisioning of Delius Core Applications into Delius environments.
+This project has a dependecy on:
+https://github.com/ministryofjustice/hmpps-env-configs
+https://github.com/ministryofjustice/hmpps-delius-network-terraform
+
 
 ### Purpose
 This repo contains terraform code to create Delius Core testing environments.
@@ -15,8 +19,52 @@ You should not be referencing IDs or other data directly emitted as outputs from
 Each configuration constructs any local identifiers from a short list of variables (region, project, environment type, vpc CIDR, account ID) passed in.
 You should not leak derived values into the env_configs directory (see below)
 
-There is also a env_config directory, which contains configuration specific to each environment.
-Each environment has a pair of files - a <env_type>.properties.sh file which sets up environment variables identifying the environment, and a <dev_name>.tfvars file which contains environment-specific variables.
+## Environment configurations
+
+The environment configurations are to be copied into a directory named `env_configs` with the following example structure:
+
+```
+env_configs
+├── common
+│   ├── common.properties
+│   └── common.tfvars
+└── delius-core-dev
+    ├── delius-core-dev.credentials.yml
+    ├── delius-core-dev.properties
+    └── delius-core-dev.tfvars
+```
+
+An example method of obtaining the configs would be:
+```
+CONFIG_BRANCH=master
+ENVIRONMENT_NAME=delius-core-dev
+
+mkdir -p env_configs/common
+
+wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/common/common.properties" --output-document="env_configs/common/common.properties"
+wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/common/common.tfvars" --output-document="env_configs/common/common.tfvars"
+wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.properties" --output-document="env_configs/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.properties"
+wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.tfvars" --output-document="env_configs/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.tfvars"
+
+source env_configs/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.properties
+```
+
+or
+```
+CONFIG_BRANCH=master
+TARGET_DIR=env_configs
+
+git clone --depth 1 -b "${CONFIG_BRANCH}" git@github.com:ministryofjustice/hmpps-env-configs.git "${TARGET_DIR}"
+```
+
+## Run order
+
+Start with security-groups
+then
+```
+└── security-groups
+    └── application
+```
 
 The configurations are run with terragrunt, and all terragrunt related code should remain in the env_configs file and 2 files in the top-level folder of each configuration (main.tf, terraform.tfvars).
 You should not leak terragrunt related code into other files or modules within the configuration.
@@ -25,7 +73,7 @@ You should not leak terragrunt related code into other files or modules within t
 
 To run a single configuration locally, with terragrunt installed:
 
-1. Run one of the <env_type>.properties.sh files, to select which environment you are working with.
+1. Run one of the <env_type>/<env_type>.properties.sh files, to select which environment you are working with.
 2. Navigate to the directory corresponding to the component you want to update
 3. terragrunt init
 4. terragrunt plan
