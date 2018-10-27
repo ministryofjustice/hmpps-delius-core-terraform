@@ -1,4 +1,5 @@
 def project = [:]
+project.config    = 'hmpps-env-configs'
 project.network   = 'hmpps-delius-network-terraform'
 project.dcore     = 'hmpps-delius-core-terraform'
 project.alfresco  = 'hmpps-delius-alfresco-shared-terraform'
@@ -40,22 +41,23 @@ def prepare_env() {
 
 }
 
-def plan_submodule(config_name, git_project_dir, submodule_name) {
+def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
         #!/usr/env/bin bash
-        echo "TF PLAN for ${config_name} | ${submodule_name} - component from git project ${git_project_dir}"
+        echo "TF PLAN for ${env_name} | ${submodule_name} - component from git project ${git_project_dir}"
         set +e
+        cp -R -n "${config_dir}" "${git_project_dir}/env_configs"
         cd "${git_project_dir}"
         docker run --rm \
             -v `pwd`:/home/tools/data \
             -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
             bash -c "\
-                source env_configs/${config_name}.properties; \
+                source env_configs/${env_name}/${env_name}.properties; \
                 cd ${submodule_name}; \
                 if [ -d .terraform ]; then rm -rf .terraform; fi; sleep 5; \
                 terragrunt init; \
-                terragrunt plan -detailed-exitcode --out ${config_name}.plan" \
+                terragrunt plan -detailed-exitcode --out ${env_name}.plan" \
             || exitcode="\$?"; \
             echo "\$exitcode" > plan_ret; \
             if [ "\$exitcode" == '1' ]; then exit 1; else exit 0; fi
@@ -65,37 +67,39 @@ def plan_submodule(config_name, git_project_dir, submodule_name) {
     }
 }
 
-def apply_submodule(config_name, git_project_dir, submodule_name) {
+def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
         #!/usr/env/bin bash
-        echo "TF APPLY for ${config_name} | ${submodule_name} - component from git project ${git_project_dir}"
+        echo "TF APPLY for ${env_name} | ${submodule_name} - component from git project ${git_project_dir}"
         set +e
+        cp -R -n "${config_dir}" "${git_project_dir}/env_configs"
         cd "${git_project_dir}"
         docker run --rm \
         -v `pwd`:/home/tools/data \
         -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
         bash -c "\
-            source env_configs/${config_name}.properties; \
+            source env_configs/${env_name}/${env_name}.properties; \
             cd ${submodule_name}; \
-            terragrunt apply ${config_name}.plan"
+            terragrunt apply ${env_name}.plan"
         set -e
         """
     }
 }
 
-def taint_submodule(config_name, git_project_dir, submodule_name, taint_action, resource_name) {
+def taint_submodule(config_dir, env_name, git_project_dir, submodule_name, taint_action, resource_name) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
         #!/usr/env/bin bash
-        echo "TF TAINT for ${config_name} | ${submodule_name} - component from git project ${git_project_dir}"
+        echo "TF TAINT for ${env_name} | ${submodule_name} - component from git project ${git_project_dir}"
         set +e
+        cp -R -n "${config_dir}" "${git_project_dir}/env_configs"
         cd "${git_project_dir}"
         docker run --rm \
         -v `pwd`:/home/tools/data \
         -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
         bash -c "\
-            source env_configs/${config_name}.properties; \
+            source env_configs/${env_name}/${env_name}.properties; \
             cd ${submodule_name}; \
             terragrunt ${taint_action} ${resource_name}"
         set -e
@@ -124,11 +128,11 @@ def confirm() {
     }
 }
 
-def do_terraform(config_name, git_project, component) {
-    if (plan_submodule(config_name, git_project, component) == "2") {
+def do_terraform(config_dir, env_name, git_project, component) {
+    if (plan_submodule(config_dir, env_name, git_project, component) == "2") {
         confirm()
         if (env.Continue == "true") {
-            apply_submodule(config_name, git_project, component)
+            apply_submodule(config_dir, env_name, git_project, component)
         }
     }
     else {
@@ -172,15 +176,12 @@ pipeline {
 
         stage('setup') {
             steps {
-                // dir( project.network ) {
-                //   git url: 'git@github.com:ministryofjustice/hmpps-delius-network-terraform.git', branch: 'feature/delius_test_perf_stage_pre-prod_prod_JenkinsFile', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
-                // }
-                dir( project.dcore ) {
-                  git url: 'git@github.com:ministryofjustice/hmpps-delius-core-terraform', branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
-                }
-                // dir( project.alfresco ) {
-                //   git url: 'git@github.com:ministryofjustice/hmpps-delius-alfresco-shared-terraform', branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
-                // }
+              dir( project.config ) {
+                git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+              }
+              dir( project.dcore ) {
+                git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+              }
                 prepare_env()
             }
         }
@@ -188,7 +189,7 @@ pipeline {
         stage('Taint resource') {
           steps {
             script {
-              taint_submodule(environment_name, project.dcore, 'application', taint_action, resource_name)
+              taint_submodule(project.config, environment_name, project.dcore, 'application', taint_action, resource_name)
             }
           }
         }
@@ -196,7 +197,7 @@ pipeline {
         stage('Plan & Apply change') {
           steps {
             script {
-              do_terraform(environment_name, project.dcore, 'application')
+              do_terraform(project.config, environment_name, project.dcore, 'application')
             }
           }
         }
