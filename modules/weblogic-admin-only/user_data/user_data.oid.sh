@@ -38,8 +38,10 @@ cat << EOF > ~/requirements.yml
   version: centos
 - name: users
   src: singleplatform-eng.users
-# - name: rsyslog
-#   src: https://github.com/ministryofjustice/hmpps-rsyslog-role
+- name: hmpps-delius-core-apacheds-bootstrap
+  version: feature/initial_bootstrap
+  src: https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap
+
 # - name: elasticbeats
 #   src: https://github.com/ministryofjustice/hmpps-beats-monitoring
 # - name: tier specific role
@@ -66,6 +68,7 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
+     - hmpps-delius-core-apacheds-bootstrap
      # - rsyslog
      # - elasticbeats
      # - tier specific role

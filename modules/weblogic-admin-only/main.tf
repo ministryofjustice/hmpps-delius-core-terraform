@@ -1,7 +1,7 @@
 #TODO: ASG for managed should nightly cycle boxes
 
 data "template_file" "user_data" {
-  template = "${file("${path.module}/user_data/user_data.sh")}"
+  template = "${file("${path.module}/user_data/user_data.${var.tier_name}.sh")}"
 
   vars {
     env_identifier       = "${var.environment_identifier}"
