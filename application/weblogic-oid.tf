@@ -11,8 +11,7 @@ module "oid" {
 
   security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_admin_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_managed_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
@@ -43,8 +42,8 @@ module "oid" {
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
   admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_admin_elb_id}"
   managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_managed_elb_id}"
-  admin_port                   = "${var.weblogic_domain_ports["oid_admin"]}"
-  managed_port                 = "${var.weblogic_domain_ports["oid_managed"]}"
+  admin_port                   = "${var.ldap_ports["ldap"]}"
+  managed_port                 = "${var.ldap_ports["ldap"]}"
 }
 
 output "ami_oid_wls" {

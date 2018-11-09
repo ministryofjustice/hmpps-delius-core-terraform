@@ -24,8 +24,8 @@ resource "aws_security_group_rule" "managed_elb_ingress_interface_managed" {
   security_group_id        = "${aws_security_group.weblogic_oid_managed_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_interface_managed.id}"
   description              = "Interface managed in"
 }
@@ -34,8 +34,8 @@ resource "aws_security_group_rule" "managed_elb_ingress_ndelius_managed" {
   security_group_id        = "${aws_security_group.weblogic_oid_managed_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
   description              = "Delius managed in"
 }
@@ -44,8 +44,8 @@ resource "aws_security_group_rule" "managed_elb_ingress_spg_managed" {
   security_group_id        = "${aws_security_group.weblogic_oid_managed_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
   description              = "SPG managed in"
 }
@@ -73,8 +73,8 @@ resource "aws_security_group_rule" "oid_admin_elb_ingress" {
   security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["oid_admin"]}"
-  to_port           = "${var.weblogic_domain_ports["oid_admin"]}"
+  from_port         = "${var.ldap_ports["ldap"]}"
+  to_port           = "${var.ldap_ports["ldap"]}"
   cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
   description       = "Admins in via bastion"
 }
@@ -84,8 +84,8 @@ resource "aws_security_group_rule" "oid_admin_tls_elb_ingress" {
   security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["oid_admin_tls"]}"
-  to_port           = "${var.weblogic_domain_ports["oid_admin_tls"]}"
+  from_port         = "${var.ldap_ports["ldap_tls"]}"
+  to_port           = "${var.ldap_ports["ldap_tls"]}"
   cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
   description       = "Admins in via bastion"
 }
@@ -113,19 +113,19 @@ resource "aws_security_group_rule" "oid_admin_ingress_elb" {
   security_group_id        = "${aws_security_group.weblogic_oid_admin.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_admin"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_admin"]}"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_oid_admin_elb.id}"
 }
 
 resource "aws_security_group_rule" "oid_admin_ingress_bastion" {
-  security_group_id        = "${aws_security_group.weblogic_oid_admin.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_admin"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_admin"]}"
-  cidr_blocks              = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
-  description              = "Admins in via bastion"
+  security_group_id = "${aws_security_group.weblogic_oid_admin.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.ldap_ports["ldap"]}"
+  to_port           = "${var.ldap_ports["ldap"]}"
+  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
+  description       = "Admins in via bastion"
 }
 
 resource "aws_security_group_rule" "oid_admin_egress_1521" {
@@ -161,8 +161,8 @@ resource "aws_security_group_rule" "oid_managed_ingress_elb" {
   security_group_id        = "${aws_security_group.weblogic_oid_managed.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_managed"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_managed"]}"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_oid_managed_elb.id}"
 }
 

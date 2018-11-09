@@ -20,15 +20,15 @@ output "sg_weblogic_spg_managed_elb_id" {
 
 #Allow users into the managed boxes on the useful port
 #TODO: Do we build a list of allowed source in or?
-resource "aws_security_group_rule" "spg_managed_elb_ingress" {
-  security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["spg_managed"]}"
-  to_port           = "${var.weblogic_domain_ports["spg_managed"]}"
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "World in"
-}
+// resource "aws_security_group_rule" "spg_managed_elb_ingress" {
+//   security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
+//   type              = "ingress"
+//   protocol          = "tcp"
+//   from_port         = "${var.weblogic_domain_ports["spg_jms_broker"]}"
+//   to_port           = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
+//   cidr_blocks       = ["0.0.0.0/0"]
+//   description       = "World in"
+// }
 
 ################################################################################
 ## weblogic-spg-admin-elb
@@ -59,6 +59,16 @@ resource "aws_security_group_rule" "spg_admin_elb_ingress" {
   description       = "Admins in via bastion"
 }
 
+resource "aws_security_group_rule" "spg_admin_elb_ingress_delius_db" {
+  security_group_id        = "${aws_security_group.weblogic_spg_admin_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
+  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
+  source_security_group_id = "${aws_security_group.delius_db_out.id}"
+  description              = "From Delius db into SPG JMS Broker ELB"
+}
+
 ################################################################################
 ## weblogic-spg-admin
 ################################################################################
@@ -86,6 +96,16 @@ resource "aws_security_group_rule" "spg_admin_ingress_elb" {
   to_port                  = "${var.weblogic_domain_ports["spg_admin"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
   description              = "Admins via ELB in"
+}
+
+resource "aws_security_group_rule" "spg_admin_ingress_delius_db" {
+  security_group_id        = "${aws_security_group.weblogic_spg_admin.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
+  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
+  source_security_group_id = "${aws_security_group.delius_db_out.id}"
+  description              = "From Delius db into SPG JMS Broker"
 }
 
 resource "aws_security_group_rule" "spg_admin_egress_1521" {
@@ -121,8 +141,8 @@ resource "aws_security_group_rule" "spg_managed_ingress_elb" {
   security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["spg_managed"]}"
-  to_port                  = "${var.weblogic_domain_ports["spg_managed"]}"
+  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
+  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
   description              = "ELB in"
 }
@@ -141,8 +161,8 @@ resource "aws_security_group_rule" "spg_managed_egress_oid_ldap" {
   security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["oid_ldap"]}"
-  to_port                  = "${var.weblogic_domain_ports["oid_ldap"]}"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_oid_managed_elb.id}"
   description              = "OID LDAP out"
 }

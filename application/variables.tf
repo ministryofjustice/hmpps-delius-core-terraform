@@ -31,6 +31,11 @@ variable "weblogic_domain_ports" {
   description = "Map of the ports that the weblogic domains use"
 }
 
+variable "ldap_ports" {
+  type        = "map"
+  description = "Map of the ports that the ldap ports"
+}
+
 variable "instance_type_weblogic" {
   description = "The ec2 instance type"
 }
