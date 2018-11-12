@@ -112,7 +112,8 @@ data "aws_ami" "centos_apacheds" {
   most_recent = true
 
   filter {
-    name   = "name"
+    name = "name"
+
     # values = ["HMPPS Delius-Core ApacheDS master *"]
     values = ["HMPPS Delius-Core ApacheDS feature/ApacheDS *"]
   }

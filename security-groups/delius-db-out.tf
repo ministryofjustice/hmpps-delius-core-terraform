@@ -17,3 +17,23 @@ resource "aws_security_group" "delius_db_out" {
 output "sg_delius_db_out_id" {
   value = "${aws_security_group.delius_db_out.id}"
 }
+
+resource "aws_security_group_rule" "delius_db_out_spg_message" {
+  security_group_id        = "${aws_security_group.delius_db_out.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
+  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
+  description              = "Delius db out SPG JMS Broker"
+}
+
+resource "aws_security_group_rule" "delius_db_out_spg_message_elb" {
+  security_group_id        = "${aws_security_group.delius_db_out.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
+  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
+  description              = "Delius db out SPG JMS Broker"
+}
