@@ -163,6 +163,16 @@ resource "aws_security_group_rule" "spg_managed_egress_oid_ldap" {
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
+  description              = "OID LDAP out"
+}
+
+resource "aws_security_group_rule" "spg_managed_egress_oid_ldap_elb" {
+  security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_oid_managed_elb.id}"
   description              = "OID LDAP out"
 }

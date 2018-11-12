@@ -26,18 +26,18 @@ resource "aws_security_group_rule" "ndelius_managed_elb_ingress" {
   protocol          = "tcp"
   from_port         = "${var.weblogic_domain_ports["ndelius_managed"]}"
   to_port           = "${var.weblogic_domain_ports["ndelius_managed"]}"
-  cidr_blocks       = "${var.user_access_cidr_blocks}"
+  cidr_blocks       = ["${var.user_access_cidr_blocks}"]
   description       = "World in"
 }
 
 resource "aws_security_group_rule" "ndelius_managed_elb_egress_ndelius" {
-  security_group_id = "${aws_security_group.weblogic_ndelius_managed_elb.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["ndelius_managed"]}"
-  to_port           = "${var.weblogic_domain_ports["ndelius_managed"]}"
-  source_security_group_id        = "${aws_security_group.weblogic_ndelius_managed.id}"
-  description       = "Out to ndelius service"
+  security_group_id        = "${aws_security_group.weblogic_ndelius_managed_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["ndelius_managed"]}"
+  to_port                  = "${var.weblogic_domain_ports["ndelius_managed"]}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
+  description              = "Out to ndelius service"
 }
 
 ################################################################################
@@ -69,14 +69,14 @@ resource "aws_security_group_rule" "ndelius_admin_elb_ingress" {
   description       = "Admins in via bastion"
 }
 
-resource "aws_security_group_rule" "ndelius_managed_elb_egress_ndelius" {
-  security_group_id = "${aws_security_group.weblogic_ndelius_admin_elb.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["ndelius_admin"]}"
-  to_port           = "${var.weblogic_domain_ports["ndelius_admin"]}"
-  source_security_group_id        = "${aws_security_group.weblogic_ndelius_admin.id}"
-  description       = "Out to ndelius service"
+resource "aws_security_group_rule" "ndelius_admin_elb_egress_ndelius" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_admin_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["ndelius_admin"]}"
+  to_port                  = "${var.weblogic_domain_ports["ndelius_admin"]}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_admin.id}"
+  description              = "Out to ndelius service"
 }
 
 ################################################################################
@@ -158,6 +158,16 @@ resource "aws_security_group_rule" "ndelius_managed_egress_1521" {
 }
 
 resource "aws_security_group_rule" "ndelius_managed_egress_oid_ldap" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_managed.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_oid_managed.id}"
+  description              = "OID LDAP out"
+}
+
+resource "aws_security_group_rule" "ndelius_managed_egress_oid_ldap_elb" {
   security_group_id        = "${aws_security_group.weblogic_ndelius_managed.id}"
   type                     = "egress"
   protocol                 = "tcp"
