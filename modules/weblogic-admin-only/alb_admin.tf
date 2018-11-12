@@ -14,6 +14,11 @@ resource "aws_lb_target_group" "admin" {
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
   tags     = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-admin"))}"
+
+  health_check {
+    path = "${var.admin_health_check["path"]}"
+    matcher = "${var.admin_health_check["matcher"]}"
+  }
 }
 
 resource "aws_lb_target_group_attachment" "admin" {
