@@ -164,6 +164,27 @@ resource "aws_security_group_rule" "oid_managed_ingress_elb" {
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.weblogic_oid_managed_elb.id}"
+  description              = "ELB MANAGED IN"
+}
+
+resource "aws_security_group_rule" "oid_managed_ingress_ndelius_wls" {
+  security_group_id        = "${aws_security_group.weblogic_oid_managed.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
+  description              = "NDELIUS IN"
+}
+
+resource "aws_security_group_rule" "oid_managed_ingress_spg_wls" {
+  security_group_id        = "${aws_security_group.weblogic_oid_managed.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
+  description              = "SPG IN"
 }
 
 resource "aws_security_group_rule" "oid_managed_egress_1521" {

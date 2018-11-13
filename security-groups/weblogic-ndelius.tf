@@ -26,8 +26,18 @@ resource "aws_security_group_rule" "ndelius_managed_elb_ingress" {
   protocol          = "tcp"
   from_port         = "${var.weblogic_domain_ports["ndelius_managed"]}"
   to_port           = "${var.weblogic_domain_ports["ndelius_managed"]}"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["${var.user_access_cidr_blocks}"]
   description       = "World in"
+}
+
+resource "aws_security_group_rule" "ndelius_managed_elb_egress_ndelius" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_managed_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["ndelius_managed"]}"
+  to_port                  = "${var.weblogic_domain_ports["ndelius_managed"]}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
+  description              = "Out to ndelius service"
 }
 
 ################################################################################
@@ -57,6 +67,16 @@ resource "aws_security_group_rule" "ndelius_admin_elb_ingress" {
   to_port           = "${var.weblogic_domain_ports["ndelius_admin"]}"
   cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
   description       = "Admins in via bastion"
+}
+
+resource "aws_security_group_rule" "ndelius_admin_elb_egress_ndelius" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_admin_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["ndelius_admin"]}"
+  to_port                  = "${var.weblogic_domain_ports["ndelius_admin"]}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_admin.id}"
+  description              = "Out to ndelius service"
 }
 
 ################################################################################
@@ -143,32 +163,16 @@ resource "aws_security_group_rule" "ndelius_managed_egress_oid_ldap" {
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_oid_managed_elb.id}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
   description              = "OID LDAP out"
 }
 
-# This is a temp solution to enable quick access to yum repos from dev env
-# during discovery.
-resource "aws_security_group_rule" "ndelius_managed_egress_80" {
-  count             = "${var.egress_80}"
-  security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "yum repos"
-}
-
-# This is a temp solution to enable quick access to S3 bucket from dev env
-# during discovery.
-resource "aws_security_group_rule" "ndelius_managed_egress_443" {
-  count             = "${var.egress_443}"
-  security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 443
-  to_port           = 443
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "s3"
+resource "aws_security_group_rule" "ndelius_managed_egress_oid_ldap_elb" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_managed.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  description              = "OID LDAP ELB out"
 }

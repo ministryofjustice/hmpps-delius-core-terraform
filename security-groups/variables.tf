@@ -37,3 +37,8 @@ variable "egress_443" {
 variable "vpc_supernet" {
   description = "VPC CIDR"
 }
+
+variable "user_access_cidr_blocks" {
+  description = "CIDRS for access via public/user network"
+  type        = "list"
+}
