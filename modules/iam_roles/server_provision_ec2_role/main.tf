@@ -28,3 +28,17 @@ resource "aws_iam_role_policy_attachment" "delius_core_dependencies_bucket_acces
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "${aws_iam_policy.delius_core_dependencies_bucket_access.arn}"
 }
+
+data "template_file" "ssm_read_only_policy" {
+  template = "${file("${path.module}/policies/ssm_read_only.json")}"
+}
+
+resource "aws_iam_policy" "delius_core_ssm_read_only" {
+  name   = "${var.environment_name}-ssm-read-only"
+  policy = "${data.template_file.ssm_read_only_policy.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "delius_core_ssm_read_only" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "${aws_iam_policy.delius_core_ssm_read_only.arn}"
+}
