@@ -193,8 +193,8 @@ resource "aws_security_group_rule" "spg_managed_egress_spg_gw" {
   security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "${var.spg_partnergateway_domain_ports["spg_jms_broker"]}"
-  to_port                  = "${var.spg_partnergateway_domain_ports["spg_jms_broker_ssl"]}"
+  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
+  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
   cidr_blocks              = ["${local.private_cidr_block}"]
   description              = "SPG GW out"
 }
