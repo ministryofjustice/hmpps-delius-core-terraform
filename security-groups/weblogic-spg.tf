@@ -178,9 +178,9 @@ resource "aws_security_group_rule" "spg_managed_egress_oid_ldap_elb" {
 }
 
 ## Allow access from SPG GW
-resource "aws_security_group_rule" "spg_managed_igress_spg_gw" {
+resource "aws_security_group_rule" "spg_managed_ingress_spg_gw" {
   security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
-  type                     = "igress"
+  type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
   to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
