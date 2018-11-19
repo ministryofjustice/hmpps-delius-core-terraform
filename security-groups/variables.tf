@@ -19,6 +19,12 @@ variable "weblogic_domain_ports" {
   description = "Map of the ports that the weblogic domains use"
 }
 
+variable "spg_partnergateway_domain_ports" {
+  type        = "map"
+  description = "Map of the ports that the weblogic domains use"
+}
+
+
 variable "ldap_ports" {
   type        = "map"
   description = "Map of the ports that the ldap ports"
