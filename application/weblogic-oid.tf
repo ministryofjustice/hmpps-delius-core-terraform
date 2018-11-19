@@ -45,7 +45,7 @@ module "oid" {
   admin_port                   = "${var.ldap_ports["ldap"]}"
   managed_port                 = "${var.ldap_ports["ldap"]}"
 
-  # Place holder 
+  # Place holder
   # admin_health_check = {
   #   path    = "/NDelius-war"
   #   matcher = "200,302"
@@ -55,6 +55,10 @@ module "oid" {
   #   path    = "/NDelius-war"
   #   matcher = "200,302"
   # }
+  app_bootstrap_name = "hmpps-delius-core-apacheds-bootstrap"
+  app_bootstrap_src =  "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
+  app_bootstrap_version = "feature/initial_bootstrap"
+  app_bootstrap_initial_role = "hmpps-delius-core-apacheds-bootstrap"
 }
 
 output "ami_oid_wls" {

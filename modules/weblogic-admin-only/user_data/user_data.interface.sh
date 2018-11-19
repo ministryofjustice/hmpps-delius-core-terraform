@@ -38,6 +38,10 @@ cat << EOF > ~/requirements.yml
   version: centos
 - name: users
   src: singleplatform-eng.users
+- name: "${app_bootstrap_name}"
+  src: "${app_bootstrap_src}"
+  version: "${app_bootstrap_version}"
+
 # - name: rsyslog
 #   src: https://github.com/ministryofjustice/hmpps-rsyslog-role
 # - name: elasticbeats
@@ -66,6 +70,8 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
+     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_initial_role}"
+     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_secondary_role}"
      # - rsyslog
      # - elasticbeats
      # - tier specific role

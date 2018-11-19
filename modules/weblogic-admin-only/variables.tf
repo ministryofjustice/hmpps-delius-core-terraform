@@ -136,3 +136,35 @@ variable "managed_health_check" {
     "matcher" = "200"
   }
 }
+
+variable "app_bootstrap_name" {
+  description = "app bootstrap name"
+  type        = "string"
+}
+
+variable "app_bootstrap_src" {
+  description = "app bootstrap src"
+  type        = "string"
+}
+
+variable "app_bootstrap_version" {
+  description = "app bootstrap version"
+  type        = "string"
+}
+
+variable "app_bootstrap_initial_role" {
+  description = "app bootstrap initial role name (may be same as app_bootstrap_name)"
+  type        = "string"
+}
+
+variable "app_bootstrap_secondary_role" {
+  description = "app bootstrap supplementary role name (optional)"
+  type        = "string"
+  default     = "nada"
+}
+
+variable "app_bootstrap_tertiary_role" {
+  description = "app bootstrap tertiary role name (optional)"
+  type        = "string"
+  default     = "nada"
+}
