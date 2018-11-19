@@ -185,7 +185,7 @@ resource "aws_security_group_rule" "spg_managed_ingress_spg_gw" {
   from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
   to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
   cidr_blocks              = ["${local.private_cidr_block}"]
-  description              = "SPG GW out"
+  description              = "SPG GW in"
 }
 
 ## Allow access to SPG GW
