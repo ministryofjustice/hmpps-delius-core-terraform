@@ -45,6 +45,16 @@ module "spg" {
   managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_elb_id}"
   admin_port                   = "${var.weblogic_domain_ports["spg_admin"]}"
   managed_port                 = "${var.weblogic_domain_ports["spg_jms_broker"]}"
+
+  admin_health_check = {
+    path    = "/NDelius-war"
+    matcher = "200,302"
+  }
+
+  managed_health_check = {
+    path    = "/NDelius-war"
+    matcher = "200,302"
+  }
 }
 
 output "ami_spg_wls" {

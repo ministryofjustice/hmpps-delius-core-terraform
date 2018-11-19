@@ -44,6 +44,17 @@ module "oid" {
   managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_managed_elb_id}"
   admin_port                   = "${var.ldap_ports["ldap"]}"
   managed_port                 = "${var.ldap_ports["ldap"]}"
+
+  # Place holder 
+  # admin_health_check = {
+  #   path    = "/NDelius-war"
+  #   matcher = "200,302"
+  # }
+  #
+  # managed_health_check = {
+  #   path    = "/NDelius-war"
+  #   matcher = "200,302"
+  # }
 }
 
 output "ami_oid_wls" {

@@ -45,6 +45,16 @@ module "interface" {
   managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_managed_elb_id}"
   admin_port                   = "${var.weblogic_domain_ports["interface_admin"]}"
   managed_port                 = "${var.weblogic_domain_ports["interface_managed"]}"
+
+  admin_health_check = {
+    path    = "/NDelius-war"
+    matcher = "200,302"
+  }
+
+  managed_health_check = {
+    path    = "/NDelius-war"
+    matcher = "200,302"
+  }
 }
 
 output "ami_interface_wls" {
