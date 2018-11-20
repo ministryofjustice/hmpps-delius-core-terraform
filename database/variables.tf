@@ -30,20 +30,6 @@ variable "short_environment_identifier" {
   description = "shortend resource label or name"
 }
 
-variable "weblogic_domain_ports" {
-  type        = "map"
-  description = "Map of the ports that the weblogic domains use"
-}
-
-variable "ldap_ports" {
-  type        = "map"
-  description = "Map of the ports that the ldap ports"
-}
-
-variable "instance_type_weblogic" {
-  description = "The ec2 instance type"
-}
-
 variable "instance_type_db" {
   description = "The ec2 instance type"
 }

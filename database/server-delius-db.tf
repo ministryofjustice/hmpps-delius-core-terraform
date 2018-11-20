@@ -6,7 +6,7 @@ module "delius_db" {
   instance_type        = "${var.instance_type_db}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
-  iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
+  iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
   security_group_ids = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
@@ -24,7 +24,7 @@ module "delius_db" {
   environment_type = "${var.environment_type}"
   region           = "${var.region}"
 
-  kms_key_id      = "${module.kms_key_app.kms_arn}"
+  kms_key_id      = "${data.terraform_remote_state.key_profile.kms_arn_app}"
   public_zone_id  = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
