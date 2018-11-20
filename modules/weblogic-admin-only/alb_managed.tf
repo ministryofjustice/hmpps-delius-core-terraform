@@ -1,7 +1,7 @@
-# Managed ELB
+# # Managed ELB
 
 resource "aws_lb" "managed" {
-  name            = "${var.tier_name}-managed"
+  name            = "${var.short_environment_name}-${var.tier_name}-managed"
   internal        = false
   ip_address_type = "ipv4"
   security_groups = ["${var.managed_elb_sg_id}"]
@@ -39,7 +39,7 @@ resource "aws_lb_listener" "managed" {
 
 resource "aws_route53_record" "managed_lb_internal" {
   zone_id = "${var.private_zone_id}"
-  name    = "${var.tier_name}-managed"
+  name    = "${var.short_environment_name}-${var.tier_name}-managed"
   type    = "CNAME"
   ttl     = "300"
   records = ["${aws_lb.managed.dns_name}"]
@@ -47,7 +47,7 @@ resource "aws_route53_record" "managed_lb_internal" {
 
 resource "aws_route53_record" "managed_lb_public" {
   zone_id = "${var.public_zone_id}"
-  name    = "${var.tier_name}-managed"
+  name    = "${var.short_environment_name}-${var.tier_name}-managed"
   type    = "CNAME"
   ttl     = "300"
   records = ["${aws_lb.managed.dns_name}"]

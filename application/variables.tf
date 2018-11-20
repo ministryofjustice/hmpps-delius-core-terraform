@@ -2,6 +2,10 @@ variable "environment_name" {
   type = "string"
 }
 
+variable "short_environment_name" {
+  type = "string"
+}
+
 variable "project_name" {
   description = "The project name - delius-core"
 }

@@ -48,6 +48,11 @@ variable "environment_name" {
   type        = "string"
 }
 
+variable "short_environment_name" {
+  description = "Shortend name of the environment"
+  type        = "string"
+}
+
 variable "bastion_inventory" {
   description = "Bastion environment inventory"
   type        = "string"

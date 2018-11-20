@@ -33,6 +33,7 @@ module "ndelius" {
   bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
   environment_identifier       = "${var.environment_identifier}"
   short_environment_identifier = "${var.short_environment_identifier}"
+  short_environment_name       = "${var.short_environment_name}"
   environment_type             = "${var.environment_type}"
   region                       = "${var.region}"
   vpc_id                       = "${data.terraform_remote_state.vpc.vpc_id}"
