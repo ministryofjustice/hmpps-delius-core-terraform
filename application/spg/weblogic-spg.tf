@@ -1,18 +1,18 @@
-# Weblogic tier interface
+# Weblogic tier spg
 
-module "interface" {
+module "spg" {
   # source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-only"
-  source               = "../modules/weblogic-admin-only"
-  tier_name            = "interface"
+  source               = "../../modules/weblogic-admin-only"
+  tier_name            = "spg"
   ami_id               = "${data.aws_ami.centos_wls.id}"
   instance_type        = "${var.instance_type_weblogic}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
-  iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
+  iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
   security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_admin_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_managed_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_admin_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
@@ -38,14 +38,14 @@ module "interface" {
   region                       = "${var.region}"
   vpc_id                       = "${data.terraform_remote_state.vpc.vpc_id}"
   vpc_account_id               = "${data.terraform_remote_state.vpc.vpc_account_id}"
-  kms_key_id                   = "${module.kms_key_app.kms_arn}"
+  kms_key_id                   = "${data.terraform_remote_state.key_profile.kms_arn_app}"
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_admin_elb_id}"
-  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_managed_elb_id}"
-  admin_port                   = "${var.weblogic_domain_ports["interface_admin"]}"
-  managed_port                 = "${var.weblogic_domain_ports["interface_managed"]}"
+  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_admin_elb_id}"
+  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_elb_id}"
+  admin_port                   = "${var.weblogic_domain_ports["spg_admin"]}"
+  managed_port                 = "${var.weblogic_domain_ports["spg_jms_broker"]}"
 
   admin_health_check = {
     path    = "/NDelius-war"
@@ -61,37 +61,37 @@ module "interface" {
   app_bootstrap_src =  "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
   app_bootstrap_version = "feature/bootstrap_application_vm"
   app_bootstrap_initial_role = "delius-core"
-  app_bootstrap_secondary_role = "delius-interfaces"
+  app_bootstrap_secondary_role = "delius-spg"
 }
 
-output "ami_interface_wls" {
+output "ami_spg_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "internal_fqdn_interface_wls" {
-  value = "${module.interface.internal_fqdn_wls}"
+output "internal_fqdn_spg_wls" {
+  value = "${module.spg.internal_fqdn_wls}"
 }
 
-output "public_fqdn_interface_wls" {
-  value = "${module.interface.public_fqdn_wls}"
+output "public_fqdn_spg_wls" {
+  value = "${module.spg.public_fqdn_wls}"
 }
 
-output "private_ip_interface_wls" {
-  value = "${module.interface.private_ip_wls}"
+output "private_ip_spg_wls" {
+  value = "${module.spg.private_ip_wls}"
 }
 
-output "internal_fqdn_interface_wls_admin_lb" {
-  value = "${module.interface.internal_fqdn_admin_lb}"
+output "internal_fqdn_spg_wls_admin_lb" {
+  value = "${module.spg.internal_fqdn_admin_lb}"
 }
 
-output "public_fqdn_interface_wls_admin_lb" {
-  value = "${module.interface.public_fqdn_admin_lb}"
+output "public_fqdn_spg_wls_admin_lb" {
+  value = "${module.spg.public_fqdn_admin_lb}"
 }
 
-output "internal_fqdn_interface_managed_lb" {
-  value = "${module.interface.internal_fqdn_managed_lb}"
+output "internal_fqdn_spg_managed_lb" {
+  value = "${module.spg.internal_fqdn_managed_lb}"
 }
 
-output "public_fqdn_interface_managed_lb" {
-  value = "${module.interface.public_fqdn_managed_lb}"
+output "public_fqdn_spg_managed_lb" {
+  value = "${module.spg.public_fqdn_managed_lb}"
 }

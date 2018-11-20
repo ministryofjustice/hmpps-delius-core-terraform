@@ -47,23 +47,16 @@ data "terraform_remote_state" "delius_core_security_groups" {
   }
 }
 
-data "aws_ami" "centos" {
-  owners      = ["895523100917"]
-  most_recent = true
+#-------------------------------------------------------------
+### Getting the sub project keys and profiles
+#-------------------------------------------------------------
+data "terraform_remote_state" "key_profile" {
+  backend = "s3"
 
-  filter {
-    name   = "name"
-    values = ["HMPPS Base CentOS master *"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/key_profile/terraform.tfstate"
+    region = "${var.region}"
   }
 }
 
@@ -74,48 +67,6 @@ data "aws_ami" "centos_wls" {
   filter {
     name   = "name"
     values = ["HMPPS Delius-Core Weblogic-Admin master *"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-}
-
-data "aws_ami" "centos_oracle_db" {
-  owners      = ["895523100917"]
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["HMPPS Delius-Core OracleDB master *"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-}
-
-data "aws_ami" "centos_apacheds" {
-  owners      = ["895523100917"]
-  most_recent = true
-
-  filter {
-    name = "name"
-
-    # values = ["HMPPS Delius-Core ApacheDS master *"]
-    values = ["HMPPS Delius-Core ApacheDS feature/ApacheDS *"]
   }
 
   filter {

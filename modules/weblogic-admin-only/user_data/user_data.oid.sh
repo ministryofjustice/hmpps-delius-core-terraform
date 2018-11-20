@@ -70,7 +70,7 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
-     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}"
+     #- "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}"
      # - rsyslog
      # - elasticbeats
      # - tier specific role
