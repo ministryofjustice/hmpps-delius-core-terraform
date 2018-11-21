@@ -42,3 +42,7 @@ variable "instance_type_weblogic" {
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
+
+variable "ndelius_version" {
+  description = "NDelius version"
+}
