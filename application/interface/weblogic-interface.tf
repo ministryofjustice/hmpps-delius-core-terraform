@@ -62,6 +62,8 @@ module "interface" {
   app_bootstrap_version = "feature/bootstrap_application_vm"
   app_bootstrap_initial_role = "delius-core"
   app_bootstrap_secondary_role = "delius-interfaces"
+
+  ndelius_version = "${var.ndelius_version}"
 }
 
 output "ami_interface_wls" {

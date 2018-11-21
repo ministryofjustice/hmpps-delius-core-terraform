@@ -61,6 +61,8 @@ module "ndelius" {
   app_bootstrap_src =  "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
   app_bootstrap_version = "feature/bootstrap_application_vm"
   app_bootstrap_initial_role = "delius-core"
+
+  ndelius_version = "${var.ndelius_version}"
 }
 
 output "ami_ndelius_wls" {
