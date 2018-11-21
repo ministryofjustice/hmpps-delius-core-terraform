@@ -60,6 +60,8 @@ module "oid" {
   app_bootstrap_src =  "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_version = "feature/initial_bootstrap"
   app_bootstrap_initial_role = "hmpps-delius-core-apacheds-bootstrap"
+
+  ndelius_version = "${var.ndelius_version}"
 }
 
 output "ami_oid_wls" {

@@ -57,6 +57,7 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
+ndelius_version : "${ndelius_version}"
 
 
 EOF
@@ -70,7 +71,7 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
-     #- "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}"
+     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}"
      # - rsyslog
      # - elasticbeats
      # - tier specific role

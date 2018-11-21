@@ -57,6 +57,7 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
+ndelius_version : "${ndelius_version}"
 
 
 EOF

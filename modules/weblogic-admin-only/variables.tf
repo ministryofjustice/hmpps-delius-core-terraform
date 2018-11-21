@@ -173,3 +173,7 @@ variable "app_bootstrap_tertiary_role" {
   type        = "string"
   default     = "nada"
 }
+
+variable "ndelius_version" {
+  description = "NDelius version"
+}
