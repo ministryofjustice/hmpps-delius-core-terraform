@@ -79,3 +79,11 @@ data "aws_ami" "centos_wls" {
     values = ["ebs"]
   }
 }
+
+data "aws_route53_zone" "public" {
+  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+}
+
+data "aws_route53_zone" "private" {
+  zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
+}

@@ -4,7 +4,7 @@ exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
 echo BEGIN
 date '+%Y-%m-%d %H:%M:%S'
 
-yum install -y wget git python-pip
+yum install -y wget git python-pip jq
 pip install -U pip
 pip install ansible ansible==2.6
 
@@ -59,8 +59,26 @@ cat << EOF > ~/vars.yml
 region: "${region}"
 ndelius_version : "${ndelius_version}"
 
+setup_datasources: "${setup_datasources}"
+
+s3_dependencies_bucket: "${s3_dependencies_bucket}"
+database_host: "${database_host}"
+alfresco_host: "${alfresco_host}"
+alfresco_office_host: "${alfresco_office_host}"
+spg_host: "${spg_host}"
+oid_host: "${oid_host}"
+ndelius_display_name: "${ndelius_display_name}"
+ndelius_training_mode: "${ndelius_training_mode}"
+ndelius_log_level: "${ndelius_log_level}"
+ndelius_analytics_tag: "${ndelius_analytics_tag}"
+newtech_search_url: "${newtech_search_url}"
+newtech_pdfgenerator_url: "${newtech_pdfgenerator_url}"
+usermanagement_url: "${usermanagement_url}"
+nomis_url: "${nomis_url}"
+
 
 EOF
+
 cat << EOF > ~/bootstrap.yml
 ---
 
@@ -78,5 +96,29 @@ cat << EOF > ~/bootstrap.yml
      # - tier specific role
 EOF
 
+# get ssm parmaeters
+PARAM=$(aws ssm get-parameters \
+--region eu-west-2 \
+--with-decryption --name \
+"/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password" \
+"/${environment_name}/delius-core/weblogic/${app_name}-domain/remote_broker_username" \
+"/${environment_name}/delius-core/weblogic/${app_name}-domain/remote_broker_password" \
+"/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password" \
+--query Parameters)
+
+# set parameter values
+weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
+remote_broker_username="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_username")) | .Value' --raw-output)"
+remote_broker_password="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_password")) | .Value' --raw-output)"
+ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+
+export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+
 ansible-galaxy install -f -r ~/requirements.yml
-CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml
+CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
+--extra-vars '\
+"weblogic_admin_password":"$weblogic_admin_password", \
+"activemq_remoteCF_username":"$remote_broker_username", \
+"activemq_remoteCF_password":"$remote_broker_password", \
+"ldap_admin_password":"$ldap_admin_password" \
+'
