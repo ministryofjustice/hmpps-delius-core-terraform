@@ -62,7 +62,26 @@ module "ndelius" {
   app_bootstrap_version = "feature/bootstrap_application_vm"
   app_bootstrap_initial_role = "delius-core"
 
+
   ndelius_version = "${var.ndelius_version}"
+
+  ansible_vars = {
+    setup_datasources        = "${var.ansible_vars["setup_datasources"]}"
+    s3_dependencies_bucket   = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
+    database_host            = "${var.ansible_vars["database_host"]}.${data.aws_route53_zone.public.name}"
+    alfresco_host            = "${var.ansible_vars["alfresco_host"]}.${data.aws_route53_zone.public.name}"
+    alfresco_office_host     = "${var.ansible_vars["alfresco_office_host"]}.${data.aws_route53_zone.public.name}"
+    spg_host                 = "${var.ansible_vars["spg_host"]}.${data.aws_route53_zone.public.name}"
+    oid_host                 = "${var.ansible_vars["oid_host"]}.${data.aws_route53_zone.public.name}"
+    ndelius_display_name     = "${var.ansible_vars["ndelius_display_name"]}"
+    ndelius_training_mode    = "${var.ansible_vars["ndelius_training_mode"]}"
+    ndelius_log_level        = "${var.ansible_vars["ndelius_log_level"]}"
+    ndelius_analytics_tag    = "${var.ansible_vars["ndelius_analytics_tag"]}"
+    newtech_search_url       = "${var.ansible_vars["newtech_search_url"]}"
+    newtech_pdfgenerator_url = "${var.ansible_vars["newtech_pdfgenerator_url"]}"
+    usermanagement_url       = "${var.ansible_vars["usermanagement_url"]}"
+    nomis_url                = "${var.ansible_vars["nomis_url"]}"
+  }
 }
 
 output "ami_ndelius_wls" {
