@@ -1,8 +1,7 @@
 # Weblogic tier oid
 
 module "oid" {
-  # source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//weblogic-admin-only"
-  source               = "../../modules/weblogic-admin-only"
+  source               = "../../modules/apacheds-ldap"
   tier_name            = "oid"
   ami_id               = "${data.aws_ami.centos_apacheds.id}"
   instance_type        = "${var.instance_type_weblogic}"
@@ -62,6 +61,17 @@ module "oid" {
   app_bootstrap_initial_role = "hmpps-delius-core-apacheds-bootstrap"
 
   ndelius_version = "${var.ndelius_version}"
+
+  ansible_vars = {
+    s3_dependencies_bucket = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
+    apacheds_version       = "${var.ansible_vars_apacheds["apacheds_version"]}"
+    ldap_protocol          = "${var.ansible_vars_apacheds["ldap_protocol"]}"
+    ldap_port              = "${var.ldap_ports["ldap"]}"
+    bind_user              = "${var.ansible_vars_apacheds["bind_user"]}"
+    # bind_password        = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
+    partition_id           = "${var.ansible_vars_apacheds["partition_id"]}"
+    create_test_users      = "${var.ansible_vars_apacheds["create_test_users"]}"
+  }
 }
 
 output "ami_oid_wls" {
