@@ -51,3 +51,8 @@ variable "ansible_vars" {
   description = "Ansible vars for user_data script"
   type        = "map"
 }
+
+variable "ansible_vars_apacheds" {
+  description = "Ansible (ldap) vars for user_data script "
+  type        = "map"
+}
