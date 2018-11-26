@@ -60,24 +60,42 @@ region: "${region}"
 ndelius_version : "${ndelius_version}"
 
 setup_datasources: "${setup_datasources}"
-
 s3_dependencies_bucket: "${s3_dependencies_bucket}"
 database_host: "${database_host}"
 alfresco_host: "${alfresco_host}"
 alfresco_office_host: "${alfresco_office_host}"
 spg_host: "${spg_host}"
-oid_host: "${oid_host}"
+ldap_host: "${ldap_host}"
+
 ndelius_display_name: "${ndelius_display_name}"
 ndelius_training_mode: "${ndelius_training_mode}"
 ndelius_log_level: "${ndelius_log_level}"
 ndelius_analytics_tag: "${ndelius_analytics_tag}"
+
 newtech_search_url: "${newtech_search_url}"
 newtech_pdfgenerator_url: "${newtech_pdfgenerator_url}"
 usermanagement_url: "${usermanagement_url}"
 nomis_url: "${nomis_url}"
 
+domain_name: "${domain_name}"
+server_name: "${server_name}"
+server_params: "${server_params}"
+weblogic_admin_username: "${weblogic_admin_username}"
+server_listen_address: "${server_listen_address}"
+server_listen_port: "${server_listen_port}"
+jvm_mem_args: "${jvm_mem_args}"
+database_port: "${database_port}"
+database_sid: "${database_sid}"
+
+alfresco_port: "${alfresco_port}"
+alfresco_office_port: "${alfresco_office_port}"
+
+ldap_port: "${ldap_port}"
+ldap_principal: "${ldap_principal}"
+partition_id: "${partition_id}"
 
 EOF
+
 cat << EOF > ~/bootstrap.yml
 ---
 
@@ -100,16 +118,19 @@ PARAM=$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
 "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password" \
+"/${environment_name}/delius-core/oracle-database/db/delius_app_schema_password" \
+"/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password" \
 "/${environment_name}/delius-core/weblogic/${app_name}-domain/remote_broker_username" \
 "/${environment_name}/delius-core/weblogic/${app_name}-domain/remote_broker_password" \
-"/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password" \
 --query Parameters)
 
 # set parameter values
 weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
+ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_app_schema_password")) | .Value' --raw-output)"
 remote_broker_username="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_username")) | .Value' --raw-output)"
 remote_broker_password="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_password")) | .Value' --raw-output)"
-ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+
 
 export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 
@@ -117,7 +138,8 @@ ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 --extra-vars '\
 "weblogic_admin_password":"$weblogic_admin_password", \
+"ldap_admin_password":"$ldap_admin_password" \
+"database_password":"$database_password" \
 "activemq_remoteCF_username":"$remote_broker_username", \
 "activemq_remoteCF_password":"$remote_broker_password", \
-"ldap_admin_password":"$ldap_admin_password" \
 '
