@@ -1,5 +1,6 @@
 module "delius_db" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
+  #source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
+  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=feature-oracle-db-vars-ssm//modules//oracle-database"
   server_name = "delius-db"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
@@ -29,6 +30,20 @@ module "delius_db" {
   private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
+
+  ansible_vars = {
+    service_user_name             = "${var.ansible_vars_oracle_db["service_user_name"]}"
+    database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
+    database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
+    database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
+
+    ## the following are retrieved from SSM Parameter Store
+    ## oradb_sys_password            = "/${environment_name}/delius-core/oracle-database/db/oradb_sys_password"
+    ## oradb_system_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_system_password"
+    ## oradb_sysman_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_sysman_password"
+    ## oradb_dbsnmp_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_dbsnmp_password"
+    ## oradb_asmsnmp_password        = "/${environment_name}/delius-core/oracle-database/db/oradb_asmsnmp_password"
+  }
 }
 
 output "ami_delius_db" {
