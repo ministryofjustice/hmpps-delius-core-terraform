@@ -5,7 +5,7 @@ terragrunt = {
   }
 
   dependencies {
-    paths = ["../network"]
+    paths = ["../../security-groups", "../../key_profile", "../../database", "../ldap"]
   }
 
 }

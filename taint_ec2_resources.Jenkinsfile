@@ -29,8 +29,7 @@ def resources = [
   '-module="ndelius" aws_instance.wls',
   '-module="oid" aws_instance.wls',
   '-module="spg" aws_instance.wls',
-  '-module="delius_db" aws_instance.oracle_db',
-  '-module="oid_db" aws_instance.oracle_db'
+  '-module="delius_db" aws_instance.oracle_db'
 ]
 
 def prepare_env() {

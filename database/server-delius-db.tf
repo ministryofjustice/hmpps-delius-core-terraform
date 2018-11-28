@@ -6,7 +6,7 @@ module "delius_db" {
   instance_type        = "${var.instance_type_db}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
-  iam_instance_profile = "${module.s3_access_role.instance_profile_ec2_id}"
+  iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
   security_group_ids = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
@@ -24,11 +24,25 @@ module "delius_db" {
   environment_type = "${var.environment_type}"
   region           = "${var.region}"
 
-  kms_key_id      = "${module.kms_key_app.kms_arn}"
+  kms_key_id      = "${data.terraform_remote_state.key_profile.kms_arn_app}"
   public_zone_id  = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
+
+  ansible_vars = {
+    service_user_name             = "${var.ansible_vars_oracle_db["service_user_name"]}"
+    database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
+    database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
+    database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
+
+    ## the following are retrieved from SSM Parameter Store
+    ## oradb_sys_password            = "/${environment_name}/delius-core/oracle-database/db/oradb_sys_password"
+    ## oradb_system_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_system_password"
+    ## oradb_sysman_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_sysman_password"
+    ## oradb_dbsnmp_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_dbsnmp_password"
+    ## oradb_asmsnmp_password        = "/${environment_name}/delius-core/oracle-database/db/oradb_asmsnmp_password"
+  }
 }
 
 output "ami_delius_db" {

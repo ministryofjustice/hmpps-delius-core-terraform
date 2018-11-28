@@ -19,6 +19,7 @@ exit_on_error() {
   fi
 }
 
+
 cleanUp() {
   echo "cleanUp"
   echo "${ENVIRONMENT_NAME}"
@@ -33,7 +34,10 @@ cleanUp() {
       sleep 5
     fi
   fi
-  rm -rf ${HOME}/data/env_configs/inspec.properties
+  rm -rf ${env_config_dir}
+  rm -rf tmp_config
+  git clone --depth 1 -b "${config_branch}" git@github.com:ministryofjustice/hmpps-env-configs.git ${env_config_dir}
+  rm -rf ${env_config_dir}/.git
 }
 
 ENVIRONMENT_NAME=${1}
@@ -44,6 +48,9 @@ AWS_TOKEN=${4}
 baseDir=$(pwd)
 env_config_dir="${baseDir}/env_configs"
 tfstate="${baseDir}/${COMPONENT}/.terraform/terraform.tfstate"
+
+config_branch="master"
+#config_branch="sandpit-demo"
 
 
 
@@ -86,13 +93,14 @@ tg_applyCmd="terragrunt apply ${ENVIRONMENT_NAME}.plan"
 
 runCmd="docker run -it --rm -v $(pwd):/home/tools/data \
     -v ${HOME}/.aws:/home/tools/.aws \
-    ${TOKEN_ARGS} -e RUNNING_IN_CONTAINER=True mojdigitalstudio/hmpps-terraform-builder:latest sh run.sh ${ENVIRONMENT_NAME} ${ACTION_TYPE} ${COMPONENT}"
+    -v ${HOME}/docker-util-scripts/terraform_builder_run_centralised_envs.sh:/home/tools/run.sh \
+    ${TOKEN_ARGS} -e RUNNING_IN_CONTAINER=True mojdigitalstudio/hmpps-terraform-builder:latest sh /home/tools/run.sh ${ENVIRONMENT_NAME} ${ACTION_TYPE} ${COMPONENT}"
 
 #check env vars for RUNNING_IN_CONTAINER switch
 if [[ ${RUNNING_IN_CONTAINER} == True ]]
 then
     echo "Output -> environment stage"
-    source ${env_config_dir}/${ENVIRONMENT_NAME}.properties
+    source ${env_config_dir}/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.properties
     exit_on_error $? !!
     echo "Output ---> set environment stage complete"
     # set runCmd
