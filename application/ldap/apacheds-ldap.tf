@@ -55,9 +55,9 @@ module "oid" {
   #   path    = "/NDelius-war"
   #   matcher = "200,302"
   # }
-  app_bootstrap_name = "hmpps-delius-core-apacheds-bootstrap"
-  app_bootstrap_src =  "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
-  app_bootstrap_version = "feature/bootstrap_application_vm"
+  app_bootstrap_name         = "hmpps-delius-core-apacheds-bootstrap"
+  app_bootstrap_src          =  "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
+  app_bootstrap_version      = "master"
   app_bootstrap_initial_role = "hmpps-delius-core-apacheds-bootstrap"
 
   ndelius_version = "${var.ndelius_version}"
