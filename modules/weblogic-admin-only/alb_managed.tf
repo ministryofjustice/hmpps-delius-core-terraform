@@ -39,7 +39,7 @@ resource "aws_lb_listener" "managed" {
 
 resource "aws_route53_record" "managed_lb_internal" {
   zone_id = "${var.private_zone_id}"
-  name    = "${var.short_environment_name}-${var.tier_name}-managed"
+  name    = "${var.tier_name}-managed"
   type    = "CNAME"
   ttl     = "300"
   records = ["${aws_lb.managed.dns_name}"]
@@ -47,7 +47,7 @@ resource "aws_route53_record" "managed_lb_internal" {
 
 resource "aws_route53_record" "managed_lb_public" {
   zone_id = "${var.public_zone_id}"
-  name    = "${var.short_environment_name}-${var.tier_name}-managed"
+  name    = "${var.tier_name}-managed"
   type    = "CNAME"
   ttl     = "300"
   records = ["${aws_lb.managed.dns_name}"]

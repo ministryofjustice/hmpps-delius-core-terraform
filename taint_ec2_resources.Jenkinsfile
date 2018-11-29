@@ -25,11 +25,10 @@ def taint_actions = [
 ]
 
 def resources = [
-  '-module="interface" aws_instance.wls',
-  '-module="ndelius" aws_instance.wls',
-  '-module="oid" aws_instance.wls',
-  '-module="spg" aws_instance.wls',
-  '-module="delius_db" aws_instance.oracle_db'
+  'interface',
+  'ndelius',
+  'oid',
+  'spg'
 ]
 
 def prepare_env() {
@@ -188,7 +187,7 @@ pipeline {
         stage('Taint resource') {
           steps {
             script {
-              taint_submodule(project.config, environment_name, project.dcore, 'application', taint_action, resource_name)
+              taint_submodule(project.config, environment_name, project.dcore, 'application/' + resource_name, taint_action, '-module="' + resource_name + '" aws_instance.wls')
             }
           }
         }
@@ -196,7 +195,7 @@ pipeline {
         stage('Plan & Apply change') {
           steps {
             script {
-              do_terraform(project.config, environment_name, project.dcore, 'application')
+              do_terraform(project.config, environment_name, project.dcore, 'application/' + resource_name)
             }
           }
         }
