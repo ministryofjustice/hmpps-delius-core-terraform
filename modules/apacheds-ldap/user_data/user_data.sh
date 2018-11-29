@@ -5,6 +5,7 @@ echo BEGIN
 date '+%Y-%m-%d %H:%M:%S'
 
 yum install -y wget git python-pip
+
 pip install -U pip
 pip install ansible ansible==2.6
 
