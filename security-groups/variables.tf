@@ -48,3 +48,7 @@ variable "user_access_cidr_blocks" {
   description = "CIDRS for access via public/user network"
   type        = "list"
 }
+
+variable "tags" {
+  type = "map"
+}

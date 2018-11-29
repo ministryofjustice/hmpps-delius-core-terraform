@@ -7,7 +7,7 @@ resource "aws_security_group" "common_out" {
   name        = "${var.environment_name}-common-out"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Common egress rules"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-common-out", "Type", "COMMON"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-common-out", "Type", "COMMON"))}"
 
   lifecycle {
     create_before_destroy = true

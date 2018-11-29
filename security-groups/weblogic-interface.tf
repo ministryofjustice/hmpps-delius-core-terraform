@@ -7,7 +7,7 @@ resource "aws_security_group" "weblogic_interface_managed_elb" {
   name        = "${var.environment_name}-weblogic-interface-managed-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic interface admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-interface-managed-elb", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-managed-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -47,7 +47,7 @@ resource "aws_security_group" "weblogic_interface_admin_elb" {
   name        = "${var.environment_name}-weblogic-interface-admin-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic interface admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-interface-admin-elb", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-admin-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -86,7 +86,7 @@ resource "aws_security_group" "weblogic_interface_admin" {
   name        = "${var.environment_name}-weblogic-interface-admin"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic interface admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-interface-admin", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-admin", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -135,7 +135,7 @@ resource "aws_security_group" "weblogic_interface_managed" {
   name        = "${var.environment_name}-weblogic-interface-managed"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic interface managed servers"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-interface-managed", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-managed", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true

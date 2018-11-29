@@ -42,3 +42,7 @@ variable "ansible_vars_oracle_db" {
   description = "Ansible (oracle_db) vars for user_data script "
   type        = "map"
 }
+
+variable "tags" {
+  type = "map"
+}

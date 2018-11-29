@@ -17,3 +17,7 @@ variable "short_environment_name" {
 variable "dependencies_bucket_arn" {
   description = "The S3 bucket arn for software and application dependencies"
 }
+
+variable "tags" {
+  type = "map"
+}
