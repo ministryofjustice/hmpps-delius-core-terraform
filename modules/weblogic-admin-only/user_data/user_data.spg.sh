@@ -4,7 +4,7 @@ exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
 echo BEGIN
 date '+%Y-%m-%d %H:%M:%S'
 
-yum install -y wget git python-pip jq
+yum install -y wget git python-pip
 pip install -U pip
 pip install ansible ansible==2.6
 
