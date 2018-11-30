@@ -61,3 +61,7 @@ variable "ldap_ports" {
   type        = "map"
   description = "Map of the ports that the ldap ports"
 }
+
+variable "tags" {
+  type = "map"
+}

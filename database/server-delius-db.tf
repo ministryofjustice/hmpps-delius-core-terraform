@@ -15,7 +15,7 @@ module "delius_db" {
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
-  tags                         = "${data.terraform_remote_state.vpc.tags}"
+  tags                         = "${var.tags}"
   environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
   bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
   environment_identifier       = "${var.environment_identifier}"

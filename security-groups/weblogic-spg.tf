@@ -7,7 +7,7 @@ resource "aws_security_group" "weblogic_spg_managed_elb" {
   name        = "${var.environment_name}-weblogic-spg-managed-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic spg admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-spg-managed-elb", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-managed-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -37,7 +37,7 @@ resource "aws_security_group" "weblogic_spg_admin_elb" {
   name        = "${var.environment_name}-weblogic-spg-admin-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic spg admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-spg-admin-elb", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-admin-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -76,7 +76,7 @@ resource "aws_security_group" "weblogic_spg_admin" {
   name        = "${var.environment_name}-weblogic-spg-admin"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic spg admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-spg-admin", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-admin", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -125,7 +125,7 @@ resource "aws_security_group" "weblogic_spg_managed" {
   name        = "${var.environment_name}-weblogic-spg-managed"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic spg managed servers"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-spg-managed", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-managed", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true

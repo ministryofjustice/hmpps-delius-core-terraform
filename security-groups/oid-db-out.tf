@@ -7,7 +7,7 @@ resource "aws_security_group" "oid_db_out" {
   name        = "${var.environment_name}-oid-db-out"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "OID Database out"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-oid-db-out", "Type", "DB"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-oid-db-out", "Type", "DB"))}"
 
   lifecycle {
     create_before_destroy = true

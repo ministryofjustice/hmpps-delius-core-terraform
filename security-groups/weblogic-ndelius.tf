@@ -7,7 +7,7 @@ resource "aws_security_group" "weblogic_ndelius_managed_elb" {
   name        = "${var.environment_name}-weblogic-ndelius-managed-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic ndelius admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-ndelius-managed-elb", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-ndelius-managed-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -47,7 +47,7 @@ resource "aws_security_group" "weblogic_ndelius_admin_elb" {
   name        = "${var.environment_name}-weblogic-ndelius-admin-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic ndelius admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-ndelius-admin-elb", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-ndelius-admin-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -86,7 +86,7 @@ resource "aws_security_group" "weblogic_ndelius_admin" {
   name        = "${var.environment_name}-weblogic-ndelius-admin"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic ndelius admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-ndelius-admin", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-ndelius-admin", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -125,7 +125,7 @@ resource "aws_security_group" "weblogic_ndelius_managed" {
   name        = "${var.environment_name}-weblogic-ndelius-managed"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic ndelius managed servers"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-weblogic-ndelius-managed", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-ndelius-managed", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true

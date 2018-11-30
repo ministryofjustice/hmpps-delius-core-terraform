@@ -7,7 +7,7 @@ resource "aws_security_group" "apacheds_ldap_public_elb" {
   name        = "${var.environment_name}-apacheds-ldap-public-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Apache DS LDAP Public ELB"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-apacheds-ldap-public-elb", "Type", "Public"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-apacheds-ldap-public-elb", "Type", "Public"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -25,7 +25,7 @@ resource "aws_security_group" "apacheds_ldap_private_elb" {
   name        = "${var.environment_name}-apacheds-ldap-private-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "Weblogic oid admin server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-apacheds-ldap-private-elb", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-apacheds-ldap-private-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -87,7 +87,7 @@ resource "aws_security_group" "apacheds_ldap" {
   name        = "${var.environment_name}-apacheds-ldap"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
   description = "ApacheDS LDAP server"
-  tags        = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-apacheds-ldap", "Type", "Private"))}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-apacheds-ldap", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true

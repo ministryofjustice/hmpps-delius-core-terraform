@@ -1,7 +1,7 @@
 module "kms_key_app" {
   source   = "../modules/keys/encryption_key"
   key_name = "${var.environment_name}-app"
-  tags     = "${merge(data.terraform_remote_state.vpc.tags, map("Name", "${var.environment_name}-app"))}"
+  tags     = "${merge(var.tags, map("Name", "${var.environment_name}-app"))}"
 }
 
 output "kms_arn_app" {
