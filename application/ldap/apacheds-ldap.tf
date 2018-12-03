@@ -1,8 +1,8 @@
 # Weblogic tier oid
 
-module "oid" {
+module "ldap" {
   source               = "../../modules/apacheds-ldap"
-  tier_name            = "oid"
+  tier_name            = "ldap"
   ami_id               = "${data.aws_ami.centos_apacheds.id}"
   instance_type        = "${var.instance_type_weblogic}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
@@ -74,34 +74,34 @@ module "oid" {
   }
 }
 
-output "ami_oid_wls" {
+output "ami_ldap_wls" {
   value = "${data.aws_ami.centos_apacheds.id} - ${data.aws_ami.centos_apacheds.name}"
 }
 
-output "internal_fqdn_oid_wls" {
-  value = "${module.oid.internal_fqdn_wls}"
+output "internal_fqdn_ldap_wls" {
+  value = "${module.ldap.internal_fqdn_wls}"
 }
 
-output "public_fqdn_oid_wls" {
-  value = "${module.oid.public_fqdn_wls}"
+output "public_fqdn_ldap_wls" {
+  value = "${module.ldap.public_fqdn_wls}"
 }
 
-output "private_ip_oid_wls" {
-  value = "${module.oid.private_ip_wls}"
+output "private_ip_ldap_wls" {
+  value = "${module.ldap.private_ip_wls}"
 }
 
-output "internal_fqdn_oid_wls_admin_lb" {
-  value = "${module.oid.internal_fqdn_admin_lb}"
+output "internal_fqdn_ldap_wls_admin_lb" {
+  value = "${module.ldap.internal_fqdn_admin_lb}"
 }
 
-output "public_fqdn_oid_wls_admin_lb" {
-  value = "${module.oid.public_fqdn_admin_lb}"
+output "public_fqdn_ldap_wls_admin_lb" {
+  value = "${module.ldap.public_fqdn_admin_lb}"
 }
 
-output "internal_fqdn_oid_managed_lb" {
-  value = "${module.oid.internal_fqdn_managed_lb}"
+output "internal_fqdn_ldap_managed_lb" {
+  value = "${module.ldap.internal_fqdn_managed_lb}"
 }
 
-output "public_fqdn_oid_managed_lb" {
-  value = "${module.oid.public_fqdn_managed_lb}"
+output "public_fqdn_ldap_managed_lb" {
+  value = "${module.ldap.public_fqdn_managed_lb}"
 }
