@@ -40,8 +40,8 @@ module "ldap" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_admin_elb_id}"
-  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_managed_elb_id}"
+  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
+  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_public_elb_id}"
   admin_port                   = "${var.ldap_ports["ldap"]}"
   managed_port                 = "${var.ldap_ports["ldap"]}"
 
