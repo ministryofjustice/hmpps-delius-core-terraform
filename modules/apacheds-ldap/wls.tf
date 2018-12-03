@@ -1,6 +1,6 @@
 # Admin server (TODO: ASG of one)
 
-resource "aws_instance" "wls" {
+resource "aws_instance" "ldap" {
   ami                    = "${var.ami_id}"
   instance_type          = "${var.instance_type}"
   key_name               = "${var.key_name}"
@@ -16,37 +16,37 @@ resource "aws_instance" "wls" {
     volume_type           = "gp2"
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-wls"))}"
+  tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-ldap"))}"
 
   lifecycle {
     ignore_changes = ["ami", "user_data"]
   }
 }
 
-resource "aws_route53_record" "wls_instance_internal" {
+resource "aws_route53_record" "ldap_instance_internal" {
   zone_id = "${var.private_zone_id}"
-  name    = "${var.tier_name}-wls-instance"
+  name    = "${var.tier_name}-instance"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.wls.private_ip}"]
+  records = ["${aws_instance.ldap.private_ip}"]
 }
 
-resource "aws_route53_record" "wls_instance_public" {
+resource "aws_route53_record" "ldap_instance_public" {
   zone_id = "${var.public_zone_id}"
-  name    = "${var.tier_name}-wls-instance"
+  name    = "${var.tier_name}-instance"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.wls.private_ip}"]
+  records = ["${aws_instance.ldap.private_ip}"]
 }
 
-output "internal_fqdn_wls" {
-  value = "${aws_route53_record.wls_instance_internal.fqdn}"
+output "internal_fqdn_ldap" {
+  value = "${aws_route53_record.ldap_instance_internal.fqdn}"
 }
 
-output "public_fqdn_wls" {
-  value = "${aws_route53_record.wls_instance_public.fqdn}"
+output "public_fqdn_ldap" {
+  value = "${aws_route53_record.ldap_instance_public.fqdn}"
 }
 
-output "private_ip_wls" {
-  value = "${aws_instance.wls.private_ip}"
+output "private_ip_ldap" {
+  value = "${aws_instance.ldap.private_ip}"
 }
