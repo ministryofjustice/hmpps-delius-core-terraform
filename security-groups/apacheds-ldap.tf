@@ -18,13 +18,45 @@ output "sg_apacheds_ldap_public_elb_id" {
   value = "${aws_security_group.apacheds_ldap_public_elb.id}"
 }
 
+#Allow other weblogic domains into the managed boxes on the LDAP port
+
+resource "aws_security_group_rule" "managed_elb_ingress_interface_managed" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_public_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_managed.id}"
+  description              = "Interface managed in"
+}
+
+resource "aws_security_group_rule" "managed_elb_ingress_ndelius_managed" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_public_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
+  description              = "Delius managed in"
+}
+
+resource "aws_security_group_rule" "managed_elb_ingress_spg_managed" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_public_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
+  description              = "SPG managed in"
+}
+
 ################################################################################
 ## apacheds_ldap_private_elb
 ################################################################################
 resource "aws_security_group" "apacheds_ldap_private_elb" {
   name        = "${var.environment_name}-apacheds-ldap-private-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic oid admin server"
+  description = "Apache DS LDAP Server Private ELB"
   tags        = "${merge(var.tags, map("Name", "${var.environment_name}-apacheds-ldap-private-elb", "Type", "Private"))}"
 
   lifecycle {
