@@ -70,7 +70,8 @@ module "ldap" {
     bind_user              = "${var.ansible_vars_apacheds["bind_user"]}"
     # bind_password        = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
     partition_id           = "${var.ansible_vars_apacheds["partition_id"]}"
-    create_test_users      = "${var.ansible_vars_apacheds["create_test_users"]}"
+    import_users_ldif      = "${var.ansible_vars_apacheds["import_users_ldif"]}"
+    sanitize_oid_ldif      = "${var.ansible_vars_apacheds["sanitize_oid_ldif"]}"
   }
 }
 
