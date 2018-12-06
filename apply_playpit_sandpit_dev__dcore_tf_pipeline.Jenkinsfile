@@ -10,6 +10,7 @@ def environments = [
   'delius-core-sandpit',
   'delius-core-playpit',
   'delius-core-dev',
+  'delius-test',
 ]
 
 def prepare_env() {
@@ -65,9 +66,11 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     }
 }
 
-def confirm() {
+def confirm(component) {
     try {
         timeout(time: 15, unit: 'MINUTES') {
+            slackSend(message: "Build of \"${component}\" on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}console|Paused for input>)")
+
             env.Continue = input(
                 id: 'Proceed1', message: 'Apply plan?', parameters: [
                     [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Apply Terraform']
@@ -88,7 +91,7 @@ def confirm() {
 
 def do_terraform(config_dir, env_name, git_project, component) {
     if (plan_submodule(config_dir, env_name, git_project, component) == "2") {
-        confirm()
+        confirm(component)
         if (env.Continue == "true") {
             apply_submodule(config_dir, env_name, git_project, component)
         }
@@ -122,6 +125,8 @@ pipeline {
 
         stage('setup') {
             steps {
+                slackSend(message: "Build started on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
+
                 dir( project.config ) {
                   git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
@@ -196,7 +201,12 @@ pipeline {
     post {
         always {
             deleteDir()
-
+        }
+        success {
+            slackSend(message: "Build completed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'good')
+        }
+        failure {
+            slackSend(message: "Build failed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'danger')
         }
     }
 
