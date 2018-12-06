@@ -66,7 +66,8 @@ ldap_protocol: "${ldap_protocol}"
 ldap_port: "${ldap_port}"
 bind_user: "${bind_user}"
 partition_id: "${partition_id}"
-create_test_users: ${create_test_users}
+import_users_ldif: "${import_users_ldif}"
+sanitize_oid_ldif: ${sanitize_oid_ldif}
 
 EOF
 

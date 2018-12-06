@@ -1,8 +1,8 @@
 # Weblogic tier oid
 
-module "oid" {
+module "ldap" {
   source               = "../../modules/apacheds-ldap"
-  tier_name            = "oid"
+  tier_name            = "ldap"
   ami_id               = "${data.aws_ami.centos_apacheds.id}"
   instance_type        = "${var.instance_type_weblogic}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
@@ -40,8 +40,8 @@ module "oid" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_admin_elb_id}"
-  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_oid_managed_elb_id}"
+  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
+  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_public_elb_id}"
   admin_port                   = "${var.ldap_ports["ldap"]}"
   managed_port                 = "${var.ldap_ports["ldap"]}"
 
@@ -70,38 +70,39 @@ module "oid" {
     bind_user              = "${var.ansible_vars_apacheds["bind_user"]}"
     # bind_password        = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
     partition_id           = "${var.ansible_vars_apacheds["partition_id"]}"
-    create_test_users      = "${var.ansible_vars_apacheds["create_test_users"]}"
+    import_users_ldif      = "${var.ansible_vars_apacheds["import_users_ldif"]}"
+    sanitize_oid_ldif      = "${var.ansible_vars_apacheds["sanitize_oid_ldif"]}"
   }
 }
 
-output "ami_oid_wls" {
+output "ami_ldap_wls" {
   value = "${data.aws_ami.centos_apacheds.id} - ${data.aws_ami.centos_apacheds.name}"
 }
 
-output "internal_fqdn_oid_wls" {
-  value = "${module.oid.internal_fqdn_wls}"
+output "internal_fqdn_ldap" {
+  value = "${module.ldap.internal_fqdn_ldap}"
 }
 
-output "public_fqdn_oid_wls" {
-  value = "${module.oid.public_fqdn_wls}"
+output "public_fqdn_ldap" {
+  value = "${module.ldap.public_fqdn_ldap}"
 }
 
-output "private_ip_oid_wls" {
-  value = "${module.oid.private_ip_wls}"
+output "private_ip_ldap" {
+  value = "${module.ldap.private_ip_ldap}"
 }
 
-output "internal_fqdn_oid_wls_admin_lb" {
-  value = "${module.oid.internal_fqdn_admin_lb}"
+output "internal_fqdn_ldap_admin_lb" {
+  value = "${module.ldap.internal_fqdn_admin_lb}"
 }
 
-output "public_fqdn_oid_wls_admin_lb" {
-  value = "${module.oid.public_fqdn_admin_lb}"
+output "public_fqdn_ldap_admin_lb" {
+  value = "${module.ldap.public_fqdn_admin_lb}"
 }
 
-output "internal_fqdn_oid_managed_lb" {
-  value = "${module.oid.internal_fqdn_managed_lb}"
+output "internal_fqdn_ldap_managed_lb" {
+  value = "${module.ldap.internal_fqdn_managed_lb}"
 }
 
-output "public_fqdn_oid_managed_lb" {
-  value = "${module.oid.public_fqdn_managed_lb}"
+output "public_fqdn_ldap_managed_lb" {
+  value = "${module.ldap.public_fqdn_managed_lb}"
 }

@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "admin" {
 resource "aws_lb_target_group_attachment" "admin" {
   port             = "${var.admin_port}"
   target_group_arn = "${aws_lb_target_group.admin.arn}"
-  target_id        = "${aws_instance.wls.id}"
+  target_id        = "${aws_instance.ldap.id}"
 }
 
 resource "aws_lb_listener" "admin" {

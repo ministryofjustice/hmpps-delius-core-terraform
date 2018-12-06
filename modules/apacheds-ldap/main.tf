@@ -28,6 +28,7 @@ data "template_file" "user_data" {
     bind_user              = "${var.ansible_vars["bind_user"]}"
     # bind_password        = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
     partition_id           = "${var.ansible_vars["partition_id"]}"
-    create_test_users      = "${var.ansible_vars["create_test_users"]}"
+    import_users_ldif      = "${var.ansible_vars["import_users_ldif"]}"
+    sanitize_oid_ldif      = "${var.ansible_vars["sanitize_oid_ldif"]}"
   }
 }
