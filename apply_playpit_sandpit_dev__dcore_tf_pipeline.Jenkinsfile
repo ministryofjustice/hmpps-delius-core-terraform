@@ -157,6 +157,14 @@ pipeline {
           }
         }
 
+        stage('Delius LoadRunner') {
+          steps {
+            script {
+              do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
+            }
+          }
+        }
+
         stage('Delius Database') {
           steps {
             script {
