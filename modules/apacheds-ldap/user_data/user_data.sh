@@ -69,6 +69,8 @@ partition_id: "${partition_id}"
 import_users_ldif: "${import_users_ldif}"
 sanitize_oid_ldif: ${sanitize_oid_ldif}
 
+cldwatch_log_group: "weblogic-${app_name}"
+
 EOF
 
 cat << EOF > ~/bootstrap.yml
