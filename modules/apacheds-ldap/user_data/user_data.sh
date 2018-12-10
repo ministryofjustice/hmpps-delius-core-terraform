@@ -68,8 +68,7 @@ bind_user: "${bind_user}"
 partition_id: "${partition_id}"
 import_users_ldif: "${import_users_ldif}"
 sanitize_oid_ldif: ${sanitize_oid_ldif}
-
-cldwatch_log_group: "weblogic-${app_name}"
+cldwatch_log_group: "${cldwatch_log_group}"
 
 EOF
 
