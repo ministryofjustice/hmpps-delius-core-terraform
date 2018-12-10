@@ -96,6 +96,8 @@ ldap_port: "${ldap_port}"
 ldap_principal: "${ldap_principal}"
 partition_id: "${partition_id}"
 
+cldwatch_log_group: "${cldwatch_log_group}"
+
 EOF
 
 cat << EOF > ~/bootstrap.yml

@@ -20,6 +20,7 @@ data "template_file" "user_data" {
     app_bootstrap_secondary_role  = "${var.app_bootstrap_secondary_role}"
     app_bootstrap_tertiary_role   = "${var.app_bootstrap_tertiary_role}"
     ndelius_version               = "${var.ndelius_version}"
+    cldwatch_log_group            = "${var.ansible_vars["cldwatch_log_group"]}"
 
     setup_datasources             = "${var.ansible_vars["setup_datasources"]}"
     s3_dependencies_bucket        = "${var.ansible_vars["s3_dependencies_bucket"]}"
@@ -33,7 +34,7 @@ data "template_file" "user_data" {
     ndelius_training_mode         = "${var.ansible_vars["ndelius_training_mode"]}"
     ndelius_log_level             = "${var.ansible_vars["ndelius_log_level"]}"
     ndelius_analytics_tag         = "${var.ansible_vars["ndelius_analytics_tag"]}"
-    
+
     newtech_search_url            = "${var.ansible_vars["newtech_search_url"]}"
     newtech_pdfgenerator_url      = "${var.ansible_vars["newtech_pdfgenerator_url"]}"
     usermanagement_url            = "${var.ansible_vars["usermanagement_url"]}"
