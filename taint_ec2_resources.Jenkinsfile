@@ -10,6 +10,7 @@ def environment_type = ""
 
 // Add environments to the list in alphabetical order
 def environments = [
+  '-- choose environment --',
   'delius-core-sandpit',
   'delius-core-dev',
   'delius-test',

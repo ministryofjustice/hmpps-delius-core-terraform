@@ -10,6 +10,7 @@ def environment_type = ""
 
 // Add environments to the list in alphabetical order
 def environments = [
+  '-- choose environment --',
   'delius-core-sandpit',
   'delius-core-dev',
   'delius-test',
@@ -106,7 +107,7 @@ def confirm() {
     try {
         timeout(time: 15, unit: 'MINUTES') {
             slackSend(message: "\"${taint_action}\" of \"${resource_name}\" on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}console|Paused for input>)")
-            
+
             env.Continue = input(
                 id: 'Proceed1', message: 'Apply plan?', parameters: [
                     [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Apply Terraform']

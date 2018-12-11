@@ -7,6 +7,7 @@ project.spg       = 'hmpps-spg-terraform'
 //project.ndmis     = 'hmpps-ndmis-terraform' //
 
 def environments = [
+  '-- choose environment --',
   'delius-core-sandpit',
   'delius-core-playpit',
   'delius-core-dev',
