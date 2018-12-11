@@ -42,3 +42,8 @@ resource "aws_iam_role_policy_attachment" "delius_core_ssm_read_only" {
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "${aws_iam_policy.delius_core_ssm_read_only.arn}"
 }
+
+resource "aws_iam_role_policy_attachment" "container_registry" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
