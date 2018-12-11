@@ -66,7 +66,7 @@ module "interface" {
   ndelius_version = "${var.ndelius_version}"
 
   ansible_vars = {
-    cldwatch_log_group       = "weblogic-interface"
+    cldwatch_log_group       = "${var.environment_identifier}/weblogic-interface"
     setup_datasources        = "${var.ansible_vars["setup_datasources"]}"
     s3_dependencies_bucket   = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
     database_host            = "${var.ansible_vars["database_host"]}.${data.aws_route53_zone.public.name}"

@@ -63,7 +63,7 @@ module "ldap" {
   ndelius_version = "${var.ndelius_version}"
 
   ansible_vars = {
-    cldwatch_log_group     = "ldap"
+    cldwatch_log_group     = "${var.environment_identifier}/ldap"
     s3_dependencies_bucket = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
     apacheds_version       = "${var.ansible_vars_apacheds["apacheds_version"]}"
     ldap_protocol          = "${var.ansible_vars_apacheds["ldap_protocol"]}"
