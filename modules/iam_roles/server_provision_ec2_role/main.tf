@@ -47,3 +47,17 @@ resource "aws_iam_role_policy_attachment" "container_registry" {
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
+data "template_file" "cloudwatch_logs_policy" {
+  template = "${file("${path.module}/policies/cloudwatch_logs.json")}"
+}
+
+resource "aws_iam_policy" "delius_core_cloudwatch_logs" {
+  name   = "${var.environment_name}-cloudwatch-logs"
+  policy = "${data.template_file.cloudwatch_logs_policy.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "delius_core_cloudwatch_logs" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "${aws_iam_policy.delius_core_cloudwatch_logs.arn}"
+}
