@@ -1,23 +1,22 @@
 # Admin ELB
 
 resource "aws_lb" "admin" {
-  name            = "${var.short_environment_name}-${var.tier_name}-admin"
-  internal        = true
-  ip_address_type = "ipv4"
-  security_groups = ["${var.admin_elb_sg_id}"]
-  subnets         = ["${var.private_subnets}"]
-  tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-admin"))}"
+  name               = "${var.short_environment_name}-${var.tier_name}-admin"
+  load_balancer_type = "network"
+  internal           = true
+  ip_address_type    = "ipv4"
+  security_groups    = ["${var.admin_elb_sg_id}"]
+  subnets            = ["${var.private_subnets}"]
+  tags               = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-admin"))}"
 }
 
 resource "aws_lb_target_group" "admin" {
   port     = "${var.admin_port}"
-  protocol = "HTTP"
+  protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
   tags     = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-admin"))}"
 
   health_check {
-    path = "${var.admin_health_check["path"]}"
-    matcher = "${var.admin_health_check["matcher"]}"
   }
 }
 
