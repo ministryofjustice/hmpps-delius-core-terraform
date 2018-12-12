@@ -33,7 +33,7 @@ resource "aws_lb_listener" "internal_lb_listener" {
   }
 
   load_balancer_arn = "${aws_lb.internal_lb.arn}"
-  protocol          = "tcp"
+  protocol          = "TCP"
   port              = "${var.ldap_port}"
 }
 
