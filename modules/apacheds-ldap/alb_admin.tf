@@ -11,10 +11,11 @@ resource "aws_lb" "admin" {
 }
 
 resource "aws_lb_target_group" "admin" {
-  port     = "${var.admin_port}"
-  protocol = "TCP"
-  vpc_id   = "${var.vpc_id}"
-  tags     = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-admin"))}"
+  port        = "${var.admin_port}"
+  protocol    = "TCP"
+  vpc_id      = "${var.vpc_id}"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-admin"))}"
+  stickiness  = []
 
   health_check {
   }
