@@ -104,42 +104,9 @@ variable "private_domain" {
   type        = "string"
 }
 
-variable "admin_elb_sg_id" {
-  description = "ID for the security group for the ELB"
+variable "ldap_port" {
+  description = "TCP port for the ldap server"
   type        = "string"
-}
-
-variable "managed_elb_sg_id" {
-  description = "ID for the security group for the ELB"
-  type        = "string"
-}
-
-variable "admin_port" {
-  description = "TCP port for the admin server"
-  type        = "string"
-}
-
-variable "managed_port" {
-  description = "TCP port for the managed server"
-  type        = "string"
-}
-
-variable "admin_health_check" {
-  description = "parameters for the LB health check"
-  type        = "map"
-  default = {
-    "path" = "/"
-    "matcher" = "200"
-  }
-}
-
-variable "managed_health_check" {
-  description = "parameters for the LB health check"
-  type        = "map"
-  default = {
-    "path" = "/"
-    "matcher" = "200"
-  }
 }
 
 variable "app_bootstrap_name" {

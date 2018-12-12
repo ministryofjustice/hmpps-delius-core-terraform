@@ -40,10 +40,7 @@ module "ldap" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
-  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_public_elb_id}"
-  admin_port                   = "${var.ldap_ports["ldap"]}"
-  managed_port                 = "${var.ldap_ports["ldap"]}"
+  ldap_port                    = "${var.ldap_ports["ldap"]}"
 
   # Place holder
   # admin_health_check = {
@@ -92,18 +89,10 @@ output "private_ip_ldap" {
   value = "${module.ldap.private_ip_ldap}"
 }
 
-output "internal_fqdn_ldap_admin_lb" {
-  value = "${module.ldap.internal_fqdn_admin_lb}"
+output "private_fqdn_ldap_internal_lb" {
+  value = "${module.ldap.private_fqdn_internal_lb}"
 }
 
-output "public_fqdn_ldap_admin_lb" {
-  value = "${module.ldap.public_fqdn_admin_lb}"
-}
-
-output "internal_fqdn_ldap_managed_lb" {
-  value = "${module.ldap.internal_fqdn_managed_lb}"
-}
-
-output "public_fqdn_ldap_managed_lb" {
-  value = "${module.ldap.public_fqdn_managed_lb}"
+output "public_fqdn_ldap_internal_lb" {
+  value = "${module.ldap.public_fqdn_internal_lb}"
 }
