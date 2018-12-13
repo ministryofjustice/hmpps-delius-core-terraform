@@ -15,6 +15,11 @@ resource "aws_lb_target_group" "ldap_instances_group" {
   vpc_id      = "${var.vpc_id}"
   tags        = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-internal"))}"
   stickiness  = []
+
+  health_check {
+    protocol  = "TCP"
+    matcher   = ""
+  }
 }
 
 resource "aws_lb_target_group_attachment" "internal_lb_group_attachment" {
