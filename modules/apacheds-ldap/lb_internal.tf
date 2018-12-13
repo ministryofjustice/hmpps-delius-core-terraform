@@ -17,6 +17,7 @@ resource "aws_lb_target_group" "ldap_instances_group" {
   stickiness  = []
 
   health_check {
+    protocol = "TCP"
   }
 }
 
