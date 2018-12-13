@@ -25,8 +25,8 @@ resource "aws_security_group_rule" "weblogic_interface_to_ldap" {
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_managed.id}"
-  description              = "Interface managed in"
+  source_security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
+  description              = "Interface in"
 }
 
 resource "aws_security_group_rule" "weblogic_ndelius_to_ldap" {
@@ -35,8 +35,8 @@ resource "aws_security_group_rule" "weblogic_ndelius_to_ldap" {
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_managed.id}"
-  description              = "Delius managed in"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_admin.id}"
+  description              = "Delius in"
 }
 
 resource "aws_security_group_rule" "weblogic_spg_to_ldap" {
@@ -45,8 +45,8 @@ resource "aws_security_group_rule" "weblogic_spg_to_ldap" {
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_spg_managed.id}"
-  description              = "SPG managed in"
+  source_security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
+  description              = "SPG in"
 }
 
 #Allow admins in via bastion
