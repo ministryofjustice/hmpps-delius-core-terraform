@@ -118,6 +118,16 @@ resource "aws_security_group_rule" "ndelius_admin_egress_1521" {
   description              = "Delius db"
 }
 
+resource "aws_security_group_rule" "ndelius_admin_egress_ldap" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_admin.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "LDAP out"
+}
+
 ################################################################################
 ## weblogic_ndelius_managed
 ################################################################################
@@ -155,14 +165,4 @@ resource "aws_security_group_rule" "ndelius_managed_egress_1521" {
   to_port                  = 1521
   source_security_group_id = "${aws_security_group.delius_db_in.id}"
   description              = "Delius db"
-}
-
-resource "aws_security_group_rule" "ndelius_managed_egress_ldap" {
-  security_group_id        = "${aws_security_group.weblogic_ndelius_managed.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "${var.ldap_ports["ldap"]}"
-  to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
-  description              = "OID LDAP out"
 }
