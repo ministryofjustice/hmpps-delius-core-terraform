@@ -18,6 +18,7 @@ resource "aws_lb_target_group" "ldap_instances_group" {
 
   health_check {
     protocol  = "TCP"
+    path      = ""
     matcher   = ""
   }
 }
