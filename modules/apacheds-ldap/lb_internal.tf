@@ -5,6 +5,7 @@ resource "aws_elb" "ldap_internal_lb" {
   subnets               = ["${var.private_subnets}"]
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-internal"))}"
   instances             = ["${aws_instance.ldap.id}"]
+  security_groups       = ["${var.admin_elb_sg_id}"]
   listener {
     instance_port       = "${var.ldap_port}"
     instance_protocol   = "tcp"
@@ -20,7 +21,7 @@ resource "aws_elb" "ldap_internal_lb" {
   }
 }
 
-resource "aws_route53_record" "internal_lb_private" {
+resource "aws_route53_record" "ldap_elb_private" {
   zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}-elb"
   type    = "CNAME"
@@ -28,7 +29,7 @@ resource "aws_route53_record" "internal_lb_private" {
   records = ["${aws_elb.ldap_internal_lb.dns_name}"]
 }
 
-resource "aws_route53_record" "internal_lb_public" {
+resource "aws_route53_record" "ldap_elb_public" {
   zone_id = "${var.public_zone_id}"
   name    = "${var.tier_name}-elb"
   type    = "CNAME"
@@ -36,10 +37,10 @@ resource "aws_route53_record" "internal_lb_public" {
   records = ["${aws_elb.ldap_internal_lb.dns_name}"]
 }
 
-output "private_fqdn_internal_lb" {
-  value = "${aws_route53_record.internal_lb_private.fqdn}"
+output "private_fqdn_ldap_elb" {
+  value = "${aws_route53_record.ldap_elb_private.fqdn}"
 }
 
-output "public_fqdn_internal_lb" {
-  value = "${aws_route53_record.internal_lb_public.fqdn}"
+output "public_fqdn_ldap_elb" {
+  value = "${aws_route53_record.ldap_elb_public.fqdn}"
 }

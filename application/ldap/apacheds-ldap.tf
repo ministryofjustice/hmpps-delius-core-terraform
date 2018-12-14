@@ -40,6 +40,7 @@ module "ldap" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
+  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
   ldap_port                    = "${var.ldap_ports["ldap"]}"
 
   # Place holder
@@ -90,9 +91,9 @@ output "private_ip_ldap" {
 }
 
 output "private_fqdn_ldap_internal_lb" {
-  value = "${module.ldap.private_fqdn_internal_lb}"
+  value = "${module.ldap.private_fqdn_ldap_elb}"
 }
 
 output "public_fqdn_ldap_internal_lb" {
-  value = "${module.ldap.public_fqdn_internal_lb}"
+  value = "${module.ldap.public_fqdn_ldap_elb}"
 }

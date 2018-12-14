@@ -104,6 +104,11 @@ variable "private_domain" {
   type        = "string"
 }
 
+variable "admin_elb_sg_id" {
+  description = "Security group id for LDAP load balancer"
+  type        = "string"
+}
+
 variable "ldap_port" {
   description = "TCP port for the ldap server"
   type        = "string"

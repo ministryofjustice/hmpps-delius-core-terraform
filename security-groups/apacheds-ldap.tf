@@ -29,6 +29,17 @@ resource "aws_security_group_rule" "apacheds_ldap_private_elb_ingress_bastion" {
   description       = "Admins in via bastion"
 }
 
+#Allow admins in via private elb
+resource "aws_security_group_rule" "apacheds_ldap_tls_private_elb_ingress_bastion" {
+  security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.ldap_ports["ldap_tls"]}"
+  to_port           = "${var.ldap_ports["ldap_tls"]}"
+  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
+  description       = "Admins in via bastion"
+}
+
 #Allow elb egress to apacheds_ldap sg
 resource "aws_security_group_rule" "apacheds_ldap_private_elb_egress" {
   security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
@@ -38,6 +49,48 @@ resource "aws_security_group_rule" "apacheds_ldap_private_elb_egress" {
   to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
   description              = "LB out to LDAP"
+}
+
+#Allow elb egress to apacheds_ldap sg
+resource "aws_security_group_rule" "apacheds_ldap_tls_private_elb_egress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap_tls"]}"
+  to_port                  = "${var.ldap_ports["ldap_tls"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "LB out to LDAPS"
+}
+
+#Allow weblogic domains into the LDAP instances
+resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_interface_ingress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
+  description              = "Interface in"
+}
+
+resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_ndelius_ingress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_admin.id}"
+  description              = "Delius in"
+}
+
+resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_spg_ingress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
+  description              = "SPG in"
 }
 
 ################################################################################
@@ -89,35 +142,4 @@ resource "aws_security_group_rule" "apacheds_ldap_tls_ingress_private_elb" {
   to_port                  = "${var.ldap_ports["ldap_tls"]}"
   source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
   description              = "LDAPS via LB"
-}
-
-#Allow weblogic domains into the LDAP instances
-resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_interface_ingress" {
-  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.ldap_ports["ldap"]}"
-  to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
-  description              = "Interface in"
-}
-
-resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_ndelius_ingress" {
-  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.ldap_ports["ldap"]}"
-  to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_admin.id}"
-  description              = "Delius in"
-}
-
-resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_spg_ingress" {
-  security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
-  type = "ingress"
-  protocol = "tcp"
-  from_port = "${var.ldap_ports["ldap"]}"
-  to_port = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
-  description = "SPG in"
 }
