@@ -124,8 +124,8 @@ resource "aws_security_group_rule" "spg_admin_egress_ldap" {
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
-  description              = "LDAP out"
+  source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  description              = "LDAP ELB out"
 }
 
 ################################################################################
