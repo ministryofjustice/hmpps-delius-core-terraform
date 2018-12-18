@@ -13,12 +13,6 @@ resource "aws_elb" "external" {
     lb_port = 80
     lb_protocol = "HTTP"
   }
-  listener {
-    instance_port = "${var.weblogic_tls_port}"
-    instance_protocol = "HTTPS"
-    lb_port = 443
-    lb_protocol = "HTTPS"
-  }
   health_check {
     target = "HTTP:${var.weblogic_port}/${var.weblogic_health_check_path}"
     timeout = 15

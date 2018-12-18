@@ -14,12 +14,6 @@ resource "aws_elb" "internal" {
     lb_protocol = "HTTP"
   }
   listener {
-    instance_port = "${var.weblogic_tls_port}"
-    instance_protocol = "HTTPS"
-    lb_port = "${var.weblogic_tls_port}"
-    lb_protocol = "HTTPS"
-  }
-  listener {
     instance_port = "${var.activemq_port}"
     instance_protocol = "TCP"
     lb_port = "${var.activemq_port}"
