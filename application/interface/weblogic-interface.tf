@@ -81,7 +81,7 @@ module "interface" {
     server_params            = "${var.ansible_vars["server_params"]}"
     weblogic_admin_username  = "${var.ansible_vars["weblogic_admin_username"]}"
     server_listen_address    = "${var.ansible_vars["server_listen_address"]}"
-    server_listen_port       = "${var.weblogic_domain_ports["ndelius_admin"]}"
+    server_listen_port       = "${var.weblogic_domain_ports["weblogic_port"]}"
     jvm_mem_args             = "${var.ansible_vars["jvm_mem_args"]}"
     database_port            = "${var.ansible_vars["database_port"]}"
     database_sid             = "${var.ansible_vars["database_sid"]}"
