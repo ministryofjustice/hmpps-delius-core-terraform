@@ -104,42 +104,39 @@ variable "private_domain" {
   type        = "string"
 }
 
-variable "admin_elb_sg_id" {
+variable "internal_elb_sg_id" {
   description = "ID for the security group for the ELB"
   type        = "string"
 }
 
-variable "managed_elb_sg_id" {
+variable "external_elb_sg_id" {
   description = "ID for the security group for the ELB"
   type        = "string"
 }
 
-variable "admin_port" {
-  description = "TCP port for the admin server"
+variable "weblogic_port" {
+  description = "Port for the weblogic admin server"
   type        = "string"
 }
 
-variable "managed_port" {
-  description = "TCP port for the managed server"
+variable "weblogic_tls_port" {
+  description = "Secure port for the weblogic admin server"
   type        = "string"
 }
 
-variable "admin_health_check" {
-  description = "parameters for the LB health check"
-  type        = "map"
-  default = {
-    "path" = "/"
-    "matcher" = "200"
-  }
+variable "activemq_port" {
+  description = "Port for the activemq server"
+  type        = "string"
 }
 
-variable "managed_health_check" {
+variable "activemq_enabled" {
+  default     = "Whether the load balancer should listen to ActiveMQ connections"
+  type        = "string"
+}
+
+variable "weblogic_health_check_path" {
   description = "parameters for the LB health check"
-  type        = "map"
-  default = {
-    "path" = "/"
-    "matcher" = "200"
-  }
+  type        = "string"
 }
 
 variable "app_bootstrap_name" {

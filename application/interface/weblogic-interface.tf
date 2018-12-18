@@ -11,8 +11,7 @@ module "interface" {
 
   security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_admin_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_managed_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_instances_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
@@ -42,20 +41,13 @@ module "interface" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_admin_elb_id}"
-  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_managed_elb_id}"
-  admin_port                   = "${var.weblogic_domain_ports["interface_admin"]}"
-  managed_port                 = "${var.weblogic_domain_ports["interface_managed"]}"
-
-  admin_health_check = {
-    path    = "/NDelius-war"
-    matcher = "200,302"
-  }
-
-  managed_health_check = {
-    path    = "/NDelius-war"
-    matcher = "200,302"
-  }
+  internal_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_internal_elb_id}"
+  external_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_external_elb_id}"
+  weblogic_health_check_path   = "/NDelius-war/"
+  weblogic_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
+  activemq_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  activemq_enabled             = "false"
 
   app_bootstrap_name            = "hmpps-delius-core-bootstrap"
   app_bootstrap_src             =  "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
@@ -125,18 +117,18 @@ output "private_ip_interface_wls" {
   value = "${module.interface.private_ip_wls}"
 }
 
-output "internal_fqdn_interface_wls_admin_lb" {
-  value = "${module.interface.internal_fqdn_admin_lb}"
+output "private_fqdn_interface_wls_internal_lb" {
+  value = "${module.interface.private_fqdn_internal_lb}"
 }
 
-output "public_fqdn_interface_wls_admin_lb" {
-  value = "${module.interface.public_fqdn_admin_lb}"
+output "public_fqdn_interface_wls_internal_lb" {
+  value = "${module.interface.public_fqdn_internal_lb}"
 }
 
-output "internal_fqdn_interface_managed_lb" {
-  value = "${module.interface.internal_fqdn_managed_lb}"
+output "private_fqdn_interface_external_lb" {
+  value = "${module.interface.private_fqdn_external_lb}"
 }
 
-output "public_fqdn_interface_managed_lb" {
-  value = "${module.interface.public_fqdn_managed_lb}"
+output "public_fqdn_interface_external_lb" {
+  value = "${module.interface.public_fqdn_external_lb}"
 }

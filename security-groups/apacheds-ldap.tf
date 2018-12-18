@@ -69,7 +69,7 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_interface_ingress
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_instances.id}"
   description              = "Interface in"
 }
 
@@ -79,7 +79,7 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_ndelius_ingress" 
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_admin.id}"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_instances.id}"
   description              = "Delius in"
 }
 
@@ -89,7 +89,7 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_spg_ingress" {
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.weblogic_spg_admin.id}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
   description              = "SPG in"
 }
 
