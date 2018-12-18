@@ -24,7 +24,6 @@ resource "aws_elb" "internal" {
     instance_protocol = "TCP"
     lb_port = "${var.activemq_port}"
     lb_protocol = "TCP"
-    enabled = "${var.activemq_enabled}"
   }
   health_check {
     target = "HTTP:${var.weblogic_port}/${var.weblogic_health_check_path}"
@@ -32,16 +31,16 @@ resource "aws_elb" "internal" {
     interval = 30
     healthy_threshold = 2
     unhealthy_threshold = 2
-    enabled = "${var.activemq_enabled == "true"? "false": "true"}"
   }
-  health_check {
-    target = "TCP:${var.activemq_port}"
-    timeout = 15
-    interval = 30
-    healthy_threshold = 2
-    unhealthy_threshold = 2
-    enabled = "${var.activemq_enabled}"
-  }
+  // TODO:
+//  health_check {
+//    target = "TCP:${var.activemq_port}"
+//    timeout = 15
+//    interval = 30
+//    healthy_threshold = 2
+//    unhealthy_threshold = 2
+//    enabled = "${var.activemq_enabled}"
+//  }
 }
 
 resource "aws_route53_record" "internal_lb_private" {
