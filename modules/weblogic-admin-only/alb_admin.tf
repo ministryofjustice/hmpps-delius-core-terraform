@@ -3,7 +3,6 @@
 resource "aws_elb" "internal" {
   name            = "${var.short_environment_name}-${var.tier_name}-internal"
   internal        = true
-  ip_address_type = "ipv4"
   security_groups = ["${var.internal_elb_sg_id}"]
   subnets         = ["${var.private_subnets}"]
   tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-internal"))}"
@@ -33,6 +32,7 @@ resource "aws_elb" "internal" {
     interval = 30
     healthy_threshold = 2
     unhealthy_threshold = 2
+    enabled = "${var.activemq_enabled == "true"? "false": "true"}"
   }
   health_check {
     target = "TCP:${var.activemq_port}"

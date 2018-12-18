@@ -3,7 +3,6 @@
 resource "aws_elb" "external" {
   name            = "${var.short_environment_name}-${var.tier_name}-external"
   internal        = false
-  ip_address_type = "ipv4"
   security_groups = ["${var.external_elb_sg_id}"]
   subnets         = ["${var.public_subnets}"]
   tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-external"))}"
