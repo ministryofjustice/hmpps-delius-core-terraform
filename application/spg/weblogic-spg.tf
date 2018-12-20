@@ -42,7 +42,7 @@ module "spg" {
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
   internal_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
-  external_elb_sg_id           = ""
+  external_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
   weblogic_health_check_path   = "NDelius-war/"
   weblogic_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
