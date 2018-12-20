@@ -19,15 +19,16 @@ resource "aws_elb" "internal" {
     lb_port = "${var.activemq_port}"
     lb_protocol = "TCP"
   }
-  health_check {
-    target = "${var.activemq_enabled?
-        format("%s:%s", "TCP", var.activemq_port):
-        format("%s:%s/%s", "HTTP", var.weblogic_port, var.weblogic_health_check_path)}"
-    timeout = 15
-    interval = 30
-    healthy_threshold = 2
-    unhealthy_threshold = 2
-  }
+  // TODO: re-enable when health check endpoint is available in delius
+//  health_check {
+//    target = "${var.activemq_enabled?
+//        format("%s:%s", "TCP", var.activemq_port):
+//        format("%s:%s/%s", "HTTP", var.weblogic_port, var.weblogic_health_check_path)}"
+//    timeout = 15
+//    interval = 30
+//    healthy_threshold = 2
+//    unhealthy_threshold = 2
+//  }
 }
 
 resource "aws_route53_record" "internal_lb_private" {
