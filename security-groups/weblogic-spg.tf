@@ -35,8 +35,18 @@ resource "aws_security_group_rule" "spg_internal_elb_egress_wls" {
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_instances.id}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
   description              = "Out to wls instances"
+}
+
+resource "aws_security_group_rule" "spg_internal_elb_egress_wls_activemq" {
+  security_group_id        = "${aws_security_group.weblogic_spg_internal_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
+  description              = "Out to wls activemq instances"
 }
 
 resource "aws_security_group_rule" "spg_internal_elb_ingress_delius_db" {
@@ -98,6 +108,16 @@ resource "aws_security_group_rule" "spg_instances_ingress_elb" {
   to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_internal_elb.id}"
   description              = "Internal ELB in"
+}
+
+resource "aws_security_group_rule" "spg_instances_ingress_elb" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_internal_elb.id}"
+  description              = "Internal ELB in to activemq"
 }
 
 resource "aws_security_group_rule" "spg_instances_egress_1521" {
