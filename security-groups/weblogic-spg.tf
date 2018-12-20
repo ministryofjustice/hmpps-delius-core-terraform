@@ -110,7 +110,7 @@ resource "aws_security_group_rule" "spg_instances_ingress_elb" {
   description              = "Internal ELB in"
 }
 
-resource "aws_security_group_rule" "spg_instances_ingress_elb" {
+resource "aws_security_group_rule" "spg_instances_activemq_ingress_elb" {
   security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
   type                     = "ingress"
   protocol                 = "tcp"
