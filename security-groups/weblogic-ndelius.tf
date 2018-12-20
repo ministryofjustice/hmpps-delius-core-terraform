@@ -24,8 +24,8 @@ resource "aws_security_group_rule" "ndelius_external_elb_ingress" {
   security_group_id = "${aws_security_group.weblogic_ndelius_external_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["weblogic_port"]}"
-  to_port           = "${var.weblogic_domain_ports["weblogic_port"]}"
+  from_port         = "80"
+  to_port           = "80"
   cidr_blocks       = ["${var.user_access_cidr_blocks}"]
   description       = "Front-end users in"
 }

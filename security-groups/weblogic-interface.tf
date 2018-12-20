@@ -24,8 +24,8 @@ resource "aws_security_group_rule" "interface_external_elb_ingress" {
   security_group_id = "${aws_security_group.weblogic_interface_external_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["weblogic_port"]}"
-  to_port           = "${var.weblogic_domain_ports["weblogic_port"]}"
+  from_port         = "80"
+  to_port           = "80"
   cidr_blocks       = ["0.0.0.0/0"]
   description       = "Interface users in"
 }
