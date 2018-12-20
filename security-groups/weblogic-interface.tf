@@ -36,7 +36,7 @@ resource "aws_security_group_rule" "spg_external_elb_egress_wls" {
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_instances.id}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_instances.id}"
   description              = "Out to wls instances"
 }
 
