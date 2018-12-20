@@ -30,14 +30,14 @@ resource "aws_security_group_rule" "interface_external_elb_ingress" {
   description       = "Interface users in"
 }
 
-resource "aws_security_group_rule" "spg_external_elb_egress_spg_internal_elb" {
+resource "aws_security_group_rule" "spg_external_elb_egress_wls" {
   security_group_id        = "${aws_security_group.weblogic_interface_external_elb.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_internal_elb.id}"
-  description              = "Out to internal ELB"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_instances.id}"
+  description              = "Out to wls instances"
 }
 
 ################################################################################
@@ -98,7 +98,17 @@ output "sg_weblogic_interface_instances_id" {
 }
 
 #Allow the ELB into the Admin port
-resource "aws_security_group_rule" "interface_instances_elb_ingress" {
+resource "aws_security_group_rule" "interface_instances_external_elb_ingress" {
+  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_external_elb.id}"
+  description              = "External ELB in"
+}
+
+resource "aws_security_group_rule" "interface_instances_internal_elb_ingress" {
   security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
   type                     = "ingress"
   protocol                 = "tcp"

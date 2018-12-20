@@ -6,7 +6,7 @@ resource "aws_elb" "external" {
   security_groups = ["${var.external_elb_sg_id}"]
   subnets         = ["${var.public_subnets}"]
   tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-external"))}"
-  instances       = ["${aws_elb.internal.id}"]
+  instances       = ["${aws_instance.wls.id}"]
   listener {
     instance_port = "${var.weblogic_port}"
     instance_protocol = "HTTP"
