@@ -14,13 +14,13 @@ resource "aws_elb" "external" {
     lb_protocol = "HTTP"
   }
   // TODO: re-enable when health check endpoint is available in delius
-//  health_check {
-//    target = "HTTP:${var.weblogic_port}/${var.weblogic_health_check_path}"
-//    timeout = 15
-//    interval = 30
-//    healthy_threshold = 2
-//    unhealthy_threshold = 2
-//  }
+  health_check {
+    target = "HTTP:${var.weblogic_port}/${var.weblogic_health_check_path}"
+    timeout = 15
+    interval = 30
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+  }
 }
 
 resource "aws_route53_record" "external_lb_private" {
