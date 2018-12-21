@@ -1,178 +1,139 @@
 # weblogic-interface.tf
 
 ################################################################################
-## weblogic_interface_managed_elb
+## weblogic_interface_external_elb
 ################################################################################
-resource "aws_security_group" "weblogic_interface_managed_elb" {
-  name        = "${var.environment_name}-weblogic-interface-managed-elb"
+resource "aws_security_group" "weblogic_interface_external_elb" {
+  name        = "${var.environment_name}-weblogic-interface-external-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic interface admin server"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-managed-elb", "Type", "Private"))}"
+  description = "Weblogic interface external ELB"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-external-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-output "sg_weblogic_interface_managed_elb_id" {
-  value = "${aws_security_group.weblogic_interface_managed_elb.id}"
+output "sg_weblogic_interface_external_elb_id" {
+  value = "${aws_security_group.weblogic_interface_external_elb.id}"
 }
 
-#Allow users into the managed boxes on the useful port
+# Allow EIS users into the external ELB
 #TODO: Do we build a list of allowed source in or?
-resource "aws_security_group_rule" "interface_managed_elb_ingress" {
-  security_group_id = "${aws_security_group.weblogic_interface_managed_elb.id}"
+resource "aws_security_group_rule" "interface_external_elb_ingress" {
+  security_group_id = "${aws_security_group.weblogic_interface_external_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["interface_managed"]}"
-  to_port           = "${var.weblogic_domain_ports["interface_managed"]}"
+  from_port         = "80"
+  to_port           = "80"
   cidr_blocks       = ["0.0.0.0/0"]
-  description       = "World in"
+  description       = "Interface users in"
 }
 
-resource "aws_security_group_rule" "interface_managed_elb_egress" {
-  security_group_id        = "${aws_security_group.weblogic_interface_managed_elb.id}"
+resource "aws_security_group_rule" "spg_external_elb_egress_wls" {
+  security_group_id        = "${aws_security_group.weblogic_interface_external_elb.id}"
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["interface_managed"]}"
-  to_port                  = "${var.weblogic_domain_ports["interface_managed"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_managed.id}"
-  description              = "ELB out"
+  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_instances.id}"
+  description              = "Out to wls instances"
 }
 
 ################################################################################
-## weblogic_interface_admin_elb
+## weblogic_interface_internal_elb
 ################################################################################
-resource "aws_security_group" "weblogic_interface_admin_elb" {
-  name        = "${var.environment_name}-weblogic-interface-admin-elb"
+resource "aws_security_group" "weblogic_interface_internal_elb" {
+  name        = "${var.environment_name}-weblogic-interface-internal-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic interface admin server"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-admin-elb", "Type", "Private"))}"
+  description = "Weblogic interface internal ELB"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-internal-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-output "sg_weblogic_interface_admin_elb_id" {
-  value = "${aws_security_group.weblogic_interface_admin_elb.id}"
+output "sg_weblogic_interface_internal_elb_id" {
+  value = "${aws_security_group.weblogic_interface_internal_elb.id}"
 }
 
-#Allow admins into the admin box
-resource "aws_security_group_rule" "interface_admin_elb_ingress" {
-  security_group_id = "${aws_security_group.weblogic_interface_admin_elb.id}"
+#Allow admins into the internal ELB
+resource "aws_security_group_rule" "interface_internal_elb_ingress" {
+  security_group_id = "${aws_security_group.weblogic_interface_internal_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["interface_admin"]}"
-  to_port           = "${var.weblogic_domain_ports["interface_admin"]}"
+  from_port         = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port           = "${var.weblogic_domain_ports["weblogic_port"]}"
   cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
   description       = "Admins in via bastion"
 }
 
-resource "aws_security_group_rule" "interface_admin_elb_egress" {
-  security_group_id        = "${aws_security_group.weblogic_interface_admin_elb.id}"
+resource "aws_security_group_rule" "interface_internal_elb_egress_wls" {
+  security_group_id        = "${aws_security_group.weblogic_interface_internal_elb.id}"
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["interface_admin"]}"
-  to_port                  = "${var.weblogic_domain_ports["interface_admin"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
+  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_instances.id}"
   description              = "ELB out"
 }
 
 ################################################################################
-## weblogic_interface_admin
+## weblogic_interface_internal
 ################################################################################
-resource "aws_security_group" "weblogic_interface_admin" {
-  name        = "${var.environment_name}-weblogic-interface-admin"
+resource "aws_security_group" "weblogic_interface_instances" {
+  name        = "${var.environment_name}-weblogic-interface-instances"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic interface admin server"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-admin", "Type", "Private"))}"
+  description = "Weblogic interface instances"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-instances", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-output "sg_weblogic_interface_admin_id" {
-  value = "${aws_security_group.weblogic_interface_admin.id}"
+output "sg_weblogic_interface_instances_id" {
+  value = "${aws_security_group.weblogic_interface_instances.id}"
 }
 
 #Allow the ELB into the Admin port
-resource "aws_security_group_rule" "interface_admin_elb_elb_ingress" {
-  security_group_id        = "${aws_security_group.weblogic_interface_admin.id}"
+resource "aws_security_group_rule" "interface_instances_external_elb_ingress" {
+  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["interface_admin"]}"
-  to_port                  = "${var.weblogic_domain_ports["interface_admin"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_admin_elb.id}"
-  description              = "Admins via ELB in"
+  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_external_elb.id}"
+  description              = "External ELB in"
 }
 
-resource "aws_security_group_rule" "interface_admin_bastion_ingress" {
-  security_group_id = "${aws_security_group.weblogic_interface_admin.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["interface_admin"]}"
-  to_port           = "${var.weblogic_domain_ports["interface_admin"]}"
-  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
-  description       = "Admins in direct via bastion"
+resource "aws_security_group_rule" "interface_instances_internal_elb_ingress" {
+  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_internal_elb.id}"
+  description              = "Internal ELB in"
 }
 
-resource "aws_security_group_rule" "interface_admin_egress_1521" {
-  security_group_id        = "${aws_security_group.weblogic_interface_admin.id}"
+resource "aws_security_group_rule" "interface_instances_egress_1521" {
+  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = 1521
   to_port                  = 1521
   source_security_group_id = "${aws_security_group.delius_db_in.id}"
-  description              = "Delius db out"
+  description              = "Delius DB out"
 }
 
-resource "aws_security_group_rule" "interface_admin_egress_ldap" {
-  security_group_id        = "${aws_security_group.weblogic_interface_admin.id}"
+resource "aws_security_group_rule" "interface_instances_egress_ldap" {
+  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
   description              = "LDAP ELB out"
-}
-
-################################################################################
-## weblogic_interface_managed
-################################################################################
-resource "aws_security_group" "weblogic_interface_managed" {
-  name        = "${var.environment_name}-weblogic-interface-managed"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic interface managed servers"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-managed", "Type", "Private"))}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-output "sg_weblogic_interface_managed_id" {
-  value = "${aws_security_group.weblogic_interface_managed.id}"
-}
-
-#Allow the ELB into the managed port
-resource "aws_security_group_rule" "interface_managed_elb_elb_ingress" {
-  security_group_id        = "${aws_security_group.weblogic_interface_managed.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["interface_managed"]}"
-  to_port                  = "${var.weblogic_domain_ports["interface_managed"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_managed_elb.id}"
-  description              = "ELB in"
-}
-
-resource "aws_security_group_rule" "interface_managed_egress_1521" {
-  security_group_id        = "${aws_security_group.weblogic_interface_managed.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 1521
-  to_port                  = 1521
-  source_security_group_id = "${aws_security_group.delius_db_in.id}"
-  description              = "Delius db out"
 }

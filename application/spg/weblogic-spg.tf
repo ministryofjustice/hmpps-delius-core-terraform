@@ -11,8 +11,7 @@ module "spg" {
 
   security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_admin_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_instances_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
@@ -42,20 +41,14 @@ module "spg" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_admin_elb_id}"
-  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_managed_elb_id}"
-  admin_port                   = "${var.weblogic_domain_ports["spg_admin"]}"
-  managed_port                 = "${var.weblogic_domain_ports["spg_jms_broker"]}"
-
-  admin_health_check = {
-    path    = "/NDelius-war"
-    matcher = "200,302"
-  }
-
-  managed_health_check = {
-    path    = "/NDelius-war"
-    matcher = "200,302"
-  }
+  internal_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
+  external_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
+  // TODO: update when health check endpoint is available in delius:
+  weblogic_health_check_path   = "console/login/LoginForm.jsp"
+  weblogic_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
+  activemq_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  activemq_enabled             = "true"
 
   app_bootstrap_name           = "hmpps-delius-core-bootstrap"
   app_bootstrap_src            = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
@@ -89,7 +82,7 @@ module "spg" {
     server_params            = "${var.ansible_vars["server_params"]}"
     weblogic_admin_username  = "${var.ansible_vars["weblogic_admin_username"]}"
     server_listen_address    = "${var.ansible_vars["server_listen_address"]}"
-    server_listen_port       = "${var.weblogic_domain_ports["ndelius_admin"]}"
+    server_listen_port       = "${var.weblogic_domain_ports["weblogic_port"]}"
     jvm_mem_args             = "${var.ansible_vars["jvm_mem_args"]}"
     database_port            = "${var.ansible_vars["database_port"]}"
     database_sid             = "${var.ansible_vars["database_sid"]}"
@@ -127,18 +120,18 @@ output "private_ip_spg_wls" {
   value = "${module.spg.private_ip_wls}"
 }
 
-output "internal_fqdn_spg_wls_admin_lb" {
-  value = "${module.spg.internal_fqdn_admin_lb}"
+output "private_fqdn_spg_wls_internal_lb" {
+  value = "${module.spg.private_fqdn_internal_lb}"
 }
 
-output "public_fqdn_spg_wls_admin_lb" {
-  value = "${module.spg.public_fqdn_admin_lb}"
+output "public_fqdn_spg_wls_internal_lb" {
+  value = "${module.spg.public_fqdn_internal_lb}"
 }
 
-output "internal_fqdn_spg_managed_lb" {
-  value = "${module.spg.internal_fqdn_managed_lb}"
+output "private_fqdn_spg_external_lb" {
+  value = "${module.spg.private_fqdn_external_lb}"
 }
 
-output "public_fqdn_spg_managed_lb" {
-  value = "${module.spg.public_fqdn_managed_lb}"
+output "public_fqdn_spg_external_lb" {
+  value = "${module.spg.public_fqdn_external_lb}"
 }

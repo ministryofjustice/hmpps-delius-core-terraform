@@ -11,8 +11,7 @@ module "ndelius" {
 
   security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_admin_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_managed_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_instances_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
@@ -42,26 +41,19 @@ module "ndelius" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_admin_elb_id}"
-  managed_elb_sg_id            = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_managed_elb_id}"
-  admin_port                   = "${var.weblogic_domain_ports["ndelius_admin"]}"
-  managed_port                 = "${var.weblogic_domain_ports["ndelius_managed"]}"
-
-  admin_health_check = {
-    path    = "/NDelius-war"
-    matcher = "200,302"
-  }
-
-  managed_health_check = {
-    path    = "/NDelius-war"
-    matcher = "200,302"
-  }
+  internal_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_internal_elb_id}"
+  external_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_external_elb_id}"
+  // TODO: update when health check endpoint is available in delius:
+  weblogic_health_check_path   = "console/login/LoginForm.jsp"
+  weblogic_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
+  activemq_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  activemq_enabled             = "false"
 
   app_bootstrap_name         = "hmpps-delius-core-bootstrap"
   app_bootstrap_src          =  "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
   app_bootstrap_version      = "master"
   app_bootstrap_initial_role = "delius-core"
-
 
   ndelius_version = "${var.ndelius_version}"
 
@@ -89,7 +81,7 @@ module "ndelius" {
     server_params            = "${var.ansible_vars["server_params"]}"
     weblogic_admin_username  = "${var.ansible_vars["weblogic_admin_username"]}"
     server_listen_address    = "${var.ansible_vars["server_listen_address"]}"
-    server_listen_port       = "${var.weblogic_domain_ports["ndelius_admin"]}"
+    server_listen_port       = "${var.weblogic_domain_ports["weblogic_port"]}"
     jvm_mem_args             = "${var.ansible_vars["jvm_mem_args"]}"
     database_port            = "${var.ansible_vars["database_port"]}"
     database_sid             = "${var.ansible_vars["database_sid"]}"
@@ -124,18 +116,18 @@ output "private_ip_ndelius_wls" {
   value = "${module.ndelius.private_ip_wls}"
 }
 
-output "internal_fqdn_ndelius_wls_admin_lb" {
-  value = "${module.ndelius.internal_fqdn_admin_lb}"
+output "private_fqdn_ndelius_wls_internal_lb" {
+  value = "${module.ndelius.private_fqdn_internal_lb}"
 }
 
-output "public_fqdn_ndelius_wls_admin_lb" {
-  value = "${module.ndelius.public_fqdn_admin_lb}"
+output "public_fqdn_ndelius_wls_internal_lb" {
+  value = "${module.ndelius.public_fqdn_internal_lb}"
 }
 
-output "internal_fqdn_ndelius_managed_lb" {
-  value = "${module.ndelius.internal_fqdn_managed_lb}"
+output "private_fqdn_ndelius_external_lb" {
+  value = "${module.ndelius.private_fqdn_external_lb}"
 }
 
-output "public_fqdn_ndelius_managed_lb" {
-  value = "${module.ndelius.public_fqdn_managed_lb}"
+output "public_fqdn_ndelius_external_lb" {
+  value = "${module.ndelius.public_fqdn_external_lb}"
 }

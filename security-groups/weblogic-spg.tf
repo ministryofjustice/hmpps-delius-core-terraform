@@ -1,190 +1,141 @@
 # weblogic-spg.tf
 
 ################################################################################
-## weblogic-spg-managed-elb
+## weblogic_spg_internal_elb
 ################################################################################
-resource "aws_security_group" "weblogic_spg_managed_elb" {
-  name        = "${var.environment_name}-weblogic-spg-managed-elb"
+resource "aws_security_group" "weblogic_spg_internal_elb" {
+  name        = "${var.environment_name}-weblogic-spg-internal-elb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic spg admin server"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-managed-elb", "Type", "Private"))}"
+  description = "Weblogic spg internal ELB"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-internal-elb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-output "sg_weblogic_spg_managed_elb_id" {
-  value = "${aws_security_group.weblogic_spg_managed_elb.id}"
+output "sg_weblogic_spg_internal_elb_id" {
+  value = "${aws_security_group.weblogic_spg_internal_elb.id}"
 }
 
-#Allow users into the managed boxes on the useful port
-#TODO: Do we build a list of allowed source in or?
-// resource "aws_security_group_rule" "spg_managed_elb_ingress" {
-//   security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
-//   type              = "ingress"
-//   protocol          = "tcp"
-//   from_port         = "${var.weblogic_domain_ports["spg_jms_broker"]}"
-//   to_port           = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
-//   cidr_blocks       = ["0.0.0.0/0"]
-//   description       = "World in"
-// }
-
-################################################################################
-## weblogic-spg-admin-elb
-################################################################################
-resource "aws_security_group" "weblogic_spg_admin_elb" {
-  name        = "${var.environment_name}-weblogic-spg-admin-elb"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic spg admin server"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-admin-elb", "Type", "Private"))}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-output "sg_weblogic_spg_admin_elb_id" {
-  value = "${aws_security_group.weblogic_spg_admin_elb.id}"
-}
-
-#Allow admins into the admin box
-resource "aws_security_group_rule" "spg_admin_elb_ingress" {
-  security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
+#Allow admins into the internal ELB
+resource "aws_security_group_rule" "spg_internal_elb_ingress" {
+  security_group_id = "${aws_security_group.weblogic_spg_internal_elb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["spg_admin"]}"
-  to_port           = "${var.weblogic_domain_ports["spg_admin"]}"
+  from_port         = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port           = "${var.weblogic_domain_ports["weblogic_port"]}"
   cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
   description       = "Admins in via bastion"
 }
 
-resource "aws_security_group_rule" "spg_admin_elb_ingress_delius_db" {
-  security_group_id        = "${aws_security_group.weblogic_spg_admin_elb.id}"
+resource "aws_security_group_rule" "spg_internal_elb_egress_wls" {
+  security_group_id        = "${aws_security_group.weblogic_spg_internal_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
+  description              = "Out to wls instances"
+}
+
+resource "aws_security_group_rule" "spg_internal_elb_egress_wls_activemq" {
+  security_group_id        = "${aws_security_group.weblogic_spg_internal_elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
+  description              = "Out to wls activemq instances"
+}
+
+resource "aws_security_group_rule" "spg_internal_elb_ingress_delius_db" {
+  security_group_id        = "${aws_security_group.weblogic_spg_internal_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
-  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
   source_security_group_id = "${aws_security_group.delius_db_out.id}"
-  description              = "From Delius db into SPG JMS Broker ELB"
-}
-
-################################################################################
-## weblogic-spg-admin
-################################################################################
-resource "aws_security_group" "weblogic_spg_admin" {
-  name        = "${var.environment_name}-weblogic-spg-admin"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic spg admin server"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-admin", "Type", "Private"))}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-output "sg_weblogic_spg_admin_id" {
-  value = "${aws_security_group.weblogic_spg_admin.id}"
-}
-
-#Allow the ELB into the Admin port
-resource "aws_security_group_rule" "spg_admin_ingress_elb" {
-  security_group_id        = "${aws_security_group.weblogic_spg_admin.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["spg_admin"]}"
-  to_port                  = "${var.weblogic_domain_ports["spg_admin"]}"
-  source_security_group_id = "${aws_security_group.weblogic_spg_admin_elb.id}"
-  description              = "Admins via ELB in"
-}
-
-resource "aws_security_group_rule" "spg_admin_ingress_delius_db" {
-  security_group_id        = "${aws_security_group.weblogic_spg_admin.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
-  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
-  source_security_group_id = "${aws_security_group.delius_db_out.id}"
-  description              = "From Delius db into SPG JMS Broker"
-}
-
-resource "aws_security_group_rule" "spg_admin_egress_1521" {
-  security_group_id        = "${aws_security_group.weblogic_spg_admin.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 1521
-  to_port                  = 1521
-  source_security_group_id = "${aws_security_group.delius_db_in.id}"
-  description              = "Delius db"
-}
-
-resource "aws_security_group_rule" "spg_admin_egress_ldap" {
-  security_group_id        = "${aws_security_group.weblogic_spg_admin.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "${var.ldap_ports["ldap"]}"
-  to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
-  description              = "LDAP ELB out"
-}
-
-################################################################################
-## weblogic-spg-managed
-################################################################################
-resource "aws_security_group" "weblogic_spg_managed" {
-  name        = "${var.environment_name}-weblogic-spg-managed"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic spg managed servers"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-managed", "Type", "Private"))}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-output "sg_weblogic_spg_managed_id" {
-  value = "${aws_security_group.weblogic_spg_managed.id}"
-}
-
-#Allow the ELB into the managed port
-resource "aws_security_group_rule" "spg_managed_ingress_elb" {
-  security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
-  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
-  source_security_group_id = "${aws_security_group.weblogic_spg_managed_elb.id}"
-  description              = "ELB in"
-}
-
-resource "aws_security_group_rule" "spg_managed_egress_1521" {
-  security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 1521
-  to_port                  = 1521
-  source_security_group_id = "${aws_security_group.delius_db_in.id}"
-  description              = "Delius db"
+  description              = "In from database"
 }
 
 ## Allow access from SPG GW
-resource "aws_security_group_rule" "spg_managed_ingress_spg_gw" {
-  security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
+resource "aws_security_group_rule" "spg_internal_elb_ingress_spg_gw" {
+  security_group_id        = "${aws_security_group.weblogic_spg_internal_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["spg_jms_broker"]}"
-  to_port                  = "${var.weblogic_domain_ports["spg_jms_broker_ssl"]}"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
   cidr_blocks              = ["${local.private_cidr_block}"]
   description              = "SPG GW in"
 }
 
 ## Allow access to SPG GW
-resource "aws_security_group_rule" "spg_managed_egress_spg_gw" {
-  security_group_id        = "${aws_security_group.weblogic_spg_managed.id}"
+resource "aws_security_group_rule" "spg_internal_elb_egress_spg_gw" {
+  security_group_id        = "${aws_security_group.weblogic_spg_internal_elb.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
   to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
   cidr_blocks              = ["${local.private_cidr_block}"]
   description              = "SPG GW out"
+}
+
+################################################################################
+## weblogic_spg_internal
+################################################################################
+resource "aws_security_group" "weblogic_spg_instances" {
+  name        = "${var.environment_name}-weblogic-spg-instances"
+  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  description = "Weblogic spg instances"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-spg-instances", "Type", "Private"))}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+output "sg_weblogic_spg_instances_id" {
+  value = "${aws_security_group.weblogic_spg_instances.id}"
+}
+
+#Allow the ELB into the Admin port
+resource "aws_security_group_rule" "spg_instances_ingress_elb" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_internal_elb.id}"
+  description              = "Internal ELB in"
+}
+
+resource "aws_security_group_rule" "spg_instances_activemq_ingress_elb" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_internal_elb.id}"
+  description              = "Internal ELB in to activemq"
+}
+
+resource "aws_security_group_rule" "spg_instances_egress_1521" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = "${aws_security_group.delius_db_in.id}"
+  description              = "Delius DB out"
+}
+
+resource "aws_security_group_rule" "spg_instances_egress_ldap" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  description              = "LDAP ELB out"
 }
