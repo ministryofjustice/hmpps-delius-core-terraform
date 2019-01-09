@@ -69,6 +69,8 @@ partition_id: "${partition_id}"
 import_users_ldif: "${import_users_ldif}"
 sanitize_oid_ldif: ${sanitize_oid_ldif}
 cldwatch_log_group: "${cldwatch_log_group}"
+is_consumer: ${is_consumer}
+provider_host: "${provider_host}"
 
 EOF
 

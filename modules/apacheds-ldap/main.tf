@@ -31,5 +31,7 @@ data "template_file" "user_data" {
     partition_id           = "${var.ansible_vars["partition_id"]}"
     import_users_ldif      = "${var.ansible_vars["import_users_ldif"]}"
     sanitize_oid_ldif      = "${var.ansible_vars["sanitize_oid_ldif"]}"
+    is_consumer            = "${var.ansible_vars["is_consumer"]}"
+    provider_host          = "${var.ansible_vars["provider_host"]}"
   }
 }
