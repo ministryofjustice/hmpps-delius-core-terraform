@@ -44,7 +44,7 @@ module "spg" {
   internal_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
   external_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
   // TODO: update when health check endpoint is available in delius:
-  weblogic_health_check_path   = "console/login/LoginForm.jsp"
+  weblogic_health_check_path   = "NDelius-war/delius/JSP/healthcheck.jsp"
   weblogic_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
   activemq_port                = "${var.weblogic_domain_ports["activemq_port"]}"
