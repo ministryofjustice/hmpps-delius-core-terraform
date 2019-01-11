@@ -62,6 +62,22 @@ resource "aws_route53_record" "ldap_instance_public" {
   records = ["${aws_instance.ldap.private_ip}"]
 }
 
+resource "aws_route53_record" "ldap_instance_internal" {
+  zone_id = "${var.private_zone_id}"
+  name    = "${var.tier_name}-slave-instance"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_instance.ldap_slave.private_ip}"]
+}
+
+resource "aws_route53_record" "ldap_instance_public" {
+  zone_id = "${var.public_zone_id}"
+  name    = "${var.tier_name}-slave-instance"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_instance.ldap_slave.private_ip}"]
+}
+
 output "internal_fqdn_ldap" {
   value = "${aws_route53_record.ldap_instance_internal.fqdn}"
 }
