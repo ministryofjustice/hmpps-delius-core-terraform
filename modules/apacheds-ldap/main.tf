@@ -32,6 +32,7 @@ data "template_file" "user_data" {
     import_users_ldif      = "${var.ansible_vars["import_users_ldif"]}"
     sanitize_oid_ldif      = "${var.ansible_vars["sanitize_oid_ldif"]}"
     is_consumer            = "false"
+    provider_host          = ""
   }
 }
 
