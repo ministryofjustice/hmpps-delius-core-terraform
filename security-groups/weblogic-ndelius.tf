@@ -30,6 +30,16 @@ resource "aws_security_group_rule" "ndelius_external_elb_ingress" {
   description       = "Front-end users in"
 }
 
+resource "aws_security_group_rule" "ndelius_external_elb_ingress_nat" {
+  security_group_id = "${aws_security_group.weblogic_ndelius_external_elb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "80"
+  to_port           = "80"
+  cidr_blocks       = ["${local.natgateway_public_ips_cidr_blocks}"]
+  description       = "Loadrunner in"
+}
+
 resource "aws_security_group_rule" "ndelius_external_elb_egress_wls" {
   security_group_id        = "${aws_security_group.weblogic_ndelius_external_elb.id}"
   type                     = "egress"

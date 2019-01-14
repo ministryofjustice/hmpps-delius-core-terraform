@@ -21,6 +21,16 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
+data "terraform_remote_state" "natgateway" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "natgateway/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 ####################################################
 # Locals
 ####################################################
@@ -60,5 +70,11 @@ locals {
     "${data.terraform_remote_state.vpc.vpc_db-subnet-az1-cidr_block}",
     "${data.terraform_remote_state.vpc.vpc_db-subnet-az2-cidr_block}",
     "${data.terraform_remote_state.vpc.vpc_db-subnet-az3-cidr_block}",
+  ]
+
+  natgateway_public_ips_cidr_blocks = [
+    "${data.terraform_remote_state.natgateway.natgateway_common-nat-public-ip-az1}/32",
+    "${data.terraform_remote_state.natgateway.natgateway_common-nat-public-ip-az2}/32",
+    "${data.terraform_remote_state.natgateway.natgateway_common-nat-public-ip-az3}/32",
   ]
 }
