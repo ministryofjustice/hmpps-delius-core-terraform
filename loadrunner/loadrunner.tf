@@ -13,6 +13,7 @@ resource "aws_instance" "loadrunner" {
   vpc_security_group_ids = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_loadrunner_id}",
   ]
   root_block_device = {
     delete_on_termination = true
