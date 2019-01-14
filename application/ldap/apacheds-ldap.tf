@@ -67,18 +67,6 @@ output "ami_ldap_wls" {
   value = "${data.aws_ami.centos_apacheds.id} - ${data.aws_ami.centos_apacheds.name}"
 }
 
-output "internal_fqdn_ldap" {
-  value = "${module.ldap.internal_fqdn_ldap}"
-}
-
-output "public_fqdn_ldap" {
-  value = "${module.ldap.public_fqdn_ldap}"
-}
-
-output "private_ip_ldap" {
-  value = "${module.ldap.private_ip_ldap}"
-}
-
 output "private_fqdn_ldap_internal_lb" {
   value = "${module.ldap.private_fqdn_ldap_elb}"
 }

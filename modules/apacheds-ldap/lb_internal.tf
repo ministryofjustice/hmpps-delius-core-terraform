@@ -4,7 +4,7 @@ resource "aws_elb" "ldap_internal_lb" {
   internal              = true
   subnets               = ["${var.private_subnets}"]
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-internal"))}"
-  instances             = ["${aws_instance.ldap.id}", "${aws_instance.ldap_slave.id}"]
+  instances             = ["${module.master_asg}", "${aws_instance.ldap_slave.id}"]
   security_groups       = ["${var.admin_elb_sg_id}"]
   listener {
     instance_port       = "${var.ldap_port}"

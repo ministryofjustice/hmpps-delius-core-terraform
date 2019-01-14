@@ -68,6 +68,6 @@ data "template_file" "user_data_slave" {
     import_users_ldif      = "${var.ansible_vars["import_users_ldif"]}"
     sanitize_oid_ldif      = "${var.ansible_vars["sanitize_oid_ldif"]}"
     is_consumer            = "true"
-    provider_host          = "${aws_route53_record.ldap_instance_internal.fqdn}"
+    provider_host          = "${aws_route53_record.ldap_elb_private.fqdn}"
   }
 }
