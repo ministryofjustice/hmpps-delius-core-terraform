@@ -1,5 +1,4 @@
-# Weblogic tier oid
-
+# ApacheDS provider/master instance
 module "ldap" {
   source               = "../../modules/apacheds-ldap"
   tier_name            = "ldap"
@@ -43,16 +42,6 @@ module "ldap" {
   admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
   ldap_port                    = "${var.ldap_ports["ldap"]}"
 
-  # Place holder
-  # admin_health_check = {
-  #   path    = "/NDelius-war"
-  #   matcher = "200,302"
-  # }
-  #
-  # managed_health_check = {
-  #   path    = "/NDelius-war"
-  #   matcher = "200,302"
-  # }
   app_bootstrap_name         = "hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_src          =  "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_version      = "master"

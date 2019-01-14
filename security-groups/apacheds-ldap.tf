@@ -143,3 +143,47 @@ resource "aws_security_group_rule" "apacheds_ldap_tls_ingress_private_elb" {
   source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
   description              = "LDAPS via LB"
 }
+
+#Allow the master+slaves to see each other
+resource "aws_security_group_rule" "apacheds_ldap_instances_ingress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "Master/slave ingress"
+}
+
+#Allow the master+slaves to see each other
+resource "aws_security_group_rule" "apacheds_ldap_instances_egress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "Master/slave egress"
+}
+
+#Allow the master+slaves to see each other
+resource "aws_security_group_rule" "apacheds_ldap_instances_ingress_tls" {
+  security_group_id        = "${aws_security_group.apacheds_ldap.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap_tls"]}"
+  to_port                  = "${var.ldap_ports["ldap_tls"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "Master/slave ingress TLS"
+}
+
+#Allow the master+slaves to see each other
+resource "aws_security_group_rule" "apacheds_ldap_instances_egress_tls" {
+  security_group_id        = "${aws_security_group.apacheds_ldap.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap_tls"]}"
+  to_port                  = "${var.ldap_ports["ldap_tls"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "Master/slave egress TLS"
+}
