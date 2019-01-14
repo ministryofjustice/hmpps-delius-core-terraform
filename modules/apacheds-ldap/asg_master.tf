@@ -9,7 +9,6 @@ module "launch_cfg" {
   key_name                    = "${aws_instance.ldap.key_name}"
   security_groups             = ["${aws_instance.ldap.vpc_security_group_ids}"]
   user_data                   = "${data.template_file.user_data.rendered}"
-  tags                        = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-ldap-master-launch-config"))}"
 }
 
 module "master_asg" {
