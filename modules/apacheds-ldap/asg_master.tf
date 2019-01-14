@@ -3,8 +3,8 @@ module "launch_cfg" {
   launch_configuration_name   = "${var.environment_name}-${var.tier_name}-ldap-master-launch-config"
   image_id                    = "${aws_instance.ldap.ami}"
   instance_type               = "${aws_instance.ldap.instance_type}"
-  volume_size                 = "${aws_instance.ldap.root_block_device.volume_size}"
-  volume_type                 = "${aws_instance.ldap.root_block_device.volume_type}"
+  volume_size                 = 50
+  volume_type                 = "gp2"
   instance_profile            = "${aws_instance.ldap.iam_instance_profile}"
   key_name                    = "${aws_instance.ldap.key_name}"
   security_groups             = ["${aws_instance.ldap.vpc_security_group_ids}"]
