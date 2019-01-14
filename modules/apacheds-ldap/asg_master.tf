@@ -1,6 +1,6 @@
 module "launch_cfg" {
   source                      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//launch_configuration//noblockdevice"
-  launch_configuration_name   = "${var.environment_name}-${var.tier_name}-ldap-master-launch-config"
+  launch_configuration_name   = "${var.environment_name}-${var.tier_name}-ldap-master"
   image_id                    = "${var.ami_id}"
   instance_type               = "${var.instance_type}"
   volume_size                 = 50
@@ -18,7 +18,7 @@ module "master_asg" {
   asg_max               = 1
   asg_desired           = 1
   launch_configuration  = "${module.launch_cfg.launch_name}"
-  load_balancers        = ["${aws_elb.ldap_internal_lb.id}"]
+  load_balancers        = ["${aws_elb.ldap_master_lb.id}"]
   subnet_ids            = ["${var.private_subnets}"]
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-ldap-master-asg"))}"
 }
