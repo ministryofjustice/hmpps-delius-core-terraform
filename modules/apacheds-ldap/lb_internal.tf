@@ -1,4 +1,4 @@
-# Master ELB
+# Master ELB (read-write)
 resource "aws_elb" "ldap_master_lb" {
   name                  = "${var.short_environment_name}-${var.tier_name}-elb"
   internal              = true
@@ -20,12 +20,12 @@ resource "aws_elb" "ldap_master_lb" {
   }
 }
 
+# Slave ELB (read-only)
 resource "aws_elb" "ldap_readonly_lb" {
   name                  = "${var.short_environment_name}-${var.tier_name}-readonly-elb"
   internal              = true
   subnets               = ["${var.private_subnets}"]
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-readonly-lb"))}"
-  instances             = ["${aws_instance.ldap_slave.id}"]
   security_groups       = ["${var.admin_elb_sg_id}"]
   listener {
     instance_port       = "${var.ldap_port}"
