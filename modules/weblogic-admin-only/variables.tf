@@ -13,6 +13,11 @@ variable "instance_type" {
   type        = "string"
 }
 
+variable "instance_count" {
+  description = "Instance count for the weblogic auto-scaling group"
+  type        = "string"
+}
+
 variable "key_name" {
   description = "Deployer key name"
   type        = "string"

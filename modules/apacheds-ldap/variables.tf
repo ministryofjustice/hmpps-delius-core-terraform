@@ -9,7 +9,7 @@ variable "ami_id" {
 }
 
 variable "instance_type" {
-  description = "Instance type for the weblogic server"
+  description = "Instance type for the ldap server"
   type        = "string"
 }
 

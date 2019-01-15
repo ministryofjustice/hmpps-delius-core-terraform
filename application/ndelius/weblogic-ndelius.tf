@@ -6,6 +6,7 @@ module "ndelius" {
   tier_name            = "ndelius"
   ami_id               = "${data.aws_ami.centos_wls.id}"
   instance_type        = "${var.instance_type_weblogic}"
+  instance_count       = "${var.instance_count_weblogic}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 

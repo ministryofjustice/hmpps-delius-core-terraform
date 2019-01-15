@@ -6,7 +6,6 @@ resource "aws_elb" "internal" {
   security_groups = ["${var.internal_elb_sg_id}"]
   subnets         = ["${var.private_subnets}"]
   tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-internal"))}"
-  instances       = ["${aws_instance.wls.id}"]
   listener {
     instance_port = "${var.weblogic_port}"
     instance_protocol = "HTTP"

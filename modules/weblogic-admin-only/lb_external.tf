@@ -6,14 +6,12 @@ resource "aws_elb" "external" {
   security_groups = ["${var.external_elb_sg_id}"]
   subnets         = ["${var.public_subnets}"]
   tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-external"))}"
-  instances       = ["${aws_instance.wls.id}"]
   listener {
     instance_port = "${var.weblogic_port}"
     instance_protocol = "HTTP"
     lb_port = 80
     lb_protocol = "HTTP"
   }
-  // TODO: re-enable when health check endpoint is available in delius
   health_check {
     target = "HTTP:${var.weblogic_port}/${var.weblogic_health_check_path}"
     timeout = 15
