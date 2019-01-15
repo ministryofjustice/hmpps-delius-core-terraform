@@ -39,7 +39,7 @@ variable "instance_type_weblogic" {
   description = "The ec2 instance type"
 }
 
-variable "instance_count_weblogic" {
+variable "instance_count_weblogic_spg" {
   description = "The desired number of weblogic instances"
 }
 
