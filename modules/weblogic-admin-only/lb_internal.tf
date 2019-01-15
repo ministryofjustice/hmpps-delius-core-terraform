@@ -29,6 +29,13 @@ resource "aws_elb" "internal" {
   }
 }
 
+resource "aws_app_cookie_stickiness_policy" "internal_lb_jsessionid_stickiness_policy" {
+  name          = "${var.short_environment_name}-${var.tier_name}-internal-jsessionid"
+  load_balancer = "${aws_elb.internal.name}"
+  lb_port       = "${var.weblogic_port}"
+  cookie_name   = "JSESSIONID"
+}
+
 resource "aws_route53_record" "internal_lb_private" {
   zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}-internal"
