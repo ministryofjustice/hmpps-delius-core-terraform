@@ -106,18 +106,6 @@ output "ami_interface_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "internal_fqdn_interface_wls" {
-  value = "${module.interface.internal_fqdn_wls}"
-}
-
-output "public_fqdn_interface_wls" {
-  value = "${module.interface.public_fqdn_wls}"
-}
-
-output "private_ip_interface_wls" {
-  value = "${module.interface.private_ip_wls}"
-}
-
 output "private_fqdn_interface_wls_internal_lb" {
   value = "${module.interface.private_fqdn_internal_lb}"
 }
