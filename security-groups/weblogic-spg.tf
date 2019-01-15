@@ -70,17 +70,6 @@ resource "aws_security_group_rule" "spg_internal_elb_ingress_spg_gw" {
   description              = "SPG GW in"
 }
 
-## Allow access to SPG GW
-resource "aws_security_group_rule" "spg_internal_elb_egress_spg_gw" {
-  security_group_id        = "${aws_security_group.weblogic_spg_internal_elb.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
-  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
-  cidr_blocks              = ["${local.private_cidr_block}"]
-  description              = "SPG GW out"
-}
-
 ################################################################################
 ## weblogic_spg_internal
 ################################################################################
@@ -138,4 +127,14 @@ resource "aws_security_group_rule" "spg_instances_egress_ldap" {
   to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
   description              = "LDAP ELB out"
+}
+
+resource "aws_security_group_rule" "spg_instances_egress_spg_gw" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
+  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
+  cidr_blocks              = ["${local.private_cidr_block}"]
+  description              = "SPG GW out"
 }
