@@ -13,25 +13,24 @@ resource "aws_lb" "external_lb" {
   }
 }
 
-module "external_lb_target_group" {
-  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//loadbalancer//alb//targetgroup"
-  appname             = "${var.short_environment_name}-${var.tier_name}"
-  vpc_id              = "${var.vpc_id}"
+resource "aws_lb_target_group" "external_lb_target_group" {
+  name      = "${var.short_environment_name}-${var.tier_name}-tg"
+  vpc_id    = "${var.vpc_id}"
 
-  target_protocol     = "HTTP"
-  target_port         = "${var.weblogic_port}"
-  target_type         = "instance"
+  protocol  = "HTTP"
+  port      = "${var.weblogic_port}"
 
-  check_protocol      = "HTTP"
-  check_port          = "${var.weblogic_port}"
-  check_path          = "/${var.weblogic_health_check_path}"
-  return_code         = "200"
-  check_interval      = "30"
-  timeout             = "15"
-  healthy_threshold   = "2"
-  unhealthy_threshold = "2"
+  health_check {
+    protocol  = "HTTP"
+    port      = "${var.weblogic_port}"
+    path      = "/${var.weblogic_health_check_path}"
+    matcher   = "200"
+  }
+  stickiness {
+    type = "lb_cookie"
+  }
 
-  tags                = "${var.tags}"
+  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-tg"))}"
 }
 
 module "external_lb_listener" {
@@ -39,7 +38,7 @@ module "external_lb_listener" {
   lb_arn              = "${aws_lb.external_lb.arn}"
   lb_protocol         = "HTTPS"
   lb_port             = "443"
-  target_group_arn    = "${module.external_lb_target_group.target_group_arn}"
+  target_group_arn    = "${aws_lb_target_group.external_lb_target_group.arn}"
   certificate_arn     = ["${var.certificate_arn}"]
 }
 
