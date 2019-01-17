@@ -43,12 +43,14 @@ module "external_lb_listener" {
   certificate_arn     = ["${module.iam_server_certificate.arn}"]
 }
 
-module "external_lb_listener_insecure" {
-  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//loadbalancer//alb//create_listener"
-  lb_arn              = "${aws_lb.external_lb.arn}"
-  lb_protocol         = "HTTP"
-  lb_port             = "80"
-  target_group_arn    = "${module.external_lb_target_group.target_group_arn}"
+resource "aws_lb_listener" "external_lb_listener_insecure" {
+  load_balancer_arn   = "${aws_lb.external_lb.arn}"
+  protocol            = "HTTP"
+  port                = "80"
+  default_action {
+    target_group_arn  = "${module.external_lb_target_group.target_group_arn}"
+    type              = "forward"
+  }
 }
 
 resource "aws_app_cookie_stickiness_policy" "external_lb_jsessionid_stickiness_policy" {
@@ -59,7 +61,7 @@ resource "aws_app_cookie_stickiness_policy" "external_lb_jsessionid_stickiness_p
 }
 
 resource "aws_lb_listener_rule" "external_lb_redirect_http_to_https" {
-  listener_arn = "${index(module.external_lb_listener_insecure.listener_arn, 0)}"
+  listener_arn = "${aws_lb_listener.external_lb_listener_insecure.arn}"
   action {
     type = "redirect"
     redirect {
