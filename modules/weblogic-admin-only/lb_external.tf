@@ -57,13 +57,6 @@ resource "aws_lb_listener" "external_lb_listener_insecure" {
   }
 }
 
-resource "aws_app_cookie_stickiness_policy" "external_lb_jsessionid_stickiness_policy" {
-  name          = "${var.short_environment_name}-${var.tier_name}-ext-jsessionid"
-  load_balancer = "${aws_lb.external_lb.name}"
-  lb_port       = 443
-  cookie_name   = "JSESSIONID"
-}
-
 resource "aws_route53_record" "external_lb_private" {
   zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}"
