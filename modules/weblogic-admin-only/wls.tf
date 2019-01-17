@@ -20,7 +20,7 @@ module "wls_asg" {
   asg_desired           = "${var.instance_count}"
   asg_max               = "${var.instance_count}"
   launch_configuration  = "${module.wls_launch_cfg.launch_name}"
-  load_balancers        = ["${aws_elb.internal.id}", "${aws_elb.external.id}"]
+  load_balancers        = ["${aws_elb.internal.id}", "${module.external_lb.lb_id}"]
   subnet_ids            = ["${var.private_subnets}"]
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-asg"))}"
 }
