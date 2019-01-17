@@ -109,6 +109,11 @@ variable "private_domain" {
   type        = "string"
 }
 
+variable "certificate_arn" {
+  description = "SSL certificate to be used for the external LB"
+  type        = "string"
+}
+
 variable "internal_elb_sg_id" {
   description = "ID for the security group for the ELB"
   type        = "string"

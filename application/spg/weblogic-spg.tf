@@ -42,6 +42,7 @@ module "spg" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
+  certificate_arn              = "${data.aws_acm_certificate.cert.arn}"
   internal_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
   external_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_internal_elb_id}"
   weblogic_health_check_path   = "NDelius-war/delius/JSP/healthcheck.jsp"

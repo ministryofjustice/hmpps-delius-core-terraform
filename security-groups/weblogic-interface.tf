@@ -30,6 +30,16 @@ resource "aws_security_group_rule" "interface_external_elb_ingress" {
   description       = "Interface users in"
 }
 
+resource "aws_security_group_rule" "interface_external_elb_ingress_tls" {
+  security_group_id = "${aws_security_group.weblogic_interface_external_elb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Interface users in"
+}
+
 resource "aws_security_group_rule" "spg_external_elb_egress_wls" {
   security_group_id        = "${aws_security_group.weblogic_interface_external_elb.id}"
   type                     = "egress"
