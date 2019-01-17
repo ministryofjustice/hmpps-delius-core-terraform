@@ -6,7 +6,6 @@ resource "aws_elb" "internal" {
   security_groups = ["${var.internal_elb_sg_id}"]
   subnets         = ["${var.private_subnets}"]
   tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-internal"))}"
-  instances       = ["${aws_instance.wls.id}"]
   listener {
     instance_port = "${var.weblogic_port}"
     instance_protocol = "HTTP"
@@ -28,6 +27,13 @@ resource "aws_elb" "internal" {
     healthy_threshold = 2
     unhealthy_threshold = 2
   }
+}
+
+resource "aws_app_cookie_stickiness_policy" "internal_lb_jsessionid_stickiness_policy" {
+  name          = "${var.short_environment_name}-${var.tier_name}-internal-jsessionid"
+  load_balancer = "${aws_elb.internal.name}"
+  lb_port       = "${var.weblogic_port}"
+  cookie_name   = "JSESSIONID"
 }
 
 resource "aws_route53_record" "internal_lb_private" {

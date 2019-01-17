@@ -39,6 +39,10 @@ variable "instance_type_weblogic" {
   description = "The ec2 instance type"
 }
 
+variable "instance_count_weblogic_interface" {
+  description = "The desired number of weblogic instances"
+}
+
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }

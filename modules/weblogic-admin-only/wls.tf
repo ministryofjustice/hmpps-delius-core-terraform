@@ -1,52 +1,26 @@
-# Admin server (TODO: ASG of one)
+# WebLogic auto-scaling group with fixed instance count
 
-resource "aws_instance" "wls" {
-  ami                    = "${var.ami_id}"
-  instance_type          = "${var.instance_type}"
-  key_name               = "${var.key_name}"
-  iam_instance_profile   = "${var.iam_instance_profile}"
-  vpc_security_group_ids = ["${var.security_groups}"]
-  subnet_id              = "${var.private_subnets[0]}"
-  user_data              = "${data.template_file.user_data.rendered}"
-  source_dest_check      = false
-
-  root_block_device = {
-    delete_on_termination = true
-    volume_size           = 50
-    volume_type           = "gp2"
-  }
-
-  tags = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-wls"))}"
-
-  lifecycle {
-    ignore_changes = ["ami", "user_data"]
-  }
+module "wls_launch_cfg" {
+  source                      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//launch_configuration//noblockdevice"
+  launch_configuration_name   = "${var.environment_name}-${var.tier_name}"
+  image_id                    = "${var.ami_id}"
+  instance_type               = "${var.instance_type}"
+  volume_size                 = 50
+  volume_type                 = "gp2"
+  instance_profile            = "${var.iam_instance_profile}"
+  key_name                    = "${var.key_name}"
+  security_groups             = ["${var.security_groups}"]
+  user_data                   = "${data.template_file.user_data.rendered}"
 }
 
-resource "aws_route53_record" "wls_instance_internal" {
-  zone_id = "${var.private_zone_id}"
-  name    = "${var.tier_name}-wls-instance"
-  type    = "A"
-  ttl     = "300"
-  records = ["${aws_instance.wls.private_ip}"]
-}
-
-resource "aws_route53_record" "wls_instance_public" {
-  zone_id = "${var.public_zone_id}"
-  name    = "${var.tier_name}-wls-instance"
-  type    = "A"
-  ttl     = "300"
-  records = ["${aws_instance.wls.private_ip}"]
-}
-
-output "internal_fqdn_wls" {
-  value = "${aws_route53_record.wls_instance_internal.fqdn}"
-}
-
-output "public_fqdn_wls" {
-  value = "${aws_route53_record.wls_instance_public.fqdn}"
-}
-
-output "private_ip_wls" {
-  value = "${aws_instance.wls.private_ip}"
+module "wls_asg" {
+  source                = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//autoscaling//group//asg_classic_lb"
+  asg_name              = "${var.environment_name}-${var.tier_name}"
+  asg_min               = "${var.instance_count}"
+  asg_desired           = "${var.instance_count}"
+  asg_max               = "${var.instance_count}"
+  launch_configuration  = "${module.wls_launch_cfg.launch_name}"
+  load_balancers        = ["${aws_elb.internal.id}", "${aws_elb.external.id}"]
+  subnet_ids            = ["${var.private_subnets}"]
+  tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-asg"))}"
 }

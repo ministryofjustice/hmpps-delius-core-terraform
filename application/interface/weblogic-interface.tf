@@ -6,6 +6,7 @@ module "interface" {
   tier_name            = "interface"
   ami_id               = "${data.aws_ami.centos_wls.id}"
   instance_type        = "${var.instance_type_weblogic}"
+  instance_count       = "${var.instance_count_weblogic_interface}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
@@ -103,18 +104,6 @@ module "interface" {
 
 output "ami_interface_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
-}
-
-output "internal_fqdn_interface_wls" {
-  value = "${module.interface.internal_fqdn_wls}"
-}
-
-output "public_fqdn_interface_wls" {
-  value = "${module.interface.public_fqdn_wls}"
-}
-
-output "private_ip_interface_wls" {
-  value = "${module.interface.private_ip_wls}"
 }
 
 output "private_fqdn_interface_wls_internal_lb" {

@@ -6,6 +6,7 @@ module "spg" {
   tier_name            = "spg"
   ami_id               = "${data.aws_ami.centos_wls.id}"
   instance_type        = "${var.instance_type_weblogic}"
+  instance_count       = "${var.instance_count_weblogic_spg}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
@@ -105,18 +106,6 @@ module "spg" {
 
 output "ami_spg_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
-}
-
-output "internal_fqdn_spg_wls" {
-  value = "${module.spg.internal_fqdn_wls}"
-}
-
-output "public_fqdn_spg_wls" {
-  value = "${module.spg.public_fqdn_wls}"
-}
-
-output "private_ip_spg_wls" {
-  value = "${module.spg.private_ip_wls}"
 }
 
 output "private_fqdn_spg_wls_internal_lb" {
