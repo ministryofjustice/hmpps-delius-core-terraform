@@ -109,8 +109,8 @@ variable "private_domain" {
   type        = "string"
 }
 
-variable "public_zone_name" {
-  description = "Public route53 zone name"
+variable "certificate_arn" {
+  description = "SSL certificate to be used for the external LB"
   type        = "string"
 }
 

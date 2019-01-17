@@ -40,7 +40,7 @@ module "external_lb_listener" {
   lb_protocol         = "HTTPS"
   lb_port             = "443"
   target_group_arn    = "${module.external_lb_target_group.target_group_arn}"
-  certificate_arn     = ["${module.iam_server_certificate.arn}"]
+  certificate_arn     = ["${var.certificate_arn}"]
 }
 
 resource "aws_lb_listener" "external_lb_listener_insecure" {
