@@ -55,7 +55,7 @@ resource "aws_lb_listener" "external_lb_listener_insecure" {
 
 resource "aws_app_cookie_stickiness_policy" "external_lb_jsessionid_stickiness_policy" {
   name          = "${var.short_environment_name}-${var.tier_name}-ext-jsessionid"
-  load_balancer = "${aws_lb.external_lb.id}"
+  load_balancer = "${aws_lb.external_lb.name}"
   lb_port       = 443
   cookie_name   = "JSESSIONID"
 }
@@ -71,8 +71,8 @@ resource "aws_lb_listener_rule" "external_lb_redirect_http_to_https" {
     }
   }
   condition {
-    field  = "host-header"
-    values = ["*"]
+    field  = "path-pattern"
+    values = ["/*"]
   }
 }
 
