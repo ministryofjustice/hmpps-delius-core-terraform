@@ -81,7 +81,7 @@ data "aws_ami" "centos_wls" {
 }
 
 data "aws_acm_certificate" "cert" {
-  domain      = "${data.terraform_remote_state.vpc.vpc_route53_domain_private}"
+  domain      = "${data.terraform_remote_state.vpc.public_ssl_domain}"
   types       = ["AMAZON_ISSUED"]
   most_recent = true
 }
