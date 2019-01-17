@@ -1,11 +1,11 @@
 # Internal ELB
 
 resource "aws_elb" "internal" {
-  name            = "${var.short_environment_name}-${var.tier_name}-internal"
+  name            = "${var.short_environment_name}-${var.tier_name}-int"
   internal        = true
   security_groups = ["${var.internal_elb_sg_id}"]
   subnets         = ["${var.private_subnets}"]
-  tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-internal"))}"
+  tags            = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-int"))}"
   listener {
     instance_port = "${var.weblogic_port}"
     instance_protocol = "HTTP"
@@ -30,7 +30,7 @@ resource "aws_elb" "internal" {
 }
 
 resource "aws_app_cookie_stickiness_policy" "internal_lb_jsessionid_stickiness_policy" {
-  name          = "${var.short_environment_name}-${var.tier_name}-internal-jsessionid"
+  name          = "${var.short_environment_name}-${var.tier_name}-int-jsessionid"
   load_balancer = "${aws_elb.internal.name}"
   lb_port       = "${var.weblogic_port}"
   cookie_name   = "JSESSIONID"

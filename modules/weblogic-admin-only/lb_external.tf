@@ -1,12 +1,12 @@
 # External ELB
 resource "aws_lb" "external_lb" {
-  name               = "${var.short_environment_name}-${var.tier_name}-external-lb"
+  name               = "${var.short_environment_name}-${var.tier_name}-ext"
   internal           = "false"
   load_balancer_type = "application"
   security_groups    = ["${var.external_elb_sg_id}"]
   subnets            = ["${var.public_subnets}"]
 
-  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-external-lb"))}"
+  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-ext"))}"
 
   lifecycle {
     create_before_destroy = true
@@ -52,14 +52,14 @@ module "external_lb_listener_insecure" {
 }
 
 resource "aws_app_cookie_stickiness_policy" "external_lb_jsessionid_stickiness_policy" {
-  name          = "${var.short_environment_name}-${var.tier_name}-external-jsessionid"
+  name          = "${var.short_environment_name}-${var.tier_name}-ext-jsessionid"
   load_balancer = "${aws_lb.external_lb.id}"
   lb_port       = 443
   cookie_name   = "JSESSIONID"
 }
 
 resource "aws_lb_listener_rule" "external_lb_redirect_http_to_https" {
-  listener_arn = "${module.external_lb_listener_insecure.listener_arn}"
+  listener_arn = "${index(module.external_lb_listener_insecure.listener_arn, 0)}"
   action {
     type = "redirect"
     redirect {
