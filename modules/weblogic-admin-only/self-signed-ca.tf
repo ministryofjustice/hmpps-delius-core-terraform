@@ -9,7 +9,7 @@ module "ca_cert" {
   key_algorithm         = "RSA"
   private_key_pem       = "${module.ca_key.private_key}"
   subject               = [{
-    common_name  = "ca.${var.private_domain}"
+    common_name  = "ca.${var.public_zone_name}"
     organization = "${var.environment_identifier}"
   }]
   validity_period_hours = "8544"

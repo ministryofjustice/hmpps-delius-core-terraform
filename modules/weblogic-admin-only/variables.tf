@@ -109,6 +109,11 @@ variable "private_domain" {
   type        = "string"
 }
 
+variable "public_zone_name" {
+  description = "Public route53 zone name"
+  type        = "string"
+}
+
 variable "internal_elb_sg_id" {
   description = "ID for the security group for the ELB"
   type        = "string"

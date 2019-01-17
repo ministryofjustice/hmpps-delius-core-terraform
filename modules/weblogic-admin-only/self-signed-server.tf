@@ -9,10 +9,10 @@ module "server_csr" {
   key_algorithm   = "RSA"
   private_key_pem = "${module.server_key.private_key}"
   subject         = [{
-    common_name  = "${var.private_domain}"
+    common_name  = "${var.public_zone_name}"
     organization = "${var.environment_identifier}"
   }]
-  dns_names       = ["*.${var.private_domain}"]
+  dns_names       = ["*.${var.public_zone_name}"]
 }
 
 module "server_cert" {
@@ -35,7 +35,7 @@ module "server_cert" {
 
 module "iam_server_certificate" {
   source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//iam_certificate"
-  name_prefix       = "${var.private_domain}-cert"
+  name_prefix       = "${var.public_zone_name}-cert"
   certificate_body  = "${module.server_cert.cert_pem}"
   private_key       = "${module.server_key.private_key}"
   certificate_chain = "${module.ca_cert.cert_pem}"
