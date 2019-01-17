@@ -1,14 +1,16 @@
 # External ELB
+resource "aws_lb" "external_lb" {
+  name               = "${var.short_environment_name}-${var.tier_name}-external-lb"
+  internal           = "false"
+  load_balancer_type = "application"
+  security_groups    = ["${var.external_elb_sg_id}"]
+  subnets            = ["${var.public_subnets}"]
 
-module "external_lb" {
-  source          = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//loadbalancer//alb//create_lb"
-  lb_name         = "${var.short_environment_name}-${var.tier_name}-external"
-  internal        = "false"
-  security_groups = ["${var.external_elb_sg_id}"]
-  subnet_ids      = ["${var.public_subnets}"]
-  logs_enabled    = "false"
-  s3_bucket_name  = ""
-  tags            = "${var.tags}"
+  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-external-lb"))}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 module "external_lb_target_group" {
@@ -34,16 +36,16 @@ module "external_lb_target_group" {
 
 module "external_lb_listener" {
   source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//loadbalancer//alb//create_listener_with_https"
-  lb_arn              = "${module.external_lb.lb_arn}"
+  lb_arn              = "${aws_lb.external_lb.arn}"
   lb_protocol         = "HTTPS"
   lb_port             = "443"
   target_group_arn    = "${module.external_lb_target_group.target_group_arn}"
-  certificate_arn     = "${module.iam_server_certificate.arn}"
+  certificate_arn     = ["${module.iam_server_certificate.arn}"]
 }
 
 module "external_lb_listener_insecure" {
   source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//loadbalancer//alb//create_listener"
-  lb_arn              = "${module.external_lb.lb_arn}"
+  lb_arn              = "${aws_lb.external_lb.arn}"
   lb_protocol         = "HTTP"
   lb_port             = "80"
   target_group_arn    = "${module.external_lb_target_group.target_group_arn}"
@@ -51,7 +53,7 @@ module "external_lb_listener_insecure" {
 
 resource "aws_app_cookie_stickiness_policy" "external_lb_jsessionid_stickiness_policy" {
   name          = "${var.short_environment_name}-${var.tier_name}-external-jsessionid"
-  load_balancer = "${module.external_lb.lb_id}"
+  load_balancer = "${aws_lb.external_lb.id}"
   lb_port       = 443
   cookie_name   = "JSESSIONID"
 }
@@ -77,7 +79,7 @@ resource "aws_route53_record" "external_lb_private" {
   name    = "${var.tier_name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${module.external_lb.lb_dns_name}"]
+  records = ["${aws_lb.external_lb.dns_name}"]
 }
 
 resource "aws_route53_record" "external_lb_public" {
@@ -85,7 +87,7 @@ resource "aws_route53_record" "external_lb_public" {
   name    = "${var.tier_name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${module.external_lb.lb_dns_name}"]
+  records = ["${aws_lb.external_lb.dns_name}"]
 }
 
 output "private_fqdn_external_lb" {
