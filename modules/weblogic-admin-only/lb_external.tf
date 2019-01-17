@@ -22,7 +22,7 @@ module "external_lb_target_group" {
 
   check_protocol      = "HTTP"
   check_port          = "${var.weblogic_port}"
-  check_path          = "${var.weblogic_health_check_path}"
+  check_path          = "/${var.weblogic_health_check_path}"
   return_code         = "200"
   check_interval      = "30"
   timeout             = "15"
