@@ -24,3 +24,8 @@ module "wls_asg" {
   subnet_ids            = ["${var.private_subnets}"]
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${var.tier_name}-asg"))}"
 }
+
+resource "aws_autoscaling_attachment" "wls_asg_attachment" {
+  autoscaling_group_name = "${module.wls_asg.autoscale_id}"
+  alb_target_group_arn   = "${module.external_lb_target_group.target_group_arn}"
+}
