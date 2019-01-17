@@ -1,15 +1,3 @@
-locals {
-  subject = {
-    common_name  = "ca.${var.private_domain}"
-    organization = "${var.environment_identifier}"
-  }
-
-  allowed_uses = [
-    "cert_signing",
-    "crl_signing",
-  ]
-}
-
 module "ca_key" {
   source    = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//tls//tls_private_key"
   algorithm = "RSA"
@@ -20,11 +8,17 @@ module "ca_cert" {
   source                = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//tls//tls_self_signed_cert"
   key_algorithm         = "RSA"
   private_key_pem       = "${module.ca_key.private_key}"
-  subject               = ["${local.subject}"]
+  subject               = [{
+    common_name  = "ca.${var.private_domain}"
+    organization = "${var.environment_identifier}"
+  }]
   validity_period_hours = "8544"
   early_renewal_hours   = "672"
   is_ca_certificate     = "true"
-  allowed_uses          = ["${local.allowed_uses}"]
+  allowed_uses          = [
+    "cert_signing",
+    "crl_signing",
+  ]
 }
 
 module "create_parameter_ca_cert" {

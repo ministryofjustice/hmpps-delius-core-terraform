@@ -1,19 +1,3 @@
-locals {
-  allowed_uses = [
-    "key_encipherment",
-    "digital_signature",
-    "server_auth",
-    "client_auth",
-  ]
-
-  dns_names = ["*.${var.private_domain}"]
-
-  subject = {
-    common_name  = "${var.private_domain}"
-    organization = "${var.environment_identifier}"
-  }
-}
-
 module "server_key" {
   source    = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//tls//tls_private_key"
   algorithm = "RSA"
@@ -24,8 +8,11 @@ module "server_csr" {
   source          = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//tls//tls_cert_request"
   key_algorithm   = "RSA"
   private_key_pem = "${module.server_key.private_key}"
-  subject         = ["${local.subject}"]
-  dns_names       = ["${local.dns_names}"]
+  subject         = [{
+    common_name  = "${var.private_domain}"
+    organization = "${var.environment_identifier}"
+  }]
+  dns_names       = ["*.${var.private_domain}"]
 }
 
 module "server_cert" {
@@ -38,7 +25,12 @@ module "server_cert" {
   validity_period_hours = "2160"
   early_renewal_hours   = "336"
 
-  allowed_uses = ["${local.allowed_uses}"]
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth",
+  ]
 }
 
 module "iam_server_certificate" {
