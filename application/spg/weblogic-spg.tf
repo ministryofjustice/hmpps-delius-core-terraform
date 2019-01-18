@@ -14,6 +14,7 @@ module "spg" {
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_instances_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
+    "${module.activemq-nfs.nfs_client_sg_id}"
   ]
 
   public_subnets = "${list(
@@ -103,6 +104,29 @@ module "spg" {
     ## activemq_remoteCF_username = "/${environment_name}/delius-core/weblogic/${app_name}-domain/remote_broker_username"
     ## activemq_remoteCF_password = "/${environment_name}/delius-core/weblogic/${app_name}-domain/remote_broker_password"
   }
+}
+
+# Shared NFS for the ActiveMQ persistence store
+module "activemq-nfs" {
+  source                        = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//nfs-server"
+  region                        = "${var.region}"
+  environment_identifier        = "${var.environment_identifier}"
+  short_environment_identifier  = "${var.short_environment_identifier}"
+  remote_state_bucket_name      = "${var.remote_state_bucket_name}"
+  route53_sub_domain            = "${data.aws_route53_zone.public.name}"
+  bastion_origin_sgs            = ["${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}"]
+  private-cidr                  = ["${data.terraform_remote_state.vpc.vpc_cidr}"]
+  private_subnet_ids            = [
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az2}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az3}",
+  ]
+  availability_zones            = [
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az1-availability_zone}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az2-availability_zone}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az3-availability_zone}",
+  ]
+  tags                          = "${var.tags}"
 }
 
 output "ami_spg_wls" {
