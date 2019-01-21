@@ -88,7 +88,7 @@ server_listen_port: "${server_listen_port}"
 jvm_mem_args: "${jvm_mem_args}"
 database_port: "${database_port}"
 database_sid: "${database_sid}"
-activemq_data_folder: "${activemq_data_folder}"
+activemq_data_folder: "${activemq_data_folder}/data"
 
 alfresco_port: "${alfresco_port}"
 alfresco_office_port: "${alfresco_office_port}"
