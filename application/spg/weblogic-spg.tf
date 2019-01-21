@@ -108,7 +108,7 @@ module "spg" {
 }
 
 # Shared NFS for the ActiveMQ persistence store
-module "activemq_nfs" {
+module "activemq-nfs" {
   source                        = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//nfs-server"
   region                        = "${var.region}"
   app_name                      = "amq-nfs"
