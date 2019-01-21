@@ -88,6 +88,7 @@ server_listen_port: "${server_listen_port}"
 jvm_mem_args: "${jvm_mem_args}"
 database_port: "${database_port}"
 database_sid: "${database_sid}"
+activemq_data_folder: "${activemq_data_folder}"
 
 alfresco_port: "${alfresco_port}"
 alfresco_office_port: "${alfresco_office_port}"
@@ -99,7 +100,7 @@ partition_id: "${partition_id}"
 cldwatch_log_group: "${cldwatch_log_group}"
 
 is_nfs_client: true
-nfs_mount_dir: /activemq-data
+nfs_mount_dir: "${activemq_data_folder}"
 nfs_mount_owner: oracle
 
 EOF
