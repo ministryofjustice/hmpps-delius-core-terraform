@@ -115,7 +115,7 @@ module "activemq-nfs" {
   remote_state_bucket_name      = "${var.remote_state_bucket_name}"
   route53_sub_domain            = "${data.aws_route53_zone.public.name}"
   bastion_origin_sgs            = ["${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}"]
-  private-cidr                  = ["${data.terraform_remote_state.vpc.vpc_cidr}"]
+  private-cidr                  = ["${data.terraform_remote_state.vpc.vpc_cidr_block}"]
   private_subnet_ids            = [
     "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}",
     "${data.terraform_remote_state.vpc.vpc_private-subnet-az2}",
