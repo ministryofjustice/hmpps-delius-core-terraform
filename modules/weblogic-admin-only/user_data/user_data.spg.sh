@@ -38,6 +38,8 @@ cat << EOF > ~/requirements.yml
   version: centos
 - name: users
   src: singleplatform-eng.users
+- name: nfs
+  src: https://github.com/ministryofjustice/hmpps-nfs
 - name: "${app_bootstrap_name}"
   src: "${app_bootstrap_src}"
   version: "${app_bootstrap_version}"
@@ -86,6 +88,7 @@ server_listen_port: "${server_listen_port}"
 jvm_mem_args: "${jvm_mem_args}"
 database_port: "${database_port}"
 database_sid: "${database_sid}"
+activemq_data_folder: "${activemq_data_folder}/data"
 
 alfresco_port: "${alfresco_port}"
 alfresco_office_port: "${alfresco_office_port}"
@@ -95,6 +98,10 @@ ldap_principal: "${ldap_principal}"
 partition_id: "${partition_id}"
 
 cldwatch_log_group: "${cldwatch_log_group}"
+
+is_nfs_client: true
+nfs_mount_dir: "${activemq_data_folder}"
+nfs_mount_owner: oracle
 
 EOF
 
@@ -108,6 +115,7 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
+     - nfs
      - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_initial_role}"
      - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_secondary_role}"
      # - rsyslog
