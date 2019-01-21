@@ -102,6 +102,7 @@ cldwatch_log_group: "${cldwatch_log_group}"
 is_nfs_client: true
 nfs_mount_dir: "${activemq_data_folder}"
 nfs_mount_owner: oracle
+nfs_server_name: activemq-nfs
 
 EOF
 
