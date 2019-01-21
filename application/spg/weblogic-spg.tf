@@ -111,7 +111,7 @@ module "spg" {
 module "activemq-nfs" {
   source                        = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//nfs-server"
   region                        = "${var.region}"
-  environment_identifier        = "${var.environment_identifier}"
+  environment_identifier        = "${var.environment_identifier}-amq"
   short_environment_identifier  = "${var.short_environment_identifier}"
   remote_state_bucket_name      = "${var.remote_state_bucket_name}"
   route53_sub_domain            = "${data.aws_route53_zone.public.name}"
