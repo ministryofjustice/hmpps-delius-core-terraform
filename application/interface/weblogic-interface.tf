@@ -87,6 +87,7 @@ module "interface" {
     jvm_mem_args             = "${var.ansible_vars["jvm_mem_args"]}"
     database_port            = "${var.ansible_vars["database_port"]}"
     database_sid             = "${var.ansible_vars["database_sid"]}"
+    activemq_data_folder     = "${var.ansible_vars["activemq_data_folder"]}"
 
     alfresco_port           = "${var.ansible_vars["alfresco_port"]}"
     alfresco_office_port    = "${var.ansible_vars["alfresco_office_port"]}"
