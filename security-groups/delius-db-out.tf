@@ -27,3 +27,23 @@ resource "aws_security_group_rule" "delius_db_out_spg_message" {
   source_security_group_id = "${aws_security_group.weblogic_spg_internal_elb.id}"
   description              = "Delius DB out to ActiveMQ ELB"
 }
+
+resource "aws_security_group_rule" "db_to_db_out" {
+  security_group_id = "${aws_security_group.delius_db_out.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = "1521"
+  to_port           = "1521"
+  self              = true
+  description       = "Inter db comms"
+}
+
+resource "aws_security_group_rule" "db_to_db_ssh_out" {
+  security_group_id = "${aws_security_group.delius_db_out.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = "22"
+  to_port           = "22"
+  self              = true
+  description       = "Inter db ssh comms"
+}

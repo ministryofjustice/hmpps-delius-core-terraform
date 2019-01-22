@@ -1,10 +1,10 @@
-module "delius_db" {
+module "delius_db_3" {
   source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
-  server_name = "delius-db"
+  server_name = "delius-db-3"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
   instance_type        = "${var.instance_type_db}"
-  db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
+  db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az3}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
@@ -49,14 +49,14 @@ output "ami_delius_db" {
   value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
 }
 
-output "public_fqdn_delius_db" {
-  value = "${module.delius_db.public_fqdn}"
+output "public_fqdn_delius_db_3" {
+  value = "${module.delius_db_3.public_fqdn}"
 }
 
-output "internal_fqdn_delius_db" {
-  value = "${module.delius_db.internal_fqdn}"
+output "internal_fqdn_delius_db_3" {
+  value = "${module.delius_db_3.internal_fqdn}"
 }
 
 output "private_ip_delius_db" {
-  value = "${module.delius_db.private_ip}"
+  value = "${module.delius_db_3.private_ip}"
 }
