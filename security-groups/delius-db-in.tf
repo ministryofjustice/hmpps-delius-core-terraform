@@ -54,6 +54,6 @@ resource "aws_security_group_rule" "jenkins_db_in" {
   protocol                 = "tcp"
   from_port                = "1521"
   to_port                  = "1521"
-  cidr_blocks              = ["${var.jenkins_access_cidr_blocks}"]
+  cidr_blocks              = [ "${data.terraform_remote_state.vpc.eng_vpc_cidr}" ]
   description              = "Jenkins in"
 }
