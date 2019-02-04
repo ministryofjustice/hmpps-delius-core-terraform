@@ -75,7 +75,7 @@ resource "aws_security_group_rule" "apacheds_ldap_instances_egress_to_lb" {
 
 resource "aws_security_group_rule" "apacheds_ldap_lb_ingress_from_instances" {
   security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
-  type                     = "egress"
+  type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap"]}"
   to_port                  = "${var.ldap_ports["ldap"]}"
@@ -86,7 +86,7 @@ resource "aws_security_group_rule" "apacheds_ldap_lb_ingress_from_instances" {
 #Allow the slaves to see the master LB (TLS)
 resource "aws_security_group_rule" "apacheds_ldap_instances_egress_to_lb_tls" {
   security_group_id        = "${aws_security_group.apacheds_ldap.id}"
-  type                     = "ingress"
+  type                     = "engress"
   protocol                 = "tcp"
   from_port                = "${var.ldap_ports["ldap_tls"]}"
   to_port                  = "${var.ldap_ports["ldap_tls"]}"
