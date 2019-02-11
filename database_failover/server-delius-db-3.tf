@@ -1,5 +1,6 @@
 module "delius_db_3" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
+  #source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
+  source      = "../modules/oracle-database"
   server_name = "delius-db-3"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
@@ -35,6 +36,7 @@ module "delius_db_3" {
     database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
+    database_type                 = "standby"
 
     ## the following are retrieved from SSM Parameter Store
     ## oradb_sys_password            = "/${environment_name}/delius-core/oracle-database/db/oradb_sys_password"
@@ -45,7 +47,7 @@ module "delius_db_3" {
   }
 }
 
-output "ami_delius_db" {
+output "ami_delius_db_3" {
   value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
 }
 
@@ -57,6 +59,6 @@ output "internal_fqdn_delius_db_3" {
   value = "${module.delius_db_3.internal_fqdn}"
 }
 
-output "private_ip_delius_db" {
+output "private_ip_delius_db_3" {
   value = "${module.delius_db_3.private_ip}"
 }
