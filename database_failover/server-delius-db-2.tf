@@ -35,7 +35,7 @@ module "delius_db_2" {
     database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
-    database_type                 = "standby"
+    database_type                 = "standby" # required for the DB module. This file is where the property is set.
 
     ## the following are retrieved from SSM Parameter Store
     ## oradb_sys_password            = "/${environment_name}/delius-core/oracle-database/db/oradb_sys_password"
