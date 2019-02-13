@@ -1,6 +1,6 @@
-module "delius_db" {
+module "delius_db_1" {
   source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
-  server_name = "delius-db"
+  server_name = "delius-db-1"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
   instance_type        = "${var.instance_type_db}"
@@ -35,7 +35,7 @@ module "delius_db" {
     database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
-    database_type                 = "standalone" # required for the DB module. This file is where the property is set.
+    database_type                 = "primary" # required for the DB module. This file is where the property is set.
     dependencies_bucket_arn       = "${var.dependencies_bucket_arn}"
     database_bootstrap_restore    = "${var.ansible_vars_oracle_db["database_bootstrap_restore"]}"
     database_backup               = "${var.ansible_vars_oracle_db["database_backup"]}"
@@ -50,18 +50,18 @@ module "delius_db" {
   }
 }
 
-output "ami_delius_db" {
+output "ami_delius_db_1" {
   value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
 }
 
-output "public_fqdn_delius_db" {
-  value = "${module.delius_db.public_fqdn}"
+output "public_fqdn_delius_db_1" {
+  value = "${module.delius_db_1.public_fqdn}"
 }
 
-output "internal_fqdn_delius_db" {
-  value = "${module.delius_db.internal_fqdn}"
+output "internal_fqdn_delius_db_1" {
+  value = "${module.delius_db_1.internal_fqdn}"
 }
 
-output "private_ip_delius_db" {
-  value = "${module.delius_db.private_ip}"
+output "private_ip_delius_db_1" {
+  value = "${module.delius_db_1.private_ip}"
 }

@@ -1,10 +1,10 @@
-module "delius_db" {
+module "delius_db_3" {
   source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
-  server_name = "delius-db"
+  server_name = "delius-db-3"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
   instance_type        = "${var.instance_type_db}"
-  db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
+  db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az3}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
@@ -35,12 +35,8 @@ module "delius_db" {
     database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
-    database_type                 = "standalone" # required for the DB module. This file is where the property is set.
-    dependencies_bucket_arn       = "${var.dependencies_bucket_arn}"
-    database_bootstrap_restore    = "${var.ansible_vars_oracle_db["database_bootstrap_restore"]}"
-    database_backup               = "${var.ansible_vars_oracle_db["database_backup"]}"
-    database_backup_sys_passwd    = "${var.ansible_vars_oracle_db["database_backup_sys_passwd"]}"
-    database_backup_location      = "${var.ansible_vars_oracle_db["database_backup_location"]}"
+    database_type                 = "standby" # required for the DB module. This file is where the property is set.
+
     ## the following are retrieved from SSM Parameter Store
     ## oradb_sys_password            = "/${environment_name}/delius-core/oracle-database/db/oradb_sys_password"
     ## oradb_system_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_system_password"
@@ -50,18 +46,18 @@ module "delius_db" {
   }
 }
 
-output "ami_delius_db" {
+output "ami_delius_db_3" {
   value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
 }
 
-output "public_fqdn_delius_db" {
-  value = "${module.delius_db.public_fqdn}"
+output "public_fqdn_delius_db_3" {
+  value = "${module.delius_db_3.public_fqdn}"
 }
 
-output "internal_fqdn_delius_db" {
-  value = "${module.delius_db.internal_fqdn}"
+output "internal_fqdn_delius_db_3" {
+  value = "${module.delius_db_3.internal_fqdn}"
 }
 
-output "private_ip_delius_db" {
-  value = "${module.delius_db.private_ip}"
+output "private_ip_delius_db_3" {
+  value = "${module.delius_db_3.private_ip}"
 }
