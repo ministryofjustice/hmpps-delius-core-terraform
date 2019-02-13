@@ -62,6 +62,48 @@ resource "aws_security_group_rule" "apacheds_ldap_tls_private_elb_egress" {
   description              = "LB out to LDAPS"
 }
 
+#Allow the slaves to see the master LB
+resource "aws_security_group_rule" "apacheds_ldap_instances_egress_to_lb" {
+  security_group_id        = "${aws_security_group.apacheds_ldap.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  description              = "Instances to LB"
+}
+
+resource "aws_security_group_rule" "apacheds_ldap_lb_ingress_from_instances" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "LB from instances"
+}
+
+#Allow the slaves to see the master LB (TLS)
+resource "aws_security_group_rule" "apacheds_ldap_instances_egress_to_lb_tls" {
+  security_group_id        = "${aws_security_group.apacheds_ldap.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap_tls"]}"
+  to_port                  = "${var.ldap_ports["ldap_tls"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  description              = "Instances to LB TLS"
+}
+
+resource "aws_security_group_rule" "apacheds_ldap_lb_ingress_from_instances_tls" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap_tls"]}"
+  to_port                  = "${var.ldap_ports["ldap_tls"]}"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "LB from instances TLS"
+}
+
 #Allow weblogic domains into the LDAP instances
 resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_interface_ingress" {
   security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"

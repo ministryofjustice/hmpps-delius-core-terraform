@@ -48,16 +48,6 @@ resource "aws_security_group_rule" "weblogic_spg_admin_db_in" {
   description              = "wls spg instances in"
 }
 
-resource "aws_security_group_rule" "jenkins_db_in" {
-  security_group_id = "${aws_security_group.delius_db_in.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "1521"
-  to_port           = "1521"
-  cidr_blocks       = ["${data.terraform_remote_state.vpc.eng_vpc_cidr}"]
-  description       = "Jenkins in"
-}
-
 resource "aws_security_group_rule" "db_to_db_in" {
   security_group_id = "${aws_security_group.delius_db_in.id}"
   type              = "ingress"
@@ -76,4 +66,14 @@ resource "aws_security_group_rule" "db_to_db_ssh_in" {
   to_port           = "22"
   self              = true
   description       = "Inter db ssh comms"
+}
+
+resource "aws_security_group_rule" "jenkins_db_in" {
+  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  cidr_blocks              = [ "${data.terraform_remote_state.vpc.eng_vpc_cidr}" ]
+  description              = "Jenkins in"
 }
