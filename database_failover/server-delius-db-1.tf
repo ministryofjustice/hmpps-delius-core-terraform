@@ -36,7 +36,11 @@ module "delius_db_1" {
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
     database_type                 = "primary"
-
+    dependencies_bucket_arn       = "${var.dependencies_bucket_arn}"
+    database_bootstrap_restore    = "${var.ansible_vars_oracle_db["database_bootstrap_restore"]}"
+    database_backup               = "${var.ansible_vars_oracle_db["database_backup"]}"
+    database_backup_sys_passwd    = "${var.ansible_vars_oracle_db["database_backup_sys_passwd"]}"
+    database_backup_location      = "${var.ansible_vars_oracle_db["database_backup_location"]}"
     ## the following are retrieved from SSM Parameter Store
     ## oradb_sys_password            = "/${environment_name}/delius-core/oracle-database/db/oradb_sys_password"
     ## oradb_system_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_system_password"
