@@ -27,6 +27,7 @@ def resources = [
   'application/spg',
   'application/ldap',
   'database',
+  's3buckets',
   'key_profile',
   'security-groups'
 ]
