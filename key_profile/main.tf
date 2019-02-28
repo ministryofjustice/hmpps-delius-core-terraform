@@ -20,3 +20,16 @@ data "terraform_remote_state" "vpc" {
     region = "${var.region}"
   }
 }
+
+#-------------------------------------------------------------
+### Getting the s3buckets
+#-------------------------------------------------------------
+data "terraform_remote_state" "s3bucket" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/s3buckets/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
