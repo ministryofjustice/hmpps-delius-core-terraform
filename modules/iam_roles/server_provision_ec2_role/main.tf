@@ -16,6 +16,7 @@ data "template_file" "bucket_access_policy" {
 
   vars {
     dependencies_bucket_arn = "${var.dependencies_bucket_arn}"
+    backups_bucket_arn      = "${var.backups_bucket_arn}"
   }
 }
 

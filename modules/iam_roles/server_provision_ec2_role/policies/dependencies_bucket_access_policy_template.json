@@ -2,6 +2,7 @@
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Sid": "allowAccessToDependenciesBucket",
       "Action": [
         "s3:Get*",
         "s3:List*"
@@ -10,6 +11,19 @@
       "Resource": [
         "${dependencies_bucket_arn}",
         "${dependencies_bucket_arn}/*"
+      ]
+    },
+    {
+      "Sid": "allowAccessToBackupBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*",
+        "s3:List*",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "${backups_bucket_arn}",
+        "${backups_bucket_arn}/*"
       ]
     }
   ]
