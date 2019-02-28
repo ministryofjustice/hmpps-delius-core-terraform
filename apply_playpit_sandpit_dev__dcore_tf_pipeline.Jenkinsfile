@@ -149,6 +149,14 @@ pipeline {
             }
           }
         }
+        
+        stage('Delius Backups bucket') {
+          steps {
+            script {
+              do_terraform(project.config, environment_name, project.dcore, 's3buckets')
+            }
+          }
+        }
 
         stage('Delius Keys and Profiles') {
           steps {
