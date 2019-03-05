@@ -29,6 +29,7 @@ module "delius_db" {
   private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
+  db_size         = "${var.db_size_delius_core}"
 
   ansible_vars = {
     service_user_name             = "${var.ansible_vars_oracle_db["service_user_name"]}"
@@ -51,7 +52,7 @@ module "delius_db" {
 }
 
 output "ami_delius_db" {
-  value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
+  value = "${module.delius_db.ami_id}"
 }
 
 output "public_fqdn_delius_db" {
@@ -64,4 +65,8 @@ output "internal_fqdn_delius_db" {
 
 output "private_ip_delius_db" {
   value = "${module.delius_db.private_ip}"
+}
+
+output "db_disks_delius_db" {
+  value = "${module.delius_db.db_size_parameters}"
 }
