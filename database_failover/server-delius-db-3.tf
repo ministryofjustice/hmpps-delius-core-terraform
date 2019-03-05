@@ -29,12 +29,14 @@ module "delius_db_3" {
   private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
+  db_size         = "${var.db_size_delius_core}"
 
   ansible_vars = {
     service_user_name             = "${var.ansible_vars_oracle_db["service_user_name"]}"
     database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
+    oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
     database_type                 = "standby" # required for the DB module. This file is where the property is set.
 
     ## the following are retrieved from SSM Parameter Store
@@ -47,7 +49,7 @@ module "delius_db_3" {
 }
 
 output "ami_delius_db_3" {
-  value = "${data.aws_ami.centos_oracle_db.id} - ${data.aws_ami.centos_oracle_db.name}"
+  value = "${module.delius_db_3.ami_id}"
 }
 
 output "public_fqdn_delius_db_3" {
@@ -60,4 +62,8 @@ output "internal_fqdn_delius_db_3" {
 
 output "private_ip_delius_db_3" {
   value = "${module.delius_db_3.private_ip}"
+}
+
+output "db_disks_delius_db_3" {
+  value = "${module.delius_db_3.db_size_parameters}"
 }

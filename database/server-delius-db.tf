@@ -36,6 +36,7 @@ module "delius_db" {
     database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
+    oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
     database_type                 = "standalone" # required for the DB module. This file is where the property is set.
     dependencies_bucket_arn       = "${var.dependencies_bucket_arn}"
     database_bootstrap_restore    = "${var.ansible_vars_oracle_db["database_bootstrap_restore"]}"
