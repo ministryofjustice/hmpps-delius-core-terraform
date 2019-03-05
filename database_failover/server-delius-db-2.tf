@@ -3,7 +3,6 @@ module "delius_db_2" {
   server_name = "delius-db-2"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
-  instance_type        = "${var.instance_type_db}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az2}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
