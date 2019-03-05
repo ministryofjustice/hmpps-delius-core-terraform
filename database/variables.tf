@@ -30,10 +30,6 @@ variable "short_environment_identifier" {
   description = "shortend resource label or name"
 }
 
-variable "instance_type_db" {
-  description = "The ec2 instance type"
-}
-
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
@@ -44,5 +40,10 @@ variable "ansible_vars_oracle_db" {
 }
 
 variable "tags" {
+  type = "map"
+}
+
+variable "db_size_delius_core" {
+  description = "Details of the database resources size"
   type = "map"
 }
