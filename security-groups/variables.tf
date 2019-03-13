@@ -49,6 +49,11 @@ variable "user_access_cidr_blocks" {
   type        = "list"
 }
 
+variable "env_user_access_cidr_blocks" {
+  description = "Environment-specific CIDRS for access via public/user network"
+  type        = "list"
+}
+
 variable "jenkins_access_cidr_blocks" {
   description = "CIDRS for Jenkins to access"
   type        = "list"

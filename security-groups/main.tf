@@ -77,4 +77,9 @@ locals {
     "${data.terraform_remote_state.natgateway.natgateway_common-nat-public-ip-az2}/32",
     "${data.terraform_remote_state.natgateway.natgateway_common-nat-public-ip-az3}/32",
   ]
+
+  user_access_cidr_blocks = "${concat(
+    "${var.user_access_cidr_blocks}",
+    "${var.env_user_access_cidr_blocks}"
+  )}"
 }
