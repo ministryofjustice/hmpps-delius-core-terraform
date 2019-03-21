@@ -34,15 +34,6 @@ variable "tags" {
   type = "map"
 }
 
-variable "instance_type_db" {
-  description = "The ec2 instance type"
-}
-
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
-}
-
-variable "ansible_vars_oracle_db" {
-  description = "Ansible (oracle_db) vars for user_data script "
-  type        = "map"
 }
