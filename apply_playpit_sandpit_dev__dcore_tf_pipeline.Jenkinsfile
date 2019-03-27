@@ -6,12 +6,21 @@ project.alfresco  = 'hmpps-delius-alfresco-shared-terraform'
 project.spg       = 'hmpps-spg-terraform'
 //project.ndmis     = 'hmpps-ndmis-terraform' //
 
+// Add environments to the list in alphabetical order
 def environments = [
   '-- choose environment --',
   'delius-core-sandpit',
-  'delius-core-playpit',
   'delius-core-dev',
   'delius-test',
+  'delius-perf',
+  'delius-stage',
+  'delius-mis-test',
+  'delius-po-test1',
+  'delius-po-test2',
+  'delius-training',
+  'delius-training-test'
+  // 'delius-pre-prod',
+  // 'delius-prod'
 ]
 
 def prepare_env() {
@@ -149,7 +158,7 @@ pipeline {
             }
           }
         }
-        
+
         stage('Delius Backups bucket') {
           steps {
             script {

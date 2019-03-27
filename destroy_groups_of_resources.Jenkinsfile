@@ -16,6 +16,11 @@ def environments = [
   'delius-test',
   'delius-perf',
   'delius-stage',
+  'delius-mis-test',
+  'delius-po-test1',
+  'delius-po-test2',
+  'delius-training',
+  'delius-training-test'
   // 'delius-pre-prod',
   // 'delius-prod'
 ]
@@ -25,10 +30,13 @@ def taint_actions = [
 ]
 
 def resources = [
-  'ldap',
-  'interface',
-  'ndelius',
-  'spg'
+  'loadrunner',
+  'application/interface',
+  'application/ndelius',
+  'application/spg',
+  'application/ldap',
+  'database',
+  'database_failover'
 ]
 
 def prepare_env() {
