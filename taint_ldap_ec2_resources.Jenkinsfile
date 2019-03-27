@@ -16,6 +16,11 @@ def environments = [
   'delius-test',
   'delius-perf',
   'delius-stage',
+  'delius-mis-test',
+  'delius-po-test1',
+  'delius-po-test2',
+  'delius-training',
+  'delius-training-test'
   // 'delius-pre-prod',
   // 'delius-prod'
 ]
