@@ -25,7 +25,7 @@ module "delius_db_3" {
 
   kms_key_id      = "${data.terraform_remote_state.key_profile.kms_arn_app}"
   public_zone_id  = "${data.terraform_remote_state.vpc.public_zone_id}"
-  private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
   private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
   db_size         = "${var.db_size_delius_core}"
