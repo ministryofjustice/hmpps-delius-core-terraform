@@ -34,6 +34,18 @@
         "${backups_bucket_arn}",
         "${backups_bucket_arn}/*"
       ]
+    },
+    {
+      "Sid": "allowAccessToMigrationBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Resource": [
+        "${migration_bucket_arn}",
+        "${migration_bucket_arn}/*"
+      ]
     }
   ]
 }

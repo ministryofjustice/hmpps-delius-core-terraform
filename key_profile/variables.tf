@@ -18,6 +18,10 @@ variable "dependencies_bucket_arn" {
   description = "The S3 bucket arn for software and application dependencies"
 }
 
+variable "migration_bucket_arn" {
+  description = "The S3 bucket arn for temporarily holding migrated data"
+}
+
 variable "tags" {
   type = "map"
 }
