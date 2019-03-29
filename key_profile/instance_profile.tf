@@ -6,6 +6,7 @@ module "server_provision_ec2_role" {
   environment_name        = "${var.short_environment_name}"
   dependencies_bucket_arn = "${var.dependencies_bucket_arn}"
   backups_bucket_arn      = "${data.terraform_remote_state.s3bucket.s3_bucket_arn}"
+  migration_bucket_arn    = "${var.migration_bucket_arn}"
 }
 
 output "instance_profile_ec2_id" {

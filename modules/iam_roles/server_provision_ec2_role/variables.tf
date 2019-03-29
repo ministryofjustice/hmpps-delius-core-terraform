@@ -11,5 +11,9 @@ variable "dependencies_bucket_arn" {
 }
 
 variable "backups_bucket_arn" {
-  description = "The S3 bucket arn for database backups"
+  description = "The S3 bucket arn for data backups"
+}
+
+variable "migration_bucket_arn" {
+  description = "The S3 bucket arn for temporarily holding migrated data"
 }
