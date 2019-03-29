@@ -66,9 +66,7 @@ data "aws_ami" "centos_apacheds" {
 
   filter {
     name = "name"
-
-    # values = ["HMPPS Delius-Core ApacheDS master *"]
-    values = ["HMPPS Delius-Core ApacheDS feature/ApacheDS *"]
+    values = ["HMPPS Delius-Core ApacheDS master *"]
   }
 
   filter {
