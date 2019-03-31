@@ -61,6 +61,7 @@ region: "${region}"
 ndelius_version : "${ndelius_version}"
 
 s3_dependencies_bucket: "${s3_dependencies_bucket}"
+s3_backups_bucket: "${s3_backups_bucket}"
 apacheds_version: "${apacheds_version}"
 ldap_protocol: "${ldap_protocol}"
 ldap_port: "${ldap_port}"
