@@ -52,7 +52,7 @@ module "ldap" {
   ansible_vars = {
     cldwatch_log_group     = "${var.environment_identifier}/ldap"
     s3_dependencies_bucket = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
-    s3_backups_bucket      = "${var.environment_identifier}-backups"
+    s3_backups_bucket      = "${var.environment_identifier}-backups-s3bucket"
     apacheds_version       = "${var.ansible_vars_apacheds["apacheds_version"]}"
     ldap_protocol          = "${var.ansible_vars_apacheds["ldap_protocol"]}"
     ldap_port              = "${var.ldap_ports["ldap"]}"
