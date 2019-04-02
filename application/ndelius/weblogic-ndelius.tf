@@ -63,20 +63,52 @@ module "ndelius" {
 
   ndelius_version = "${var.ndelius_version}"
 
-  ansible_vars = "${merge(${local.ansible_vars}, map(
-      "cldwatch_log_group", "${var.environment_identifier}/weblogic-ndelius",
-      "database_url", concat("(DESCRIPTION=(LOAD_BALANCE=OFF)(FAILOVER=ON)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=",
-        "(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-1.${data.aws_route53_zone.public.name})(PORT=1521))",
-        "(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-2.${data.aws_route53_zone.public.name})(PORT=1521))",
-        "(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-3.${data.aws_route53_zone.public.name})(PORT=1521)))",
-        "(CONNECT_DATA=(SERVICE_NAME=${local.ansible_vars["database_sid"]}_TAF)))"),
-      "alfresco_host", "${local.ansible_vars["alfresco_host"]}.${data.aws_route53_zone.public.name}",
-      "alfresco_office_host", "${local.ansible_vars["alfresco_office_host"]}.${data.aws_route53_zone.public.name}",
-      "spg_host", "${local.ansible_vars["spg_host"]}.${data.aws_route53_zone.public.name}",
-      "ldap_host", "${local.ansible_vars["ldap_host"]}.${data.aws_route53_zone.public.name}",
-      "ldap_principal", "${var.ansible_vars_apacheds["bind_user"]}",
-      "partition_id", "${var.ansible_vars_apacheds["partition_id"]}"
-    ))}"
+  ansible_vars = {
+    cldwatch_log_group       = "${var.environment_identifier}/weblogic-ndelius"
+    setup_datasources        = "${local.ansible_vars["setup_datasources"]}"
+    s3_dependencies_bucket   = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
+    database_url             = "${concat("(DESCRIPTION=(LOAD_BALANCE=OFF)(FAILOVER=ON)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=",
+        "(ADDRESS=(PROTOCOL=tcp)(HOST=${local.ansible_vars["database_host"]}-1.${data.aws_route53_zone.public.name})(PORT=1521))",
+        "(ADDRESS=(PROTOCOL=tcp)(HOST=${local.ansible_vars["database_host"]}-2.${data.aws_route53_zone.public.name})(PORT=1521))",
+        "(ADDRESS=(PROTOCOL=tcp)(HOST=${local.ansible_vars["database_host"]}-3.${data.aws_route53_zone.public.name})(PORT=1521)))",
+        "(CONNECT_DATA=(SERVICE_NAME=${local.ansible_vars["database_sid"]}_TAF)))")}"
+    alfresco_host            = "${local.ansible_vars["alfresco_host"]}.${data.aws_route53_zone.public.name}"
+    alfresco_office_host     = "${local.ansible_vars["alfresco_office_host"]}.${data.aws_route53_zone.public.name}"
+    spg_host                 = "${local.ansible_vars["spg_host"]}.${data.aws_route53_zone.public.name}"
+    ldap_host                = "${local.ansible_vars["ldap_host"]}.${data.aws_route53_zone.public.name}"
+
+    ndelius_display_name     = "${local.ansible_vars["ndelius_display_name"]}"
+    ndelius_training_mode    = "${local.ansible_vars["ndelius_training_mode"]}"
+    ndelius_log_level        = "${local.ansible_vars["ndelius_log_level"]}"
+    ndelius_analytics_tag    = "${local.ansible_vars["ndelius_analytics_tag"]}"
+    newtech_search_url       = "${local.ansible_vars["newtech_search_url"]}"
+    newtech_pdfgenerator_url = "${local.ansible_vars["newtech_pdfgenerator_url"]}"
+    usermanagement_url       = "${local.ansible_vars["usermanagement_url"]}"
+    nomis_url                = "${local.ansible_vars["nomis_url"]}"
+
+    domain_name              = "${local.ansible_vars["domain_name"]}"
+    server_name              = "${local.ansible_vars["server_name"]}"
+    server_params            = "${local.ansible_vars["server_params"]}"
+    weblogic_admin_username  = "${local.ansible_vars["weblogic_admin_username"]}"
+    server_listen_address    = "${local.ansible_vars["server_listen_address"]}"
+    server_listen_port       = "${var.weblogic_domain_ports["weblogic_port"]}"
+    jvm_mem_args             = "${local.ansible_vars["jvm_mem_args"]}"
+    database_port            = "${local.ansible_vars["database_port"]}"
+    database_sid             = "${local.ansible_vars["database_sid"]}"
+    activemq_data_folder     = "${local.ansible_vars["activemq_data_folder"]}"
+
+    alfresco_port           = "${local.ansible_vars["alfresco_port"]}"
+    alfresco_office_port    = "${local.ansible_vars["alfresco_office_port"]}"
+
+    ldap_port               = "${var.ldap_ports["ldap"]}"
+    ldap_principal          = "${var.ansible_vars_apacheds["bind_user"]}"
+    partition_id            = "${var.ansible_vars_apacheds["partition_id"]}"
+
+    ## the following are retrieved from SSM Parameter Store
+    ## weblogic_admin_password  = "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password"
+    ## database_password        = "/${environment_name}/delius-core/oracle-database/db/delius_app_schema_password"
+    ## ldap_admin_password      = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
+  }
 }
 
 output "ami_ndelius_wls" {
