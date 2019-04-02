@@ -66,7 +66,7 @@ module "spg" {
   ndelius_version = "${var.ndelius_version}"
 
   ansible_vars = {
-    cldwatch_log_group       = "${var.environment_identifier}/weblogic-ndelius"
+    cldwatch_log_group       = "${var.environment_identifier}/weblogic-spg"
 
     # Artefact locations
     s3_dependencies_bucket   = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
