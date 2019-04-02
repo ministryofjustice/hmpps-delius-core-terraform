@@ -172,7 +172,7 @@ CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 --extra-vars "{\
 'weblogic_admin_password':'$weblogic_admin_password', \
 'ldap_admin_password':'$ldap_admin_password', \
-'database_password':'$database_password' \
+'database_password':'$database_password', \
 'activemq_remoteCF_username':'$remote_broker_username', \
 'activemq_remoteCF_password':'$remote_broker_password' \
 }"
