@@ -64,6 +64,15 @@ cldwatch_log_group: "${cldwatch_log_group}"
 # Artefact locations
 s3_dependencies_bucket: "${s3_dependencies_bucket}"
 
+# Server/WebLogic config
+domain_name: "${domain_name}"
+server_name: "${server_name}"
+jvm_mem_args: "${jvm_mem_args}"
+server_params: "${server_params}"
+weblogic_admin_username: "${weblogic_admin_username}"
+server_listen_address: "${server_listen_address}"
+server_listen_port: "${server_listen_port}"
+
 # Database
 setup_datasources: "${setup_datasources}"
 database_url: "${database_url}"
@@ -76,34 +85,36 @@ alfresco_office_port: "${alfresco_office_port}"
 
 # LDAP
 ldap_host: "${ldap_host}"
+ldap_readonly_host: "${ldap_readonly_host}"
 ldap_port: "${ldap_port}"
 ldap_principal: "${ldap_principal}"
 partition_id: "${partition_id}"
+ldap_base: "${ldap_base}"
+ldap_user_base: "${ldap_user_base}"
+ldap_group_base: "${ldap_group_base}"
 
 # NDelius application
 ndelius_version : "${ndelius_version}"
 ndelius_display_name: "${ndelius_display_name}"
-ndelius_training_mode: "${ndelius_training_mode}"
 ndelius_log_level: "${ndelius_log_level}"
+ndelius_training_mode: "${ndelius_training_mode}"
 ndelius_analytics_tag: "${ndelius_analytics_tag}"
+ldap_passfile: "${ldap_passfile}"
 
 # New tech
 newtech_search_url: "${newtech_search_url}"
 newtech_pdfgenerator_url: "${newtech_pdfgenerator_url}"
-
-# NOMIS
-nomis_url: "${nomis_url}"
+newtech_pdfgenerator_templates: "${newtech_pdfgenerator_templates}"
+newtech_pdfgenerator_secret: "${newtech_pdfgenerator_secret}"
 
 # User management tool
 usermanagement_url: "${usermanagement_url}"
+usermanagement_secret: "${usermanagement_secret}"
 
-# WebLogic
-domain_name: "${domain_name}"
-server_name: "${server_name}"
-weblogic_admin_username: "${weblogic_admin_username}"
-server_listen_address: "${server_listen_address}"
-server_listen_port: "${server_listen_port}"
-jvm_mem_args: "${jvm_mem_args}"
+# NOMIS
+nomis_url: "${nomis_url}"
+nomis_client_id: "${nomis_client_id}"
+nomis_client_secret: "${nomis_client_secret}"
 
 EOF
 
