@@ -59,6 +59,7 @@ data "template_file" "user_data" {
     ldap_group_base          = "${var.ansible_vars["ldap_group_base"]}"
 
     # App config
+    ndelius_version          = "${var.ndelius_version}"
     ndelius_display_name     = "${var.ansible_vars["ndelius_display_name"]}"
     ndelius_training_mode    = "${var.ansible_vars["ndelius_training_mode"]}"
     ndelius_log_level        = "${var.ansible_vars["ndelius_log_level"]}"
