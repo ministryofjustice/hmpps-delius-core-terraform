@@ -57,44 +57,51 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
-ndelius_version : "${ndelius_version}"
+cldwatch_log_group: "${cldwatch_log_group}"
 
-setup_datasources: "${setup_datasources}"
+# Artefact locations
 s3_dependencies_bucket: "${s3_dependencies_bucket}"
-database_host: "${database_host}"
-alfresco_host: "${alfresco_host}"
-alfresco_office_host: "${alfresco_office_host}"
-spg_host: "${spg_host}"
-ldap_host: "${ldap_host}"
 
+# Database
+setup_datasources: "${setup_datasources}"
+database_url: "${database_url}"
+
+# Alfresco
+alfresco_host: "${alfresco_host}"
+alfresco_port: "${alfresco_port}"
+alfresco_office_host: "${alfresco_office_host}"
+alfresco_office_port: "${alfresco_office_port}"
+
+# LDAP
+ldap_host: "${ldap_host}"
+ldap_port: "${ldap_port}"
+ldap_principal: "${ldap_principal}"
+partition_id: "${partition_id}"
+
+# NDelius application
+ndelius_version : "${ndelius_version}"
 ndelius_display_name: "${ndelius_display_name}"
 ndelius_training_mode: "${ndelius_training_mode}"
 ndelius_log_level: "${ndelius_log_level}"
 ndelius_analytics_tag: "${ndelius_analytics_tag}"
 
+# New tech
 newtech_search_url: "${newtech_search_url}"
 newtech_pdfgenerator_url: "${newtech_pdfgenerator_url}"
-usermanagement_url: "${usermanagement_url}"
+
+# NOMIS
 nomis_url: "${nomis_url}"
 
+# User management tool
+usermanagement_url: "${usermanagement_url}"
+
+# WebLogic
 domain_name: "${domain_name}"
 server_name: "${server_name}"
-server_params: "${server_params}"
 weblogic_admin_username: "${weblogic_admin_username}"
 server_listen_address: "${server_listen_address}"
 server_listen_port: "${server_listen_port}"
 jvm_mem_args: "${jvm_mem_args}"
-database_port: "${database_port}"
-database_sid: "${database_sid}"
-
-alfresco_port: "${alfresco_port}"
-alfresco_office_port: "${alfresco_office_port}"
-
-ldap_port: "${ldap_port}"
-ldap_principal: "${ldap_principal}"
-partition_id: "${partition_id}"
-
-cldwatch_log_group: "${cldwatch_log_group}"
 
 EOF
 
