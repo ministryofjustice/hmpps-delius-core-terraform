@@ -152,8 +152,8 @@ export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
---extra-vars '\
-"weblogic_admin_password":"$weblogic_admin_password", \
-"ldap_admin_password":"$ldap_admin_password" \
-"database_password":"$database_password" \
-'
+--extra-vars "{\
+'weblogic_admin_password':'${weblogic_admin_password}', \
+'ldap_admin_password':'${ldap_admin_password}', \
+'database_password':'${database_password}' \
+}"
