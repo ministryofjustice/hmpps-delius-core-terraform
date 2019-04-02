@@ -2,7 +2,7 @@
 
 locals {
   # Override default values
-  ansible_vars = "${merge(${var.default_ansible_vars}, ${var.ansible_vars})}"
+  ansible_vars = "${merge(var.default_ansible_vars, var.ansible_vars)}"
 }
 
 module "interface" {
