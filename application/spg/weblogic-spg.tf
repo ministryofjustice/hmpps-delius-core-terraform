@@ -71,7 +71,7 @@ module "spg" {
         "(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-1.${data.aws_route53_zone.public.name})(PORT=1521))",
         "(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-2.${data.aws_route53_zone.public.name})(PORT=1521))",
         "(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-3.${data.aws_route53_zone.public.name})(PORT=1521)))",
-        "(CONNECT_DATA=(SERVICE_NAME=${local.database_sid}_TAF)))"),
+        "(CONNECT_DATA=(SERVICE_NAME=${local.ansible_vars["database_sid"]}_TAF)))"),
       "alfresco_host", "${local.ansible_vars["alfresco_host"]}.${data.aws_route53_zone.public.name}",
       "alfresco_office_host", "${local.ansible_vars["alfresco_office_host"]}.${data.aws_route53_zone.public.name}",
       "spg_host", "${local.ansible_vars["spg_host"]}.${data.aws_route53_zone.public.name}",
