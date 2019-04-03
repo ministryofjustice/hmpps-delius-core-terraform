@@ -186,7 +186,7 @@ pipeline {
         stage('Delius Database') {
           steps {
             script {
-              do_terraform(project.config, environment_name, project.dcore, 'database')
+              do_terraform(project.config, environment_name, project.dcore, 'database_failover')
             }
           }
         }
