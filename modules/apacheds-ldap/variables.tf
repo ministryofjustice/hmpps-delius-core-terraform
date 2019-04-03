@@ -58,6 +58,11 @@ variable "bastion_inventory" {
   type        = "string"
 }
 
+variable "project_name" {
+  description = "The project name - eg. delius-core"
+  type        = "string"
+}
+
 variable "environment_identifier" {
   description = "resource label or name"
 }
