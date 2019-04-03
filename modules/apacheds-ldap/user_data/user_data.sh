@@ -91,11 +91,12 @@ cat << EOF > ~/bootstrap.yml
      # - tier specific role
 EOF
 
-# get ssm parmaeters
+# get ssm parameters
+# TODO replace project name with sub-project name
 PARAM=$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
-"/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password" \
+"/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
 --query Parameters)
 
 # set parameter values

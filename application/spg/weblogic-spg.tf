@@ -37,6 +37,7 @@ module "spg" {
   tags                         = "${var.tags}"
   environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
   bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
+  project_name                 = "${var.project_name}"
   environment_identifier       = "${var.environment_identifier}"
   short_environment_identifier = "${var.short_environment_identifier}"
   short_environment_name       = "${var.short_environment_name}"

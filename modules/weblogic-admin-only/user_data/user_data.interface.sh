@@ -133,13 +133,14 @@ cat << EOF > ~/bootstrap.yml
      # - tier specific role
 EOF
 
-# get ssm parmaeters
+# get ssm parameters
+# TODO replace project name with sub-project name
 PARAM=$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
-"/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password" \
-"/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password" \
-"/${environment_name}/delius-core/oracle-database/db/delius_app_schema_password" \
+"/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
+"/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
+"/${environment_name}/${project_name}/oracle-database/db/delius_app_schema_password" \
 --query Parameters)
 
 # set parameter values
