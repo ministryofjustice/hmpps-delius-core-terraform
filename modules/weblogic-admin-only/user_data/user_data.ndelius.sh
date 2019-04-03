@@ -1,7 +1,5 @@
 #!/bin/bash
 set -x
-
-
 exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
 echo BEGIN
 date '+%Y-%m-%d %H:%M:%S'
