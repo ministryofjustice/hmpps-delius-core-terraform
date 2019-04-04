@@ -12,6 +12,7 @@ module "delius_db_3" {
     "${data.terraform_remote_state.delius_core_security_groups.sg_delius_db_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_delius_db_out_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
+    "${data.terraform_remote_state.vpc_security_groups.sg_delius_core_db_in_from_mis_id}",
   ]
 
   tags                         = "${var.tags}"
