@@ -58,6 +58,8 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
+environment_name: "${environment_name}"
+project_name: "${project_name}"
 ndelius_version : "${ndelius_version}"
 
 s3_dependencies_bucket: "${s3_dependencies_bucket}"
