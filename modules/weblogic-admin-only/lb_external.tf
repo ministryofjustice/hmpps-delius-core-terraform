@@ -33,13 +33,18 @@ resource "aws_lb_target_group" "external_lb_target_group" {
   tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-tg"))}"
 }
 
-module "external_lb_listener" {
-  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//loadbalancer//alb//create_listener_with_https"
-  lb_arn              = "${aws_lb.external_lb.arn}"
-  lb_protocol         = "HTTPS"
-  lb_port             = "443"
-  target_group_arn    = "${aws_lb_target_group.external_lb_target_group.arn}"
-  certificate_arn     = ["${var.certificate_arn}"]
+resource "aws_lb_listener" "external_lb_listener" {
+  load_balancer_arn = "${aws_lb.external_lb.arn}"
+  port              = "443"
+  protocol          = "HTTPS"
+
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = "${var.certificate_arn}"
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.external_lb_target_group.arn}"
+    type             = "forward"
+  }
 }
 
 resource "aws_lb_listener" "external_lb_listener_insecure" {
@@ -52,6 +57,22 @@ resource "aws_lb_listener" "external_lb_listener_insecure" {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "external_lb_console_redirect" {
+  listener_arn = "${aws_lb_listener.external_lb_listener.arn}"
+  "condition" {
+    field  = "path-pattern"
+    values = ["/console/*"]
+  }
+  "action" {
+    type = "redirect"
+    redirect {
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+      path        = "/"
     }
   }
 }
