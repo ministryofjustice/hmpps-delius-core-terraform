@@ -56,6 +56,22 @@ resource "aws_lb_listener" "external_lb_listener_insecure" {
   }
 }
 
+resource "aws_lb_listener_rule" "external_lb_console_redirect" {
+  listener_arn = "${module.external_lb_listener.listener_arn}"
+  "condition" {
+    field  = "path-pattern"
+    values = ["/console/*"]
+  }
+  "action" {
+    type = "redirect"
+    redirect {
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+      path        = "/"
+    }
+  }
+}
+
 resource "aws_route53_record" "external_lb_private" {
   zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}"
