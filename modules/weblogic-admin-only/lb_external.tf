@@ -34,7 +34,7 @@ resource "aws_lb_target_group" "external_lb_target_group" {
 }
 
 resource "aws_lb_listener" "external_lb_listener" {
-  load_balancer_arn = "${aws_lb.external_lb.arn}"
+  load_balancer_arn = ["${aws_lb.external_lb.arn}"]
   port              = "443"
   protocol          = "HTTPS"
 
