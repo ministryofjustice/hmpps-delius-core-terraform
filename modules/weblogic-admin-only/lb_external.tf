@@ -34,12 +34,12 @@ resource "aws_lb_target_group" "external_lb_target_group" {
 }
 
 resource "aws_lb_listener" "external_lb_listener" {
-  load_balancer_arn = ["${aws_lb.external_lb.arn}"]
+  load_balancer_arn = "${aws_lb.external_lb.arn}"
   port              = "443"
   protocol          = "HTTPS"
 
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = "${element(var.certificate_arn, count.index)}"
+  certificate_arn   = ["${var.certificate_arn}"]
 
   default_action {
     target_group_arn = "${aws_lb_target_group.external_lb_target_group.arn}"
