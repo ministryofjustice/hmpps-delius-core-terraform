@@ -46,7 +46,7 @@ data "template_file" "user_data" {
     alfresco_office_port     = "${var.ansible_vars["alfresco_office_port"]}"
 
     # SPG
-    spg_host                 = "${var.ansible_vars["spg_host"]}"
+    spg_host                 = "${var.ansible_vars["spg_jms_host"]}"
     activemq_data_folder     = "${var.ansible_vars["activemq_data_folder"]}"
 
     # LDAP
