@@ -92,7 +92,7 @@ module "spg" {
     alfresco_office_port     = "${local.ansible_vars["alfresco_office_port"]}"
 
     # SPG
-    spg_host                 = "${local.ansible_vars["spg_host"]}.${data.aws_route53_zone.public.name}"
+    spg_jms_host             = "${local.ansible_vars["spg_jms_host"]}.${data.aws_route53_zone.public.name}"
     activemq_data_folder     = "${local.ansible_vars["activemq_data_folder"]}"
 
     # LDAP

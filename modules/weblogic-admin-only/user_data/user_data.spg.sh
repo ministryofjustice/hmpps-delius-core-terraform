@@ -84,7 +84,7 @@ alfresco_office_host: "${alfresco_office_host}"
 alfresco_office_port: "${alfresco_office_port}"
 
 # SPG
-spg_host: "${spg_host}"
+spg_host: "${spg_jms_host}"
 activemq_data_folder: "${activemq_data_folder}/data"
 
 # LDAP
