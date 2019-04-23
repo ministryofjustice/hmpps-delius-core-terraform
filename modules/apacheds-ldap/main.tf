@@ -75,3 +75,14 @@ data "template_file" "user_data_slave" {
     provider_host          = "${aws_route53_record.ldap_elb_private.fqdn}"
   }
 }
+
+# This null_data_source is required to convert our Map of tags, to the required List of tags for ASGs
+# see: https://github.com/hashicorp/terraform/issues/16980
+data "null_data_source" "tags" {
+  count = "${length(keys(var.tags))}"
+  inputs = {
+    key                 = "${element(keys(var.tags), count.index)}"
+    value               = "${element(values(var.tags), count.index)}"
+    propagate_at_launch = true
+  }
+}
