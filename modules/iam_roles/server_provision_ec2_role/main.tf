@@ -63,3 +63,8 @@ resource "aws_iam_role_policy_attachment" "delius_core_cloudwatch_logs" {
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "${aws_iam_policy.delius_core_cloudwatch_logs.arn}"
 }
+
+resource "aws_iam_role_policy_attachment" "delius_core_ec2_read_only" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+}
