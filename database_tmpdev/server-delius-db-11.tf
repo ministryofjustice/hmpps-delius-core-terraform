@@ -1,6 +1,7 @@
-module "delius_db_1" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
-  server_name = "delius-db-1"
+module "delius_db_11" {
+  #source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
+  source      = "../../modules/oracle-database"
+  server_name = "delius-db-11"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
@@ -52,22 +53,22 @@ module "delius_db_1" {
   }
 }
 
-output "ami_delius_db_1" {
-  value = "${module.delius_db_1.ami_id}"
+output "ami_delius_db_11" {
+  value = "${module.delius_db_11.ami_id}"
 }
 
-output "public_fqdn_delius_db_1" {
-  value = "${module.delius_db_1.public_fqdn}"
+output "public_fqdn_delius_db_11" {
+  value = "${module.delius_db_11.public_fqdn}"
 }
 
-output "internal_fqdn_delius_db_1" {
-  value = "${module.delius_db_1.internal_fqdn}"
+output "internal_fqdn_delius_db_11" {
+  value = "${module.delius_db_11.internal_fqdn}"
 }
 
-output "private_ip_delius_db_1" {
-  value = "${module.delius_db_1.private_ip}"
+output "private_ip_delius_db_11" {
+  value = "${module.delius_db_11.private_ip}"
 }
 
-output "db_disks_delius_db_1" {
-  value = "${module.delius_db_1.db_size_parameters}"
+output "db_disks_delius_db_11" {
+  value = "${module.delius_db_11.db_size_parameters}"
 }
