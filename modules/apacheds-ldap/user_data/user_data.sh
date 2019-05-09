@@ -62,18 +62,31 @@ environment_name: "${environment_name}"
 project_name: "${project_name}"
 ndelius_version : "${ndelius_version}"
 
+# AWS
+cldwatch_log_group: "${cldwatch_log_group}"
 s3_dependencies_bucket: "${s3_dependencies_bucket}"
 s3_backups_bucket: "${s3_backups_bucket}"
+
+# ApacheDS
+jvm_mem_args: "${jvm_mem_args}"
 apacheds_version: "${apacheds_version}"
+apacheds_install_directory: "${apacheds_install_directory}"
+apacheds_lib_directory: "${apacheds_lib_directory}"
+workspace: "${workspace}"
+log_level: "${log_level}"
+
+# LDAP
 ldap_protocol: "${ldap_protocol}"
 ldap_port: "${ldap_port}"
 bind_user: "${bind_user}"
 partition_id: "${partition_id}"
-import_users_ldif: "${import_users_ldif}"
-sanitize_oid_ldif: ${sanitize_oid_ldif}
-cldwatch_log_group: "${cldwatch_log_group}"
+base_root: "${base_root}"
 is_consumer: ${is_consumer}
 provider_host: "${provider_host}"
+
+# Data import
+import_users_ldif: "${import_users_ldif}"
+sanitize_oid_ldif: "${sanitize_oid_ldif}"
 
 EOF
 
@@ -108,6 +121,6 @@ export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
---extra-vars '\
-"bind_password":"$bind_password" \
-'
+--extra-vars "{\
+'bind_password':'$bind_password'\
+}"

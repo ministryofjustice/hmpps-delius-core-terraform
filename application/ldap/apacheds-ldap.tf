@@ -1,9 +1,14 @@
-# ApacheDS provider/master instance
+# ApacheDS LDAP
+locals {
+  # Override default values
+  ansible_vars_apacheds = "${merge(var.default_ansible_vars_apacheds, var.ansible_vars_apacheds)}"
+}
+
 module "ldap" {
   source               = "../../modules/apacheds-ldap"
   tier_name            = "ldap"
   ami_id               = "${data.aws_ami.centos_apacheds.id}"
-  instance_type        = "${var.instance_type_weblogic}"
+  instance_type        = "${var.instance_type_ldap}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
@@ -44,24 +49,37 @@ module "ldap" {
   ldap_port                    = "${var.ldap_ports["ldap"]}"
 
   app_bootstrap_name         = "hmpps-delius-core-apacheds-bootstrap"
-  app_bootstrap_src          =  "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
+  app_bootstrap_src          = "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_version      = "master"
   app_bootstrap_initial_role = "hmpps-delius-core-apacheds-bootstrap"
 
   ndelius_version = "${var.ndelius_version}"
 
   ansible_vars = {
-    cldwatch_log_group     = "${var.environment_identifier}/ldap"
-    s3_dependencies_bucket = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
-    s3_backups_bucket      = "${var.environment_identifier}-backups-s3bucket"
-    apacheds_version       = "${var.ansible_vars_apacheds["apacheds_version"]}"
-    ldap_protocol          = "${var.ansible_vars_apacheds["ldap_protocol"]}"
-    ldap_port              = "${var.ldap_ports["ldap"]}"
-    bind_user              = "${var.ansible_vars_apacheds["bind_user"]}"
-    # bind_password        = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
-    partition_id           = "${var.ansible_vars_apacheds["partition_id"]}"
-    import_users_ldif      = "${var.ansible_vars_apacheds["import_users_ldif"]}"
-    sanitize_oid_ldif      = "${var.ansible_vars_apacheds["sanitize_oid_ldif"]}"
+    # AWS
+    cldwatch_log_group         = "${var.environment_identifier}/ldap"
+    s3_dependencies_bucket     = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
+    s3_backups_bucket          = "${var.environment_identifier}-backups-s3bucket"
+
+    # ApacheDS
+    jvm_mem_args               = "${local.ansible_vars_apacheds["jvm_mem_args"]}"
+    apacheds_version           = "${local.ansible_vars_apacheds["apacheds_version"]}"
+    apacheds_install_directory = "${local.ansible_vars_apacheds["apacheds_install_directory"]}"
+    apacheds_lib_directory     = "${local.ansible_vars_apacheds["apacheds_lib_directory"]}"
+    workspace                  = "${local.ansible_vars_apacheds["workspace"]}"
+    log_level                  = "${local.ansible_vars_apacheds["log_level"]}"
+
+    # LDAP
+    ldap_protocol              = "${local.ansible_vars_apacheds["ldap_protocol"]}"
+    ldap_port                  = "${var.ldap_ports["ldap"]}"
+    bind_user                  = "${local.ansible_vars_apacheds["bind_user"]}"
+    # bind_password            = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
+    partition_id               = "${local.ansible_vars_apacheds["partition_id"]}"
+    base_root                  = "${local.ansible_vars_apacheds["base_root"]}"
+
+    # Data import
+    import_users_ldif          = "${local.ansible_vars_apacheds["import_users_ldif"]}"
+    sanitize_oid_ldif          = "${local.ansible_vars_apacheds["sanitize_oid_ldif"]}"
   }
 }
 

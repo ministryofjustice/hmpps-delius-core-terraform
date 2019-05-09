@@ -21,20 +21,34 @@ data "template_file" "user_data" {
     app_bootstrap_secondary_role  = "${var.app_bootstrap_secondary_role}"
     app_bootstrap_tertiary_role   = "${var.app_bootstrap_tertiary_role}"
 
-    ndelius_version        = "${var.ndelius_version}"
-    cldwatch_log_group     = "${var.ansible_vars["cldwatch_log_group"]}"
-    s3_dependencies_bucket = "${var.ansible_vars["s3_dependencies_bucket"]}"
-    s3_backups_bucket      = "${var.ansible_vars["s3_backups_bucket"]}"
-    apacheds_version       = "${var.ansible_vars["apacheds_version"]}"
-    ldap_protocol          = "${var.ansible_vars["ldap_protocol"]}"
-    ldap_port              = "${var.ansible_vars["ldap_port"]}"
-    bind_user              = "${var.ansible_vars["bind_user"]}"
-    # bind_password        = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
-    partition_id           = "${var.ansible_vars["partition_id"]}"
-    import_users_ldif      = "${var.ansible_vars["import_users_ldif"]}"
-    sanitize_oid_ldif      = "${var.ansible_vars["sanitize_oid_ldif"]}"
-    is_consumer            = "false"
-    provider_host          = "localhost"
+    ndelius_version               = "${var.ndelius_version}"
+
+    # AWS
+    cldwatch_log_group            = "${var.ansible_vars["cldwatch_log_group"]}"
+    s3_dependencies_bucket        = "${var.ansible_vars["s3_dependencies_bucket"]}"
+    s3_backups_bucket             = "${var.ansible_vars["s3_backups_bucket"]}"
+
+    # ApacheDS
+    jvm_mem_args                  = "${var.ansible_vars["jvm_mem_args"]}"
+    apacheds_version              = "${var.ansible_vars["apacheds_version"]}"
+    apacheds_install_directory    = "${var.ansible_vars["apacheds_install_directory"]}"
+    apacheds_lib_directory        = "${var.ansible_vars["apacheds_lib_directory"]}"
+    workspace                     = "${var.ansible_vars["workspace"]}"
+    log_level                     = "${var.ansible_vars["log_level"]}"
+
+    # LDAP
+    ldap_protocol                 = "${var.ansible_vars["ldap_protocol"]}"
+    ldap_port                     = "${var.ansible_vars["ldap_port"]}"
+    bind_user                     = "${var.ansible_vars["bind_user"]}"
+    # bind_password               = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
+    partition_id                  = "${var.ansible_vars["partition_id"]}"
+    base_root                     = "${var.ansible_vars["base_root"]}"
+    is_consumer                   = "false"
+    provider_host                 = "localhost"
+
+    # Data import
+    import_users_ldif             = "${var.ansible_vars["import_users_ldif"]}"
+    sanitize_oid_ldif             = "${var.ansible_vars["sanitize_oid_ldif"]}"
   }
 }
 
@@ -59,20 +73,34 @@ data "template_file" "user_data_slave" {
     app_bootstrap_secondary_role  = "${var.app_bootstrap_secondary_role}"
     app_bootstrap_tertiary_role   = "${var.app_bootstrap_tertiary_role}"
 
-    ndelius_version        = "${var.ndelius_version}"
-    cldwatch_log_group     = "${var.ansible_vars["cldwatch_log_group"]}"
-    s3_dependencies_bucket = "${var.ansible_vars["s3_dependencies_bucket"]}"
-    s3_backups_bucket      = "${var.ansible_vars["s3_backups_bucket"]}"
-    apacheds_version       = "${var.ansible_vars["apacheds_version"]}"
-    ldap_protocol          = "${var.ansible_vars["ldap_protocol"]}"
-    ldap_port              = "${var.ansible_vars["ldap_port"]}"
-    bind_user              = "${var.ansible_vars["bind_user"]}"
-    # bind_password        = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
-    partition_id           = "${var.ansible_vars["partition_id"]}"
-    import_users_ldif      = "${var.ansible_vars["import_users_ldif"]}"
-    sanitize_oid_ldif      = "${var.ansible_vars["sanitize_oid_ldif"]}"
-    is_consumer            = "true"
-    provider_host          = "${aws_route53_record.ldap_elb_private.fqdn}"
+    ndelius_version               = "${var.ndelius_version}"
+
+    # AWS
+    cldwatch_log_group            = "${var.ansible_vars["cldwatch_log_group"]}"
+    s3_dependencies_bucket        = "${var.ansible_vars["s3_dependencies_bucket"]}"
+    s3_backups_bucket             = "${var.ansible_vars["s3_backups_bucket"]}"
+
+    # ApacheDS
+    jvm_mem_args                  = "${var.ansible_vars["jvm_mem_args"]}"
+    apacheds_version              = "${var.ansible_vars["apacheds_version"]}"
+    apacheds_install_directory    = "${var.ansible_vars["apacheds_install_directory"]}"
+    apacheds_lib_directory        = "${var.ansible_vars["apacheds_lib_directory"]}"
+    workspace                     = "${var.ansible_vars["workspace"]}"
+    log_level                     = "${var.ansible_vars["log_level"]}"
+
+    # LDAP
+    ldap_protocol                 = "${var.ansible_vars["ldap_protocol"]}"
+    ldap_port                     = "${var.ansible_vars["ldap_port"]}"
+    bind_user                     = "${var.ansible_vars["bind_user"]}"
+    # bind_password               = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
+    partition_id                  = "${var.ansible_vars["partition_id"]}"
+    base_root                     = "${var.ansible_vars["base_root"]}"
+    is_consumer                   = "true"
+    provider_host                 = "${aws_route53_record.ldap_elb_private.fqdn}"
+
+    # Data import
+    import_users_ldif             = "${var.ansible_vars["import_users_ldif"]}"
+    sanitize_oid_ldif             = "${var.ansible_vars["sanitize_oid_ldif"]}"
   }
 }
 
