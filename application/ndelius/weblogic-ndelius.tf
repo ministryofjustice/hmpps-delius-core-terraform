@@ -3,6 +3,7 @@
 locals {
   # Override default values
   ansible_vars = "${merge(var.default_ansible_vars, var.ansible_vars)}"
+  ansible_vars_apacheds = "${merge(var.default_ansible_vars_apacheds, var.ansible_vars_apacheds)}"
 }
 
 module "ndelius" {
@@ -97,8 +98,8 @@ module "ndelius" {
     ldap_host                = "${local.ansible_vars["ldap_host"]}.${data.aws_route53_zone.public.name}"
     ldap_readonly_host       = "${local.ansible_vars["ldap_readonly_host"]}.${data.aws_route53_zone.public.name}"
     ldap_port                = "${var.ldap_ports["ldap"]}"
-    ldap_principal           = "${var.ansible_vars_apacheds["bind_user"]}"
-    partition_id             = "${var.ansible_vars_apacheds["partition_id"]}"
+    ldap_principal           = "${local.ansible_vars_apacheds["bind_user"]}"
+    partition_id             = "${local.ansible_vars_apacheds["partition_id"]}"
     ldap_base                = "${local.ansible_vars["ldap_base"]}"
     ldap_user_base           = "${local.ansible_vars["ldap_user_base"]}"
     ldap_group_base          = "${local.ansible_vars["ldap_group_base"]}"
