@@ -61,6 +61,11 @@ variable "ansible_vars" {
   type        = "map"
 }
 
+variable "default_ansible_vars_apacheds" {
+  description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars_apacheds"
+  type        = "map"
+}
+
 variable "ansible_vars_apacheds" {
   description = "Ansible (ldap) vars for user_data script "
   type        = "map"
