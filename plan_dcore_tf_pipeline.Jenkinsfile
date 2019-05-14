@@ -47,6 +47,27 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
 }
 
 
+def do_terraform(config_dir, env_name, git_project, component) {
+    plancode = plan_submodule(config_dir, env_name, git_project, component)
+    if (plancode == "2") {
+        if ("${confirmation}" == "true") {
+           confirm()
+        } else {
+            env.Continue = true
+        }
+        if (env.Continue == "true") {
+           apply_submodule(config_dir, env_name, git_project, component)
+        }
+    }
+    else if (plancode == "3") {
+        apply_submodule(config_dir, env_name, git_project, component)
+        env.Continue = true    }
+    }
+    else {
+        env.Continue = true
+    }
+}
+
 def debug_env() {
     sh '''
     #!/usr/env/bin bash
