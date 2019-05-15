@@ -35,7 +35,22 @@ variable "ldap_ports" {
   description = "Map of the ports that the ldap ports"
 }
 
-variable "instance_type_weblogic" {
+variable "ldap_slave_asg_min" {
+  description = "Minimum number of slave instances"
+  type        = "string"
+}
+
+variable "ldap_slave_asg_max" {
+  description = "Maximum number of slave instances"
+  type        = "string"
+}
+
+variable "ldap_slave_asg_desired" {
+  description = "Desired number of slave instances"
+  type        = "string"
+}
+
+variable "instance_type_ldap" {
   description = "The ec2 instance type"
 }
 
@@ -45,6 +60,11 @@ variable "dependencies_bucket_arn" {
 
 variable "ndelius_version" {
   description = "NDelius version"
+}
+
+variable "default_ansible_vars_apacheds" {
+  description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars_apacheds"
+  type        = "map"
 }
 
 variable "ansible_vars_apacheds" {
