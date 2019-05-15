@@ -17,6 +17,7 @@ data "template_file" "user_data" {
     database_characterset         = "${var.ansible_vars["database_characterset"]}"
     oracle_dbca_template_file     = "${var.ansible_vars["oracle_dbca_template_file"]}"
     database_type                 = "${lookup(var.ansible_vars, "database_type", "NOTSET")}"
+    s3_oracledb_backups_arn       = "${lookup(var.ansible_vars, "s3_oracledb_backups_arn", "NOTSET")}"
     dependencies_bucket_arn       = "${lookup(var.ansible_vars, "dependencies_bucket_arn", "NOTSET")}"
     database_bootstrap_restore    = "${lookup(var.ansible_vars, "database_bootstrap_restore", "False")}"
     database_backup               = "${lookup(var.ansible_vars, "database_backup", "NOTSET")}"

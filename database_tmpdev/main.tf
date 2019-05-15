@@ -35,6 +35,19 @@ data "terraform_remote_state" "vpc_security_groups" {
 }
 
 #-------------------------------------------------------------
+### Getting the oracledb backup s3 bucket
+#-------------------------------------------------------------
+data "terraform_remote_state" "s3-oracledb-backups" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "s3/oracledb-backups/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
+#-------------------------------------------------------------
 ### Getting the sub project security groups
 #-------------------------------------------------------------
 data "terraform_remote_state" "delius_core_security_groups" {
@@ -66,7 +79,8 @@ data "aws_ami" "centos_oracle_db" {
 
   filter {
     name   = "name"
-    values = ["HMPPS Delius-Core OracleDB master *"]
+    #values = ["HMPPS Delius-Core OracleDB master *"]
+    values = ["HMPPS Delius-Core OracleDB issue27_Oracle_Secure_Backup_Web_Service *"]
   }
 
   filter {

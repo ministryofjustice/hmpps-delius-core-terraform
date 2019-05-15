@@ -1,6 +1,6 @@
 module "delius_db_11" {
   #source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
-  source      = "../../modules/oracle-database"
+  source      = "../modules/oracle-database"
   server_name = "delius-db-11"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
@@ -40,6 +40,7 @@ module "delius_db_11" {
     oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
     database_type                 = "primary" # required for the DB module. This file is where the property is set.
     dependencies_bucket_arn       = "${var.dependencies_bucket_arn}"
+    s3_oracledb_backups_arn       = "${data.terraform_remote_state.s3-oracledb-backups.s3_oracledb_backups.arn}"
     database_bootstrap_restore    = "${var.ansible_vars_oracle_db["database_bootstrap_restore"]}"
     database_backup               = "${var.ansible_vars_oracle_db["database_backup"]}"
     database_backup_sys_passwd    = "${var.ansible_vars_oracle_db["database_backup_sys_passwd"]}"

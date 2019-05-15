@@ -9,14 +9,15 @@ pip install -U pip
 pip install ansible
 
 cat << EOF >> /etc/environment
-HMPPS_ROLE="${app_name}"
-HMPPS_FQDN="${app_name}.${private_domain}"
-HMPPS_STACKNAME=${env_identifier}
-HMPPS_STACK="${short_env_identifier}"
-HMPPS_ENVIRONMENT=${route53_sub_domain}
-HMPPS_ACCOUNT_ID="${account_id}"
-HMPPS_DOMAIN="${private_domain}"
-DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="${app_name}.${private_domain}"
+export HMPPS_STACKNAME=${env_identifier}
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT=${route53_sub_domain}
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
+export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
 EOF
 ## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
 ## just configured, so lets export them
@@ -27,6 +28,7 @@ export HMPPS_STACK="${short_env_identifier}"
 export HMPPS_ENVIRONMENT=${route53_sub_domain}
 export HMPPS_ACCOUNT_ID="${account_id}"
 export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
 export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
 
 cat << EOF > ~/requirements.yml
@@ -58,6 +60,7 @@ database_characterset: "${database_characterset}"
 oracle_dbca_template_file: "${oracle_dbca_template_file}"
 
 database_type: "${database_type}"
+s3_oracledb_backups_arn: "${s3_oracledb_backups_arn}"
 dependencies_bucket_arn: "${dependencies_bucket_arn}"
 database_bootstrap_restore: "${database_bootstrap_restore}"
 database_backup: "${database_backup}"
