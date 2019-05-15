@@ -13,6 +13,21 @@ variable "instance_type" {
   type        = "string"
 }
 
+variable "slave_asg_min" {
+  description = "Minimum number of slave instances"
+  type        = "string"
+}
+
+variable "slave_asg_max" {
+  description = "Maximum number of slave instances"
+  type        = "string"
+}
+
+variable "slave_asg_desired" {
+  description = "Desired number of slave instances"
+  type        = "string"
+}
+
 variable "key_name" {
   description = "Deployer key name"
   type        = "string"

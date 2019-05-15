@@ -48,6 +48,10 @@ module "ldap" {
   admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
   ldap_port                    = "${var.ldap_ports["ldap"]}"
 
+  slave_asg_min                = "${var.ldap_slave_asg_min}"
+  slave_asg_desired            = "${var.ldap_slave_asg_desired}"
+  slave_asg_max                = "${var.ldap_slave_asg_max}"
+
   app_bootstrap_name         = "hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_src          = "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_version      = "master"
