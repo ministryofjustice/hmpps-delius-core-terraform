@@ -17,6 +17,8 @@ data "template_file" "bucket_access_policy" {
   vars {
     dependencies_bucket_arn = "${var.dependencies_bucket_arn}"
     backups_bucket_arn      = "${var.backups_bucket_arn}"
+    s3_oracledb_backups_arn = "${var.s3_oracledb_backups_arn}"
+    s3_ldap_backups_arn     = "${var.s3_ldap_backups_arn}"
     migration_bucket_arn    = "${var.migration_bucket_arn}"
   }
 }

@@ -36,6 +36,28 @@
       ]
     },
     {
+      "Sid": "allowAccessToOracleDBBackupBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "${s3_oracledb_backups_arn}",
+        "${s3_oracledb_backups_arn}/*"
+      ]
+    },
+    {
+      "Sid": "allowAccessToLDAPBackupBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "${s3_ldap_backups_arn}",
+        "${s3_ldap_backups_arn}/*"
+      ]
+    },
+    {
       "Sid": "allowAccessToMigrationBucket",
       "Effect": "Allow",
       "Action": [
