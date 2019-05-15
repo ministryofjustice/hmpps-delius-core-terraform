@@ -79,8 +79,7 @@ data "aws_ami" "centos_oracle_db" {
 
   filter {
     name   = "name"
-    #values = ["HMPPS Delius-Core OracleDB master *"]
-    values = ["HMPPS Delius-Core OracleDB issue27_Oracle_Secure_Backup_Web_Service *"]
+    values = ["HMPPS Delius-Core OracleDB master *"]
   }
 
   filter {
