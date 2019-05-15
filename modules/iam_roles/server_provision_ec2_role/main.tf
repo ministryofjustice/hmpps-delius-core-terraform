@@ -12,7 +12,7 @@ resource "aws_iam_role" "ec2" {
 }
 
 data "template_file" "bucket_access_policy" {
-  template = "${file("${path.module}/policies/dependencies_bucket_access_policy_template.json")}"
+  template = "${file("${path.module}/policies/bucket_access_policy_template.json")}"
 
   vars {
     dependencies_bucket_arn = "${var.dependencies_bucket_arn}"
