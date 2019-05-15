@@ -23,9 +23,9 @@ resource "aws_launch_configuration" "slave_launch_cfg" {
 resource "aws_autoscaling_group" "slave_asg" {
   name                 = "${var.environment_name}-${var.tier_name}-slave"
   vpc_zone_identifier  = ["${var.private_subnets}"]
-  min_size             = "1"
-  max_size             = "10"
-  desired_capacity     = "2"
+  min_size             = "${var.slave_asg_min}"
+  max_size             = "${var.slave_asg_max}"
+  desired_capacity     = "${var.slave_asg_desired}"
   launch_configuration = "${aws_launch_configuration.slave_launch_cfg.id}"
   load_balancers       = ["${aws_elb.ldap_readonly_lb.id}"]
 
