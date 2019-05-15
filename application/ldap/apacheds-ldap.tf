@@ -59,7 +59,7 @@ module "ldap" {
     # AWS
     cldwatch_log_group         = "${var.environment_identifier}/ldap"
     s3_dependencies_bucket     = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
-    s3_backups_bucket          = "${var.environment_identifier}-backups-s3bucket"
+    s3_backups_bucket          = "${data.terraform_remote_state.s3-ldap-backups.name}"
 
     # ApacheDS
     jvm_mem_args               = "${local.ansible_vars_apacheds["jvm_mem_args"]}"
