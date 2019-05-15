@@ -33,3 +33,29 @@ data "terraform_remote_state" "s3bucket" {
     region = "${var.region}"
   }
 }
+
+#-------------------------------------------------------------
+### Getting the oracledb backup s3 bucket
+#-------------------------------------------------------------
+data "terraform_remote_state" "s3-oracledb-backups" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "s3/oracledb-backups/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
+#-------------------------------------------------------------
+### Getting the oracledb backup s3 bucket
+#-------------------------------------------------------------
+data "terraform_remote_state" "s3-ldap-backups" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "s3/ldap-backups/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
