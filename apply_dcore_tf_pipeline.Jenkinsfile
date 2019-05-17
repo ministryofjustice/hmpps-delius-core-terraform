@@ -32,13 +32,13 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
                 terragrunt plan -detailed-exitcode --out ${env_name}.plan > tf.plan.out; \
                 exitcode=\\\"\\\$?\\\"; \
                 cat tf.plan.out; \
+                if [ \\\"\\\$exitcode\\\" == '1' ]; then exit 1; fi; \
                 if [ \\\"\\\$exitcode\\\" == '2' ]; then \
-                  parse-terraform-plan -i tf.plan.out | jq '.changedResources[] | (.action != \\\"update\\\") or (.changedAttributes | to_entries | map(.key != \\\"tags.source-hash\\\") | reduce .[] as \\\$item (false; . or \\\$item))' | jq -e -s 'reduce .[] as \\\$item (false; . or \\\$item) == false'; \
-                  if [ \\\"\\\$?\\\" == '1' ]; then exitcode=2 ; else exitcode=3; fi; \
+                    parse-terraform-plan -i tf.plan.out | jq '.changedResources[] | (.action != \\\"update\\\") or (.changedAttributes | to_entries | map(.key != \\\"tags.source-hash\\\") | reduce .[] as \\\$item (false; . or \\\$item))' | jq -e -s 'reduce .[] as \\\$item (false; . or \\\$item) == false'; \
+                    if [ \\\"\\\$?\\\" == '1' ]; then exitcode=2 ; else exitcode=3; fi; \
                 fi; \
                 echo \\\"\\\$exitcode\\\" > plan_ret;" \
             || exitcode="\$?"; \
-            echo "\$exitcode" > plan_ret; \
             if [ "\$exitcode" == '1' ]; then exit 1; else exit 0; fi
         set -e
         """
@@ -66,10 +66,9 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     }
 }
 
-def confirm(component) {
+def confirm() {
     try {
         timeout(time: 15, unit: 'MINUTES') {
-            slackSend(message: "Build of \"${component}\" on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}console|Paused for input>)")
 
             env.Continue = input(
                 id: 'Proceed1', message: 'Apply plan?', parameters: [
@@ -103,7 +102,7 @@ def do_terraform(config_dir, env_name, git_project, component) {
     }
     else if (plancode == "3") {
         apply_submodule(config_dir, env_name, git_project, component)
-        env.Continue = true    }
+        env.Continue = true
     }
     else {
         env.Continue = true
@@ -122,19 +121,11 @@ pipeline {
 
     agent { label "jenkins_slave" }
 
-    parameters {
-        choice(
-          name: 'environment_name',
-          choices: environments,
-          description: 'Select environment for creation or updating.'
-        )
-    }
 
     stages {
 
         stage('setup') {
             steps {
-                slackSend(message: "Build started on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
 
                 dir( project.config ) {
                   git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
@@ -226,12 +217,7 @@ pipeline {
     post {
         always {
             deleteDir()
-        }
-        success {
-            slackSend(message: "Build completed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'good')
-        }
-        failure {
-            slackSend(message: "Build failed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'danger')
+
         }
     }
 
