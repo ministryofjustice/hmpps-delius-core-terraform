@@ -1,10 +1,6 @@
 def project = [:]
 project.config    = 'hmpps-env-configs'
-project.network   = 'hmpps-delius-network-terraform'
 project.dcore     = 'hmpps-delius-core-terraform'
-project.alfresco  = 'hmpps-delius-alfresco-shared-terraform'
-project.spg       = 'hmpps-spg-terraform'
-//project.ndmis     = 'hmpps-ndmis-terraform' //
 
 def prepare_env() {
     sh '''
