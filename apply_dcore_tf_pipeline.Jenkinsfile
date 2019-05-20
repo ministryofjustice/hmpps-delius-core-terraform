@@ -121,6 +121,13 @@ pipeline {
 
     agent { label "jenkins_slave" }
 
+    parameters {
+        choice(
+          name: 'environment_name',
+          description: 'Environment name.'
+        )
+    }
+
 
     stages {
 
