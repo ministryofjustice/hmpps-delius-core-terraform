@@ -2,6 +2,15 @@ def project = [:]
 project.config    = 'hmpps-env-configs'
 project.dcore     = 'hmpps-delius-core-terraform'
 
+// Parameters required for job
+// parameters:
+//     choice:
+//       name: 'environment_name'
+//       description: 'Environment name.'
+//     booleanParam:
+//       name: 'confirmation'
+//       description: 'Whether to require manual confirmation of terraform plans.'
+
 def prepare_env() {
     sh '''
     #!/usr/env/bin bash
@@ -42,13 +51,6 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
 pipeline {
 
     agent { label "jenkins_slave" }
-
-    parameters {
-        choice(
-          name: 'environment_name',
-          description: 'Environment name.'
-        )
-    }
 
     stages {
 

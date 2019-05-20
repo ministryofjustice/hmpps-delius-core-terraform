@@ -2,6 +2,16 @@ def project = [:]
 project.config    = 'hmpps-env-configs'
 project.dcore     = 'hmpps-delius-core-terraform'
 
+// Parameters required for job
+// parameters:
+//     choice:
+//       name: 'environment_name'
+//       description: 'Environment name.'
+//     booleanParam:
+//       name: 'confirmation'
+//       description: 'Whether to require manual confirmation of terraform plans.'
+
+
 def prepare_env() {
     sh '''
     #!/usr/env/bin bash
@@ -117,13 +127,6 @@ pipeline {
 
     agent { label "jenkins_slave" }
 
-    parameters {
-        choice(
-          name: 'environment_name',
-          description: 'Environment name.'
-        )
-    }
-
 
     stages {
 
@@ -132,9 +135,6 @@ pipeline {
 
                 dir( project.config ) {
                   git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
-                }
-                dir( project.network ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.network, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
                 dir( project.dcore ) {
                   git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
