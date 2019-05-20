@@ -48,6 +48,10 @@ module "ldap" {
   admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
   ldap_port                    = "${var.ldap_ports["ldap"]}"
 
+  slave_asg_min                = "${var.ldap_slave_asg_min}"
+  slave_asg_desired            = "${var.ldap_slave_asg_desired}"
+  slave_asg_max                = "${var.ldap_slave_asg_max}"
+
   app_bootstrap_name         = "hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_src          = "https://github.com/ministryofjustice/hmpps-delius-core-apacheds-bootstrap"
   app_bootstrap_version      = "master"
@@ -59,7 +63,7 @@ module "ldap" {
     # AWS
     cldwatch_log_group         = "${var.environment_identifier}/ldap"
     s3_dependencies_bucket     = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
-    s3_backups_bucket          = "${var.environment_identifier}-backups-s3bucket"
+    s3_backups_bucket          = "${data.terraform_remote_state.s3-ldap-backups.s3_ldap_backups.name}"
 
     # ApacheDS
     jvm_mem_args               = "${local.ansible_vars_apacheds["jvm_mem_args"]}"

@@ -37,6 +37,7 @@ module "delius_db_3" {
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
     oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
+    s3_oracledb_backups_arn       = "${data.terraform_remote_state.s3-oracledb-backups.s3_oracledb_backups.arn}"
     database_type                 = "standby" # required for the DB module. This file is where the property is set.
 
     ## the following are retrieved from SSM Parameter Store

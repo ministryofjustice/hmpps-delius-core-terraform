@@ -12,11 +12,13 @@ resource "aws_iam_role" "ec2" {
 }
 
 data "template_file" "bucket_access_policy" {
-  template = "${file("${path.module}/policies/dependencies_bucket_access_policy_template.json")}"
+  template = "${file("${path.module}/policies/bucket_access_policy_template.json")}"
 
   vars {
     dependencies_bucket_arn = "${var.dependencies_bucket_arn}"
     backups_bucket_arn      = "${var.backups_bucket_arn}"
+    s3_oracledb_backups_arn = "${var.s3_oracledb_backups_arn}"
+    s3_ldap_backups_arn     = "${var.s3_ldap_backups_arn}"
     migration_bucket_arn    = "${var.migration_bucket_arn}"
   }
 }

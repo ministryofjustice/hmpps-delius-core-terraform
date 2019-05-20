@@ -14,6 +14,14 @@ variable "backups_bucket_arn" {
   description = "The S3 bucket arn for data backups"
 }
 
+variable "s3_oracledb_backups_arn" {
+  description = "The S3 bucket arn for oracle db data backups"
+}
+
+variable "s3_ldap_backups_arn" {
+  description = "The S3 bucket arn for ldap ldif backups"
+}
+
 variable "migration_bucket_arn" {
   description = "The S3 bucket arn for temporarily holding migrated data"
 }
