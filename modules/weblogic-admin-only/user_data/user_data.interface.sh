@@ -73,6 +73,7 @@ server_listen_port: "${server_listen_port}"
 
 # Database
 setup_datasources: "${setup_datasources}"
+primary_db_host: "${primary_db_host}"
 database_url: "${database_url}"
 
 # Alfresco
