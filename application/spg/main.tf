@@ -60,6 +60,19 @@ data "terraform_remote_state" "key_profile" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the database details
+#-------------------------------------------------------------
+data "terraform_remote_state" "database_failover" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/database_failover/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "aws_ami" "centos_wls" {
   owners      = ["895523100917"]
   most_recent = true
