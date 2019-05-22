@@ -209,11 +209,17 @@ pipeline {
         }
 
         stage('Delius Application Interface') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+            steps {
+                script {
+                    do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+                }
             }
-          }
+        }
+
+        stage('Smoke test') {
+            steps {
+                build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+            }
         }
     }
 
