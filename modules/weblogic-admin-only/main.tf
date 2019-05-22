@@ -37,6 +37,7 @@ data "template_file" "user_data" {
 
     # Database
     setup_datasources        = "${var.ansible_vars["setup_datasources"]}"
+    primary_db_host          = "${var.ansible_vars["primary_db_host"]}"
     database_url             = "${var.ansible_vars["database_url"]}"
 
     # Alfresco

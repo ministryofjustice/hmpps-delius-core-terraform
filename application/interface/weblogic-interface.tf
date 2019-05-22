@@ -83,7 +83,8 @@ module "interface" {
 
     # Database
     setup_datasources        = "${local.ansible_vars["setup_datasources"]}"
-    database_url             = "jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(FAILOVER=ON)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=${local.ansible_vars["database_host"]}-1.${data.aws_route53_zone.public.name})(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=${local.ansible_vars["database_host"]}-2.${data.aws_route53_zone.public.name})(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=${local.ansible_vars["database_host"]}-3.${data.aws_route53_zone.public.name})(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=${local.ansible_vars["database_sid"]}_TAF)))"
+    primary_db_host          = "${data.terraform_remote_state.database_failover.public_fqdn_delius_db_1}"
+    database_url             = "jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(FAILOVER=ON)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=${data.terraform_remote_state.database_failover.public_fqdn_delius_db_1})(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=${data.terraform_remote_state.database_failover.public_fqdn_delius_db_2})(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=${data.terraform_remote_state.database_failover.public_fqdn_delius_db_3})(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=${local.ansible_vars["database_sid"]}_TAF)))"
 
     # Alfresco
     alfresco_host            = "${local.ansible_vars["alfresco_host"]}.${data.aws_route53_zone.public.name}"
