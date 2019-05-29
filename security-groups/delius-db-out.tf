@@ -24,8 +24,8 @@ resource "aws_security_group_rule" "delius_db_out_spg_message" {
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
   to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_spg_internal_elb.id}"
-  description              = "Delius DB out to ActiveMQ ELB"
+  source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
+  description              = "Delius DB out to ActiveMQ"
 }
 
 resource "aws_security_group_rule" "db_to_db_out" {
