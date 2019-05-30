@@ -38,6 +38,16 @@ resource "aws_security_group_rule" "spg_lb_ingress_nat_tls" {
   description       = "NAT gateway in (TLS)"
 }
 
+resource "aws_security_group_rule" "spg_public_subnet_ingress" {
+  security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  cidr_blocks       = ["${local.public_cidr_block}"]
+  description       = "Public subnet in (required for NLB health-check)"
+}
+
 resource "aws_security_group_rule" "spg_lb_egress_wls" {
   security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
   type                     = "egress"
