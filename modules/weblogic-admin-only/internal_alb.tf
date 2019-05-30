@@ -55,12 +55,12 @@ resource "aws_lb_listener" "internal_lb_http_listener" {
 }
 
 resource "aws_lb_listener_rule" "internal_lb_console_redirect" {
-  listener_arn = "${aws_lb_listener.internal_lb_http_listener.arn}"
-  "condition" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
     field  = "path-pattern"
     values = ["/console/*"]
   }
-  "action" {
+  action {
     type = "redirect"
     redirect {
       protocol    = "HTTPS"
