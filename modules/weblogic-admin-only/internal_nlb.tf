@@ -3,11 +3,8 @@ resource "aws_lb" "internal_nlb" {
   name               = "${var.short_environment_name}-${var.tier_name}-nlb"
   internal           = true
   load_balancer_type = "network"
-  subnets            = ["${var.public_subnets}"]
+  subnets            = ["${var.private_subnets}"]
   tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-nlb"))}"
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_lb_target_group" "internal_nlb_target_group" {

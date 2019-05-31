@@ -16,6 +16,11 @@ module "ndelius" {
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
   alb_ips_bucket       = "${data.terraform_remote_state.s3buckets.alb_ips_bucket_name}"
+  eip_allocation_ids   = [
+    "${data.terraform_remote_state.persistent-eip.delius_ndelius_az1_lb_eip.allocation_id}",
+    "${data.terraform_remote_state.persistent-eip.delius_ndelius_az2_lb_eip.allocation_id}",
+    "${data.terraform_remote_state.persistent-eip.delius_ndelius_az3_lb_eip.allocation_id}"
+  ]
 
   instance_security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",

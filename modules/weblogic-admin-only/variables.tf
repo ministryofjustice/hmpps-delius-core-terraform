@@ -33,6 +33,11 @@ variable "alb_ips_bucket" {
   type        = "string"
 }
 
+variable "eip_allocation_ids" {
+  description = "Elastic IP addresses to assign to the external load balancer"
+  type        = "list"
+}
+
 variable "instance_security_groups" {
   description = "Security groups for the WebLogic instances"
   type        = "list"

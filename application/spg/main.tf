@@ -86,6 +86,19 @@ data "terraform_remote_state" "s3buckets" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the EIPs
+#-------------------------------------------------------------
+data "terraform_remote_state" "persistent-eip" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "persistent-eip/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "aws_ami" "centos_wls" {
   owners      = ["895523100917"]
   most_recent = true
