@@ -15,11 +15,20 @@ module "interface" {
   instance_count       = "${var.instance_count_weblogic_interface}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
+  alb_ips_bucket       = "${data.terraform_remote_state.s3buckets.alb_ips_bucket_name}"
+  eip_allocation_ids   = [
+    "${data.terraform_remote_state.persistent-eip.delius_interface_az1_lb_eip.allocation_id}",
+    "${data.terraform_remote_state.persistent-eip.delius_interface_az2_lb_eip.allocation_id}",
+    "${data.terraform_remote_state.persistent-eip.delius_interface_az3_lb_eip.allocation_id}"
+  ]
 
-  security_groups = [
+  instance_security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_instances_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
+  ]
+  lb_security_groups = [
+    "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_lb_id}"
   ]
 
   public_subnets = "${list(
@@ -50,8 +59,6 @@ module "interface" {
   private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
   certificate_arn              = "${data.aws_acm_certificate.cert.arn}"
-  internal_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_internal_elb_id}"
-  external_elb_sg_id           = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_interface_external_elb_id}"
   weblogic_health_check_path   = "NDelius-war/delius/JSP/healthcheck.jsp"
   weblogic_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
@@ -139,18 +146,26 @@ output "ami_interface_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "private_fqdn_interface_wls_internal_lb" {
-  value = "${module.interface.private_fqdn_internal_lb}"
+output "private_fqdn_interface_wls_internal_nlb" {
+  value = "${module.interface.private_fqdn_internal_nlb}"
 }
 
-output "public_fqdn_interface_wls_internal_lb" {
-  value = "${module.interface.public_fqdn_internal_lb}"
+output "public_fqdn_interface_wls_internal_nlb" {
+  value = "${module.interface.public_fqdn_internal_nlb}"
 }
 
-output "private_fqdn_interface_external_lb" {
-  value = "${module.interface.private_fqdn_external_lb}"
+output "private_fqdn_interface_wls_internal_alb" {
+  value = "${module.interface.private_fqdn_internal_alb}"
 }
 
-output "public_fqdn_interface_external_lb" {
-  value = "${module.interface.public_fqdn_external_lb}"
+output "public_fqdn_interface_wls_internal_alb" {
+  value = "${module.interface.public_fqdn_internal_alb}"
+}
+
+output "private_fqdn_interface_external_nlb" {
+  value = "${module.interface.private_fqdn_external_nlb}"
+}
+
+output "public_fqdn_interface_external_nlb" {
+  value = "${module.interface.public_fqdn_external_nlb}"
 }

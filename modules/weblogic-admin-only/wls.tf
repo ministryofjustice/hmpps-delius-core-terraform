@@ -6,7 +6,7 @@ resource "aws_launch_configuration" "wls_launch_cfg" {
   instance_type               = "${var.instance_type}"
   iam_instance_profile        = "${var.iam_instance_profile}"
   key_name                    = "${var.key_name}"
-  security_groups             = ["${var.security_groups}"]
+  security_groups             = ["${var.instance_security_groups}"]
   associate_public_ip_address = "false"
   user_data                   = "${data.template_file.user_data.rendered}"
   enable_monitoring           = "true"
@@ -22,9 +22,14 @@ resource "aws_launch_configuration" "wls_launch_cfg" {
   }
 }
 
-resource "aws_autoscaling_attachment" "wls_asg_attachment" {
+resource "aws_autoscaling_attachment" "wls_asg_attachment_to_alb" {
   autoscaling_group_name = "${aws_autoscaling_group.wls_asg.id}"
-  alb_target_group_arn   = "${aws_lb_target_group.external_lb_target_group.arn}"
+  alb_target_group_arn   = "${aws_lb_target_group.internal_alb_target_group.arn}"
+}
+
+resource "aws_autoscaling_attachment" "wls_asg_attachment_to_nlb" {
+  autoscaling_group_name = "${aws_autoscaling_group.wls_asg.id}"
+  alb_target_group_arn   = "${aws_lb_target_group.internal_nlb_target_group.arn}"
 }
 
 # This null_data_source is required to convert our Map of tags, to the required List of tags for ASGs
@@ -45,7 +50,6 @@ resource "aws_autoscaling_group" "wls_asg" {
   max_size             = "${var.instance_count}"
   desired_capacity     = "${var.instance_count}"
   launch_configuration = "${aws_launch_configuration.wls_launch_cfg.id}"
-  load_balancers       = ["${aws_elb.internal.id}"]
 
   lifecycle {
     create_before_destroy = true

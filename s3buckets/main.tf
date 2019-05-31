@@ -31,3 +31,14 @@ module "s3bucket" {
   tags           = "${local.tags}"
   versioning     = false
 }
+
+# #-------------------------------------------
+# ### S3 bucket for storing ALB IPs
+# #--------------------------------------------
+
+module "alb-ips-bucket" {
+  source         = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//s3bucket//s3bucket_without_policy"
+  s3_bucket_name = "${var.environment_identifier}-alb-ips"
+  tags           = "${local.tags}"
+  versioning     = false
+}

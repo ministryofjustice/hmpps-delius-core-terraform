@@ -28,8 +28,23 @@ variable "iam_instance_profile" {
   type        = "string"
 }
 
-variable "security_groups" {
-  description = "Security groups for the admin server"
+variable "alb_ips_bucket" {
+  description = "Name of the bucket where we store the application load-balancer IPs. Used for linking the ALB to the external-facing NLB"
+  type        = "string"
+}
+
+variable "eip_allocation_ids" {
+  description = "Elastic IP addresses to assign to the external load balancer"
+  type        = "list"
+}
+
+variable "instance_security_groups" {
+  description = "Security groups for the WebLogic instances"
+  type        = "list"
+}
+
+variable "lb_security_groups" {
+  description = "Security groups for the application load balancer"
   type        = "list"
 }
 
@@ -116,16 +131,6 @@ variable "private_domain" {
 
 variable "certificate_arn" {
   description = "SSL certificate to be used for the external LB"
-  type        = "string"
-}
-
-variable "internal_elb_sg_id" {
-  description = "ID for the security group for the ELB"
-  type        = "string"
-}
-
-variable "external_elb_sg_id" {
-  description = "ID for the security group for the ELB"
   type        = "string"
 }
 

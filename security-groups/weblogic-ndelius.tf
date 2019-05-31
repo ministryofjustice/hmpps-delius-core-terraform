@@ -1,116 +1,87 @@
 # weblogic-ndelius.tf
 
 ################################################################################
-## weblogic_ndelius_external_elb
+## Load balancer
 ################################################################################
-resource "aws_security_group" "weblogic_ndelius_external_elb" {
-  name        = "${var.environment_name}-weblogic-ndelius-external-elb"
+resource "aws_security_group" "weblogic_ndelius_lb" {
+  name        = "${var.environment_name}-weblogic-ndelius-lb"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic ndelius external ELB"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-ndelius-external-elb", "Type", "Private"))}"
+  description = "Weblogic ndelius LB"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-ndelius-lb", "Type", "Private"))}"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-output "sg_weblogic_ndelius_external_elb_id" {
-  value = "${aws_security_group.weblogic_ndelius_external_elb.id}"
+output "sg_weblogic_ndelius_lb_id" {
+  value = "${aws_security_group.weblogic_ndelius_lb.id}"
 }
 
 # Allow NPS+CRC users into the external ELB
 #TODO: Do we build a list of allowed source in or?
 resource "aws_security_group_rule" "ndelius_external_elb_ingress" {
-  security_group_id = "${aws_security_group.weblogic_ndelius_external_elb.id}"
+  security_group_id = "${aws_security_group.weblogic_ndelius_lb.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "80"
   to_port           = "80"
   cidr_blocks       = ["${local.user_access_cidr_blocks}"]
   description       = "Front-end users in"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_ingress_nat" {
-  security_group_id = "${aws_security_group.weblogic_ndelius_external_elb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "80"
-  to_port           = "80"
-  cidr_blocks       = ["${local.natgateway_public_ips_cidr_blocks}"]
-  description       = "Loadrunner in"
 }
 
 resource "aws_security_group_rule" "ndelius_external_elb_ingress_tls" {
-  security_group_id = "${aws_security_group.weblogic_ndelius_external_elb.id}"
+  security_group_id = "${aws_security_group.weblogic_ndelius_lb.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = ["${local.user_access_cidr_blocks}"]
-  description       = "Front-end users in"
+  description       = "Front-end users in (TLS)"
+}
+
+resource "aws_security_group_rule" "ndelius_external_elb_ingress_nat" {
+  security_group_id = "${aws_security_group.weblogic_ndelius_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "80"
+  to_port           = "80"
+  cidr_blocks       = ["${local.natgateway_public_ips_cidr_blocks}"]
+  description       = "NAT gateway in"
 }
 
 resource "aws_security_group_rule" "ndelius_external_elb_ingress_nat_tls" {
-  security_group_id = "${aws_security_group.weblogic_ndelius_external_elb.id}"
+  security_group_id = "${aws_security_group.weblogic_ndelius_lb.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = ["${local.natgateway_public_ips_cidr_blocks}"]
-  description       = "Loadrunner in"
+  description       = "NAT gateway in (TLS)"
+}
+
+resource "aws_security_group_rule" "ndelius_public_subnet_ingress_tls" {
+  security_group_id = "${aws_security_group.weblogic_ndelius_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  cidr_blocks       = ["${local.public_cidr_block}"]
+  description       = "Public subnet in (required for NLB health-check)"
 }
 
 resource "aws_security_group_rule" "ndelius_external_elb_egress_wls" {
-  security_group_id        = "${aws_security_group.weblogic_ndelius_external_elb.id}"
+  security_group_id        = "${aws_security_group.weblogic_ndelius_lb.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
   source_security_group_id = "${aws_security_group.weblogic_ndelius_instances.id}"
-  description              = "Out to wls instances"
+  description              = "Out to instances"
 }
 
 ################################################################################
-## weblogic_ndelius_internal_elb
-################################################################################
-resource "aws_security_group" "weblogic_ndelius_internal_elb" {
-  name        = "${var.environment_name}-weblogic-ndelius-internal-elb"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Weblogic ndelius internal ELB"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-ndelius-internal-elb", "Type", "Private"))}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-output "sg_weblogic_ndelius_internal_elb_id" {
-  value = "${aws_security_group.weblogic_ndelius_internal_elb.id}"
-}
-
-# Allow admins into the internal ELB
-resource "aws_security_group_rule" "ndelius_internal_elb_ingress" {
-  security_group_id = "${aws_security_group.weblogic_ndelius_internal_elb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "${var.weblogic_domain_ports["weblogic_port"]}"
-  to_port           = "${var.weblogic_domain_ports["weblogic_port"]}"
-  cidr_blocks       = ["${values(data.terraform_remote_state.vpc.bastion_vpc_public_cidr)}"]
-  description       = "Admins in via bastion"
-}
-
-resource "aws_security_group_rule" "ndelius_internal_elb_egress_wls" {
-  security_group_id        = "${aws_security_group.weblogic_ndelius_internal_elb.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
-  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_instances.id}"
-  description              = "Out to wls instances"
-}
-
-################################################################################
-## weblogic_ndelius_internal
+## Instances
 ################################################################################
 resource "aws_security_group" "weblogic_ndelius_instances" {
   name        = "${var.environment_name}-weblogic-ndelius-instances"
@@ -134,18 +105,8 @@ resource "aws_security_group_rule" "ndelius_instances_external_elb_ingress" {
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_external_elb.id}"
-  description              = "External ELB in"
-}
-
-resource "aws_security_group_rule" "ndelius_instances_internal_elb_ingress" {
-  security_group_id        = "${aws_security_group.weblogic_ndelius_instances.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
-  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_ndelius_internal_elb.id}"
-  description              = "Internal ELB in"
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_lb.id}"
+  description              = "Load balancer in"
 }
 
 resource "aws_security_group_rule" "ndelius_instances_egress_1521" {
