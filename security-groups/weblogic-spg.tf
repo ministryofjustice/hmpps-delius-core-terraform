@@ -42,10 +42,20 @@ resource "aws_security_group_rule" "spg_public_subnet_ingress" {
   security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
   type              = "ingress"
   protocol          = "tcp"
+  from_port         = "80"
+  to_port           = "80"
+  cidr_blocks       = ["${local.public_cidr_block}"]
+  description       = "Public subnet in"
+}
+
+resource "aws_security_group_rule" "spg_public_subnet_ingress_tls" {
+  security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = ["${local.public_cidr_block}"]
-  description       = "Public subnet in (required for NLB health-check)"
+  description       = "Public subnet in (TLS)"
 }
 
 resource "aws_security_group_rule" "spg_lb_egress_wls" {
