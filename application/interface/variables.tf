@@ -47,10 +47,6 @@ variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
 
-variable "ndelius_version" {
-  description = "NDelius version"
-}
-
 variable "default_ansible_vars" {
   description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars"
   type        = "map"

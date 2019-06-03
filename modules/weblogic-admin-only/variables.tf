@@ -191,10 +191,6 @@ variable "app_bootstrap_tertiary_role" {
   default     = "nada"
 }
 
-variable "ndelius_version" {
-  description = "NDelius version"
-}
-
 variable "ansible_vars" {
   description = "Ansible vars for user_data script"
   type        = "map"
