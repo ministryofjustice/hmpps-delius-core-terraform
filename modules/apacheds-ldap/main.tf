@@ -21,8 +21,6 @@ data "template_file" "user_data" {
     app_bootstrap_secondary_role  = "${var.app_bootstrap_secondary_role}"
     app_bootstrap_tertiary_role   = "${var.app_bootstrap_tertiary_role}"
 
-    ndelius_version               = "${var.ndelius_version}"
-
     # AWS
     cldwatch_log_group            = "${var.ansible_vars["cldwatch_log_group"]}"
     s3_dependencies_bucket        = "${var.ansible_vars["s3_dependencies_bucket"]}"
@@ -72,8 +70,6 @@ data "template_file" "user_data_slave" {
     app_bootstrap_initial_role    = "${var.app_bootstrap_initial_role}"
     app_bootstrap_secondary_role  = "${var.app_bootstrap_secondary_role}"
     app_bootstrap_tertiary_role   = "${var.app_bootstrap_tertiary_role}"
-
-    ndelius_version               = "${var.ndelius_version}"
 
     # AWS
     cldwatch_log_group            = "${var.ansible_vars["cldwatch_log_group"]}"
