@@ -66,11 +66,9 @@ module "ndelius" {
   activemq_enabled             = "false"
 
   app_bootstrap_name         = "hmpps-delius-core-bootstrap"
-  app_bootstrap_src          =  "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
+  app_bootstrap_src          = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
   app_bootstrap_version      = "master"
   app_bootstrap_initial_role = "delius-core"
-
-  ndelius_version = "${var.ndelius_version}"
 
   ansible_vars = {
     cldwatch_log_group       = "${var.environment_identifier}/weblogic-ndelius"

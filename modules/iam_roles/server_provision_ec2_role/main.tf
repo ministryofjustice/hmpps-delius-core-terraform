@@ -70,3 +70,17 @@ resource "aws_iam_role_policy_attachment" "delius_core_ec2_read_only" {
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }
+
+data "template_file" "ec2_create_tags_policy" {
+  template = "${file("${path.module}/policies/ec2_create_tags_policy.json")}"
+}
+
+resource "aws_iam_policy" "ec2_create_tags" {
+  name   = "${var.environment_name}-ec2-create-tags"
+  policy = "${data.template_file.ec2_create_tags_policy.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_create_tags" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "${aws_iam_policy.ec2_create_tags.arn}"
+}

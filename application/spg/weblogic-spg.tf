@@ -72,8 +72,6 @@ module "spg" {
   app_bootstrap_initial_role   = "delius-core"
   app_bootstrap_secondary_role = "delius-spg"
 
-  ndelius_version = "${var.ndelius_version}"
-
   ansible_vars = {
     cldwatch_log_group       = "${var.environment_identifier}/weblogic-spg"
 

@@ -18,3 +18,7 @@ output "instance_profile_ec2_id" {
 output "instance_profile_ec2_arn" {
   value = "${module.server_provision_ec2_role.instance_profile_ec2_arn}"
 }
+
+output "instance_profile_ec2" {
+  value = "${module.server_provision_ec2_role.instance_profile_ec2}"
+}

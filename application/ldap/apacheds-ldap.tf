@@ -57,8 +57,6 @@ module "ldap" {
   app_bootstrap_version      = "master"
   app_bootstrap_initial_role = "hmpps-delius-core-apacheds-bootstrap"
 
-  ndelius_version = "${var.ndelius_version}"
-
   ansible_vars = {
     # AWS
     cldwatch_log_group         = "${var.environment_identifier}/ldap"
