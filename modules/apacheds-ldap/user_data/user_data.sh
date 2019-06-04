@@ -10,13 +10,15 @@ pip install -U pip
 pip install ansible ansible==2.6
 
 cat << EOF >> /etc/environment
-HMPPS_ROLE="${app_name}"
-HMPPS_FQDN="`curl http://169.254.169.254/latest/meta-data/instance-id`.${private_domain}"
-HMPPS_STACKNAME=${env_identifier}
-HMPPS_STACK="${short_env_identifier}"
-HMPPS_ENVIRONMENT=${route53_sub_domain}
-HMPPS_ACCOUNT_ID="${account_id}"
-HMPPS_DOMAIN="${private_domain}"
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="`curl http://169.254.169.254/latest/meta-data/instance-id`.${private_domain}"
+export HMPPS_STACKNAME="${env_identifier}"
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
 EOF
 ## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
 ## just configured, so lets export them
@@ -24,9 +26,11 @@ export HMPPS_ROLE="${app_name}"
 export HMPPS_FQDN="`curl http://169.254.169.254/latest/meta-data/instance-id`.${private_domain}"
 export HMPPS_STACKNAME="${env_identifier}"
 export HMPPS_STACK="${short_env_identifier}"
-export HMPPS_ENVIRONMENT=${route53_sub_domain}
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
 export HMPPS_ACCOUNT_ID="${account_id}"
 export HMPPS_DOMAIN="${private_domain}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
 
 cat << EOF > ~/requirements.yml
 ---
@@ -54,13 +58,14 @@ EOF
 
 /usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
 
+/usr/bin/curl -o ~/delius-core.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/${route53_sub_domain}/ansible/group_vars/all.yml
+
 cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
 environment_name: "${environment_name}"
 project_name: "${project_name}"
-ndelius_version : "${ndelius_version}"
 
 # AWS
 cldwatch_log_group: "${cldwatch_log_group}"
@@ -122,5 +127,6 @@ export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 --extra-vars "{\
+'instance_id':'$INSTANCE_ID', \
 'bind_password':'$bind_password'\
 }"

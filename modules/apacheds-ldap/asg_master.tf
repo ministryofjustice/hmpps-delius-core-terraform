@@ -33,9 +33,17 @@ resource "aws_autoscaling_group" "master_asg" {
     create_before_destroy = true
   }
 
-  tags = ["${data.null_data_source.tags.*.outputs}", {
-    key                 = "Name"
-    value               = "${var.environment_name}-${var.tier_name}-master-asg"
-    propagate_at_launch = true
-  }]
+  tags = [
+    "${data.null_data_source.tags.*.outputs}",
+    {
+      key                 = "Name"
+      value               = "${var.environment_name}-${var.tier_name}-master-asg"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "ndelius_version"
+      value               = "None deployed"
+      propagate_at_launch = true
+    }
+  ]
 }
