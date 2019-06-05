@@ -83,17 +83,14 @@ variable "dss_batch_instances" {
 
 variable "dss_min_vcpu" {
   description = "Upper bound for active VCPUs in the AWS Batch Compute Environment. Must be >= VCPU count of largest instance type specified in dss_batch_instances"
-  type        = "number"
 }
 
 variable "dss_min_vcpu" {
   description = "Lower bound for active VCPUs in the AWS Batch Compute Environment. 0 means env will be scaled down when not required"
-  type        = "number"
 }
 
 variable "dss_job_retries" {
   description = "Number of retries for a failed DSS job"
-  type        = "number"
 }
 
 variable "dss_job_envvars" {
@@ -108,5 +105,4 @@ variable "dss_job_ulimits" {
 
 variable "dss_queue_state" {
   description = "State of the DSS Batch Queue: ENABLED or DISABLED"
-  type        = "string"
 }
