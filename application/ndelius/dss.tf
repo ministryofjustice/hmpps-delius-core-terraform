@@ -1,6 +1,9 @@
 # Create the AWS Batch Compute Environment and Job Queue from generic module
 module "dss_batch_environment" {
-  source         = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//batch//standalone_ce"
+  //TODO switch to git src once changes tested and merged
+  // source         = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//batch//standalone_ce"
+  source = "../../../hmpps-terraform-modules/modules/batch/standalone_ce"
+
   ce_name        = "${var.environment_name}-ndelius"
   ce_instances   = "${var.dss_batch_instances}"
   ce_min_vcpu    = "${var.dss_min_vcpu}"
@@ -78,7 +81,10 @@ resource "aws_batch_job_definition" "dss_job_def" {
 
 # Create Cloudwatch Event (Scheduled) trigger from generic module
 module "dss_cloudwatch_event" {
-  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//cloudwatch//scheduled_event"
+  //TODO switch to git source once changes tested and merged
+  //source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//cloudwatch//scheduled_event//batch_job"
+  source = "../../../hmpps-terraform-modules/modules/cloudwatch/scheduled_event/batch_job"
+
   event_name          = "${var.environment_name}-ndelius-dss-event"
   event_desc          = "Daily scheduled DSS Batch Event"
   event_schedule      = "${var.dss_job_schedule}"
