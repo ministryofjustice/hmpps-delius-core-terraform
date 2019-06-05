@@ -75,3 +75,38 @@ variable "ldap_ports" {
 variable "tags" {
   type = "map"
 }
+
+variable "dss_batch_instances" {
+  description = "List of permitted EC2 instance types to use for AWS Batch compute Environment"
+  type        = "list"
+}
+
+variable "dss_min_vcpu" {
+  description = "Upper bound for active VCPUs in the AWS Batch Compute Environment. Must be >= VCPU count of largest instance type specified in dss_batch_instances"
+  type        = "number"
+}
+
+variable "dss_min_vcpu" {
+  description = "Lower bound for active VCPUs in the AWS Batch Compute Environment. 0 means env will be scaled down when not required"
+  type        = "number"
+}
+
+variable "dss_job_retries" {
+  description = "Number of retries for a failed DSS job"
+  type        = "number"
+}
+
+variable "dss_job_envvars" {
+  description = "Map of Environment Variables to pass to DSS batch job"
+  type        = "map"
+}
+
+variable "dss_job_ulimits" {
+  description = "Map of ulimit values for DSS batch job definition"
+  type        = "map"
+}
+
+variable "dss_queue_state" {
+  description = "State of the DSS Batch Queue: ENABLED or DISABLED"
+  type        = "string"
+}
