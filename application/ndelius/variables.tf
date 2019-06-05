@@ -81,12 +81,24 @@ variable "dss_batch_instances" {
   type        = "list"
 }
 
-variable "dss_min_vcpu" {
+variable "dss_max_vcpu" {
   description = "Upper bound for active VCPUs in the AWS Batch Compute Environment. Must be >= VCPU count of largest instance type specified in dss_batch_instances"
 }
 
 variable "dss_min_vcpu" {
   description = "Lower bound for active VCPUs in the AWS Batch Compute Environment. 0 means env will be scaled down when not required"
+}
+
+variable "dss_job_image" {
+  description = "DSS Docker Image"
+}
+
+variable "dss_job_vcpus" {
+  description = "No. of VCPUs to assign to the DSS scheduled job"
+}
+
+variable "dss_job_memory" {
+  description = "Amount of RAM (GB) to assign to the DSS scheduled job"
 }
 
 variable "dss_job_retries" {
@@ -105,4 +117,8 @@ variable "dss_job_ulimits" {
 
 variable "dss_queue_state" {
   description = "State of the DSS Batch Queue: ENABLED or DISABLED"
+}
+
+variable "dss_job_schedule" {
+  description = "cron or rate expression for Cloudwatch Event Rule schedule"
 }
