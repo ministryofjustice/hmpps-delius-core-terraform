@@ -106,13 +106,13 @@ variable "dss_job_retries" {
 }
 
 variable "dss_job_envvars" {
-  description = "Map of Environment Variables to pass to DSS batch job"
-  type        = "map"
+  description = "List of aps of Environment Variables to pass to DSS batch job"
+  type        = "list"
 }
 
 variable "dss_job_ulimits" {
-  description = "Map of ulimit values for DSS batch job definition"
-  type        = "map"
+  description = "List of maps for ulimit values for DSS batch job definition"
+  type        = "list"
 }
 
 variable "dss_queue_state" {

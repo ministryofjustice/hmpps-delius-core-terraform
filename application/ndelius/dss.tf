@@ -1,3 +1,19 @@
+//TODO Remove this - only for local testing to get a plan output without prereq sg
+resource "aws_security_group" "delius_dss_out" {
+  name        = "${var.environment_name}-delius-dss-out"
+  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  description = "Delius database in"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-delius-dss-out", "Type", "Private"))}"
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+data "aws_caller_identity" "current" {}
+
 # Create the AWS Batch Compute Environment and Job Queue from generic module
 module "dss_batch_environment" {
   //TODO switch to git src once changes tested and merged
@@ -21,31 +37,30 @@ module "dss_batch_environment" {
 }
 
 # Create dedicated IAM Role and policy for DSS batch job
-data "template" "dss_job_role_policy_template" {
+data "template_file" "dss_job_role_policy_template" {
   template = "${file("./templates/iam_policies/dss_job_role.tpl")}"
 
   vars {
-    # List of SSM Parameters the batch instances are permitted to get, incl KMS keys to decrypt with
-    dss_batch_ssm_resources = []
+    aws_account_id = "${data.aws_caller_identity.current.account_id}"
   }
 }
 
-data "template" "ec2_assume_role_template" {
-  template = "${file("./templates/batch_jobs/dss.tpl")}"
+data "template_file" "ec2_assume_role_template" {
+  template = "${file("./templates/iam_policies/ec2_assume_role.tpl")}"
 
   vars {}
 }
 
 resource "aws_iam_role" "dss_job_role" {
   name               = "batch_job_role"
-  assume_role_policy = "${data.template.ec2_assume_role_template.rendered}"
+  assume_role_policy = "${data.template_file.ec2_assume_role_template.rendered}"
 }
 
 resource "aws_iam_role_policy" "dss_job_policy" {
   name = "batch_sts_policy"
   role = "${aws_iam_role.dss_job_role.name}"
 
-  policy = "${data.template.dss_job_role_policy_template.rendered}"
+  policy = "${data.template_file.dss_job_role_policy_template.rendered}"
 }
 
 # Create DSS specific AWS Batch Job Definition
