@@ -64,17 +64,12 @@ data "aws_ami" "amazon_ami" {
 
   filter {
     name   = "name"
-    values = ["HMPPS Base CentOS master *"]
+    values = ["HMPPS Delius-Core Oracle Client master *"]
   }
 
   filter {
     name   = "architecture"
     values = ["x86_64"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
   }
 
   filter {
