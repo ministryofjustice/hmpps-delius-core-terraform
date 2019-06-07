@@ -1,0 +1,7 @@
+    "image": "mojdigitalstudio/hmpps-delius-dss-docker:latest",
+    "jobRoleArn": "arn:aws:iam::723123699647:role/batch_job_role",
+    "memory": 128,
+    "vcpus": 1,
+    "environment": [{"name":"DSS_TESTMODE","value":"true"},{"name":"DSS_TESTINGAUTOCORRECT","value":"true"}],
+    "ulimits": [{"hardLimit":"1024","name":"nofile","softLimit":"1024"}]
+}EOL

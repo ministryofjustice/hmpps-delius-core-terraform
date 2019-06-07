@@ -1,30 +1,14 @@
-//TODO Remove this - only for local testing to get a plan output without prereq sg
-resource "aws_security_group" "delius_dss_out" {
-  name        = "${var.environment_name}-delius-dss-out"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "Delius database in"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-delius-dss-out", "Type", "Private"))}"
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 data "aws_caller_identity" "current" {}
 
 # Create the AWS Batch Compute Environment and Job Queue from generic module
 module "dss_batch_environment" {
-  //TODO switch to git src once changes tested and merged
-  // source         = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//batch//standalone_ce"
-  source = "../../../hmpps-terraform-modules/modules/batch/standalone_ce"
+  source = "../../modules/scheduled_batch/batch_environment"
 
   ce_name        = "${var.environment_name}-ndelius"
   ce_instances   = "${var.dss_batch_instances}"
   ce_min_vcpu    = "${var.dss_min_vcpu}"
   ce_max_vcpu    = "${var.dss_max_vcpu}"
-  ce_sg          = ["${aws_security_group.delius_dss_out.id}"]
+  ce_sg          = ["${data.terraform_remote_state.delius_core_security_groups.sg_delius_dss_out_id}"]
   ce_queue_state = "${var.dss_queue_state}"
 
   ce_subnets = "${list(
@@ -75,10 +59,15 @@ data "template_file" "dss_job_def_template" {
     job_vcpus  = "${var.dss_job_vcpus}"
 
     # Map of environment vars - e.g. dss config params
-    job_envvars = "${var.dss_job_envvars}"
+    job_envvars = "${jsonencode(var.dss_job_envvars)}"
 
-    # Job specific ulimits
-    job_ulimits = "${var.dss_job_ulimits}"
+    # Job specific ulimits - with horrible TF workaround for keeping integers post marshalling - fixed in TF 0.12
+    # see https://github.com/hashicorp/terraform/issues/17033
+    job_ulimits = "${replace(replace(
+        "${jsonencode(var.dss_job_ulimits)}",
+        "/\"([[:digit:]]+)\"/", "$1"
+      ), "string:", ""
+    )}"
   }
 }
 
@@ -96,14 +85,11 @@ resource "aws_batch_job_definition" "dss_job_def" {
 
 # Create Cloudwatch Event (Scheduled) trigger from generic module
 module "dss_cloudwatch_event" {
-  //TODO switch to git source once changes tested and merged
-  //source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//cloudwatch//scheduled_event//batch_job"
-  source = "../../../hmpps-terraform-modules/modules/cloudwatch/scheduled_event/batch_job"
-
+  source              = "../../modules/scheduled_batch/scheduled_event"
   event_name          = "${var.environment_name}-ndelius-dss-event"
   event_desc          = "Daily scheduled DSS Batch Event"
   event_schedule      = "${var.dss_job_schedule}"
   event_job_queue_arn = "${module.dss_batch_environment.job_queue_arn}"
-  event_job_def_id    = "${aws_batch_job_definition.dss_job_def.id}"
+  event_job_def_arn   = "${aws_batch_job_definition.dss_job_def.arn}"
   event_job_attempts  = "${var.dss_job_retries}"
 }
