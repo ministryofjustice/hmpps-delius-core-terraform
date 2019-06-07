@@ -176,6 +176,14 @@ pipeline {
           }
         }
 
+        stage('Delius Management Server') {
+          steps {
+            script {
+              do_terraform(project.config, environment_name, project.dcore, 'management')
+            }
+          }
+        }
+
         stage('Delius Database') {
           steps {
             script {
