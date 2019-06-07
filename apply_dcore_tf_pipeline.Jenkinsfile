@@ -215,7 +215,13 @@ pipeline {
                 }
             }
         }
-
+        stage ('Delius DSS Batch Job') {
+          steps{
+            script {
+              do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
+            }
+          }
+        }
         stage('Smoke test') {
             steps {
                 build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
