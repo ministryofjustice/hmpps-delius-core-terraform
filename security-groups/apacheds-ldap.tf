@@ -135,6 +135,17 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_weblogic_spg_ingress" {
   description              = "SPG in"
 }
 
+#Allow management server in
+resource "aws_security_group_rule" "apacheds_ldap_elb_management_ingress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.management_server.id}"
+  description              = "Management server in"
+}
+
 ################################################################################
 ## apacheds_ldap
 ################################################################################
