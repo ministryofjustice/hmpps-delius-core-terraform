@@ -1,4 +1,4 @@
-# Load runner host
+# Management server
 
 resource "aws_instance" "management_server" {
   ami                         = "${data.aws_ami.amazon_ami.id}"
