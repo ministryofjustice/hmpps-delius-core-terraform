@@ -37,3 +37,18 @@ variable "tags" {
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
+
+variable "default_ansible_vars" {
+  description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars"
+  type        = "map"
+}
+
+variable "ansible_vars" {
+  description = "Ansible vars for user_data script"
+  type        = "map"
+}
+
+variable "ldap_ports" {
+  type        = "map"
+  description = "Map of the ports that the ldap ports"
+}

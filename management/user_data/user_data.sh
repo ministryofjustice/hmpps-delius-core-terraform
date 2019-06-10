@@ -34,6 +34,8 @@ cat << EOF > ~/requirements.yml
   version: centos
 - name: users
   src: singleplatform-eng.users
+- name: management-server
+  src: https://github.com/ministryofjustice/hmpps-delius-core-management-server-bootstrap
 
 EOF
 
@@ -43,6 +45,12 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
+training_scripts_repo: https://github.com/ministryofjustice/hmpps-delius-core-training-scripts.git
+app_scripts_repo: https://github.com/ministryofjustice/hmpps-delius-core-app-scripts.git
+database_host: "${database_host}"
+database_sid: "${database_sid}"
+ldap_host: "${ldap_host}"
+ldap_port: "${ldap_port}"
 
 EOF
 
@@ -56,6 +64,7 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
+     - management-server
 
 EOF
 

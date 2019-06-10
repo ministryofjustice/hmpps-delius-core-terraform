@@ -59,6 +59,28 @@ data "terraform_remote_state" "key_profile" {
     region = "${var.region}"
   }
 }
+
+#-------------------------------------------------------------
+### Getting the database details
+#-------------------------------------------------------------
+data "terraform_remote_state" "database_failover" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/database_failover/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
+data "aws_route53_zone" "public" {
+  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+}
+
+data "aws_route53_zone" "private" {
+  zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
+}
+
 data "aws_ami" "amazon_ami" {
   most_recent = true
 
@@ -79,6 +101,9 @@ data "aws_ami" "amazon_ami" {
 }
 
 
+locals {
+  ansible_vars = "${merge(var.default_ansible_vars, var.ansible_vars)}"
+}
 
 data "template_file" "user_data" {
   template = "${file("user_data/user_data.sh")}"
@@ -93,5 +118,9 @@ data "template_file" "user_data" {
     bastion_inventory             = "${data.terraform_remote_state.vpc.bastion_inventory}"
     public_zone_id                = "${data.terraform_remote_state.vpc.public_zone_id}"
     private_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
+    database_host                 = "${data.terraform_remote_state.database_failover.public_fqdn_delius_db_1}"
+    database_sid                  = "${local.ansible_vars["database_sid"]}"
+    ldap_host                     = "${local.ansible_vars["ldap_host"]}.${data.aws_route53_zone.public.name}"
+    ldap_port                     = "${var.ldap_ports["ldap"]}"
   }
 }
