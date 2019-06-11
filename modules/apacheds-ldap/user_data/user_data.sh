@@ -102,6 +102,7 @@ cat << EOF > ~/bootstrap.yml
   vars_files:
    - "{{ playbook_dir }}/vars.yml"
    - "{{ playbook_dir }}/users.yml"
+   - "{{ playbook_dir }}/delius-core.yml"
   roles:
      - bootstrap
      - users
