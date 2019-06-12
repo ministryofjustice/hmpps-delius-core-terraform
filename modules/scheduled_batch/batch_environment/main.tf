@@ -37,7 +37,7 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_role_policy_attachement"
 }
 
 resource "aws_iam_instance_profile" "ecs_instance_profile" {
-  name = "ecs_instance_role"
+  name = "${var.ce_name}-ecs-batch-role"
   role = "${aws_iam_role.ecs_instance_role.name}"
 }
 
