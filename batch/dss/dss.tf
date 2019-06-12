@@ -38,7 +38,7 @@ data "template_file" "ec2_assume_role_template" {
 }
 
 resource "aws_iam_role" "dss_job_role" {
-  name               = "batch_job_role"
+  name               = "${var.environment_name}-dss-job-role"
   assume_role_policy = "${data.template_file.ec2_assume_role_template.rendered}"
 }
 
