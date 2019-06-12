@@ -26,6 +26,7 @@ data "template_file" "dss_job_role_policy_template" {
 
   vars {
     aws_account_id = "${data.aws_caller_identity.current.account_id}"
+    environment_name = "${var.environment_name}"
   }
 }
 

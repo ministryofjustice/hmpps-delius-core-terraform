@@ -8,11 +8,11 @@
         "kms:Decrypt"
       ],
       "Resource": [
-          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/dss_pnomis_user",
-          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/dss_pnomis_password",
-          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/dss_ndelius_user",
-          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/dss_ndelius_password",
-          "arn:aws:kms:eu-west-2:${aws_account_id}:key/alias/dss_param_key"
+          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/${environment_name}/delius-core/dss/dss/dss_web_password",
+          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/${environment_name}/delius-core/dss/dss/dss_web_user",
+          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/${environment_name}/delius-core/dss/dss/pnomis_web_password",
+          "arn:aws:ssm:eu-west-2:${aws_account_id}:parameter/${environment_name}/delius-core/dss/dss/pnomis_web_user",
+          "arn:aws:kms:eu-west-2:${aws_account_id}:alias/aws/ssm"
       ]
     }
   ]
