@@ -10,6 +10,7 @@ module "dss_batch_environment" {
   ce_max_vcpu    = "${var.dss_max_vcpu}"
   ce_sg          = ["${data.terraform_remote_state.delius_core_security_groups.sg_delius_dss_out_id}"]
   ce_queue_state = "${var.dss_queue_state}"
+  ce_ec2_key_pair = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
 
   ce_subnets = "${list(
     data.terraform_remote_state.vpc.vpc_private-subnet-az1,
@@ -26,6 +27,7 @@ data "template_file" "dss_job_role_policy_template" {
 
   vars {
     aws_account_id = "${data.aws_caller_identity.current.account_id}"
+    environment_name = "${var.environment_name}"
   }
 }
 

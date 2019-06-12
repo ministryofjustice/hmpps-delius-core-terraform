@@ -34,3 +34,7 @@ variable "ce_tags" {
 variable "ce_queue_state" {
   description = "State of CE job queue: ENABLED or DISABLED"
 }
+
+variable "ce_ec2_key_pair" {
+  description = "EC2 key pair to launch Compute Environment instances with"
+}

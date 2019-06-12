@@ -46,7 +46,7 @@ resource "aws_batch_compute_environment" "batch_ce" {
 
   compute_resources {
     instance_role = "${aws_iam_instance_profile.ecs_instance_profile.arn}"
-
+    ec2_key_pair = "${var.ce_ec2_key_pair}"
     instance_type = "${var.ce_instances}"
 
     max_vcpus = "${var.ce_max_vcpu}"
