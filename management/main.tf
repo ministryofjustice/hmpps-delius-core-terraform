@@ -112,6 +112,7 @@ data "template_file" "user_data" {
     env_identifier                = "${var.environment_identifier}"
     short_env_identifier          = "${var.short_environment_identifier}"
     region                        = "${var.region}"
+    project_name                  = "${var.project_name}"
     environment_name              = "${data.terraform_remote_state.vpc.environment_name}"
     private_domain                = "${data.terraform_remote_state.vpc.private_zone_name}"
     account_id                    = "${data.terraform_remote_state.vpc.vpc_account_id}"
