@@ -108,6 +108,16 @@ resource "aws_security_group_rule" "spg_instances_ingress_activemq" {
 
 resource "aws_security_group_rule" "spg_instances_egress_spg_gw" {
   security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
+  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
+  cidr_blocks              = ["${local.private_cidr_block}"]
+  description              = "SPG GW in"
+}
+
+resource "aws_security_group_rule" "spg_instances_egress_spg_gw" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
