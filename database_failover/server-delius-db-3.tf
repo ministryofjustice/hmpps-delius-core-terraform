@@ -18,6 +18,7 @@ module "delius_db_3" {
   tags                         = "${var.tags}"
   environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
   bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
+  project_name                 = "${var.project_name}"
   environment_identifier       = "${var.environment_identifier}"
   short_environment_identifier = "${var.short_environment_identifier}"
 
@@ -41,11 +42,11 @@ module "delius_db_3" {
     database_type                 = "standby" # required for the DB module. This file is where the property is set.
 
     ## the following are retrieved from SSM Parameter Store
-    ## oradb_sys_password            = "/${environment_name}/delius-core/oracle-database/db/oradb_sys_password"
-    ## oradb_system_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_system_password"
-    ## oradb_sysman_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_sysman_password"
-    ## oradb_dbsnmp_password         = "/${environment_name}/delius-core/oracle-database/db/oradb_dbsnmp_password"
-    ## oradb_asmsnmp_password        = "/${environment_name}/delius-core/oracle-database/db/oradb_asmsnmp_password"
+    ## oradb_sys_password            = "/${environment_name}/${project}/delius-database/db/oradb_sys_password"
+    ## oradb_system_password         = "/${environment_name}/${project}/delius-database/db/oradb_system_password"
+    ## oradb_sysman_password         = "/${environment_name}/${project}/delius-database/db/oradb_sysman_password"
+    ## oradb_dbsnmp_password         = "/${environment_name}/${project}/delius-database/db/oradb_dbsnmp_password"
+    ## oradb_asmsnmp_password        = "/${environment_name}/${project}/delius-database/db/oradb_asmsnmp_password"
   }
 }
 

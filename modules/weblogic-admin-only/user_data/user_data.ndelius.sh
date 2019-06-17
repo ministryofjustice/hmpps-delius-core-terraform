@@ -146,7 +146,7 @@ PARAM=$(aws ssm get-parameters \
 --with-decryption --name \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
 "/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
-"/${environment_name}/${project_name}/oracle-database/db/delius_app_schema_password" \
+"/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password" \
 --query Parameters)
 
 # set parameter values

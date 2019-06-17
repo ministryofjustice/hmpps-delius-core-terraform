@@ -136,7 +136,7 @@ module "spg" {
 
     ## the following are retrieved from SSM Parameter Store
     ## weblogic_admin_password  = "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password"
-    ## database_password        = "/${environment_name}/delius-core/oracle-database/db/delius_app_schema_password"
+    ## database_password        = "/${environment_name}/${project}/delius-database/db/delius_app_schema_password"
     ## ldap_admin_password      = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
   }
 }
