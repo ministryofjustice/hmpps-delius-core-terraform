@@ -50,6 +50,8 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
+environment_name: "${environment_name}"
+project_name: "${project_name}"
 cldwatch_log_group: "management-server"
 training_scripts_repo: https://github.com/ministryofjustice/hmpps-delius-core-training-scripts.git
 app_scripts_repo: https://github.com/ministryofjustice/hmpps-delius-core-app-scripts.git
