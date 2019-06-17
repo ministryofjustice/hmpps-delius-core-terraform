@@ -106,7 +106,7 @@ resource "aws_security_group_rule" "spg_instances_ingress_activemq" {
   description              = "DB in to activemq"
 }
 
-resource "aws_security_group_rule" "spg_instances_egress_spg_gw" {
+resource "aws_security_group_rule" "spg_instances_ingress_spg_gw" {
   security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
   type                     = "ingress"
   protocol                 = "tcp"
