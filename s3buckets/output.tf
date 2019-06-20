@@ -10,7 +10,7 @@ output "alb_ips_bucket_arn" {
 output "s3_alb_ips" {
   value = {
       arn    = "${module.alb-ips-bucket.s3_bucket_arn}",
-      domain = "${module.alb-ips-bucket.bucket_domain_name}",
+      domain = "${module.alb-ips-bucket.s3_bucket_domain_name}",
       name   = "${module.alb-ips-bucket.s3_bucket_name}",
       region = "${var.region}"
     }
