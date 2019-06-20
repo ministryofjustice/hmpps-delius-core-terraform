@@ -10,10 +10,6 @@ variable "dependencies_bucket_arn" {
   description = "The S3 bucket arn for software and application dependencies"
 }
 
-variable "backups_bucket_arn" {
-  description = "The S3 bucket arn for data backups"
-}
-
 variable "s3_oracledb_backups_arn" {
   description = "The S3 bucket arn for oracle db data backups"
 }

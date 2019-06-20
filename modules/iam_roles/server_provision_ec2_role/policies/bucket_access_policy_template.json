@@ -25,17 +25,6 @@
       ]
     },
     {
-      "Sid": "allowAccessToBackupBucket",
-      "Effect": "Allow",
-      "Action": [
-        "s3:*"
-      ],
-      "Resource": [
-        "${backups_bucket_arn}",
-        "${backups_bucket_arn}/*"
-      ]
-    },
-    {
       "Sid": "allowAccessToOracleDBBackupBucket",
       "Effect": "Allow",
       "Action": [
