@@ -4,11 +4,11 @@ resource "aws_ecs_cluster" "cluster" {
 }
 
 data "template_file" "container_definition" {
-  template = "${file("templates/container_definition.json.tpl")}"
+  template = "${file("templates/ecs/container_definition.json.tpl")}"
   vars {
-    image_url             = "fjudith/pwm"
-    version               = "latest"
-    container_name        = "pwm"
+    image_url       = "${local.image_url}"
+    image_version   = "${local.image_version}"
+    config_location = "${local.config_location}"
   }
 }
 
@@ -16,7 +16,10 @@ resource "aws_ecs_task_definition" "task_definition" {
   family                = "${var.environment_name}-pwm-task-definition"
   container_definitions = "${data.template_file.container_definition.rendered}"
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-pwm-task-definition"))}"
-  count                 = "1"
+  volume {
+    name      = "pwm"
+    host_path = "${local.config_location}"
+  }
 }
 
 resource "aws_ecs_service" "service" {

@@ -8,7 +8,7 @@ resource "aws_lb_target_group" "target_group" {
   health_check {
     protocol  = "HTTP"
     path      = "/"
-    matcher   = "200,301,302"
+    matcher   = "200-399"
   }
 }
 

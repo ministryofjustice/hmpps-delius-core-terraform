@@ -89,10 +89,34 @@ output "ami_ldap_wls" {
   value = "${data.aws_ami.centos_apacheds.id} - ${data.aws_ami.centos_apacheds.name}"
 }
 
-output "private_fqdn_ldap_internal_lb" {
+output "private_fqdn_ldap_elb" {
   value = "${module.ldap.private_fqdn_ldap_elb}"
 }
 
-output "public_fqdn_ldap_internal_lb" {
+output "public_fqdn_ldap_elb" {
   value = "${module.ldap.public_fqdn_ldap_elb}"
+}
+
+output "private_fqdn_readonly_ldap_elb" {
+  value = "${module.ldap.private_fqdn_readonly_ldap_elb}"
+}
+
+output "public_fqdn_readonly_ldap_elb" {
+  value = "${module.ldap.public_fqdn_readonly_ldap_elb}"
+}
+
+output "ldap_port" {
+  value = "${module.ldap.ldap_port}"
+}
+
+output "ldap_protocol" {
+  value = "${module.ldap.ldap_protocol}"
+}
+
+output "ldap_base" {
+  value = "${module.ldap.ldap_base}"
+}
+
+output "ldap_bind_user" {
+  value = "${module.ldap.ldap_bind_user}"
 }

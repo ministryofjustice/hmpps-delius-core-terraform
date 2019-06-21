@@ -52,6 +52,15 @@ data "terraform_remote_state" "persistent-eip" {
   }
 }
 
+data "terraform_remote_state" "ldap" {
+  backend = "s3"
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/application/ldap/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "aws_route53_zone" "public" {
   zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
 }
@@ -65,6 +74,8 @@ data "aws_acm_certificate" "cert" {
   types       = ["AMAZON_ISSUED"]
   most_recent = true
 }
+
+data "aws_caller_identity" "current" {}
 
 data "aws_ami" "ecs_ami" {
   most_recent = true

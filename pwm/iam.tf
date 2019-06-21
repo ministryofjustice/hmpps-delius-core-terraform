@@ -1,7 +1,23 @@
+data "template_file" "assume_role_policy_template" {
+  template = "${file("${path.module}/templates/iam/ec2_assume_role_policy.json.tpl")}"
+  vars {}
+}
+
+data "template_file" "get_params_policy_template" {
+  template = "${file("${path.module}/templates/iam/pwm_get_parameters_role_policy.json.tpl")}"
+  vars {
+    aws_account_id   = "${data.aws_caller_identity.current.account_id}"
+    environment_name = "${var.environment_name}"
+    region           = "${var.region}"
+    project_name     = "${var.project_name}"
+  }
+}
+
+
 resource "aws_iam_role" "ecs" {
   name               = "${var.environment_name}-pwm-ecs-role"
   description        = "Allows EC2 instances to call AWS services on your behalf."
-  assume_role_policy = "${file("${path.module}/policies/ec2_assume_role_policy.json")}"
+  assume_role_policy = "${data.template_file.assume_role_policy_template.rendered}"
 }
 
 resource "aws_iam_instance_profile" "ecs" {
@@ -12,4 +28,14 @@ resource "aws_iam_instance_profile" "ecs" {
 resource "aws_iam_role_policy_attachment" "ecs" {
   role       = "${aws_iam_role.ecs.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_policy" "get_params" {
+  name   = "${var.environment_name}-pwm-get-params"
+  policy = "${data.template_file.get_params_policy_template.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "get_params" {
+  role       = "${aws_iam_role.ecs.name}"
+  policy_arn = "${aws_iam_policy.get_params.arn}"
 }

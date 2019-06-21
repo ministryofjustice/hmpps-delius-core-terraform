@@ -93,7 +93,7 @@ resource "aws_security_group_rule" "pwm_lb_egress_instance" {
 resource "aws_security_group" "pwm_instances" {
   name        = "${var.environment_name}-pwm-instances"
   vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
-  description = "PWM Instances"
+  description = "PWM instances"
   tags        = "${merge(var.tags, map("Name", "${var.environment_name}-pwm-instances", "Type", "Private"))}"
 
   lifecycle {
@@ -105,7 +105,6 @@ output "sg_pwm_instances_id" {
   value = "${aws_security_group.pwm_instances.id}"
 }
 
-#Allow the ELB into the Admin port
 resource "aws_security_group_rule" "pwm_instances_ingress_lb" {
   security_group_id        = "${aws_security_group.pwm_instances.id}"
   type                     = "ingress"
