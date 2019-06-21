@@ -16,6 +16,6 @@ The docker image runs an instance of the PWM application on Tomcat 8.
 * `ses.tf` - (TODO) SES SMTP service to enable emailing password-reset links
 
 ## TODO
-* Configure service to talk to delius-core LDAP
-* LDAP schema changes
+* ~~Configure service to talk to delius-core LDAP~~
+* ~~LDAP schema changes~~
 * Configure email sending
