@@ -10,7 +10,7 @@
       ],
       "Resource": [
           "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/dss_user",
-          "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/dss_user_user",
+          "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/dss_user_password",
           "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/dss/dss/pnomis_web_password",
           "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/dss/dss/pnomis_web_user",
           "arn:aws:kms:${region}:${aws_account_id}:alias/aws/ssm"
