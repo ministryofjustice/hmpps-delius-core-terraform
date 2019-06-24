@@ -21,7 +21,7 @@ resource "aws_launch_configuration" "launch_cfg" {
   name_prefix          = "${var.short_environment_name}-pwm-launch-cfg-"
   image_id             = "${data.aws_ami.ecs_ami.id}"
   iam_instance_profile = "${aws_iam_instance_profile.ecs.id}"
-  instance_type        = "t2.medium"
+  instance_type        = "${var.pwm_config["instance_type"]}"
   security_groups      = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_pwm_instances_id}",
@@ -58,8 +58,8 @@ resource "aws_autoscaling_group" "asg" {
   )}"]
   launch_configuration      = "${aws_launch_configuration.launch_cfg.id}"
   min_size                  = "1"
-  max_size                  = "3"
-  desired_capacity          = "1"
+  max_size                  = "10"
+  desired_capacity          = "${var.pwm_config["desired_count"]}"
   tags = [
     "${data.null_data_source.tags.*.outputs}",
     {

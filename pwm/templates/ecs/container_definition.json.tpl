@@ -2,7 +2,7 @@
     "name": "${container_name}",
     "image": "${image_url}:${image_version}",
     "essential": true,
-    "memory": 2048,
+    "memory": ${memory},
     "portMappings": [{
         "hostPort": 8080,
         "containerPort": 8080

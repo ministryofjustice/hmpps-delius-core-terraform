@@ -10,6 +10,9 @@ resource "aws_lb_target_group" "target_group" {
     path      = "/"
     matcher   = "200-399"
   }
+  stickiness {
+    type      = "lb_cookie"
+  }
 }
 
 resource "aws_autoscaling_attachment" "asg_attachment" {
