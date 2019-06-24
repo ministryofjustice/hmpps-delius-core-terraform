@@ -1,17 +1,18 @@
 data "template_file" "user_data" {
   template = "${file("${path.module}/user_data/user_data.sh")}"
   vars {
-    ecs_cluster_name = "${aws_ecs_cluster.cluster.name}"
-    region           = "${var.region}"
-    environment_name = "${var.environment_name}"
-    project_name     = "${var.project_name}"
-    ldap_protocol    = "${data.terraform_remote_state.ldap.ldap_protocol}"
-    ldap_host        = "${data.terraform_remote_state.ldap.public_fqdn_ldap_elb}"
-    ldap_port        = "${data.terraform_remote_state.ldap.ldap_port}"
-    ldap_bind_user   = "${data.terraform_remote_state.ldap.ldap_bind_user}"
-    user_base        = "cn=Users,${data.terraform_remote_state.ldap.ldap_base}"
-    site_url         = "https://${aws_route53_record.public_dns.fqdn}"
-    config_location  = "${local.config_location}"
+    ecs_cluster_name  = "${aws_ecs_cluster.cluster.name}"
+    region            = "${var.region}"
+    environment_name  = "${var.environment_name}"
+    project_name      = "${var.project_name}"
+    bastion_inventory = "${data.terraform_remote_state.vpc.bastion_inventory}"
+    ldap_protocol     = "${data.terraform_remote_state.ldap.ldap_protocol}"
+    ldap_host         = "${data.terraform_remote_state.ldap.public_fqdn_ldap_elb}"
+    ldap_port         = "${data.terraform_remote_state.ldap.ldap_port}"
+    ldap_bind_user    = "${data.terraform_remote_state.ldap.ldap_bind_user}"
+    user_base         = "cn=Users,${data.terraform_remote_state.ldap.ldap_base}"
+    site_url          = "https://${aws_route53_record.public_dns.fqdn}"
+    config_location   = "${local.config_location}"
   }
 }
 
