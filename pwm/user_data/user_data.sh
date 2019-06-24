@@ -57,12 +57,6 @@ cat << EOF > ~/bootstrap.yml
      - users
      - pwm
 EOF
-cat << EOF > /etc/sudoers.d/webops
-# Members of the webops group may gain root privileges
-%webops ALL=(ALL) NOPASSWD:ALL
-
-Defaults  use_pty, log_host, log_year, logfile="/var/log/webops.sudo.log"
-EOF
 
 PARAM=$(aws ssm get-parameters --region eu-west-2 \
 --with-decryption --name \
