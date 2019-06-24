@@ -1,5 +1,5 @@
 [{
-    "name": "pwm",
+    "name": "${container_name}",
     "image": "${image_url}:${image_version}",
     "essential": true,
     "memory": 2048,
@@ -10,5 +10,14 @@
     "mountPoints": [{
         "sourceVolume": "pwm",
         "containerPath": "${config_location}"
-    }]
+    }],
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-create-group": "true",
+            "awslogs-group": "${log_group_name}",
+            "awslogs-region": "${region}",
+            "awslogs-stream-prefix": "ecs-${container_name}"
+        }
+    }
 }]

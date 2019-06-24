@@ -6,9 +6,12 @@ resource "aws_ecs_cluster" "cluster" {
 data "template_file" "container_definition" {
   template = "${file("templates/ecs/container_definition.json.tpl")}"
   vars {
+    region          = "${var.region}"
+    container_name  = "${local.container_name}"
     image_url       = "${local.image_url}"
     image_version   = "${local.image_version}"
     config_location = "${local.config_location}"
+    log_group_name  = "${var.environment_name}/${local.container_name}"
   }
 }
 

@@ -13,6 +13,14 @@ data "template_file" "get_params_policy_template" {
   }
 }
 
+data "template_file" "cloudwatch_logs_policy_template" {
+  template = "${file("${path.module}/templates/iam/cloudwatch_logs_role_policy.json.tpl")}"
+  vars {
+    aws_account_id = "${data.aws_caller_identity.current.account_id}"
+    region         = "${var.region}"
+  }
+}
+
 
 resource "aws_iam_role" "ecs" {
   name               = "${var.environment_name}-pwm-ecs-role"
@@ -38,4 +46,14 @@ resource "aws_iam_policy" "get_params" {
 resource "aws_iam_role_policy_attachment" "get_params" {
   role       = "${aws_iam_role.ecs.name}"
   policy_arn = "${aws_iam_policy.get_params.arn}"
+}
+
+resource "aws_iam_policy" "cloudwatch_logs" {
+  name   = "${var.environment_name}-pwm-cloudwatch-logs"
+  policy = "${data.template_file.cloudwatch_logs_policy_template.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_logs" {
+  role       = "${aws_iam_role.ecs.name}"
+  policy_arn = "${aws_iam_policy.cloudwatch_logs.arn}"
 }

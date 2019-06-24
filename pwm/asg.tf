@@ -13,6 +13,7 @@ data "template_file" "user_data" {
     user_base         = "cn=Users,${data.terraform_remote_state.ldap.ldap_base}"
     site_url          = "https://${aws_route53_record.public_dns.fqdn}"
     config_location   = "${local.config_location}"
+    log_group_name    = "${var.environment_name}/${local.container_name}"
   }
 }
 
