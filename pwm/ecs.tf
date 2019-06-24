@@ -6,9 +6,13 @@ resource "aws_ecs_cluster" "cluster" {
 data "template_file" "container_definition" {
   template = "${file("templates/ecs/container_definition.json.tpl")}"
   vars {
+    region          = "${var.region}"
+    container_name  = "${local.container_name}"
     image_url       = "${local.image_url}"
     image_version   = "${local.image_version}"
     config_location = "${local.config_location}"
+    log_group_name  = "${var.environment_name}/${local.container_name}"
+    memory          = "${var.pwm_config["memory"]}"
   }
 }
 
@@ -26,7 +30,7 @@ resource "aws_ecs_service" "service" {
   name            = "${var.environment_name}-pwm-service"
   cluster         = "${aws_ecs_cluster.cluster.id}"
   task_definition = "${aws_ecs_task_definition.task_definition.arn}"
-  desired_count   = "1"
+  desired_count   = "${var.pwm_config["desired_count"]}"
   load_balancer {
     target_group_arn = "${aws_lb_target_group.target_group.arn}"
     container_name = "pwm"
