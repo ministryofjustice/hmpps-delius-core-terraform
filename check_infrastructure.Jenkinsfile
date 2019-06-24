@@ -74,6 +74,7 @@ pipeline {
             stage('Plan Delius Keys and Profiles')      { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'key_profile')}}}
             stage('Plan Delius LoadRunner')             { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'loadrunner')}}}
             stage('Plan Delius Database')               { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'database_failover')}}}
+            stage('Plan Delius Management Server')      { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'management')}}}
             stage('Plan Delius Application LDAP')       { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ldap')}}}
             stage('Plan Delius Application NDelius')    { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ndelius')}}}
             stage('Plan Delius Application SPG')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/spg')}}}
