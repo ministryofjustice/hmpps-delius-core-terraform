@@ -146,6 +146,17 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_management_ingress" {
   description              = "Management server in"
 }
 
+#Allow PWM in
+resource "aws_security_group_rule" "apacheds_ldap_elb_pwm_ingress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.pwm_instances.id}"
+  description              = "Password manager in"
+}
+
 ################################################################################
 ## apacheds_ldap
 ################################################################################

@@ -58,14 +58,6 @@ resource "aws_route53_record" "ldap_elb_public" {
   records = ["${aws_elb.ldap_master_lb.dns_name}"]
 }
 
-output "private_fqdn_ldap_elb" {
-  value = "${aws_route53_record.ldap_elb_private.fqdn}"
-}
-
-output "public_fqdn_ldap_elb" {
-  value = "${aws_route53_record.ldap_elb_public.fqdn}"
-}
-
 resource "aws_route53_record" "ldap_readonly_elb_private" {
   zone_id = "${var.private_zone_id}"
   name    = "${var.tier_name}-readonly-elb"
@@ -80,12 +72,4 @@ resource "aws_route53_record" "ldap_readonly_elb_public" {
   type    = "CNAME"
   ttl     = "300"
   records = ["${aws_elb.ldap_master_lb.dns_name}"]
-}
-
-output "private_fqdn_readonly_ldap_elb" {
-  value = "${aws_route53_record.ldap_readonly_elb_private.fqdn}"
-}
-
-output "public_fqdn_readonly_ldap_elb" {
-  value = "${aws_route53_record.ldap_readonly_elb_public.fqdn}"
 }
