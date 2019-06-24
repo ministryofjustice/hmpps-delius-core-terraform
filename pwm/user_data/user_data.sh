@@ -18,7 +18,9 @@ pip install ansible==2.6 virtualenv awscli boto botocore boto3 passlib
 
 # Download user inventory and run ansible
 /usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
+# - users_deleted breaks on the ECS-optimized AMI, so we remove it here:
 sed -i '/users_deleted:/,$d' ~/users.yml
+
 cat << EOF > ~/requirements.yml
 ---
 
