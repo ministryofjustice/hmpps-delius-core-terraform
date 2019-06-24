@@ -19,6 +19,9 @@ resource "aws_instance" "management_server" {
     volume_size           = 50
     volume_type           = "gp2"
   }
+  lifecycle {
+    ignore_changes = ["ami"]
+  }
 }
 
 resource "aws_route53_record" "management_instance_internal" {
