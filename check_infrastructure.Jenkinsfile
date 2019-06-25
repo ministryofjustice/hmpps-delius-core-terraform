@@ -76,7 +76,7 @@ pipeline {
             stage('Plan Delius Database')               { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'database_failover')}}}
             stage('Plan Delius Management Server')      { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'management')}}}
             stage('Plan Delius Application LDAP')       { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ldap')}}}
-            stage('Delius Password Self-Service Tool')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'pwm')}}}
+            stage('Plan Delius Password Self-Service')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'pwm')}}}
             stage('Plan Delius Application NDelius')    { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ndelius')}}}
             stage('Plan Delius Application SPG')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/spg')}}}
             stage('Plan Delius Application Interface')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/interface')}}}
