@@ -201,6 +201,14 @@ pipeline {
           }
         }
 
+        stage ('Delius Password Self-Service Tool') {
+            steps{
+                script {
+                    do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                }
+            }
+        }
+
         stage('Delius Application NDelius') {
           steps {
             script {
@@ -224,6 +232,7 @@ pipeline {
                 }
             }
         }
+
         stage ('Delius DSS Batch Job') {
           steps{
             script {
@@ -231,6 +240,7 @@ pipeline {
             }
           }
         }
+
         stage('Smoke test') {
             steps {
                 build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
