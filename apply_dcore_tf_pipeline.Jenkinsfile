@@ -224,6 +224,7 @@ pipeline {
                 }
             }
         }
+
         stage ('Delius DSS Batch Job') {
           steps{
             script {
@@ -231,6 +232,13 @@ pipeline {
             }
           }
         }
+
+        stage('Build Delius Database High Availibilty') {
+            steps {
+                build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+            }
+        }
+
         stage('Smoke test') {
             steps {
                 build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
