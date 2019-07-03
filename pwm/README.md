@@ -13,6 +13,3 @@ The docker image runs an instance of the PWM application on Tomcat 8.
 * `alb.tf` - Internal application load balancer and target group
 * `nlb.tf` - External network load balancer to sit in front of the ALB, with persistent EIPs
 * `dns.tf` - Route53 DNS entries for the load balancer
-
-## TODO
-* Configure email sending
