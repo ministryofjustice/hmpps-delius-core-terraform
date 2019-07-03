@@ -2,10 +2,11 @@ data "template_file" "user_data" {
   template = "${file("${path.module}/user_data/user_data.sh")}"
   vars {
     ecs_cluster_name  = "${aws_ecs_cluster.cluster.name}"
+    bastion_inventory = "${data.terraform_remote_state.vpc.bastion_inventory}"
+    log_group_name    = "${var.environment_name}/${local.container_name}"
     region            = "${var.region}"
     environment_name  = "${var.environment_name}"
     project_name      = "${var.project_name}"
-    bastion_inventory = "${data.terraform_remote_state.vpc.bastion_inventory}"
     ldap_protocol     = "${data.terraform_remote_state.ldap.ldap_protocol}"
     ldap_host         = "${data.terraform_remote_state.ldap.public_fqdn_ldap_elb}"
     ldap_port         = "${data.terraform_remote_state.ldap.ldap_port}"
@@ -13,7 +14,8 @@ data "template_file" "user_data" {
     user_base         = "cn=Users,${data.terraform_remote_state.ldap.ldap_base}"
     site_url          = "https://${aws_route53_record.public_dns.fqdn}"
     config_location   = "${local.config_location}"
-    log_group_name    = "${var.environment_name}/${local.container_name}"
+    email_smtp_address = "smtp.${data.terraform_remote_state.vpc.private_zone_name}"
+    email_from_address = "no-reply@${data.terraform_remote_state.vpc.public_zone_name}"
   }
 }
 
@@ -24,6 +26,7 @@ resource "aws_launch_configuration" "launch_cfg" {
   instance_type        = "${var.pwm_config["instance_type"]}"
   security_groups      = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
+    "${data.terraform_remote_state.vpc_security_groups.sg_smtp_ses}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_pwm_instances_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]

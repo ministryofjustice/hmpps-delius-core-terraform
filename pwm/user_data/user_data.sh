@@ -94,6 +94,8 @@ ldap_bind_user: "${ldap_bind_user}"
 user_base: "${user_base}"
 site_url: "${site_url}"
 config_location: "${config_location}"
+email_smtp_address: "${email_smtp_address}"
+email_from_address: "${email_from_address}"
 
 EOF
 cat << EOF > ~/bootstrap.yml
