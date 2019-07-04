@@ -61,16 +61,26 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
         cp -R -n "${config_dir}" "${git_project_dir}/env_configs"
         cd "${git_project_dir}"
         docker run --rm \
-        -v `pwd`:/home/tools/data \
-        -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
-        bash -c "\
-            source env_configs/${env_name}/${env_name}.properties; \
-            cd ${submodule_name}; \
-            terragrunt apply ${env_name}.plan"
+          -v `pwd`:/home/tools/data \
+          -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
+          bash -c " \
+              source env_configs/${env_name}/${env_name}.properties; \
+              cd ${submodule_name}; \
+              terragrunt apply ${env_name}.plan; \
+              tgexitcode=\\\$?; \
+              echo \\\"TG exited with code \\\$tgexitcode\\\"; \
+              if [ \\\$tgexitcode -ne 0 ]; then \
+                exit  \\\$tgexitcode; \
+              else \
+                exit 0; \
+              fi;"; \
+        dockerexitcode=\$?; \
+        echo "Docker step exited with code \$dockerexitcode"; \
+        if [ \$dockerexitcode -ne 0 ]; then exit \$dockerexitcode; else exit 0; fi;
         set -e
         """
     }
-}
+}    
 
 def confirm() {
     try {
