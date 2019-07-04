@@ -80,7 +80,13 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
         set -e
         """
     }
-}           env.Continue = input(
+}    
+
+def confirm() {
+    try {
+        timeout(time: 15, unit: 'MINUTES') {
+
+            env.Continue = input(
                 id: 'Proceed1', message: 'Apply plan?', parameters: [
                     [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Apply Terraform']
                 ]
