@@ -147,13 +147,13 @@ PARAM=$(aws ssm get-parameters \
 --with-decryption --name \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
 "/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
-"/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password" \
+"/${environment_name}/${project_name}/delius-database/db/delius_pool_password" \
 --query Parameters)
 
 # set parameter values
 weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
 ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
-database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_app_schema_password")) | .Value' --raw-output)"
+database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
 
 export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 
