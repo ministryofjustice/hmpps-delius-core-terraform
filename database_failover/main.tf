@@ -61,6 +61,20 @@ data "terraform_remote_state" "delius_core_security_groups" {
 }
 
 #-------------------------------------------------------------
+### Getting the shared oracle-db-operation security groups
+#-------------------------------------------------------------
+data "terraform_remote_state" "ora_db_op_security_groups" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.eng_remote_state_bucket_name}"
+    key    = "oracle-db-operation/security-groups/terraform.tfstate"
+    region = "${var.region}"
+    role_arn = "${var.eng_role_arn}"
+  }
+}
+
+#-------------------------------------------------------------
 ### Getting the sub project keys and profiles
 #-------------------------------------------------------------
 data "terraform_remote_state" "key_profile" {
