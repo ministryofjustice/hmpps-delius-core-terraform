@@ -59,10 +59,14 @@ resource "aws_autoscaling_group" "asg" {
     data.terraform_remote_state.vpc.vpc_private-subnet-az2,
     data.terraform_remote_state.vpc.vpc_private-subnet-az3
   )}"]
+  enabled_metrics           = [
+    "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupPendingInstances",
+    "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
+  ]
   launch_configuration      = "${aws_launch_configuration.launch_cfg.id}"
-  min_size                  = "1"
-  max_size                  = "10"
-  desired_capacity          = "${var.pwm_config["desired_count"]}"
+  min_size                  = 3
+  desired_capacity          = 3
+  max_size                  = 30
   tags = [
     "${data.null_data_source.tags.*.outputs}",
     {
@@ -73,5 +77,52 @@ resource "aws_autoscaling_group" "asg" {
   ]
   lifecycle {
     create_before_destroy = true
+    ignore_changes = ["desired_capacity"]
+  }
+}
+
+resource "aws_autoscaling_policy" "up_policy" {
+  name                   = "${var.environment_name}-pwm-scale-up-policy"
+  scaling_adjustment     = "1"
+  adjustment_type        = "ChangeInCapacity"
+  autoscaling_group_name = "${aws_autoscaling_group.asg.name}"
+}
+
+resource "aws_autoscaling_policy" "down_policy" {
+  name                   = "${var.environment_name}-pwm-scale-down-policy"
+  scaling_adjustment     = "-1"
+  adjustment_type        = "ChangeInCapacity"
+  autoscaling_group_name = "${aws_autoscaling_group.asg.name}"
+}
+
+resource "aws_cloudwatch_metric_alarm" "up_alarm" {
+  alarm_name          = "${var.environment_name}-pwm-scale-up-alarm"
+  alarm_description   = "ECS cluster scaling metric above threshold"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = "60"
+  alarm_actions       = ["${aws_autoscaling_policy.up_policy.arn}"]
+  dimensions {
+    ClusterName = "${aws_ecs_cluster.cluster.name}"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "down_alarm" {
+  alarm_name          = "${var.environment_name}-pwm-scale-down-alarm"
+  alarm_description   = "ECS cluster scaling metric under threshold"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = "15"
+  alarm_actions       = ["${aws_autoscaling_policy.down_policy.arn}"]
+  dimensions {
+    ClusterName = "${aws_ecs_cluster.cluster.name}"
   }
 }

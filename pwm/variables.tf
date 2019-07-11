@@ -23,7 +23,6 @@ variable "pwm_config" {
   type = "map"
   default = {
     instance_type = "t3.large"  # AWS instance type to use
-    desired_count = 2           # Initial number of EC2 instances to use
     memory = 6144               # Memory to assign to ECS container in MB
   }
 }
