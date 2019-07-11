@@ -30,7 +30,6 @@ resource "aws_ecs_service" "service" {
   name            = "${var.environment_name}-pwm-service"
   cluster         = "${aws_ecs_cluster.cluster.id}"
   task_definition = "${aws_ecs_task_definition.task_definition.arn}"
-  desired_count   = 3
   load_balancer {
     target_group_arn = "${aws_lb_target_group.target_group.arn}"
     container_name = "pwm"
@@ -42,8 +41,8 @@ resource "aws_ecs_service" "service" {
 }
 
 resource "aws_appautoscaling_target" "scaling_target" {
-  min_capacity       = 3
-  max_capacity       = 30
+  min_capacity       = "${var.pwm_config["ecs_scaling_min_capacity"]}"
+  max_capacity       = "${var.pwm_config["ecs_scaling_max_capacity"]}"
   resource_id        = "service/${aws_ecs_cluster.cluster.name}/${aws_ecs_service.service.name}"
   role_arn           = "${aws_iam_role.ecs.arn}"
   scalable_dimension = "ecs:service:DesiredCount"
@@ -60,6 +59,6 @@ resource "aws_appautoscaling_policy" "scaling_policy" {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value             = 50
+    target_value             = "${var.pwm_config["ecs_target_cpu"]}"
   }
 }

@@ -64,9 +64,8 @@ resource "aws_autoscaling_group" "asg" {
     "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
   ]
   launch_configuration      = "${aws_launch_configuration.launch_cfg.id}"
-  min_size                  = 3
-  desired_capacity          = 3
-  max_size                  = 30
+  min_size                  = "${var.pwm_config["ec2_scaling_min_capacity"]}"
+  max_size                  = "${var.pwm_config["ec2_scaling_max_capacity"]}"
   tags = [
     "${data.null_data_source.tags.*.outputs}",
     {
@@ -104,7 +103,7 @@ resource "aws_cloudwatch_metric_alarm" "up_alarm" {
   namespace           = "AWS/ECS"
   period              = "120"
   statistic           = "Average"
-  threshold           = "60"
+  threshold           = "${var.pwm_config["scale_up_cpu_threshold"]}"
   alarm_actions       = ["${aws_autoscaling_policy.up_policy.arn}"]
   dimensions {
     ClusterName = "${aws_ecs_cluster.cluster.name}"
@@ -120,7 +119,7 @@ resource "aws_cloudwatch_metric_alarm" "down_alarm" {
   namespace           = "AWS/ECS"
   period              = "120"
   statistic           = "Average"
-  threshold           = "15"
+  threshold           = "${var.pwm_config["scale_down_cpu_threshold"]}"
   alarm_actions       = ["${aws_autoscaling_policy.down_policy.arn}"]
   dimensions {
     ClusterName = "${aws_ecs_cluster.cluster.name}"
