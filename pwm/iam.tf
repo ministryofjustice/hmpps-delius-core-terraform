@@ -38,6 +38,11 @@ resource "aws_iam_role_policy_attachment" "ecs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
+resource "aws_iam_role_policy_attachment" "auto_scaling" {
+  role       = "${aws_iam_role.ecs.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole"
+}
+
 resource "aws_iam_policy" "get_params" {
   name   = "${var.environment_name}-pwm-get-params"
   policy = "${data.template_file.get_params_policy_template.rendered}"
