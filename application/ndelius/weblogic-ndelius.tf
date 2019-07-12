@@ -88,7 +88,7 @@ module "ndelius" {
     # Database
     setup_datasources        = "${local.ansible_vars["setup_datasources"]}"
     primary_db_host          = "${data.terraform_remote_state.database_failover.public_fqdn_delius_db_1}"
-    database_url             = "jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(FAILOVER=ON)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=${data.terraform_remote_state.database_failover.public_fqdn_delius_db_1})(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=${data.terraform_remote_state.database_failover.public_fqdn_delius_db_2})(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=${data.terraform_remote_state.database_failover.public_fqdn_delius_db_3})(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=${local.ansible_vars["database_sid"]}_TAF)))"
+    database_url             = "${data.terraform_remote_state.database_failover.jdbc_failover_url}"
 
     # Alfresco
     alfresco_host            = "${local.ansible_vars["alfresco_host"]}.${data.aws_route53_zone.public.name}"
@@ -134,7 +134,7 @@ module "ndelius" {
 
     ## the following are retrieved from SSM Parameter Store
     ## weblogic_admin_password  = "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password"
-    ## database_password        = "/${environment_name}/${project}/delius-database/db/delius_app_schema_password"
+    ## database_password        = "/${environment_name}/${project}/delius-database/db/delius_pool_password"
     ## ldap_admin_password      = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
   }
 }

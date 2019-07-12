@@ -1,38 +1,38 @@
 resource "aws_ecs_cluster" "cluster" {
-  name = "${var.environment_name}-pwm-cluster"
-  tags = "${merge(var.tags, map("Name", "${var.environment_name}-pwm-cluster"))}"
+  name = "${var.environment_name}-${local.app_name}-cluster"
+  tags = "${merge(var.tags, map("Name", "${var.environment_name}-${local.app_name}-cluster"))}"
 }
 
 data "template_file" "container_definition" {
   template = "${file("templates/ecs/container_definition.json.tpl")}"
   vars {
     region          = "${var.region}"
-    container_name  = "${local.container_name}"
+    container_name  = "${local.app_name}"
     image_url       = "${local.image_url}"
     image_version   = "${local.image_version}"
     config_location = "${local.config_location}"
-    log_group_name  = "${var.environment_name}/${local.container_name}"
-    memory          = "${var.pwm_config["memory"]}"
+    log_group_name  = "${var.environment_name}/${local.app_name}"
+    memory          = "${var.umt_config["memory"]}"
   }
 }
 
 resource "aws_ecs_task_definition" "task_definition" {
-  family                = "${var.environment_name}-pwm-task-definition"
+  family                = "${var.environment_name}-${local.app_name}-task-definition"
   container_definitions = "${data.template_file.container_definition.rendered}"
-  tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-pwm-task-definition"))}"
+  tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${local.app_name}-task-definition"))}"
   volume {
-    name      = "pwm"
-    host_path = "${local.config_location}"
+    name      = "config"
+    host_path = "${local.host_config_location}"
   }
 }
 
 resource "aws_ecs_service" "service" {
-  name            = "${var.environment_name}-pwm-service"
+  name            = "${var.environment_name}-${local.app_name}-service"
   cluster         = "${aws_ecs_cluster.cluster.id}"
   task_definition = "${aws_ecs_task_definition.task_definition.arn}"
   load_balancer {
     target_group_arn = "${aws_lb_target_group.target_group.arn}"
-    container_name = "pwm"
+    container_name = "${local.app_name}"
     container_port = 8080
   }
   lifecycle {
@@ -41,8 +41,8 @@ resource "aws_ecs_service" "service" {
 }
 
 resource "aws_appautoscaling_target" "scaling_target" {
-  min_capacity       = "${var.pwm_config["ecs_scaling_min_capacity"]}"
-  max_capacity       = "${var.pwm_config["ecs_scaling_max_capacity"]}"
+  min_capacity       = "${var.umt_config["ecs_scaling_min_capacity"]}"
+  max_capacity       = "${var.umt_config["ecs_scaling_max_capacity"]}"
   resource_id        = "service/${aws_ecs_cluster.cluster.name}/${aws_ecs_service.service.name}"
   role_arn           = "${aws_iam_role.ecs.arn}"
   scalable_dimension = "ecs:service:DesiredCount"
@@ -59,6 +59,6 @@ resource "aws_appautoscaling_policy" "scaling_policy" {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value             = "${var.pwm_config["ecs_target_cpu"]}"
+    target_value             = "${var.umt_config["ecs_target_cpu"]}"
   }
 }

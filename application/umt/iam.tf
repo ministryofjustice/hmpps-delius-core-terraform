@@ -4,7 +4,7 @@ data "template_file" "assume_role_policy_template" {
 }
 
 data "template_file" "get_params_policy_template" {
-  template = "${file("${path.module}/templates/iam/pwm_get_parameters_role_policy.json.tpl")}"
+  template = "${file("${path.module}/templates/iam/get_parameters_role_policy.json.tpl")}"
   vars {
     aws_account_id   = "${data.aws_caller_identity.current.account_id}"
     environment_name = "${var.environment_name}"
@@ -23,13 +23,13 @@ data "template_file" "cloudwatch_logs_policy_template" {
 
 
 resource "aws_iam_role" "ecs" {
-  name               = "${var.environment_name}-pwm-ecs-role"
+  name               = "${var.environment_name}-${local.app_name}-ecs-role"
   description        = "Allows EC2 instances to call AWS services on your behalf."
   assume_role_policy = "${data.template_file.assume_role_policy_template.rendered}"
 }
 
 resource "aws_iam_instance_profile" "ecs" {
-  name = "${var.environment_name}-pwm-ecs-instance-profile"
+  name = "${var.environment_name}-${local.app_name}-ecs-instance-profile"
   role = "${aws_iam_role.ecs.name}"
 }
 
@@ -44,7 +44,7 @@ resource "aws_iam_role_policy_attachment" "auto_scaling" {
 }
 
 resource "aws_iam_policy" "get_params" {
-  name   = "${var.environment_name}-pwm-get-params"
+  name   = "${var.environment_name}-${local.app_name}-get-params"
   policy = "${data.template_file.get_params_policy_template.rendered}"
 }
 
@@ -54,7 +54,7 @@ resource "aws_iam_role_policy_attachment" "get_params" {
 }
 
 resource "aws_iam_policy" "cloudwatch_logs" {
-  name   = "${var.environment_name}-pwm-cloudwatch-logs"
+  name   = "${var.environment_name}-${local.app_name}-cloudwatch-logs"
   policy = "${data.template_file.cloudwatch_logs_policy_template.rendered}"
 }
 
