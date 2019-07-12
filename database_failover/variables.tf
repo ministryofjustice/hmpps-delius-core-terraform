@@ -34,6 +34,14 @@ variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
 
+variable "eng_remote_state_bucket_name" {
+  description = "Engineering remote state bucket name"
+}
+
+variable "eng_role_arn" {
+  description = "arn to use for engineering platform terraform"
+}
+
 variable "ansible_vars_oracle_db" {
   description = "Ansible (oracle_db) vars for user_data script "
   type        = "map"

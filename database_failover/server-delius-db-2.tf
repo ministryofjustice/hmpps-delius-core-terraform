@@ -1,5 +1,5 @@
 module "delius_db_2" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//oracle-database"
+  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git?ref=master//modules//oracle-database"
   server_name = "delius-db-2"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
@@ -50,6 +50,7 @@ module "delius_db_2" {
   }
 }
 
+#legacy (used for info only)
 output "ami_delius_db_2" {
   value = "${module.delius_db_2.ami_id}"
 }
@@ -68,4 +69,16 @@ output "private_ip_delius_db_2" {
 
 output "db_disks_delius_db_2" {
   value = "${module.delius_db_2.db_size_parameters}"
+}
+
+# map (tidier)
+output "delius_db_2" {
+  value = {
+    ami_id        = "${module.delius_db_2.ami_id}",
+    public_fqdn   = "${module.delius_db_2.public_fqdn}",
+    internal_fqdn = "${module.delius_db_2.internal_fqdn}",
+    private_ip    = "${module.delius_db_2.private_ip}",
+    db_disks      = "${module.delius_db_2.db_size_parameters}",
+    delius_db_2   = "ssh ${module.delius_db_2.public_fqdn}",
+  }
 }
