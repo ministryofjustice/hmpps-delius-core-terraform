@@ -31,6 +31,35 @@ data "terraform_remote_state" "natgateway" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the shared oracle-db-operation security groups
+#-------------------------------------------------------------
+data "terraform_remote_state" "ora_db_op_security_groups" {
+  backend = "s3"
+
+  config {
+    bucket   = "${var.eng_remote_state_bucket_name}"
+    key      = "oracle-db-operation/security-groups/terraform.tfstate"
+    region   = "${var.region}"
+    role_arn = "${var.eng_role_arn}"
+  }
+}
+
+#-------------------------------------------------------------
+### Getting the engineering jenkins remote state
+#-------------------------------------------------------------
+
+data "terraform_remote_state" "service-jenkins-eng" {
+  backend = "s3"
+
+  config {
+    bucket   = "${var.eng_remote_state_bucket_name}"
+    key      = "service-jenkins-eng/terraform.tfstate"
+    region   = "${var.region}"
+    role_arn = "${var.eng_role_arn}"
+  }
+}
+
 ####################################################
 # Locals
 ####################################################

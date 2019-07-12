@@ -68,13 +68,14 @@ resource "aws_security_group_rule" "db_to_db_ssh_in" {
   description       = "Inter db ssh comms"
 }
 
+# TODO REMOVE Jenkins access on this port
 resource "aws_security_group_rule" "jenkins_db_in" {
   security_group_id        = "${aws_security_group.delius_db_in.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "1521"
   to_port                  = "1521"
-  cidr_blocks              = [ "${data.terraform_remote_state.vpc.eng_vpc_cidr}" ]
+  source_security_group_id = "${data.terraform_remote_state.service-jenkins-eng.jenkins_client_security_group_id}"
   description              = "Jenkins in"
 }
 
@@ -86,4 +87,14 @@ resource "aws_security_group_rule" "management_db_in" {
   to_port                  = "1521"
   source_security_group_id = "${aws_security_group.management_server.id}"
   description              = "Management server in"
+}
+
+resource "aws_security_group_rule" "eng_rman_catalog_db_in" {
+  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${data.terraform_remote_state.ora_db_op_security_groups.sg_map_ids.rman_catalog}"
+  description              = "RMAN Catalog in"
 }
