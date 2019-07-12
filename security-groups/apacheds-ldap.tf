@@ -157,6 +157,17 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_pwm_ingress" {
   description              = "Password manager in"
 }
 
+#Allow UMT in
+resource "aws_security_group_rule" "apacheds_ldap_elb_umt_ingress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.umt_instances.id}"
+  description              = "User Management Tool in"
+}
+
 ################################################################################
 ## apacheds_ldap
 ################################################################################
