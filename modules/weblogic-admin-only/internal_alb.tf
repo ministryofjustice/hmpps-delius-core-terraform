@@ -27,6 +27,24 @@ resource "aws_lb_target_group" "internal_alb_target_group" {
   }
 }
 
+resource "aws_lb_target_group" "umt_target_group" {
+  name      = "${var.short_environment_name}-${var.tier_name}-umt"
+  vpc_id    = "${var.vpc_id}"
+  protocol  = "HTTP"
+  port      = "8080"
+  tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-umt"))}"
+  health_check {
+    protocol  = "HTTP"
+    path      = "/umt/actuator/health"
+    matcher   = "200-399"
+  }
+}
+
+resource "aws_autoscaling_attachment" "umt_asg_attachment" {
+  autoscaling_group_name = "${var.umt_asg_id}"
+  alb_target_group_arn   = "${aws_lb_target_group.umt_target_group.arn}"
+}
+
 # Listeners
 resource "aws_lb_listener" "internal_lb_https_listener" {
   load_balancer_arn = "${aws_lb.internal_alb.arn}"
@@ -37,6 +55,18 @@ resource "aws_lb_listener" "internal_lb_https_listener" {
   default_action {
     target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
     type             = "forward"
+  }
+}
+
+resource "aws_lb_listener_rule" "internal_lb_umt_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/umt/*"]
+  }
+  action {
+    type = "forward"
+    target_group_arn = "${aws_lb_target_group.umt_target_group.arn}"
   }
 }
 

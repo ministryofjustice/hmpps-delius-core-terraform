@@ -161,6 +161,7 @@ PARAM=$(aws ssm get-parameters \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
 "/${environment_name}/${project_name}/delius-database/db/delius_pool_password" \
 "/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
+"/${environment_name}/${project_name}/umt/umt/delius_secret" \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/remote_broker_username" \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/remote_broker_password" \
 --query Parameters)
@@ -169,6 +170,7 @@ PARAM=$(aws ssm get-parameters \
 weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
 ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
 database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
+usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("delius_secret")) | .Value' --raw-output)"
 remote_broker_username="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_username")) | .Value' --raw-output)"
 remote_broker_password="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_password")) | .Value' --raw-output)"
 
@@ -182,6 +184,7 @@ CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 'weblogic_admin_password':'$weblogic_admin_password', \
 'ldap_admin_password':'$ldap_admin_password', \
 'database_password':'$database_password', \
+'usermanagement_secret':'$usermanagement_secret', \
 'activemq_remoteCF_username':'$remote_broker_username', \
 'activemq_remoteCF_password':'$remote_broker_password' \
 }"

@@ -65,6 +65,7 @@ module "spg" {
   weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
   activemq_port                = "${var.weblogic_domain_ports["activemq_port"]}"
   activemq_enabled             = "true"
+  umt_asg_id                   = "${data.terraform_remote_state.umt.asg["id"]}"
 
   app_bootstrap_name           = "hmpps-delius-core-bootstrap"
   app_bootstrap_src            = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
@@ -127,7 +128,6 @@ module "spg" {
 
     # User Management Tool
     usermanagement_url       = "${local.ansible_vars["usermanagement_url"]}"
-    usermanagement_secret    = "${local.ansible_vars["usermanagement_secret"]}"
 
     # NOMIS
     nomis_url                = "${local.ansible_vars["nomis_url"]}"
