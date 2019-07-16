@@ -195,3 +195,8 @@ variable "ansible_vars" {
   description = "Ansible vars for user_data script"
   type        = "map"
 }
+
+variable "umt_asg_id" {
+  description = "auto-scaling group to forward traffic to for the user management tool"
+  type        = "string"
+}

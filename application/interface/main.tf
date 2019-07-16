@@ -99,6 +99,19 @@ data "terraform_remote_state" "persistent-eip" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the user management tool
+#-------------------------------------------------------------
+data "terraform_remote_state" "umt" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/application/umt/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "aws_ami" "centos_wls" {
   owners      = ["895523100917"]
   most_recent = true
