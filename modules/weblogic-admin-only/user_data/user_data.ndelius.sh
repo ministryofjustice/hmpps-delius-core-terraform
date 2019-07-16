@@ -113,7 +113,6 @@ newtech_pdfgenerator_secret: "${newtech_pdfgenerator_secret}"
 
 # User management tool
 usermanagement_url: "${usermanagement_url}"
-usermanagement_secret: "${usermanagement_secret}"
 
 # NOMIS
 nomis_url: "${nomis_url}"
