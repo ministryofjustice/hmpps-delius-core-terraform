@@ -70,6 +70,16 @@ resource "aws_security_group_rule" "interface_external_elb_egress_wls" {
   description              = "Out to instances"
 }
 
+resource "aws_security_group_rule" "interface_external_elb_egress_umt" {
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = "${aws_security_group.umt_instances.id}"
+  description              = "Out to UMT instances"
+}
+
 ################################################################################
 ## Instances
 ################################################################################
