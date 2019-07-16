@@ -75,7 +75,6 @@ data "template_file" "user_data" {
 
     # User Management Tool
     usermanagement_url       = "${var.ansible_vars["usermanagement_url"]}"
-    usermanagement_secret    = "${var.ansible_vars["usermanagement_secret"]}"
 
     # NOMIS
     nomis_url                = "${var.ansible_vars["nomis_url"]}"
