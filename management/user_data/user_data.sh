@@ -60,6 +60,9 @@ database_sid: "${database_sid}"
 ldap_host: "${ldap_host}"
 ldap_port: "${ldap_port}"
 
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
 EOF
 
 cat << EOF > ~/bootstrap.yml

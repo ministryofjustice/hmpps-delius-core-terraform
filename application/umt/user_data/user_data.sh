@@ -95,6 +95,9 @@ ldap_bind_username: "${ldap_bind_username}"
 ldap_user_base: "${ldap_user_base}"
 ndelius_log_level: "${ndelius_log_level}"
 
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
 EOF
 cat << EOF > ~/bootstrap.yml
 ---

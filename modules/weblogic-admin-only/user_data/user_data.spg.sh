@@ -131,6 +131,9 @@ nfs_mount_dir: "${activemq_data_folder}"
 nfs_mount_owner: oracle
 nfs_server_name: amq-nfs
 
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
 EOF
 
 cat << EOF > ~/bootstrap.yml

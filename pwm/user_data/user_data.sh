@@ -97,6 +97,9 @@ config_location: "${config_location}"
 email_smtp_address: "${email_smtp_address}"
 email_from_address: "${email_from_address}"
 
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
 EOF
 cat << EOF > ~/bootstrap.yml
 ---
