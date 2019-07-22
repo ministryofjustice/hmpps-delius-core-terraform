@@ -119,6 +119,9 @@ nomis_url: "${nomis_url}"
 nomis_client_id: "${nomis_client_id}"
 nomis_client_secret: "${nomis_client_secret}"
 
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
 EOF
 
 cat << EOF > ~/bootstrap.yml

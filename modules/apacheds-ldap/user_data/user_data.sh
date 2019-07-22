@@ -93,6 +93,9 @@ provider_host: "${provider_host}"
 import_users_ldif: "${import_users_ldif}"
 sanitize_oid_ldif: "${sanitize_oid_ldif}"
 
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
 EOF
 
 cat << EOF > ~/bootstrap.yml

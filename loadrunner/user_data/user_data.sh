@@ -53,6 +53,9 @@ cat << EOF > ~/vars.yml
 
 region: "${region}"
 
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
 EOF
 
 cat << EOF > ~/bootstrap.yml
