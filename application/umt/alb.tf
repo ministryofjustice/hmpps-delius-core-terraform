@@ -10,6 +10,7 @@ resource "aws_lb_target_group" "target_group" {
     path      = "/umt/actuator/health"
     matcher   = "200-399"
   }
+  depends_on = ["aws_lb.alb"]
 }
 
 resource "aws_autoscaling_attachment" "asg_attachment" {

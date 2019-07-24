@@ -13,6 +13,7 @@ resource "aws_lb_target_group" "target_group" {
   stickiness {
     type      = "lb_cookie"
   }
+  depends_on = ["aws_lb.alb"]
 }
 
 resource "aws_autoscaling_attachment" "asg_attachment" {
