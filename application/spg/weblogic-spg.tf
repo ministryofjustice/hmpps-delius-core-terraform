@@ -141,6 +141,20 @@ module "spg" {
   }
 }
 
+resource "aws_security_group_rule" "spg_instances_ingress_activemq" {
+  security_group_id        = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_instances_id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
+  cidr_blocks              = [
+    "${data.terraform_remote_state.database_failover.private_ip_delius_db_1}/32",
+    "${data.terraform_remote_state.database_failover.private_ip_delius_db_2}/32",
+    "${data.terraform_remote_state.database_failover.private_ip_delius_db_3}/32"
+  ]
+  description              = "DB in to activemq"
+}
+
 # Shared NFS for the ActiveMQ persistence store
 module "activemq-nfs" {
   source                        = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//nfs-server"

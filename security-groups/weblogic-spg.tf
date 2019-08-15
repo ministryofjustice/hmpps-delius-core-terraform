@@ -106,16 +106,6 @@ resource "aws_security_group_rule" "spg_instances_lb_ingress" {
   description              = "Load balancer in"
 }
 
-resource "aws_security_group_rule" "spg_instances_ingress_activemq" {
-  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
-  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
-  source_security_group_id = "${aws_security_group.delius_db_out.id}"
-  description              = "DB in to activemq"
-}
-
 resource "aws_security_group_rule" "spg_instances_ingress_spg_gw" {
   security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
   type                     = "ingress"
