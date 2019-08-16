@@ -143,14 +143,6 @@ output "ami_ndelius_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "private_fqdn_ndelius_wls_internal_nlb" {
-  value = "${module.ndelius.private_fqdn_internal_nlb}"
-}
-
-output "public_fqdn_ndelius_wls_internal_nlb" {
-  value = "${module.ndelius.public_fqdn_internal_nlb}"
-}
-
 output "private_fqdn_ndelius_wls_internal_alb" {
   value = "${module.ndelius.private_fqdn_internal_alb}"
 }

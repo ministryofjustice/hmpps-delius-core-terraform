@@ -141,54 +141,8 @@ module "spg" {
   }
 }
 
-resource "aws_security_group_rule" "spg_instances_ingress_activemq" {
-  security_group_id        = "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_spg_instances_id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
-  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
-  cidr_blocks              = [
-    "${data.terraform_remote_state.database_failover.private_ip_delius_db_1}/32",
-    "${data.terraform_remote_state.database_failover.private_ip_delius_db_2}/32",
-    "${data.terraform_remote_state.database_failover.private_ip_delius_db_3}/32"
-  ]
-  description              = "DB in to activemq"
-}
-
-# Shared NFS for the ActiveMQ persistence store
-module "activemq-nfs" {
-  source                        = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//nfs-server"
-  region                        = "${var.region}"
-  app_name                      = "amq-nfs"
-  environment_identifier        = "${var.environment_identifier}"
-  short_environment_identifier  = "${var.short_environment_identifier}"
-  remote_state_bucket_name      = "${var.remote_state_bucket_name}"
-  route53_sub_domain            = "${data.aws_route53_zone.public.name}"
-  bastion_origin_sgs            = ["${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}"]
-  private-cidr                  = ["${data.terraform_remote_state.vpc.vpc_cidr_block}"]
-  private_subnet_ids            = [
-    "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}",
-    "${data.terraform_remote_state.vpc.vpc_private-subnet-az2}",
-    "${data.terraform_remote_state.vpc.vpc_private-subnet-az3}",
-  ]
-  availability_zones            = [
-    "${data.terraform_remote_state.vpc.vpc_private-subnet-az1-availability_zone}",
-    "${data.terraform_remote_state.vpc.vpc_private-subnet-az2-availability_zone}",
-    "${data.terraform_remote_state.vpc.vpc_private-subnet-az3-availability_zone}",
-  ]
-  tags                          = "${var.tags}"
-}
-
 output "ami_spg_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
-}
-
-output "private_fqdn_spg_wls_internal_nlb" {
-  value = "${module.spg.private_fqdn_internal_nlb}"
-}
-
-output "public_fqdn_spg_wls_internal_nlb" {
-  value = "${module.spg.public_fqdn_internal_nlb}"
 }
 
 output "private_fqdn_spg_wls_internal_alb" {

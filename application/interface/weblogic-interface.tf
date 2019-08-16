@@ -144,14 +144,6 @@ output "ami_interface_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "private_fqdn_interface_wls_internal_nlb" {
-  value = "${module.interface.private_fqdn_internal_nlb}"
-}
-
-output "public_fqdn_interface_wls_internal_nlb" {
-  value = "${module.interface.public_fqdn_internal_nlb}"
-}
-
 output "private_fqdn_interface_wls_internal_alb" {
   value = "${module.interface.private_fqdn_internal_alb}"
 }

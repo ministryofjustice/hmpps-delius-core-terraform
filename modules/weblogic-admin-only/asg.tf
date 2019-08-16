@@ -27,11 +27,6 @@ resource "aws_autoscaling_attachment" "wls_asg_attachment_to_alb" {
   alb_target_group_arn   = "${aws_lb_target_group.internal_alb_target_group.arn}"
 }
 
-resource "aws_autoscaling_attachment" "wls_asg_attachment_to_nlb" {
-  autoscaling_group_name = "${aws_autoscaling_group.wls_asg.id}"
-  alb_target_group_arn   = "${aws_lb_target_group.internal_nlb_target_group.arn}"
-}
-
 # This null_data_source is required to convert our Map of tags, to the required List of tags for ASGs
 # see: https://github.com/hashicorp/terraform/issues/16980
 data "null_data_source" "tags" {
@@ -68,4 +63,12 @@ resource "aws_autoscaling_group" "wls_asg" {
       propagate_at_launch = true
     }
   ]
+}
+
+output "asg" {
+  value = {
+    "id"    = "${aws_autoscaling_group.wls_asg.id}",
+    "arn"   = "${aws_autoscaling_group.wls_asg.arn}",
+    "name"  = "${aws_autoscaling_group.wls_asg.name}",
+  }
 }
