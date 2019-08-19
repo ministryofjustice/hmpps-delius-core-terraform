@@ -43,7 +43,7 @@ module "ldap" {
   vpc_account_id               = "${data.terraform_remote_state.vpc.vpc_account_id}"
   kms_key_id                   = "${data.terraform_remote_state.key_profile.kms_arn_app}"
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
-  private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_zone_id              = "${data.terraform_remote_state.vpc.private_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
   admin_elb_sg_id              = "${data.terraform_remote_state.delius_core_security_groups.sg_apacheds_ldap_private_elb_id}"
   ldap_port                    = "${var.ldap_ports["ldap"]}"

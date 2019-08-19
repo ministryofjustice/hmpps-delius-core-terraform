@@ -56,7 +56,7 @@ module "ndelius" {
   vpc_account_id               = "${data.terraform_remote_state.vpc.vpc_account_id}"
   kms_key_id                   = "${data.terraform_remote_state.key_profile.kms_arn_app}"
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
-  private_zone_id              = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_zone_id              = "${data.terraform_remote_state.vpc.private_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
   certificate_arn              = "${data.aws_acm_certificate.cert.arn}"
   weblogic_health_check_path   = "NDelius-war/delius/JSP/healthcheck.jsp"
@@ -141,14 +141,6 @@ module "ndelius" {
 
 output "ami_ndelius_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
-}
-
-output "private_fqdn_ndelius_wls_internal_nlb" {
-  value = "${module.ndelius.private_fqdn_internal_nlb}"
-}
-
-output "public_fqdn_ndelius_wls_internal_nlb" {
-  value = "${module.ndelius.public_fqdn_internal_nlb}"
 }
 
 output "private_fqdn_ndelius_wls_internal_alb" {

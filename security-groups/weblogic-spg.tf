@@ -58,6 +58,16 @@ resource "aws_security_group_rule" "spg_public_subnet_ingress_tls" {
   description       = "Public subnet in (TLS)"
 }
 
+resource "aws_security_group_rule" "spg_instances_ingress_activemq" {
+  security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
+  source_security_group_id = "${aws_security_group.delius_db_out.id}"
+  description              = "DB in to activemq"
+}
+
 resource "aws_security_group_rule" "spg_lb_egress_wls" {
   security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
   type                     = "egress"
@@ -66,6 +76,16 @@ resource "aws_security_group_rule" "spg_lb_egress_wls" {
   to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
   description              = "Out to instances"
+}
+
+resource "aws_security_group_rule" "spg_jms_lb_egress_wls" {
+  security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
+  to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
+  source_security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
+  description              = "Out to instances (JMS)"
 }
 
 resource "aws_security_group_rule" "spg_external_elb_egress_umt" {
@@ -106,14 +126,14 @@ resource "aws_security_group_rule" "spg_instances_lb_ingress" {
   description              = "Load balancer in"
 }
 
-resource "aws_security_group_rule" "spg_instances_ingress_activemq" {
+resource "aws_security_group_rule" "spg_instances_jms_lb_ingress" {
   security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.weblogic_domain_ports["activemq_port"]}"
   to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
-  source_security_group_id = "${aws_security_group.delius_db_out.id}"
-  description              = "DB in to activemq"
+  source_security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
+  description              = "Load balancer in (JMS)"
 }
 
 resource "aws_security_group_rule" "spg_instances_ingress_spg_gw" {
