@@ -98,6 +98,16 @@ resource "aws_security_group_rule" "spg_external_elb_egress_umt" {
   description              = "Out to UMT instances"
 }
 
+resource "aws_security_group_rule" "spg_jms_lb_ingress_spg_gw" {
+  security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
+  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
+  cidr_blocks              = ["${local.private_cidr_block}"]
+  description              = "SPG GW in"
+}
+
 ################################################################################
 ## Instances
 ################################################################################
@@ -134,16 +144,6 @@ resource "aws_security_group_rule" "spg_instances_jms_lb_ingress" {
   to_port                  = "${var.weblogic_domain_ports["activemq_port"]}"
   source_security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
   description              = "Load balancer in (JMS)"
-}
-
-resource "aws_security_group_rule" "spg_instances_ingress_spg_gw" {
-  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
-  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
-  cidr_blocks              = ["${local.private_cidr_block}"]
-  description              = "SPG GW in"
 }
 
 resource "aws_security_group_rule" "spg_instances_egress_spg_gw" {
