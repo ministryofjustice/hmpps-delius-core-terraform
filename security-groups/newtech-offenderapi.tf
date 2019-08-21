@@ -1,4 +1,3 @@
-# Create a dedicated security group with no ingress for the batch compute environment
 # Requires egress for pulling images from container registry and connection to p-nomis and delius endpoints
 resource "aws_security_group" "newtech_offenderapi_out" {
   name        = "${var.environment_name}-delius-offapi-out"
