@@ -46,6 +46,8 @@ resource "aws_lb_target_group" "newtechweb_target_group" {
   protocol  = "HTTP"
   port      = "9000"
   tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-newtechweb"))}"
+  # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
+  target_type = "ip"
   health_check {
     protocol  = "HTTP"
     path      = "/healthcheck"
