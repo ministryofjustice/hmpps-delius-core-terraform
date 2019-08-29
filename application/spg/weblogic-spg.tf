@@ -160,3 +160,7 @@ output "private_fqdn_spg_external_nlb" {
 output "public_fqdn_spg_external_nlb" {
   value = "${module.spg.public_fqdn_external_nlb}"
 }
+
+output "newtech_webfrontend_target_group_arn" {
+  value = "${module.spg.newtech_webfrontend_targetgroup_arn}"
+}

@@ -159,3 +159,7 @@ output "private_fqdn_interface_external_nlb" {
 output "public_fqdn_interface_external_nlb" {
   value = "${module.interface.public_fqdn_external_nlb}"
 }
+
+output "newtech_webfrontend_target_group_arn" {
+  value = "${module.interface.newtech_webfrontend_targetgroup_arn}"
+}

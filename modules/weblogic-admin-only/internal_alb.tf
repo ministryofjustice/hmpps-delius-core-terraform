@@ -41,11 +41,13 @@ resource "aws_lb_target_group" "umt_target_group" {
 }
 
 resource "aws_lb_target_group" "newtechweb_target_group" {
-  name      = "${var.short_environment_name}-${var.tier_name}-newtechweb"
+  name      = "${var.short_environment_name}-${var.tier_name}-ntw"
   vpc_id    = "${var.vpc_id}"
   protocol  = "HTTP"
   port      = "9000"
-  tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-newtechweb"))}"
+  tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-ntw"))}"
+  # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
+  target_type = "ip"
   health_check {
     protocol  = "HTTP"
     path      = "/healthcheck"
@@ -148,4 +150,8 @@ output "private_fqdn_internal_alb" {
 
 output "public_fqdn_internal_alb" {
   value = "${aws_route53_record.internal_alb_public.fqdn}"
+}
+
+output "newtech_webfrontend_targetgroup_arn" {
+  value = "${aws_lb_target_group.newtechweb_target_group.arn}"
 }
