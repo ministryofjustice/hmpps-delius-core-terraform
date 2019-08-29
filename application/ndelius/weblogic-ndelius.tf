@@ -158,3 +158,7 @@ output "private_fqdn_ndelius_external_nlb" {
 output "public_fqdn_ndelius_external_lb" {
   value = "${module.ndelius.public_fqdn_external_nlb}"
 }
+
+output "newtech_webfrontend_target_group_arn" {
+  value = "${module.ndelius.newtech_webfrontend_targetgroup_arn}"
+}

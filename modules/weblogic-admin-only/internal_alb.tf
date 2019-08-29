@@ -149,3 +149,7 @@ output "private_fqdn_internal_alb" {
 output "public_fqdn_internal_alb" {
   value = "${aws_route53_record.internal_alb_public.fqdn}"
 }
+
+output "newtech_webfrontend_targetgroup_arn" {
+  value = "${aws_lb_target_group.newtechweb_target_group.arn}"
+}
