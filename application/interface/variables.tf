@@ -75,3 +75,13 @@ variable "ldap_ports" {
 variable "tags" {
   type = "map"
 }
+
+variable "delius_core_haproxy_instance_type" {
+  type        = "string"
+  description = "Instance type to use for the proxy servers sitting between the external and internal load-balancers"
+}
+
+variable "delius_core_haproxy_instance_count" {
+  type        = "string"
+  description = "Instance count to use for the proxy servers sitting between the external and internal load-balancers"
+}

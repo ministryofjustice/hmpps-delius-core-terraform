@@ -20,25 +20,25 @@ output "sg_weblogic_interface_lb_id" {
 
 # Allow EIS users into the external ELB
 #TODO: Do we build a list of allowed source in or?
-resource "aws_security_group_rule" "interface_external_elb_ingress" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "80"
-  to_port           = "80"
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Interface users in"
-}
-
-resource "aws_security_group_rule" "interface_external_elb_ingress_tls" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Interface users in (TLS)"
-}
+#resource "aws_security_group_rule" "interface_external_elb_ingress" {
+#  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+#  type              = "ingress"
+#  protocol          = "tcp"
+#  from_port         = "80"
+#  to_port           = "80"
+#  cidr_blocks       = ["0.0.0.0/0"]
+#  description       = "Interface users in"
+#}
+#
+#resource "aws_security_group_rule" "interface_external_elb_ingress_tls" {
+#  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+#  type              = "ingress"
+#  protocol          = "tcp"
+#  from_port         = "443"
+#  to_port           = "443"
+#  cidr_blocks       = ["0.0.0.0/0"]
+#  description       = "Interface users in (TLS)"
+#}
 
 resource "aws_security_group_rule" "interface_public_subnet_ingress" {
   security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
@@ -78,6 +78,26 @@ resource "aws_security_group_rule" "interface_external_elb_egress_umt" {
   to_port                  = "8080"
   source_security_group_id = "${aws_security_group.umt_instances.id}"
   description              = "Out to UMT instances"
+}
+
+resource "aws_security_group_rule" "interface_lb_self_ingress" {
+  security_group_id         = "${aws_security_group.weblogic_interface_lb.id}"
+  type                      = "ingress"
+  protocol                  = "tcp"
+  from_port                 = "80"
+  to_port                   = "80"
+  self                      = true
+  description               = "LB-to-LB comms"
+}
+
+resource "aws_security_group_rule" "interface_lb_self_ingress_tls" {
+  security_group_id         = "${aws_security_group.weblogic_interface_lb.id}"
+  type                      = "ingress"
+  protocol                  = "tcp"
+  from_port                 = "443"
+  to_port                   = "443"
+  self                      = true
+  description               = "LB-to-LB comms (TLS)"
 }
 
 ################################################################################

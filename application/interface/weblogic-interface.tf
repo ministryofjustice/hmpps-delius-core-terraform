@@ -15,12 +15,6 @@ module "interface" {
   instance_count       = "${var.instance_count_weblogic_interface}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
-  alb_ips_bucket       = "${data.terraform_remote_state.s3buckets.alb_ips_bucket_name}"
-  eip_allocation_ids   = [
-    "${data.terraform_remote_state.persistent-eip.delius_interface_az1_lb_eip.allocation_id}",
-    "${data.terraform_remote_state.persistent-eip.delius_interface_az2_lb_eip.allocation_id}",
-    "${data.terraform_remote_state.persistent-eip.delius_interface_az3_lb_eip.allocation_id}"
-  ]
 
   instance_security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
@@ -150,14 +144,6 @@ output "private_fqdn_interface_wls_internal_alb" {
 
 output "public_fqdn_interface_wls_internal_alb" {
   value = "${module.interface.public_fqdn_internal_alb}"
-}
-
-output "private_fqdn_interface_external_nlb" {
-  value = "${module.interface.private_fqdn_external_nlb}"
-}
-
-output "public_fqdn_interface_external_nlb" {
-  value = "${module.interface.public_fqdn_external_nlb}"
 }
 
 output "newtech_webfrontend_target_group_arn" {

@@ -28,16 +28,6 @@ variable "iam_instance_profile" {
   type        = "string"
 }
 
-variable "alb_ips_bucket" {
-  description = "Name of the bucket where we store the application load-balancer IPs. Used for linking the ALB to the external-facing NLB"
-  type        = "string"
-}
-
-variable "eip_allocation_ids" {
-  description = "Elastic IP addresses to assign to the external load balancer"
-  type        = "list"
-}
-
 variable "instance_security_groups" {
   description = "Security groups for the WebLogic instances"
   type        = "list"
