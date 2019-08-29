@@ -1,14 +1,17 @@
-The Delius Core Application
+# National Delius - WebLogic NDelius domain
 
-Instances will not be terminated when a newer AMI is availible. To update instance with new AMI the taint command needs to be run.
+Supports the front-end application for National Delius.
 
-For instance in modules
+This terraform module defines a load-balanced WebLogic auto-scaling group with the NDelius application deployed.
 
-```
-terragrunt taint -module="ndelius" aws_instance.admin
-terragrunt taint -module="ndelius" aws_instance.managed
-terragrunt taint -module="interface" aws_instance.admin
-terragrunt taint -module="interface" aws_instance.managed
-terragrunt taint -module="spg" aws_instance.admin
-terragrunt taint -module="spg" aws_instance.managed
-```
+## Resources
+* `weblogic-ndelius.tf` - Module defining WebLogic ASG with an internal application load-balancer
+* `nlb.tf` - External network load-balancer to forward traffic on to the internal ALB via a HAProxy ASG.
+This is to support static elastic IP addresses that can be whitelisted in external firewalls, whilst maintaining the 
+ability for us to also whitelist inbound CIDR ranges.
+
+## Outputs
+* `private_fqdn_spg_wls_internal_alb` - Private DNS name for the internal ALB eg. ndelius-app-internal.delius-core-dev.internal
+* `public_fqdn_spg_wls_internal_alb` - Public DNS name for the internal ALB eg. ndelius-app-internal.dev.delius-core.probation.hmpps.dsd.io
+* `private_fqdn_ndelius_external_nlb` - Private DNS name for the external NLB eg. ndelius.delius-core-dev.internal
+* `public_fqdn_ndelius_external_nlb` - Public DNS name for the external NLB eg. ndelius.delius-core.probation.hmpps.dsd.io

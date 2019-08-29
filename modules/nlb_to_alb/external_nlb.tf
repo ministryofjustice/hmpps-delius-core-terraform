@@ -19,51 +19,33 @@ resource "aws_lb" "external_nlb" {
 }
 
 resource "aws_lb_target_group" "external_nlb_https_target_group" {
-  name      = "${var.short_environment_name}-${var.tier_name}-ext"
+  name      = "${var.short_environment_name}-${substr(var.tier_name, 0, 3)}-nlb-443"
   vpc_id    = "${var.vpc_id}"
-  target_type = "ip"
   protocol  = "TCP"
   port      = "443"
-  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-ext"))}"
+  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${substr(var.tier_name, 0, 3)}-nlb-443"))}"
   health_check {
     protocol  = "TCP"
     port      = "443"
   }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_lb_target_group" "external_nlb_http_target_group" {
-  name      = "${var.short_environment_name}-${var.tier_name}-e80"
+  name      = "${var.short_environment_name}-${substr(var.tier_name, 0, 3)}-nlb-80"
   vpc_id    = "${var.vpc_id}"
-  target_type = "ip"
   protocol  = "TCP"
   port      = "80"
-  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-e80"))}"
+  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${substr(var.tier_name, 0, 3)}-nlb-80"))}"
   health_check {
     protocol  = "TCP"
     port      = "80"
   }
-}
-
-module "nlb_to_alb_https" {
-  source  = "pbar1/lb-linker/aws"
-  version = "1.0.0"
-  name = "${var.short_environment_name}-${var.tier_name}-nlb-to-alb-https"
-  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-nlb-to-alb-https"))}"
-  nlb_tg_arn = "${aws_lb_target_group.external_nlb_https_target_group.arn}"
-  alb_dns_name = "${aws_lb.internal_alb.dns_name}"
-  alb_listener = "443"
-  s3_bucket = "${var.alb_ips_bucket}"
-}
-
-module "nlb_to_alb_http" {
-  source  = "pbar1/lb-linker/aws"
-  version = "1.0.0"
-  name = "${var.short_environment_name}-${var.tier_name}-nlb-to-alb-http"
-  tags = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-nlb-to-alb-http"))}"
-  nlb_tg_arn = "${aws_lb_target_group.external_nlb_http_target_group.arn}"
-  alb_dns_name = "${aws_lb.internal_alb.dns_name}"
-  alb_listener = "80"
-  s3_bucket = "${var.alb_ips_bucket}"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_lb_listener" "external_nlb_https_listener" {
