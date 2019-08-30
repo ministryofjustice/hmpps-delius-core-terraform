@@ -43,15 +43,6 @@ data "terraform_remote_state" "s3buckets" {
   }
 }
 
-data "terraform_remote_state" "persistent-eip" {
-  backend = "s3"
-  config {
-    bucket = "${var.remote_state_bucket_name}"
-    key    = "persistent-eip/terraform.tfstate"
-    region = "${var.region}"
-  }
-}
-
 data "terraform_remote_state" "ldap" {
   backend = "s3"
   config {
