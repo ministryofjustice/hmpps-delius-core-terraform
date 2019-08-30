@@ -4,7 +4,7 @@ exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
 echo BEGIN
 date '+%Y-%m-%d %H:%M:%S'
 
-yum install -y wget git python-pip haproxy
+yum install -y wget git python-pip
 pip install -U pip
 pip install ansible ansible==2.6
 
@@ -65,12 +65,16 @@ export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml
 
+# Install HAProxy
+yum install -y centos-release-scl
+yum install -y rh-haproxy18-haproxy rh-haproxy18-haproxy-syspaths
+
 # Configure HAProxy
-mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.orig
-cat << EOF >> /etc/haproxy/haproxy.cfg
+mv /etc/opt/rh/rh-haproxy18/haproxy/haproxy.cfg /etc/opt/rh/rh-haproxy18/haproxy/haproxy.cfg.orig
+cat << EOF >> /etc/opt/rh/rh-haproxy18/haproxy/haproxy.cfg
 ${haproxy_cfg}
 EOF
 
 # Start HAProxy
-systemctl start haproxy
-systemctl enable haproxy
+systemctl start rh-haproxy18-haproxy
+systemctl enable rh-haproxy18-haproxy
