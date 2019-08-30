@@ -30,11 +30,6 @@ resource "aws_ecs_service" "service" {
   name            = "${var.environment_name}-${local.app_name}-service"
   cluster         = "${aws_ecs_cluster.cluster.id}"
   task_definition = "${aws_ecs_task_definition.task_definition.arn}"
-  load_balancer {
-    target_group_arn = "${aws_lb_target_group.target_group.arn}"
-    container_name = "${local.app_name}"
-    container_port = 8080
-  }
   lifecycle {
     ignore_changes = ["desired_count"]
   }
