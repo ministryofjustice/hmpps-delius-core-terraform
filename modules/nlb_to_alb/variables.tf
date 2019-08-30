@@ -19,12 +19,12 @@ variable "eip_allocation_ids" {
 }
 
 variable "public_subnets" {
-  description = "Subnet for Managed load balancers"
+  description = "Subnet for external load balancer"
   type        = "list"
 }
 
 variable "private_subnets" {
-  description = "Subnet for Admin load balancers"
+  description = "Subnet for HAProxy ASG"
   type        = "list"
 }
 

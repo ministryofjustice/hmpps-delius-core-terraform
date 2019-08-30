@@ -67,27 +67,3 @@ resource "aws_lb_listener" "external_nlb_http_listener" {
     type             = "forward"
   }
 }
-
-resource "aws_route53_record" "external_nlb_private" {
-  zone_id = "${var.private_zone_id}"
-  name    = "${var.tier_name}"
-  type    = "CNAME"
-  ttl     = "300"
-  records = ["${aws_lb.external_nlb.dns_name}"]
-}
-
-resource "aws_route53_record" "external_nlb_public" {
-  zone_id = "${var.public_zone_id}"
-  name    = "${var.tier_name}"
-  type    = "CNAME"
-  ttl     = "300"
-  records = ["${aws_lb.external_nlb.dns_name}"]
-}
-
-output "private_fqdn_external_nlb" {
-  value = "${aws_route53_record.external_nlb_private.fqdn}"
-}
-
-output "public_fqdn_external_nlb" {
-  value = "${aws_route53_record.external_nlb_public.fqdn}"
-}

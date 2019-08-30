@@ -46,11 +46,3 @@ module "external_nlb" {
   haproxy_instance_type        = "${var.delius_core_haproxy_instance_type}"
   haproxy_instance_count       = "${var.delius_core_haproxy_instance_count}"
 }
-
-output "private_fqdn_ndelius_external_nlb" {
-  value = "${module.external_nlb.private_fqdn_external_nlb}"
-}
-
-output "public_fqdn_ndelius_external_lb" {
-  value = "${module.external_nlb.public_fqdn_external_nlb}"
-}
