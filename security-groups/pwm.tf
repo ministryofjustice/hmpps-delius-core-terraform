@@ -77,6 +77,26 @@ resource "aws_security_group_rule" "pwm_lb_ingress_public_subnet_tls" {
   description       = "Public subnet in (TLS)"
 }
 
+resource "aws_security_group_rule" "pwm_lb_self_ingress" {
+  security_group_id         = "${aws_security_group.pwm_lb.id}"
+  type                      = "ingress"
+  protocol                  = "tcp"
+  from_port                 = "80"
+  to_port                   = "80"
+  self                      = true
+  description               = "LB-to-LB comms"
+}
+
+resource "aws_security_group_rule" "pwm_lb_self_ingress_tls" {
+  security_group_id         = "${aws_security_group.pwm_lb.id}"
+  type                      = "ingress"
+  protocol                  = "tcp"
+  from_port                 = "443"
+  to_port                   = "443"
+  self                      = true
+  description               = "LB-to-LB comms (TLS)"
+}
+
 resource "aws_security_group_rule" "pwm_lb_egress_instance" {
   security_group_id        = "${aws_security_group.pwm_lb.id}"
   type                     = "egress"

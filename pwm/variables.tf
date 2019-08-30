@@ -14,8 +14,30 @@ variable "short_environment_name" {
   description = "Shortened environment name to be used as a unique identifier for resources with a limit on resource name length - eg. dlc-dev"
 }
 
+variable "environment_identifier" {
+  description = "resource label or name"
+}
+
+variable "short_environment_identifier" {
+  description = "shortend resource label or name"
+}
+
+variable "environment_type" {
+  description = "The environment type - e.g. dev"
+}
+
 variable "project_name" {
   description = "Project name to be used when looking up SSM parameters - eg. delius-core"
+}
+
+variable "delius_core_haproxy_instance_type" {
+  type        = "string"
+  description = "Instance type to use for the proxy servers sitting between the external and internal load-balancers"
+}
+
+variable "delius_core_haproxy_instance_count" {
+  type        = "string"
+  description = "Instance count to use for the proxy servers sitting between the external and internal load-balancers"
 }
 
 variable "pwm_config" {
