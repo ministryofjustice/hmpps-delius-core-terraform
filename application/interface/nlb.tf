@@ -42,7 +42,7 @@ module "external_nlb" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.private_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  alb_fqdn                     = "${module.interface.public_fqdn_internal_alb}"
+  alb_fqdn                     = "${module.interface.private_fqdn_internal_alb}"
   haproxy_instance_type        = "${var.delius_core_haproxy_instance_type}"
   haproxy_instance_count       = "${var.delius_core_haproxy_instance_count}"
 }

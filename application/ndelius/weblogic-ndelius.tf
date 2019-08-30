@@ -141,10 +141,6 @@ output "private_fqdn_ndelius_wls_internal_alb" {
   value = "${module.ndelius.private_fqdn_internal_alb}"
 }
 
-output "public_fqdn_ndelius_wls_internal_alb" {
-  value = "${module.ndelius.public_fqdn_internal_alb}"
-}
-
 output "newtech_webfrontend_target_group_arn" {
   value = "${module.ndelius.newtech_webfrontend_targetgroup_arn}"
 }

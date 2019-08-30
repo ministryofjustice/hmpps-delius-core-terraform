@@ -136,20 +136,8 @@ resource "aws_route53_record" "internal_alb_private" {
   records = ["${aws_lb.internal_alb.dns_name}"]
 }
 
-resource "aws_route53_record" "internal_alb_public" {
-  zone_id = "${var.public_zone_id}"
-  name    = "${var.tier_name}-app-internal"
-  type    = "CNAME"
-  ttl     = "300"
-  records = ["${aws_lb.internal_alb.dns_name}"]
-}
-
 output "private_fqdn_internal_alb" {
   value = "${aws_route53_record.internal_alb_private.fqdn}"
-}
-
-output "public_fqdn_internal_alb" {
-  value = "${aws_route53_record.internal_alb_public.fqdn}"
 }
 
 output "newtech_webfrontend_targetgroup_arn" {
