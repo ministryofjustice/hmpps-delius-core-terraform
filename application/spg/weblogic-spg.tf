@@ -143,10 +143,6 @@ output "private_fqdn_spg_wls_internal_alb" {
   value = "${module.spg.private_fqdn_internal_alb}"
 }
 
-output "public_fqdn_spg_wls_internal_alb" {
-  value = "${module.spg.public_fqdn_internal_alb}"
-}
-
 output "newtech_webfrontend_target_group_arn" {
   value = "${module.spg.newtech_webfrontend_targetgroup_arn}"
 }

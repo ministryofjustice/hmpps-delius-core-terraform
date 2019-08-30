@@ -142,10 +142,6 @@ output "private_fqdn_interface_wls_internal_alb" {
   value = "${module.interface.private_fqdn_internal_alb}"
 }
 
-output "public_fqdn_interface_wls_internal_alb" {
-  value = "${module.interface.public_fqdn_internal_alb}"
-}
-
 output "newtech_webfrontend_target_group_arn" {
   value = "${module.interface.newtech_webfrontend_targetgroup_arn}"
 }
