@@ -265,6 +265,14 @@ pipeline {
             }
         }
 
+        stage('Pingdom checks') {
+            steps {
+                script {
+                    do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+                }
+            }
+        }
+
         stage('Smoke test') {
             steps {
                 build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
