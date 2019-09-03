@@ -3,6 +3,11 @@ terraform {
   backend "s3" {}
 }
 
+provider "aws" {
+  region  = "${var.region}"
+  version = "~> 1.16"
+}
+
 provider "pingdom" {
   user          = "${var.pingdom_user}"
   password      = "${var.pingdom_password}"

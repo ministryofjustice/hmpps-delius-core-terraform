@@ -10,6 +10,10 @@ variable "environment_name" {
   description = "Environment name."
 }
 
+variable "eng_account_id" {
+  description = "AWS account id for the engineering account."
+}
+
 variable "pingdom_publicreports" {
   type        = "list"
   description = "A list of reports that should be made public on pingdom.service.dsd.io"
