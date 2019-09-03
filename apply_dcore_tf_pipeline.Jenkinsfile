@@ -32,6 +32,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
             -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
+                [ ${submodule_name} == 'pingdom' ] && source pingdom/ssm.properties; \
                 cd ${submodule_name}; \
                 if [ -d .terraform ]; then rm -rf .terraform; fi; sleep 5; \
                 terragrunt init; \
@@ -65,6 +66,7 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
           -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
           bash -c " \
               source env_configs/${env_name}/${env_name}.properties; \
+              [ ${submodule_name} == 'pingdom' ] && source pingdom/ssm.properties; \
               cd ${submodule_name}; \
               terragrunt apply ${env_name}.plan; \
               tgexitcode=\\\$?; \
