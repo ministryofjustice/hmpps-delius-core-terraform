@@ -4,20 +4,6 @@
     {
       "Effect": "Allow",
       "Action": [
-        "ssm:GetParameter",
-        "ssm:GetParameters",
-        "kms:Decrypt"
-      ],
-      "Resource": [
-        "arn:aws:ssm:${region}:${eng_account_id}:parameter/engineering-dev/engineering/pingdom/admin/username",
-        "arn:aws:ssm:${region}:${eng_account_id}:parameter/engineering-dev/engineering/pingdom/admin/password",
-        "arn:aws:ssm:${region}:${eng_account_id}:parameter/engineering-dev/engineering/pingdom/admin/api_key",
-        "arn:aws:ssm:${region}:${eng_account_id}:parameter/engineering-dev/engineering/pingdom/admin/account_email"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
         "ec2:DescribeSecurityGroups"
       ],
       "Resource": "*"
@@ -31,6 +17,25 @@
       "Resource": [
         "arn:aws:ec2:${region}:${current_account_id}:security-group/${security_group_id}"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sns:Subscribe",
+        "sns:Receive"
+      ],
+      "Resource": [
+        "${sns_topic_arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:${region}:${current_account_id}:*"
     }
   ]
 }

@@ -10,8 +10,17 @@ variable "environment_name" {
   description = "Environment name."
 }
 
-variable "eng_account_id" {
-  description = "AWS account id for the engineering account."
+variable "eng_remote_state_bucket_name" {
+  description = "Engineering remote state bucket name"
+}
+
+variable "eng_role_arn" {
+  description = "arn to use for engineering platform terraform"
+}
+
+variable "tags" {
+  description = "Resource tags",
+  type = "map"
 }
 
 variable "pingdom_publicreports" {

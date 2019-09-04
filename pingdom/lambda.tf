@@ -32,6 +32,7 @@ resource "aws_lambda_function" "function" {
   runtime       = "python2.7"
   publish       = true
   timeout       = 10
+  tags          = "${merge(var.tags, map("Name", "${var.environment_name}-update-pingdom-cidr-ranges"))}"
 
   source_code_hash = "${data.archive_file.archive.output_base64sha256}"
   description      = "Update security groups to allow ingress from pingdom probe IPs"

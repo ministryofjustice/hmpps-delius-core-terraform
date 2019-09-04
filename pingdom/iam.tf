@@ -12,9 +12,9 @@ data "template_file" "lambda_policy_template" {
   template = "${file("${path.module}/templates/iam/lambda_policy.json.tpl")}"
   vars {
     region              = "${var.region}"
-    eng_account_id      = "${var.eng_account_id}"
     current_account_id  = "${data.aws_caller_identity.current.account_id}"
     security_group_id   = "${data.terraform_remote_state.delius_core_security_groups.sg_pingdom_in_id}"
+    sns_topic_arn       = "${data.terraform_remote_state.pingdom_sns.pingdom_ips_sns_topic_arn}"
   }
 }
 
