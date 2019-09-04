@@ -81,23 +81,23 @@ resource "aws_security_group_rule" "interface_external_elb_egress_umt" {
 }
 
 resource "aws_security_group_rule" "interface_lb_self_ingress" {
-  security_group_id         = "${aws_security_group.weblogic_interface_lb.id}"
-  type                      = "ingress"
-  protocol                  = "tcp"
-  from_port                 = "80"
-  to_port                   = "80"
-  self                      = true
-  description               = "LB-to-LB comms"
+  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "80"
+  to_port           = "80"
+  self              = true
+  description       = "LB-to-LB comms"
 }
 
 resource "aws_security_group_rule" "interface_lb_self_ingress_tls" {
-  security_group_id         = "${aws_security_group.weblogic_interface_lb.id}"
-  type                      = "ingress"
-  protocol                  = "tcp"
-  from_port                 = "443"
-  to_port                   = "443"
-  self                      = true
-  description               = "LB-to-LB comms (TLS)"
+  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  self              = true
+  description       = "LB-to-LB comms (TLS)"
 }
 
 ################################################################################
@@ -147,4 +147,14 @@ resource "aws_security_group_rule" "interface_instances_egress_ldap" {
   to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
   description              = "LDAP ELB out"
+}
+
+resource "aws_security_group_rule" "interface_external_elb_egress_newtechweb" {
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "9000"
+  to_port                  = "9000"
+  source_security_group_id = "${aws_security_group.newtech_web.id}"
+  description              = "Out to New Tech Web ECS Service"
 }
