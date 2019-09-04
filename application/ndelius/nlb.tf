@@ -13,6 +13,7 @@ module "external_nlb" {
   haproxy_security_groups = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_weblogic_ndelius_lb_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_pingdom_in_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
   ]
 
