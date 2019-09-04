@@ -99,34 +99,35 @@ resource "aws_security_group_rule" "spg_external_elb_egress_umt" {
 }
 
 resource "aws_security_group_rule" "spg_jms_lb_ingress_spg_gw" {
-  security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
-  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
-  cidr_blocks              = ["${local.private_cidr_block}"]
-  description              = "SPG GW in"
+  security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
+  to_port           = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
+  cidr_blocks       = ["${local.private_cidr_block}"]
+  description       = "SPG GW in"
 }
 
 resource "aws_security_group_rule" "spg_lb_self_ingress" {
-  security_group_id         = "${aws_security_group.weblogic_spg_lb.id}"
-  type                      = "ingress"
-  protocol                  = "tcp"
-  from_port                 = "80"
-  to_port                   = "80"
-  self                      = true
-  description               = "LB-to-LB comms"
+  security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "80"
+  to_port           = "80"
+  self              = true
+  description       = "LB-to-LB comms"
 }
 
 resource "aws_security_group_rule" "spg_lb_self_ingress_tls" {
-  security_group_id         = "${aws_security_group.weblogic_spg_lb.id}"
-  type                      = "ingress"
-  protocol                  = "tcp"
-  from_port                 = "443"
-  to_port                   = "443"
-  self                      = true
-  description               = "LB-to-LB comms (TLS)"
+  security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  self              = true
+  description       = "LB-to-LB comms (TLS)"
 }
+
 ################################################################################
 ## Instances
 ################################################################################
@@ -166,13 +167,13 @@ resource "aws_security_group_rule" "spg_instances_jms_lb_ingress" {
 }
 
 resource "aws_security_group_rule" "spg_instances_egress_spg_gw" {
-  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
-  to_port                  = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
-  cidr_blocks              = ["${local.private_cidr_block}"]
-  description              = "SPG GW out"
+  security_group_id = "${aws_security_group.weblogic_spg_instances.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = "${var.spg_partnergateway_domain_ports["jms_broker"]}"
+  to_port           = "${var.spg_partnergateway_domain_ports["jms_broker_ssl"]}"
+  cidr_blocks       = ["${local.private_cidr_block}"]
+  description       = "SPG GW out"
 }
 
 resource "aws_security_group_rule" "spg_instances_egress_1521" {
@@ -193,4 +194,14 @@ resource "aws_security_group_rule" "spg_instances_egress_ldap" {
   to_port                  = "${var.ldap_ports["ldap"]}"
   source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
   description              = "LDAP ELB out"
+}
+
+resource "aws_security_group_rule" "spg_external_elb_egress_newtechweb" {
+  security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "9000"
+  to_port                  = "9000"
+  source_security_group_id = "${aws_security_group.newtech_web.id}"
+  description              = "Out to New Tech Web ECS Service"
 }

@@ -48,6 +48,24 @@ resource "aws_security_group_rule" "newtechweb_alb_in" {
   security_group_id = "${aws_security_group.newtech_web.id}"
 }
 
+resource "aws_security_group_rule" "newtechweb_spg_alb_in" {
+  type              = "ingress"
+  from_port         = 9000
+  to_port           = 9000
+  protocol          = "tcp"
+  source_security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
+  security_group_id = "${aws_security_group.newtech_web.id}"
+}
+
+resource "aws_security_group_rule" "newtechweb_interface_alb_in" {
+  type              = "ingress"
+  from_port         = 9000
+  to_port           = 9000
+  protocol          = "tcp"
+  source_security_group_id = "${aws_security_group.weblogic_interface_lb}"
+  security_group_id = "${aws_security_group.newtech_web.id}"
+}
+
 output "sg_newtech_web_id" {
   value = "${aws_security_group.newtech_web.id}"
 }
