@@ -21,16 +21,6 @@
     {
       "Effect": "Allow",
       "Action": [
-        "sns:Subscribe",
-        "sns:Receive"
-      ],
-      "Resource": [
-        "${sns_topic_arn}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents"

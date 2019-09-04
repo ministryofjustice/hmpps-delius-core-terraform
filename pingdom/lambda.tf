@@ -24,7 +24,7 @@ data "archive_file" "archive" {
   depends_on  = ["local_file.file"]
 }
 
-resource "aws_lambda_function" "function" {
+resource "aws_lambda_function" "update_security_group_function" {
   filename      = "/tmp/${random_uuid.uuid.result}/zip.zip"
   function_name = "${var.environment_name}-update-pingdom-cidr-ranges"
   role          = "${aws_iam_role.lambda.arn}"
@@ -37,4 +37,12 @@ resource "aws_lambda_function" "function" {
   source_code_hash = "${data.archive_file.archive.output_base64sha256}"
   description      = "Update security groups to allow ingress from pingdom probe IPs"
   depends_on       = ["data.archive_file.archive"]
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.update_security_group_function.function_name}"
+  principal     = "sns.amazonaws.com"
+  source_arn    = "${data.terraform_remote_state.pingdom_sns.pingdom_ips_sns_topic_arn}"
 }

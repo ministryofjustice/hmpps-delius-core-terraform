@@ -8,12 +8,14 @@ PINGDOM_URL = 'https://api.pingdom.com/api/2.1/probes'
 
 def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
+    msg = json.loads(event['Records'][0]['Sns']['Message'])
+    ip_ranges = msg['ip-ranges']
 
     # update the security groups
     ec2 = boto3.client('ec2')
     security_group = ec2.describe_security_groups(GroupIds=['${security_group_id}'])['SecurityGroups'][0]
     print('Security group: ' + str(security_group))
-    result = update_security_group(ec2, security_group, event['ip-ranges'], 443)
+    result = update_security_group(ec2, security_group, ip_ranges, 443)
 
     return result
 
