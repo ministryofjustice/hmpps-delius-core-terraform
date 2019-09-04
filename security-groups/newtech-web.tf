@@ -62,7 +62,7 @@ resource "aws_security_group_rule" "newtechweb_interface_alb_in" {
   from_port         = 9000
   to_port           = 9000
   protocol          = "tcp"
-  source_security_group_id = "${aws_security_group.weblogic_interface_lb}"
+  source_security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
   security_group_id = "${aws_security_group.newtech_web.id}"
 }
 
