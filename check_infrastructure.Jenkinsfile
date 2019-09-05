@@ -31,6 +31,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
             -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
+                [ ${submodule_name} == 'pingdom' ] && source pingdom/ssm.properties; \
                 cd ${submodule_name}; \
                 if [ -d .terraform ]; then rm -rf .terraform; fi; sleep 5; \
                 terragrunt init; \
@@ -68,21 +69,22 @@ pipeline {
         }
 
         stage('Delius Core') {
-          parallel {
-            stage('Plan Delius Security Groups')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'security-groups')}}}
-            stage('Plan Delius Backups bucket')         { steps { script {plan_submodule(project.config, environment_name, project.dcore, 's3buckets')}}}
-            stage('Plan Delius Keys and Profiles')      { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'key_profile')}}}
-            stage('Plan Delius LoadRunner')             { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'loadrunner')}}}
-            stage('Plan Delius Database')               { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'database_failover')}}}
-            stage('Plan Delius Management Server')      { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'management')}}}
-            stage('Plan Delius Application LDAP')       { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ldap')}}}
-            stage('Plan Delius Password Self-Service')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'pwm')}}}
-            stage('Plan Delius User Management Tool')   { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/umt')}}}
-            stage('Plan Delius Application NDelius')    { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ndelius')}}}
-            stage('Plan Delius Application SPG')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/spg')}}}
-            stage('Plan Delius Application Interface')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/interface')}}}
-            stage('Plan Delius DSS Batch Job')          { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'batch/dss')}}}
-          }
+            parallel {
+                stage('Plan Delius Security Groups')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'security-groups')}}}
+                stage('Plan Delius Backups bucket')         { steps { script {plan_submodule(project.config, environment_name, project.dcore, 's3buckets')}}}
+                stage('Plan Delius Keys and Profiles')      { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'key_profile')}}}
+                stage('Plan Delius LoadRunner')             { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'loadrunner')}}}
+                stage('Plan Delius Database')               { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'database_failover')}}}
+                stage('Plan Delius Management Server')      { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'management')}}}
+                stage('Plan Delius Application LDAP')       { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ldap')}}}
+                stage('Plan Delius Password Self-Service')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'pwm')}}}
+                stage('Plan Delius User Management Tool')   { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/umt')}}}
+                stage('Plan Delius Application NDelius')    { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/ndelius')}}}
+                stage('Plan Delius Application SPG')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/spg')}}}
+                stage('Plan Delius Application Interface')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/interface')}}}
+                stage('Plan Delius DSS Batch Job')          { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'batch/dss')}}}
+                stage('Plan Delius Pingdom Checks')         { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'pingdom')}}}
+            }
         }
     }
 
