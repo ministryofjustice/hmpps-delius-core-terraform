@@ -1,6 +1,4 @@
-import base64
 import json
-import urllib2
 
 import boto3
 

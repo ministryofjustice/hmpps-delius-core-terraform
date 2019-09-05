@@ -29,7 +29,7 @@ resource "aws_lambda_function" "update_security_group_function" {
   function_name = "${var.environment_name}-update-pingdom-cidr-ranges"
   role          = "${aws_iam_role.lambda.arn}"
   handler       = "index.lambda_handler"
-  runtime       = "python2.7"
+  runtime       = "python3.7"
   publish       = true
   timeout       = 10
   tags          = "${merge(var.tags, map("Name", "${var.environment_name}-update-pingdom-cidr-ranges"))}"
