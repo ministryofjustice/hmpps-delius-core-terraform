@@ -6,7 +6,10 @@
                 "Action": [
                     "batch:SubmitJob"
                 ],
-                "Resource": "${job_queue_arn}"
+                "Resource": [
+                    "${job_queue_arn}",
+                    "${job_definition_arn}"
+                ]
             }
         ]
 }

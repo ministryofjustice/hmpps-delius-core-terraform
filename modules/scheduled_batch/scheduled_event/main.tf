@@ -27,6 +27,7 @@ data "template_file" "event_policy_template" {
 
   vars {
     job_queue_arn = "${var.event_job_queue_arn}"
+    job_definition_arn = "${var.event_job_def_arn}"
   }
 }
 
