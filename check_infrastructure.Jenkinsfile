@@ -11,7 +11,7 @@ project.dcore     = 'hmpps-delius-core-terraform'
 //       name: 'DCORE_BRANCH'
 //       description: 'Target Branch for hmpps-delius-core-terraform'
 //     string:
-//       name: 'CONFIG_BRANCH_BRANCH'
+//       name: 'CONFIG_BRANCH'
 //       description: 'Target Branch for hmpps-env-configs'
 //     booleanParam:
 //       name: 'confirmation'
