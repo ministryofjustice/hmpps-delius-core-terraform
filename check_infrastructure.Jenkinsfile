@@ -7,6 +7,15 @@ project.dcore     = 'hmpps-delius-core-terraform'
 //     choice:
 //       name: 'environment_name'
 //       description: 'Environment name.'
+//     string:
+//       name: 'DCORE_BRANCH'
+//       description: 'Target Branch for hmpps-delius-core-terraform'
+//     string:
+//       name: 'CONFIG_BRANCH_BRANCH'
+//       description: 'Target Branch for hmpps-env-configs'
+//     booleanParam:
+//       name: 'confirmation'
+//       description: 'Whether to require manual confirmation of terraform plans.'
 //     booleanParam:
 //       name: 'confirmation'
 //       description: 'Whether to require manual confirmation of terraform plans.'
@@ -52,16 +61,19 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
 pipeline {
 
     agent { label "jenkins_slave" }
-
+    parameters {
+        string(name: 'DCORE_BRANCH', description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
+        string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
+    }
     stages {
 
         stage('setup') {
             steps {
                 dir( project.config ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: env.CONFIG_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
                 dir( project.dcore ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: env.DCORE_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
 
                 prepare_env()
