@@ -55,7 +55,6 @@ data "template_file" "user_data" {
     ldap_readonly_host       = "${var.ansible_vars["ldap_readonly_host"]}"
     ldap_port                = "${var.ansible_vars["ldap_port"]}"
     ldap_principal           = "${var.ansible_vars["ldap_principal"]}"
-    partition_id             = "${var.ansible_vars["partition_id"]}"
     ldap_base                = "${var.ansible_vars["ldap_base"]}"
     ldap_user_base           = "${var.ansible_vars["ldap_user_base"]}"
     ldap_group_base          = "${var.ansible_vars["ldap_group_base"]}"

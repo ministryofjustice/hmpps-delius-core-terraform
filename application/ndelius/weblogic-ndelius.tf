@@ -96,14 +96,13 @@ module "ndelius" {
     activemq_data_folder     = "${local.ansible_vars["activemq_data_folder"]}"
 
     # LDAP
-    ldap_host                = "${local.ansible_vars["ldap_host"]}.${data.aws_route53_zone.public.name}"
-    ldap_readonly_host       = "${local.ansible_vars["ldap_readonly_host"]}.${data.aws_route53_zone.public.name}"
+    ldap_host                = "${data.terraform_remote_state.ldap.private_fqdn_ldap_elb}"
+    ldap_readonly_host       = "${data.terraform_remote_state.ldap.private_fqdn_ldap_elb}"
     ldap_port                = "${var.ldap_ports["ldap"]}"
-    ldap_principal           = "${local.ansible_vars_apacheds["bind_user"]}"
-    partition_id             = "${local.ansible_vars_apacheds["partition_id"]}"
-    ldap_base                = "${local.ansible_vars["ldap_base"]}"
-    ldap_user_base           = "${local.ansible_vars["ldap_user_base"]}"
-    ldap_group_base          = "${local.ansible_vars["ldap_group_base"]}"
+    ldap_principal           = "${data.terraform_remote_state.ldap.ldap_bind_user}"
+    ldap_base                = "${data.terraform_remote_state.ldap.ldap_base}"
+    ldap_user_base           = "${data.terraform_remote_state.ldap.ldap_base_users}"
+    ldap_group_base          = "cn=EISUsers,${data.terraform_remote_state.ldap.ldap_base_users}"
 
     # App config
     ndelius_display_name     = "${local.ansible_vars["ndelius_display_name"]}"

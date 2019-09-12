@@ -4,7 +4,8 @@ exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
 echo BEGIN
 date '+%Y-%m-%d %H:%M:%S'
 
-yum install -y wget git python-pip jq
+yum install -y wget git python-pip
+
 pip install -U pip
 pip install ansible ansible==2.6
 
@@ -25,7 +26,7 @@ export HMPPS_ROLE="${app_name}"
 export HMPPS_FQDN="`curl http://169.254.169.254/latest/meta-data/instance-id`.${private_domain}"
 export HMPPS_STACKNAME="${env_identifier}"
 export HMPPS_STACK="${short_env_identifier}"
-export HMPPS_ENVIRONMENT=${route53_sub_domain}
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
 export HMPPS_ACCOUNT_ID="${account_id}"
 export HMPPS_DOMAIN="${private_domain}"
 export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
@@ -63,60 +64,28 @@ cat << EOF > ~/vars.yml
 ---
 
 region: "${region}"
+environment_name: "${environment_name}"
+project_name: "${project_name}"
+
+# AWS
 cldwatch_log_group: "${cldwatch_log_group}"
-
-# Artefact locations
 s3_dependencies_bucket: "${s3_dependencies_bucket}"
+s3_backups_bucket: "${s3_backups_bucket}"
 
-# Server/WebLogic config
-domain_name: "${domain_name}"
-server_name: "${server_name}"
-jvm_mem_args: "${jvm_mem_args}"
-server_params: "${server_params}"
-weblogic_admin_username: "${weblogic_admin_username}"
-server_listen_address: "${server_listen_address}"
-server_listen_port: "${server_listen_port}"
-
-# Database
-setup_datasources: "${setup_datasources}"
-primary_db_host: "${primary_db_host}"
-database_url: "${database_url}"
-
-# Alfresco
-alfresco_host: "${alfresco_host}"
-alfresco_port: "${alfresco_port}"
-alfresco_office_host: "${alfresco_office_host}"
-alfresco_office_port: "${alfresco_office_port}"
+# ApacheDS
+workspace: "${workspace}"
 
 # LDAP
-ldap_host: "${ldap_host}"
-ldap_readonly_host: "${ldap_readonly_host}"
+ldap_protocol: "${ldap_protocol}"
 ldap_port: "${ldap_port}"
-ldap_principal: "${ldap_principal}"
-ldap_base: "${ldap_base}"
-ldap_user_base: "${ldap_user_base}"
-ldap_group_base: "${ldap_group_base}"
+bind_user: "${bind_user}"
+base_root: "${base_root}"
+base_users: "${base_users}"
 
-# NDelius application
-ndelius_display_name: "${ndelius_display_name}"
-ndelius_log_level: "${ndelius_log_level}"
-ndelius_training_mode: "${ndelius_training_mode}"
-ndelius_analytics_tag: "${ndelius_analytics_tag}"
-ldap_passfile: "${ldap_passfile}"
-
-# New tech
-newtech_search_url: "${newtech_search_url}"
-newtech_pdfgenerator_url: "${newtech_pdfgenerator_url}"
-newtech_pdfgenerator_templates: "${newtech_pdfgenerator_templates}"
-newtech_pdfgenerator_secret: "${newtech_pdfgenerator_secret}"
-
-# User management tool
-usermanagement_url: "${usermanagement_url}"
-
-# NOMIS
-nomis_url: "${nomis_url}"
-nomis_client_id: "${nomis_client_id}"
-nomis_client_secret: "${nomis_client_secret}"
+# Data import
+import_users_ldif: "${import_users_ldif}"
+import_users_ldif_base_users: "${import_users_ldif_base_users}"
+sanitize_oid_ldif: ${sanitize_oid_ldif}
 
 # For user_update cron
 remote_user_filename: "${bastion_inventory}"
@@ -134,8 +103,7 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
-     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_initial_role}"
-     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_secondary_role}"
+     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}"
      # - rsyslog
      # - elasticbeats
      # - tier specific role
@@ -146,17 +114,11 @@ EOF
 PARAM=$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
-"/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
 "/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
-"/${environment_name}/${project_name}/delius-database/db/delius_pool_password" \
-"/${environment_name}/${project_name}/umt/umt/delius_secret" \
 --query Parameters)
 
 # set parameter values
-weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
-ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
-database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
-usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("delius_secret")) | .Value' --raw-output)"
+bind_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
 
 export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 
@@ -164,8 +126,5 @@ ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 --extra-vars "{\
 'instance_id':'$INSTANCE_ID', \
-'weblogic_admin_password':'$weblogic_admin_password', \
-'ldap_admin_password':'$ldap_admin_password', \
-'database_password':'$database_password', \
-'usermanagement_secret':'$usermanagement_secret' \
+'bind_password':'$bind_password'\
 }"

@@ -1,14 +1,9 @@
-The Delius Core Application
+# LDAP
 
-Instances will not be terminated when a newer AMI is availible. To update instance with new AMI the taint command needs to be run.
+Creates a private auto-scaling group containing a single centos instance that will be bootstrapped to run the National 
+Delius LDAP service.
 
-For instance in modules
-
-```
-terragrunt taint -module="ndelius" aws_instance.admin
-terragrunt taint -module="ndelius" aws_instance.managed
-terragrunt taint -module="interface" aws_instance.admin
-terragrunt taint -module="interface" aws_instance.managed
-terragrunt taint -module="spg" aws_instance.admin
-terragrunt taint -module="spg" aws_instance.managed
-```
+## Resources
+* `asg.tf` - Launch configuration and auto-scaling group
+* `elb.tf` - Internal classic load balancer
+* `dns.tf` - Internal Route53 DNS entry for the load balancer
