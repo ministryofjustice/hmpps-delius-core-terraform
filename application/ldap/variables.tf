@@ -35,21 +35,6 @@ variable "ldap_ports" {
   description = "Map of the ports that the ldap ports"
 }
 
-variable "ldap_slave_asg_min" {
-  description = "Minimum number of slave instances"
-  type        = "string"
-}
-
-variable "ldap_slave_asg_max" {
-  description = "Maximum number of slave instances"
-  type        = "string"
-}
-
-variable "ldap_slave_asg_desired" {
-  description = "Desired number of slave instances"
-  type        = "string"
-}
-
 variable "instance_type_ldap" {
   description = "The ec2 instance type"
 }

@@ -15,9 +15,9 @@ data "template_file" "user_data" {
     config_location     = "${local.host_config_location}"
     database_url        = "${data.terraform_remote_state.database.jdbc_failover_url}"
     database_username   = "delius_app_schema"
-    ldap_url            = "${data.terraform_remote_state.ldap.ldap_protocol}://${data.terraform_remote_state.ldap.public_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.ldap_port}"
+    ldap_url            = "${data.terraform_remote_state.ldap.ldap_protocol}://${data.terraform_remote_state.ldap.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.ldap_port}"
     ldap_bind_username  = "${data.terraform_remote_state.ldap.ldap_bind_user}"
-    ldap_user_base      = "cn=Users,${data.terraform_remote_state.ldap.ldap_base}"
+    ldap_user_base      = "${data.terraform_remote_state.ldap.ldap_base_users}"
     ndelius_log_level   = "${local.ansible_vars["ndelius_log_level"]}"
   }
 }
