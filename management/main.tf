@@ -73,6 +73,19 @@ data "terraform_remote_state" "database_failover" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the LDAP
+#-------------------------------------------------------------
+data "terraform_remote_state" "ldap" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/application/ldap/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "aws_route53_zone" "public" {
   zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
 }
@@ -121,7 +134,7 @@ data "template_file" "user_data" {
     private_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
     database_host                 = "${data.terraform_remote_state.database_failover.public_fqdn_delius_db_1}"
     database_sid                  = "${local.ansible_vars["database_sid"]}"
-    ldap_host                     = "${local.ansible_vars["ldap_host"]}.${data.aws_route53_zone.public.name}"
+    ldap_host                     = "${data.terraform_remote_state.ldap.private_fqdn_ldap_elb}"
     ldap_port                     = "${var.ldap_ports["ldap"]}"
   }
 }
