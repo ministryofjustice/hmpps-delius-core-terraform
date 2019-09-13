@@ -70,3 +70,8 @@ variable "eng_remote_state_bucket_name" {
 variable "eng_role_arn" {
   description = "arn to use for engineering platform terraform"
 }
+
+variable "oracle_db_operation" {
+  type        = "map"
+  description = "Engineering remote state and arn for Oracle OPs security groups"
+}
