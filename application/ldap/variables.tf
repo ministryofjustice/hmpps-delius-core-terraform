@@ -53,6 +53,11 @@ variable "ansible_vars_apacheds" {
   type        = "map"
 }
 
+variable "ldap_disk_config" {
+  description = "Configuration for the LDAP EBS volume"
+  type        = "map"
+}
+
 variable "tags" {
   type = "map"
 }

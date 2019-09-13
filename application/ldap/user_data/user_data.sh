@@ -86,6 +86,7 @@ base_users: "${base_users}"
 import_users_ldif: "${import_users_ldif}"
 import_users_ldif_base_users: "${import_users_ldif_base_users}"
 sanitize_oid_ldif: ${sanitize_oid_ldif}
+perf_test_users: "${perf_test_users}"
 
 # For user_update cron
 remote_user_filename: "${bastion_inventory}"

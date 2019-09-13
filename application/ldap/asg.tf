@@ -36,6 +36,7 @@ data "template_file" "user_data" {
     import_users_ldif             = "${local.ansible_vars_apacheds["import_users_ldif"]}"
     import_users_ldif_base_users  = "${local.ansible_vars_apacheds["import_users_ldif_base_users"]}"
     sanitize_oid_ldif             = "${local.ansible_vars_apacheds["sanitize_oid_ldif"]}"
+    perf_test_users               = "${local.ansible_vars_apacheds["sanitize_oid_ldif"]}"
   }
 }
 
@@ -56,8 +57,9 @@ resource "aws_launch_configuration" "launch_cfg" {
   ebs_optimized               = "false"
 
   root_block_device {
-    volume_type = "gp2"
-    volume_size = 50
+    volume_type = "${var.ldap_disk_config["volume_type"]}"
+    volume_size = "${var.ldap_disk_config["volume_size"]}"
+    iops        = "${var.ldap_disk_config["iops"]}"
   }
 
   lifecycle {
