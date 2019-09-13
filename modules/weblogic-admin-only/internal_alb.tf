@@ -61,30 +61,6 @@ resource "aws_autoscaling_attachment" "umt_asg_attachment" {
 }
 
 # Listeners
-resource "aws_lb_listener" "internal_lb_https_listener" {
-  load_balancer_arn = "${aws_lb.internal_alb.arn}"
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = "${var.certificate_arn}"
-  default_action {
-    target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
-    type             = "forward"
-  }
-}
-
-resource "aws_lb_listener_rule" "internal_lb_umt_rule" {
-  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
-  condition {
-    field  = "path-pattern"
-    values = ["/umt/*"]
-  }
-  action {
-    type = "forward"
-    target_group_arn = "${aws_lb_target_group.umt_target_group.arn}"
-  }
-}
-
 resource "aws_lb_listener" "internal_lb_http_listener" {
   load_balancer_arn   = "${aws_lb.internal_alb.arn}"
   protocol            = "HTTP"
@@ -99,19 +75,43 @@ resource "aws_lb_listener" "internal_lb_http_listener" {
   }
 }
 
-resource "aws_lb_listener_rule" "internal_lb_console_redirect" {
+resource "aws_lb_listener" "internal_lb_https_listener" {
+  load_balancer_arn = "${aws_lb.internal_alb.arn}"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = "${var.certificate_arn}"
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      status_code  = "404"
+      content_type = "text/plain"
+    }
+  }
+}
+
+# Listener rules
+resource "aws_lb_listener_rule" "internal_lb_ndelius_rule" {
   listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
   condition {
     field  = "path-pattern"
-    values = ["/console/*"]
+    values = ["/NDelius-war/*"]
   }
   action {
-    type = "redirect"
-    redirect {
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-      path        = "/"
-    }
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
+  }
+}
+
+resource "aws_lb_listener_rule" "internal_lb_umt_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/umt/*"]
+  }
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.umt_target_group.arn}"
   }
 }
 
@@ -122,7 +122,7 @@ resource "aws_lb_listener_rule" "internal_lb_newtechweb_rule" {
     values = ["/newTech/*"]
   }
   action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = "${aws_lb_target_group.newtechweb_target_group.arn}"
   }
 }
