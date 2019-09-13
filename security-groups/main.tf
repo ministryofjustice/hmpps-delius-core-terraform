@@ -38,10 +38,10 @@ data "terraform_remote_state" "ora_db_op_security_groups" {
   backend = "s3"
 
   config {
-    bucket   = "${var.eng_remote_state_bucket_name}"
+    bucket   = "${var.oracle_db_operation["eng_remote_state_bucket_name"]}"
     key      = "oracle-db-operation/security-groups/terraform.tfstate"
     region   = "${var.region}"
-    role_arn = "${var.eng_role_arn}"
+    role_arn = "${var.oracle_db_operation["eng_role_arn"]}"
   }
 }
 
