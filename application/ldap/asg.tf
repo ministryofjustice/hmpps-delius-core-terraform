@@ -56,8 +56,9 @@ resource "aws_launch_configuration" "launch_cfg" {
   ebs_optimized               = "false"
 
   root_block_device {
-    volume_type = "gp2"
-    volume_size = 50
+    volume_type = "${var.ldap_disk_config["volume_type"]}"
+    volume_size = "${var.ldap_disk_config["volume_size"]}"
+    iops        = "${var.ldap_disk_config["iops"]}"
   }
 
   lifecycle {
