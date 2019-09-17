@@ -91,6 +91,21 @@ resource "aws_lb_listener" "internal_lb_https_listener" {
 }
 
 # Listener rules
+resource "aws_lb_listener_rule" "internal_lb_ndelius_redirect_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/"]
+  }
+  action {
+    type = "redirect"
+    redirect {
+      status_code = "HTTP_302"
+      path        = "/NDelius-war/delius/JSP/homepage.jsp"
+    }
+  }
+}
+
 resource "aws_lb_listener_rule" "internal_lb_ndelius_rule" {
   listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
   condition {
