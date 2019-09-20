@@ -60,6 +60,21 @@ data "terraform_remote_state" "service-jenkins-eng" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the engineering jenkins windows slave remote state
+#-------------------------------------------------------------
+data "terraform_remote_state" "windows_slave" {
+  backend = "s3"
+
+  config {
+    bucket   = "${var.eng_remote_state_bucket_name}"
+    key      = "windows_slave/terraform.tfstate"
+    region   = "${var.region}"
+    role_arn = "${var.eng_role_arn}"
+  }
+}
+
+
 ####################################################
 # Locals
 ####################################################
@@ -107,8 +122,17 @@ locals {
     "${data.terraform_remote_state.natgateway.natgateway_common-nat-public-ip-az3}/32",
   ]
 
+  windows_slave_public_ip = [
+    "${data.terraform_remote_state.windows_slave.windows_slave.public_ip}/32"
+  ]
+
   user_access_cidr_blocks = "${concat(
     "${var.user_access_cidr_blocks}",
-    "${var.env_user_access_cidr_blocks}"
+    "${var.env_user_access_cidr_blocks}",
+    "${local.windows_slave_public_ip}"
   )}"
+}
+
+output "user_access_cidr_blocks_concatenated" {
+  value = "${local.user_access_cidr_blocks}"
 }
