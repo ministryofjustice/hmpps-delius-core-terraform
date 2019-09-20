@@ -118,6 +118,18 @@ resource "aws_lb_listener_rule" "internal_lb_ndelius_rule" {
   }
 }
 
+resource "aws_lb_listener_rule" "internal_lb_ndelius_root_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/NDelius-war"]
+  }
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
+  }
+}
+
 resource "aws_lb_listener_rule" "internal_lb_umt_rule" {
   listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
   condition {
