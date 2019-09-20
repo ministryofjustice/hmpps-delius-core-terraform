@@ -83,6 +83,7 @@ server_listen_port: "${server_listen_port}"
 setup_datasources: "${setup_datasources}"
 primary_db_host: "${primary_db_host}"
 database_url: "${database_url}"
+database_pool_size: "${database_pool_size}"
 
 # Alfresco
 alfresco_host: "${alfresco_host}"
