@@ -2,7 +2,7 @@
 
 resource "aws_instance" "loadrunner" {
   ami                         = "${data.aws_ami.centos_docker.id}"
-  instance_type               = "t2.micro"
+  instance_type               = "${var.loadrunner_config["instance_type"]}"
   subnet_id                   = "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}"
   associate_public_ip_address = false
   key_name                    = "${data.terraform_remote_state.vpc.ssh_deployer_key}"

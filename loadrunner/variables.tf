@@ -37,3 +37,10 @@ variable "tags" {
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
+
+variable "loadrunner_config" {
+  type    = "map"
+  default = {
+    instance_type = "t2.micro"
+  }
+}
