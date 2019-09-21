@@ -74,6 +74,18 @@ data "terraform_remote_state" "windows_slave" {
   }
 }
 
+#-------------------------------------------------------------
+### IAPS Security Group State
+#-------------------------------------------------------------
+data "terraform_remote_state" "iaps-sg" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "iaps/security-groups/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
 
 ####################################################
 # Locals
@@ -131,6 +143,8 @@ locals {
     "${var.env_user_access_cidr_blocks}",
     "${local.windows_slave_public_ip}"
   )}"
+
+  iaps_sg_id = "${data.terraform_remote_state.iaps-sg.security_groups_sg_internal_instance_id}"
 }
 
 output "user_access_cidr_blocks_concatenated" {
