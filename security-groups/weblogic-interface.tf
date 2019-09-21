@@ -100,6 +100,16 @@ resource "aws_security_group_rule" "interface_lb_self_ingress_tls" {
   description       = "LB-to-LB comms (TLS)"
 }
 
+resource "aws_security_group_rule" "interface_lb_iaps_ingress_tls" {
+  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  source_security_group_id = "${local.iaps_sg_id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  description       = "IAPS Ingress (TLS)"
+}
+
 ################################################################################
 ## Instances
 ################################################################################
