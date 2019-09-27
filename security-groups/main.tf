@@ -67,10 +67,10 @@ data "terraform_remote_state" "bastion" {
   backend = "s3"
 
   config {
-    bucket   = "${data.terraform_remote_state.vpc.bastion_remote_state_bucket_name}"
+    bucket   = "${var.bastion_remote_state_bucket_name}"
     key      = "service-bastion/terraform.tfstate"
     region   = "${var.region}"
-    role_arn = "${data.terraform_remote_state.vpc.bastion_role_arn}"
+    role_arn = "${var.bastion_role_arn}"
   }
 }
 
@@ -168,6 +168,10 @@ locals {
 
 output "user_access_cidr_blocks_concatenated" {
   value = "${local.user_access_cidr_blocks}"
+}
+
+output "windows_slave_public_ip" {
+  value = "${local.windows_slave_public_ip}"
 }
 
 output "bastion_ip" {
