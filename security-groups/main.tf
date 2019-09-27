@@ -61,6 +61,20 @@ data "terraform_remote_state" "service-jenkins-eng" {
 }
 
 #-------------------------------------------------------------
+### Getting the bastion details
+#-------------------------------------------------------------
+data "terraform_remote_state" "bastion" {
+  backend = "s3"
+
+  config {
+    bucket   = "${data.terraform_remote_state.vpc.bastion_remote_state_bucket_name}"
+    key      = "service-bastion/terraform.tfstate"
+    region   = "${var.region}"
+    role_arn = "${data.terraform_remote_state.vpc.bastion_role_arn}"
+  }
+}
+
+#-------------------------------------------------------------
 ### Getting the engineering jenkins windows slave remote state
 #-------------------------------------------------------------
 data "terraform_remote_state" "windows_slave" {
@@ -138,10 +152,15 @@ locals {
     "${data.terraform_remote_state.windows_slave.windows_slave.public_ip}/32"
   ]
 
+  bastion_public_ip = [
+    "${data.terraform_remote_state.bastion.bastion_ip}/32"
+  ]
+
   user_access_cidr_blocks = "${concat(
     "${var.user_access_cidr_blocks}",
     "${var.env_user_access_cidr_blocks}",
-    "${local.windows_slave_public_ip}"
+    "${local.windows_slave_public_ip}",
+    "${local.bastion_public_ip}"
   )}"
 
   iaps_sg_id = "${data.terraform_remote_state.iaps-sg.security_groups_sg_internal_instance_id}"
@@ -149,4 +168,8 @@ locals {
 
 output "user_access_cidr_blocks_concatenated" {
   value = "${local.user_access_cidr_blocks}"
+}
+
+output "bastion_ip" {
+  value = "${local.bastion_public_ip}"
 }
