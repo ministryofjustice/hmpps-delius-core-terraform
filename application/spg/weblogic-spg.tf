@@ -95,8 +95,10 @@ module "spg" {
     alfresco_office_port     = "${local.ansible_vars["alfresco_office_port"]}"
 
     # SPG
-    #spg_jms_host             = "${local.ansible_vars["spg_jms_host"]}.${data.aws_route53_zone.public.name}"
-    spg_jms_host             = "${data.terraform_remote_state.amazonmq.amazon_mq_broker_connect_url}"
+    spg_jms_host              = "${var.spg_jms_host_src == "data" ?
+                                    ${data.terraform_remote_state.amazonmq.amazon_mq_broker_connect_url} :
+                                    ${local.ansible_vars["spg_jms_host"]}.${data.aws_route53_zone.public.name}}"
+
     activemq_data_folder     = "${local.ansible_vars["activemq_data_folder"]}"
 
     # LDAP
