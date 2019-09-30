@@ -100,6 +100,8 @@ resource "aws_lb_listener_rule" "internal_lb_ndelius_redirect_rule" {
   action {
     type = "redirect"
     redirect {
+      port        = "443"
+      protocol    = "HTTPS"
       status_code = "HTTP_302"
       path        = "/NDelius-war/delius/JSP/homepage.jsp"
     }
