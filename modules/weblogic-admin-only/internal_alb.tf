@@ -61,7 +61,7 @@ resource "aws_lb_target_group" "newtechweb_target_group" {
   target_type = "ip"
   health_check {
     protocol  = "HTTP"
-    path      = "/healthcheck"
+    path      = "/newTech/healthcheck"
     matcher   = "200-399"
   }
 }
