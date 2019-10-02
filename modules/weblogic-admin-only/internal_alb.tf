@@ -11,11 +11,11 @@ resource "aws_lb" "internal_alb" {
 }
 
 resource "aws_lb_target_group" "internal_alb_target_group" {
-  name      = "${var.short_environment_name}-${var.tier_name}-alb"
+  name      = "${var.short_environment_name}-${var.tier_name}-tg"
   vpc_id    = "${var.vpc_id}"
   protocol  = "HTTP"
   port      = "${var.weblogic_port}"
-  tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-alb"))}"
+  tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-tg"))}"
   health_check {
     protocol  = "HTTP"
     port      = "${var.weblogic_port}"
@@ -24,6 +24,9 @@ resource "aws_lb_target_group" "internal_alb_target_group" {
   }
   stickiness {
     type = "lb_cookie"
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -52,6 +55,9 @@ resource "aws_lb_target_group" "newtechweb_target_group" {
     protocol  = "HTTP"
     path      = "/healthcheck"
     matcher   = "200-399"
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
