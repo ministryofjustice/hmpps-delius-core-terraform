@@ -10,12 +10,20 @@ resource "aws_lb" "internal_alb" {
   }
 }
 
+locals {
+  # Workaround to ensure target_group.name_prefix is shorter than 6 chars.
+  # Note we have to manually differentiate the name in the sandpit environment.
+  tier_name_sub  = "${substr(var.tier_name, 0, 3)}"
+  sandpit_prefix = "san"
+  tg_name_prefix = "${var.environment_name == "delius-core-sandpit"? local.sandpit_prefix : ""}${local.tier_name_sub}"
+}
+
 resource "aws_lb_target_group" "internal_alb_target_group" {
-  name      = "${var.short_environment_name}-${var.tier_name}-tg"
-  vpc_id    = "${var.vpc_id}"
-  protocol  = "HTTP"
-  port      = "${var.weblogic_port}"
-  tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-tg"))}"
+  name_prefix = "${local.tg_name_prefix}"
+  vpc_id      = "${var.vpc_id}"
+  protocol    = "HTTP"
+  port        = "${var.weblogic_port}"
+  tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-tg"))}"
   health_check {
     protocol  = "HTTP"
     port      = "${var.weblogic_port}"
@@ -55,9 +63,6 @@ resource "aws_lb_target_group" "newtechweb_target_group" {
     protocol  = "HTTP"
     path      = "/healthcheck"
     matcher   = "200-399"
-  }
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
