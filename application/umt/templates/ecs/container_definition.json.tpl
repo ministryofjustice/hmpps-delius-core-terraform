@@ -7,6 +7,9 @@
         "hostPort": 8080,
         "containerPort": 8080
     }],
+    "healthCheck": {
+        "command": [ "CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/umt/actuator/health || exit 1" ]
+    },
     "mountPoints": [{
         "sourceVolume": "config",
         "containerPath": "${config_location}"
