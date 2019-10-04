@@ -227,6 +227,18 @@ resource "aws_lb_listener_rule" "internal_lb_ndelius_oasys_rule" {
   }
 }
 
+resource "aws_lb_listener_rule" "internal_lb_ndelius_api_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/api/*"]
+  }
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
+  }
+}
+
 # DNS
 resource "aws_route53_record" "internal_alb_private" {
   zone_id = "${var.private_zone_id}"
