@@ -63,7 +63,7 @@ module "spg" {
 
   app_bootstrap_name           = "hmpps-delius-core-bootstrap"
   app_bootstrap_src            = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
-  app_bootstrap_version        = "DAM-329-Switch-JMS-Consumer-To-AmazonMQ"
+  app_bootstrap_version        = "master"
   app_bootstrap_initial_role   = "delius-core"
   app_bootstrap_secondary_role = "delius-spg"
 
