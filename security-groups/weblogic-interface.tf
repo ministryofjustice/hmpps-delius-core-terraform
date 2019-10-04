@@ -178,3 +178,13 @@ resource "aws_security_group_rule" "interface_external_elb_ingress_casenotes" {
   to_port           = "443"
   description       = "New Tech Casenotes Poll/Push Ingress to interface LB"
 }
+
+resource "aws_security_group_rule" "interface_external_elb_ingress_dss" {
+  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  source_security_group_id = "${aws_security_group.delius_dss_out.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  description       = "Delius DSS Offloc Ingress to interface LB"
+}
