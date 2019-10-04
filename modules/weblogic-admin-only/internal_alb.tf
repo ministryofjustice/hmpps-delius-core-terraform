@@ -10,12 +10,20 @@ resource "aws_lb" "internal_alb" {
   }
 }
 
+locals {
+  # Workaround to ensure target_group.name_prefix is shorter than 6 chars.
+  # Note we have to manually differentiate the name in the sandpit environment.
+  tier_name_sub  = "${substr(var.tier_name, 0, 3)}"
+  sandpit_prefix = "san"
+  tg_name_prefix = "${var.environment_name == "delius-core-sandpit"? local.sandpit_prefix : ""}${local.tier_name_sub}"
+}
+
 resource "aws_lb_target_group" "internal_alb_target_group" {
-  name      = "${var.short_environment_name}-${var.tier_name}-alb"
-  vpc_id    = "${var.vpc_id}"
-  protocol  = "HTTP"
-  port      = "${var.weblogic_port}"
-  tags      = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-alb"))}"
+  name_prefix = "${local.tg_name_prefix}"
+  vpc_id      = "${var.vpc_id}"
+  protocol    = "HTTP"
+  port        = "${var.weblogic_port}"
+  tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-tg"))}"
   health_check {
     protocol  = "HTTP"
     port      = "${var.weblogic_port}"
@@ -24,6 +32,9 @@ resource "aws_lb_target_group" "internal_alb_target_group" {
   }
   stickiness {
     type = "lb_cookie"
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -50,7 +61,7 @@ resource "aws_lb_target_group" "newtechweb_target_group" {
   target_type = "ip"
   health_check {
     protocol  = "HTTP"
-    path      = "/healthcheck"
+    path      = "/newTech/healthcheck"
     matcher   = "200-399"
   }
 }
@@ -100,6 +111,8 @@ resource "aws_lb_listener_rule" "internal_lb_ndelius_redirect_rule" {
   action {
     type = "redirect"
     redirect {
+      port        = "443"
+      protocol    = "HTTPS"
       status_code = "HTTP_302"
       path        = "/NDelius-war/delius/JSP/homepage.jsp"
     }
@@ -178,6 +191,42 @@ resource "aws_lb_listener_rule" "internal_lb_ndelius_iaps_rule" {
   }
 }
 
+resource "aws_lb_listener_rule" "internal_lb_ndelius_dss_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/NDeliusDSS/*"]
+  }
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
+  }
+}
+
+resource "aws_lb_listener_rule" "internal_lb_ndelius_casenotes_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/NDeliusAPI/*"]
+  }
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
+  }
+}
+
+resource "aws_lb_listener_rule" "internal_lb_ndelius_oasys_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/NDeliusOASYS/*"]
+  }
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.internal_alb_target_group.arn}"
+  }
+}
+
 # DNS
 resource "aws_route53_record" "internal_alb_private" {
   zone_id = "${var.private_zone_id}"
@@ -187,8 +236,20 @@ resource "aws_route53_record" "internal_alb_private" {
   records = ["${aws_lb.internal_alb.dns_name}"]
 }
 
+resource "aws_route53_record" "internal_alb_public" {
+  zone_id = "${var.public_zone_id}"
+  name    = "${var.tier_name}-app-internal"
+  type    = "CNAME"
+  ttl     = "300"
+  records = ["${aws_lb.internal_alb.dns_name}"]
+}
+
 output "private_fqdn_internal_alb" {
   value = "${aws_route53_record.internal_alb_private.fqdn}"
+}
+
+output "public_fqdn_internal_alb" {
+  value = "${aws_route53_record.internal_alb_public.fqdn}"
 }
 
 output "newtech_webfrontend_targetgroup_arn" {
