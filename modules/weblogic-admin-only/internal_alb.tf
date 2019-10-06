@@ -25,10 +25,14 @@ resource "aws_lb_target_group" "internal_alb_target_group" {
   port        = "${var.weblogic_port}"
   tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-tg"))}"
   health_check {
-    protocol  = "HTTP"
-    port      = "${var.weblogic_port}"
-    path      = "/${var.weblogic_health_check_path}"
-    matcher   = "200"
+    protocol            = "HTTP"
+    port                = "${var.weblogic_port}"
+    path                = "/${var.weblogic_health_check_path}"
+    matcher             = "200"
+    interval            = 60
+    timeout             = 30
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
   }
   stickiness {
     type = "lb_cookie"
