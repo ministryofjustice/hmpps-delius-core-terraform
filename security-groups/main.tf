@@ -164,6 +164,8 @@ locals {
   )}"
 
   iaps_sg_id = "${data.terraform_remote_state.iaps-sg.security_groups_sg_internal_instance_id}"
+
+  azure_community_proxy_source = "${var.azure_community_proxy_source}"
 }
 
 output "user_access_cidr_blocks_concatenated" {

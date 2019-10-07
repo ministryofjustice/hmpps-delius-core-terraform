@@ -83,3 +83,9 @@ variable "oracle_db_operation" {
   type        = "map"
   description = "Engineering remote state and arn for Oracle OPs security groups"
 }
+
+variable "azure_community_proxy_source" {
+  description = "Allowed ingress CIDRs from Azure community Proxy"
+  type        = "list"
+  default     = []
+}
