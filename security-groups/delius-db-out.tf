@@ -57,3 +57,13 @@ resource "aws_security_group_rule" "db_to_eng_rman_catalog_out" {
   source_security_group_id = "${data.terraform_remote_state.ora_db_op_security_groups.sg_map_ids.rman_catalog}"
   description              = "RMAN Catalog out"
 }
+
+resource "aws_security_group_rule" "eng_oem_db_out_1521" {
+  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${data.terraform_remote_state.ora_db_op_security_groups.sg_map_ids.oem}"
+  description              = "OEM out 1521"
+}
