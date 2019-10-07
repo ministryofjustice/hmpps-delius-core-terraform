@@ -113,7 +113,6 @@ resource "aws_security_group_rule" "interface_lb_iaps_ingress_tls" {
 
 resource "aws_security_group_rule" "interface_lb_azure_communityproxy_ingress_tls" {
   count = "${length(local.azure_community_proxy_source) >= 1  ? 1 : 0}"
-  #count = "${length(local.azure_community_proxy_source)}"
   security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
   cidr_blocks = [ "${local.azure_community_proxy_source}" ]
   type              = "ingress"
