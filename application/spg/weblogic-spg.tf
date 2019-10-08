@@ -87,7 +87,8 @@ module "spg" {
     setup_datasources        = "${local.ansible_vars["setup_datasources"]}"
     primary_db_host          = "${data.terraform_remote_state.database_failover.public_fqdn_delius_db_1}"
     database_url             = "${data.terraform_remote_state.database_failover.jdbc_failover_url}"
-    database_pool_size       = "${local.ansible_vars["database_pool_size"]}"
+    database_min_pool_size   = "${local.ansible_vars["database_min_pool_size"]}"
+    database_max_pool_size   = "${local.ansible_vars["database_max_pool_size"]}"
 
     # Alfresco
     alfresco_host            = "${local.ansible_vars["alfresco_host"]}.${data.aws_route53_zone.public.name}"
