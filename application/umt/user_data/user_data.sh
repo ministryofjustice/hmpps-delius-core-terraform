@@ -78,8 +78,6 @@ cat << EOF > ~/requirements.yml
   version: centos
 - name: users
   src: singleplatform-eng.users
-- name: umt
-  src: https://github.com/ministryofjustice/hmpps-delius-core-umt-bootstrap
 EOF
 cat << EOF > ~/vars.yml
 ---
@@ -87,15 +85,6 @@ cat << EOF > ~/vars.yml
 region: "${region}"
 environment_name: "${environment_name}"
 project_name: "${project_name}"
-config_location: "${config_location}"
-database_url: "${database_url}"
-database_username: "${database_username}"
-ldap_url: "${ldap_url}"
-ldap_bind_username: "${ldap_bind_username}"
-ldap_user_base: "${ldap_user_base}"
-ndelius_log_level: "${ndelius_log_level}"
-
-# For user_update cron
 remote_user_filename: "${bastion_inventory}"
 
 EOF
@@ -109,28 +98,7 @@ cat << EOF > ~/bootstrap.yml
   roles:
      - bootstrap
      - users
-     - umt
 EOF
 
-PARAM=$(aws ssm get-parameters --region eu-west-2 \
---with-decryption --name \
-"/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password" \
-"/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
-"/${environment_name}/${project_name}/umt/umt/jwt_secret" \
-"/${environment_name}/${project_name}/umt/umt/delius_secret" \
---query Parameters)
-
-# set parameter values
-database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_app_schema_password")) | .Value' --raw-output)"
-ldap_bind_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
-jwt_secret="$(echo $PARAM | jq '.[] | select(.Name | test("jwt_secret")) | .Value' --raw-output)"
-delius_secret="$(echo $PARAM | jq '.[] | select(.Name | test("delius_secret")) | .Value' --raw-output)"
-
 ansible-galaxy install -f -r ~/requirements.yml
-ansible-playbook ~/bootstrap.yml \
---extra-vars "{\
-'database_password':'$database_password',\
-'ldap_bind_password':'$ldap_bind_password',\
-'jwt_secret':'$jwt_secret',\
-'delius_secret':'$delius_secret',\
-}"
+ansible-playbook ~/bootstrap.yml
