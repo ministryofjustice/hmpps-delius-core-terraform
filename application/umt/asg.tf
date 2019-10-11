@@ -25,7 +25,7 @@ data "template_file" "user_data" {
 resource "aws_launch_configuration" "launch_cfg" {
   name_prefix          = "${var.short_environment_name}-${local.app_name}-launch-cfg-"
   image_id             = "${data.aws_ami.ecs_ami.id}"
-  iam_instance_profile = "${aws_iam_instance_profile.ecs.id}"
+  iam_instance_profile = "${aws_iam_instance_profile.ecs_instance.id}"
   instance_type        = "${var.umt_config["instance_type"]}"
   security_groups      = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",

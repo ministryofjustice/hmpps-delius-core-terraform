@@ -8,12 +8,11 @@
         "containerPort": 8080
     }],
     "healthCheck": {
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
         "command": [ "CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/umt/actuator/health || exit 1" ]
     },
-    "mountPoints": [{
-        "sourceVolume": "config",
-        "containerPath": "${config_location}"
-    }],
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -22,5 +21,38 @@
             "awslogs-region": "${region}",
             "awslogs-stream-prefix": "ecs-${container_name}"
         }
-    }
+    },
+    "entryPoint": ["java","-Duser.timezone=Europe/London","-jar","/app/app.jar"],
+    "environment": [
+        { "name": "SPRING_DATASOURCE_URL", "value": "${database_url}" },
+        { "name": "SPRING_DATASOURCE_USERNAME", "value": "${database_username}" },
+        { "name": "SPRING_DATASOURCE_TYPE", "value": "oracle.jdbc.pool.OracleDataSource" },
+        { "name": "SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT", "value": "org.hibernate.dialect.Oracle10gDialect" },
+        { "name": "SPRING_JPA_HIBERNATE_DDL-AUTO", "value": "none" },
+
+        { "name": "OID_URLS", "value": "${ldap_url}" },
+        { "name": "OID_USERNAME", "value": "${ldap_username}" },
+        { "name": "OID_BASE", "value": "${ldap_base}" },
+        { "name": "OID_USEORACLEATTRIBUTES", "value": "false" },
+
+        { "name": "LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS", "value": "${ndelius_log_level}" }
+    ],
+    "secrets": [
+        {
+            "name": "JWT_SECRET",
+            "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/umt/umt/jwt_secret"
+        },
+        {
+            "name": "DELIUS_SECRET",
+            "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/umt/umt/delius_secret"
+        },
+        {
+            "name": "SPRING_DATASOURCE_PASSWORD",
+            "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password"
+        },
+        {
+            "name": "OID_PASSWORD",
+            "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password"
+        }
+    ]
 }]

@@ -1,8 +1,8 @@
 defaults
     mode tcp
-    timeout connect 10s
-    timeout client 30s
-    timeout server 30s
+    timeout connect 30s
+    timeout client 5m
+    timeout server 5m
 
 listen l1
     bind *:80
