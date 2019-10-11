@@ -4,7 +4,7 @@ locals {
   # Override default values
   ansible_vars = "${merge(var.default_ansible_vars, var.ansible_vars)}"
   ansible_vars_apacheds = "${merge(var.default_ansible_vars_apacheds, var.ansible_vars_apacheds)}"
-  spg_jms_default       = "${local.ansible_vars["spg_jms_host"]}.${data.aws_route53_zone.public.name}"
+  spg_jms_default_url       = "tcp://${local.ansible_vars["spg_jms_host"]}.${data.aws_route53_zone.public.name}:61616"
 }
 
 module "interface" {
@@ -98,7 +98,7 @@ module "interface" {
     # SPG
     spg_jms_host             = "${var.spg_jms_host_src == "data" ?
                                   data.terraform_remote_state.amazonmq.amazon_mq_broker_connect_url :
-                                  local.spg_jms_default}"
+                                  local.spg_jms_default_url}"
 
     activemq_data_folder     = "${local.ansible_vars["activemq_data_folder"]}"
 
