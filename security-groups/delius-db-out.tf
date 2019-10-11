@@ -49,7 +49,7 @@ resource "aws_security_group_rule" "db_to_db_ssh_out" {
 }
 
 resource "aws_security_group_rule" "db_to_eng_rman_catalog_out" {
-  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  security_group_id        = "${aws_security_group.delius_db_out.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "1521"
@@ -59,7 +59,7 @@ resource "aws_security_group_rule" "db_to_eng_rman_catalog_out" {
 }
 
 resource "aws_security_group_rule" "eng_oem_db_out_4903" {
-  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  security_group_id        = "${aws_security_group.delius_db_out.id}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "4903"
