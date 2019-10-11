@@ -1,64 +1,43 @@
-data "template_file" "assume_role_policy_template" {
-  template = "${file("${path.module}/templates/iam/ec2_assume_role_policy.json.tpl")}"
-  vars {}
+# Task execution role for pulling the image, fetching secrets, and pushing logs to cloudwatch
+resource "aws_iam_role" "exec" {
+  name               = "${var.environment_name}-${local.app_name}-ecs-exec-role"
+  assume_role_policy = "${data.template_file.ecs_assume_role_policy_template.rendered}"
 }
 
-data "template_file" "get_params_policy_template" {
-  template = "${file("${path.module}/templates/iam/get_parameters_role_policy.json.tpl")}"
-  vars {
-    aws_account_id   = "${data.aws_caller_identity.current.account_id}"
-    environment_name = "${var.environment_name}"
-    region           = "${var.region}"
-    project_name     = "${var.project_name}"
-  }
+resource "aws_iam_policy" "exec_policy" {
+  name   = "${var.environment_name}-${local.app_name}-ecs-exec-policy"
+  policy = "${data.template_file.ecs_exec_policy_template.rendered}"
 }
 
-data "template_file" "cloudwatch_logs_policy_template" {
-  template = "${file("${path.module}/templates/iam/cloudwatch_logs_role_policy.json.tpl")}"
-  vars {
-    aws_account_id = "${data.aws_caller_identity.current.account_id}"
-    region         = "${var.region}"
-  }
+resource "aws_iam_role_policy_attachment" "exec_policy_attachment" {
+  role       = "${aws_iam_role.exec.name}"
+  policy_arn = "${aws_iam_policy.exec_policy.arn}"
 }
 
+# Task role for the task to interact with AWS services
+resource "aws_iam_role" "task" {
+  name               = "${var.environment_name}-${local.app_name}-ecs-task-role"
+  assume_role_policy = "${data.template_file.ecs_assume_role_policy_template.rendered}"
+}
 
-resource "aws_iam_role" "ecs" {
-  name               = "${var.environment_name}-${local.app_name}-ecs-role"
+# Instance role for the EC2 instances in the cluster
+resource "aws_iam_role" "ecs_instance" {
+  name               = "${var.environment_name}-${local.app_name}-ecs-instance-role"
   description        = "Allows EC2 instances to call AWS services on your behalf."
-  assume_role_policy = "${data.template_file.assume_role_policy_template.rendered}"
+  assume_role_policy = "${data.template_file.ec2_assume_role_policy_template.rendered}"
 }
 
-resource "aws_iam_instance_profile" "ecs" {
+resource "aws_iam_instance_profile" "ecs_instance" {
   name = "${var.environment_name}-${local.app_name}-ecs-instance-profile"
-  role = "${aws_iam_role.ecs.name}"
+  role = "${aws_iam_role.ecs_instance.name}"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs" {
-  role       = "${aws_iam_role.ecs.name}"
+  role       = "${aws_iam_role.ecs_instance.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
 resource "aws_iam_role_policy_attachment" "auto_scaling" {
-  role       = "${aws_iam_role.ecs.name}"
+  role       = "${aws_iam_role.ecs_instance.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole"
-}
-
-resource "aws_iam_policy" "get_params" {
-  name   = "${var.environment_name}-${local.app_name}-get-params"
-  policy = "${data.template_file.get_params_policy_template.rendered}"
-}
-
-resource "aws_iam_role_policy_attachment" "get_params" {
-  role       = "${aws_iam_role.ecs.name}"
-  policy_arn = "${aws_iam_policy.get_params.arn}"
-}
-
-resource "aws_iam_policy" "cloudwatch_logs" {
-  name   = "${var.environment_name}-${local.app_name}-cloudwatch-logs"
-  policy = "${data.template_file.cloudwatch_logs_policy_template.rendered}"
-}
-
-resource "aws_iam_role_policy_attachment" "cloudwatch_logs" {
-  role       = "${aws_iam_role.ecs.name}"
-  policy_arn = "${aws_iam_policy.cloudwatch_logs.arn}"
 }

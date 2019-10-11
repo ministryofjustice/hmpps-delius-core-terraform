@@ -6,24 +6,34 @@ resource "aws_ecs_cluster" "cluster" {
 data "template_file" "container_definition" {
   template = "${file("templates/ecs/container_definition.json.tpl")}"
   vars {
-    region          = "${var.region}"
+    region           = "${var.region}"
+    aws_account_id   = "${data.aws_caller_identity.current.account_id}"
+    environment_name = "${var.environment_name}"
+    project_name     = "${var.project_name}"
+
     container_name  = "${local.app_name}"
     image_url       = "${local.image_url}"
     image_version   = "${local.image_version}"
     config_location = "${local.config_location}"
     log_group_name  = "${var.environment_name}/${local.app_name}"
     memory          = "${var.umt_config["memory"]}"
+
+    log_group_name      = "${var.environment_name}/${local.app_name}"
+    database_url        = "${data.terraform_remote_state.database.jdbc_failover_url}"
+    database_username   = "delius_app_schema"
+    ldap_url            = "${data.terraform_remote_state.ldap.ldap_protocol}://${data.terraform_remote_state.ldap.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.ldap_port}"
+    ldap_username       = "${data.terraform_remote_state.ldap.ldap_bind_user}"
+    ldap_base           = "${data.terraform_remote_state.ldap.ldap_base_users}"
+    ndelius_log_level   = "${local.ansible_vars["ndelius_log_level"]}"
   }
 }
 
 resource "aws_ecs_task_definition" "task_definition" {
   family                = "${var.environment_name}-${local.app_name}-task-definition"
   container_definitions = "${data.template_file.container_definition.rendered}"
+  task_role_arn         = "${aws_iam_role.task.arn}"
+  execution_role_arn    = "${aws_iam_role.exec.arn}"
   tags                  = "${merge(var.tags, map("Name", "${var.environment_name}-${local.app_name}-task-definition"))}"
-  volume {
-    name      = "config"
-    host_path = "${local.host_config_location}"
-  }
 }
 
 resource "aws_ecs_service" "service" {
@@ -35,11 +45,12 @@ resource "aws_ecs_service" "service" {
   }
 }
 
+# ECS autoscaling
 resource "aws_appautoscaling_target" "scaling_target" {
   min_capacity       = "${var.umt_config["ecs_scaling_min_capacity"]}"
   max_capacity       = "${var.umt_config["ecs_scaling_max_capacity"]}"
   resource_id        = "service/${aws_ecs_cluster.cluster.name}/${aws_ecs_service.service.name}"
-  role_arn           = "${aws_iam_role.ecs.arn}"
+  role_arn           = "${aws_iam_role.exec.arn}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 }
