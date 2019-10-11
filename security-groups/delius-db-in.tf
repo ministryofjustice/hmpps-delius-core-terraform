@@ -118,6 +118,16 @@ resource "aws_security_group_rule" "eng_oem_db_in_1521" {
   description              = "OEM in 1521"
 }
 
+resource "aws_security_group_rule" "eng_oem_db_in_3872" {
+  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "3872"
+  to_port                  = "3872"
+  source_security_group_id = "${data.terraform_remote_state.ora_db_op_security_groups.sg_map_ids.oem}"
+  description              = "OEM in 3872"
+}
+
 # Allow New Tech Offender API In
 resource "aws_security_group_rule" "newtech_offender_api_in" {
   security_group_id        = "${aws_security_group.delius_db_in.id}"
