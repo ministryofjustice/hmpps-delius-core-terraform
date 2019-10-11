@@ -8,6 +8,9 @@
         "containerPort": 8080
     }],
     "healthCheck": {
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
         "command": [ "CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/umt/actuator/health || exit 1" ]
     },
     "mountPoints": [{
@@ -22,5 +25,6 @@
             "awslogs-region": "${region}",
             "awslogs-stream-prefix": "ecs-${container_name}"
         }
-    }
+    },
+    "entryPoint": ["java","-Duser.timezone=Europe/London","-jar","/app/app.jar"]
 }]
