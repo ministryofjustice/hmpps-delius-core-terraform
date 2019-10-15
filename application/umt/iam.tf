@@ -41,3 +41,13 @@ resource "aws_iam_role_policy_attachment" "auto_scaling" {
   role       = "${aws_iam_role.ecs_instance.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole"
 }
+
+resource "aws_iam_policy" "cw_logs" {
+  name   = "${var.environment_name}-${local.app_name}-cw-logs-policy"
+  policy = "${data.template_file.cw_logs_policy_template.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "cw_logs_policy_attachment" {
+  role       = "${aws_iam_role.ecs_instance.name}"
+  policy_arn = "${aws_iam_policy.cw_logs.arn}"
+}

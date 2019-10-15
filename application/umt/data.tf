@@ -106,3 +106,11 @@ data "template_file" "ecs_exec_policy_template" {
     project_name     = "${var.project_name}"
   }
 }
+
+data "template_file" "cw_logs_policy_template" {
+  template = "${file("${path.module}/templates/iam/cloudwatch_logs_policy.json.tpl")}"
+  vars {
+    aws_account_id   = "${data.aws_caller_identity.current.account_id}"
+    region           = "${var.region}"
+  }
+}
