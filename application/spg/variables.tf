@@ -72,12 +72,6 @@ variable "ldap_ports" {
   description = "Map of the ports that the ldap ports"
 }
 
-variable "app_bootstrap_version" {
-  default     ="master"
-  description = "app bootstrap version"
-  type        = "string"
-}
-
 
 variable "tags" {
   type = "map"
