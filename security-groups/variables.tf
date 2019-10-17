@@ -89,3 +89,9 @@ variable "azure_community_proxy_source" {
   type        = "list"
   default     = []
 }
+
+variable "azure_oasys_proxy_source" {
+  description = "Allowed ingress CIDRs from Azure OASys Proxy"
+  type        = "list"
+  default     = []
+}
