@@ -122,6 +122,18 @@ resource "aws_security_group_rule" "interface_lb_azure_communityproxy_ingress_tl
   description       = "Azure Community Proxy Ingress (TLS)"
 }
 
+resource "aws_security_group_rule" "interface_lb_azure_oasys_ingress_tls" {
+  count = "${length(local.azure_oasys_proxy_source) >= 1  ? 1 : 0}"
+  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  cidr_blocks = [ "${local.azure_oasys_proxy_source}" ]
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  description       = "Azure OASys Proxy Ingress (TLS)"
+}
+
+
 
 ################################################################################
 ## Instances
