@@ -20,7 +20,7 @@ data "template_file" "user_data" {
     workspace                     = "${local.ansible_vars_apacheds["workspace"]}"
 
     # AWS
-    cldwatch_log_group            = "${var.environment_identifier}/ldap"
+    cldwatch_log_group            = "${var.environment_name}/ldap"
     s3_dependencies_bucket        = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
     s3_backups_bucket             = "${data.terraform_remote_state.s3-ldap-backups.s3_ldap_backups.name}"
 
@@ -75,11 +75,16 @@ resource "aws_autoscaling_group" "asg" {
     data.terraform_remote_state.vpc.vpc_private-subnet-az3,
   )}"]
   min_size             = "1"
-  max_size             = "1"
-  desired_capacity     = "1"
+  desired_capacity     = "3"
+  max_size             = "6"
   launch_configuration = "${aws_launch_configuration.launch_cfg.id}"
   load_balancers       = ["${aws_elb.lb.id}"]
-
+  health_check_type    = "ELB"
+  health_check_grace_period = "21600" # 6 hours, to allow time for data to be loaded
+  enabled_metrics      = [
+    "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupPendingInstances",
+    "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
+  ]
   lifecycle {
     create_before_destroy = true
   }
