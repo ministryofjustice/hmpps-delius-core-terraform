@@ -1,7 +1,8 @@
 data "template_file" "haproxy_cfg" {
   template = "${file("${path.module}/templates/haproxy.cfg.tpl")}"
   vars {
-    alb_fqdn = "${var.alb_fqdn}"
+    alb_fqdn       = "${var.alb_fqdn}"
+    aws_nameserver = "${var.aws_nameserver}"
   }
 }
 
@@ -43,7 +44,7 @@ data "aws_ami" "centos" {
   }
 
   filter {
-    name = "root-device-type"
+    name   = "root-device-type"
     values = ["ebs"]
   }
 }
