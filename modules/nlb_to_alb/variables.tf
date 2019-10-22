@@ -99,6 +99,11 @@ variable "alb_fqdn" {
   type        = "string"
 }
 
+variable "aws_nameserver" {
+  description = "IP of the VPC DNS resolver"
+  type        = string
+}
+
 variable "haproxy_instance_type" {
   description = "Instance type to use for the HAProxy instances"
   type        = "string"
