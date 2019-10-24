@@ -95,7 +95,8 @@ module "interface" {
     alfresco_office_host     = "${local.ansible_vars["alfresco_office_host"]}.${data.aws_route53_zone.public.name}"
     alfresco_office_port     = "${local.ansible_vars["alfresco_office_port"]}"
 
-    spg_jms_host_url         = "${var.spg_jms_host_src == "data" ?
+    # SPG
+    spg_jms_url             = "${var.spg_jms_host_src == "data" ?
                                   data.terraform_remote_state.amazonmq.amazon_mq_broker_connect_url :
                                   local.spg_jms_default_url}"
 
