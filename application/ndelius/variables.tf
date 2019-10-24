@@ -95,3 +95,8 @@ variable spg_jms_host_src {
   default     = "data"
   description = "'var' results in url derived from 'local.spg_jms_default_url' | data results in url derived from  data.terraform.remote_state.amazonmq.amazon_mq_broker_connect_url"
 }
+
+variable "aws_nameserver" {
+  description = "IP of the VPC DNS resolver"
+  type        = "string"
+}

@@ -61,3 +61,8 @@ variable "tags" {
   description = "Tags to be applied to resources"
   type        = "map"
 }
+
+variable "aws_nameserver" {
+  description = "IP of the VPC DNS resolver"
+  type        = "string"
+}
