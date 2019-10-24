@@ -45,4 +45,5 @@ module "external_nlb" {
   alb_fqdn                     = "${aws_route53_record.internal_lb_private_dns.fqdn}"
   haproxy_instance_type        = "${var.delius_core_haproxy_instance_type}"
   haproxy_instance_count       = "${var.delius_core_haproxy_instance_count}"
+  aws_nameserver               = "${var.aws_nameserver}"
 }

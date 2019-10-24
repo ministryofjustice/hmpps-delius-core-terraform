@@ -45,4 +45,5 @@ module "external_nlb" {
   alb_fqdn                     = "${module.interface.private_fqdn_internal_alb}"
   haproxy_instance_type        = "${var.delius_core_haproxy_instance_type}"
   haproxy_instance_count       = "${var.delius_core_haproxy_instance_count}"
+  aws_nameserver               = "${var.aws_nameserver}"
 }
