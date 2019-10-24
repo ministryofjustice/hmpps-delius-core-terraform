@@ -101,7 +101,7 @@ variable "alb_fqdn" {
 
 variable "aws_nameserver" {
   description = "IP of the VPC DNS resolver"
-  type        = string
+  type        = "string"
 }
 
 variable "haproxy_instance_type" {
