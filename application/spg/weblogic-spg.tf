@@ -78,7 +78,7 @@ module "spg" {
     domain_name              = "${local.ansible_vars["domain_name"]}"
     server_name              = "${local.ansible_vars["server_name"]}"
     jvm_mem_args             = "${local.ansible_vars["jvm_mem_args"]}"
-    server_params            = "${local.ansible_vars["jvm_mem_args"]} -XX:MaxPermSize=256m"
+    server_params            = "${local.ansible_vars["jvm_mem_args"]}"
     weblogic_admin_username  = "${local.ansible_vars["weblogic_admin_username"]}"
     server_listen_address    = "${local.ansible_vars["server_listen_address"]}"
     server_listen_port       = "${var.weblogic_domain_ports["weblogic_port"]}"
