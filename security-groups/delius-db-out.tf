@@ -67,3 +67,13 @@ resource "aws_security_group_rule" "eng_oem_db_out_4903" {
   source_security_group_id = "${data.terraform_remote_state.ora_db_op_security_groups.sg_map_ids.oem}"
   description              = "OEM out 4903"
 }
+
+resource "aws_security_group_rule" "db_to_nextcloud_samba_out" {
+  security_group_id        = "${aws_security_group.delius_db_out.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "445"
+  to_port                  = "445"
+  source_security_group_id = "${data.terraform_remote_state.network_security_groups.sg_mis_samba}"
+  description              = "Next Cloud Samba out 445"
+}
