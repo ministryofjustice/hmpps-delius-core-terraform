@@ -31,6 +31,16 @@ data "terraform_remote_state" "natgateway" {
   }
 }
 
+data "terraform_remote_state" "network_security_groups" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "security-groups/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 #-------------------------------------------------------------
 ### Getting the shared oracle-db-operation security groups
 #-------------------------------------------------------------
