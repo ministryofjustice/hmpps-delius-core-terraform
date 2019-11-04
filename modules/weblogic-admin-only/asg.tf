@@ -64,11 +64,3 @@ resource "aws_autoscaling_group" "wls_asg" {
     }
   ]
 }
-
-output "asg" {
-  value = {
-    "id"    = "${aws_autoscaling_group.wls_asg.id}",
-    "arn"   = "${aws_autoscaling_group.wls_asg.arn}",
-    "name"  = "${aws_autoscaling_group.wls_asg.name}",
-  }
-}

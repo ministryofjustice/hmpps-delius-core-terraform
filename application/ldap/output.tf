@@ -21,3 +21,11 @@ output "ldap_base_users" {
 output "ldap_bind_user" {
   value = "${local.ansible_vars_apacheds["bind_user"]}"
 }
+
+output "asg" {
+  value = {
+    "id"    = "${aws_autoscaling_group.asg.id}",
+    "arn"   = "${aws_autoscaling_group.asg.arn}",
+    "name"  = "${aws_autoscaling_group.asg.name}",
+  }
+}

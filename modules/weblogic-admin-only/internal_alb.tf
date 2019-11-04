@@ -259,15 +259,3 @@ resource "aws_route53_record" "internal_alb_public" {
   ttl     = "300"
   records = ["${aws_lb.internal_alb.dns_name}"]
 }
-
-output "private_fqdn_internal_alb" {
-  value = "${aws_route53_record.internal_alb_private.fqdn}"
-}
-
-output "public_fqdn_internal_alb" {
-  value = "${aws_route53_record.internal_alb_public.fqdn}"
-}
-
-output "newtech_webfrontend_targetgroup_arn" {
-  value = "${aws_lb_target_group.newtechweb_target_group.arn}"
-}
