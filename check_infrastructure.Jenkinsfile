@@ -96,7 +96,7 @@ pipeline {
                 stage('Plan Delius Application Interface')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'application/interface')}}}
                 stage('Plan Delius DSS Batch Job')          { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'batch/dss')}}}
                 stage('Plan Delius Pingdom Checks')         { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'pingdom')}}}
-                stage('Plan Delius Monitoring')             { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'monitoring')}}}
+                stage('Plan Delius Monitoring and Alerts')  { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'monitoring')}}}
             }
         }
     }

@@ -52,7 +52,7 @@ data "template_file" "delius_service_health_dashboard_file" {
     log_group_weblogic_ndelius    = "${data.terraform_remote_state.ndelius.cloudwatch_log_group}"
     log_group_weblogic_interface  = "${data.terraform_remote_state.interface.cloudwatch_log_group}"
     log_group_weblogic_spg        = "${data.terraform_remote_state.spg.cloudwatch_log_group}"
-    alb_ndelius                   = "${replace(data.terraform_remote_state.ndelius.alb["id"], "/.+:loadbalancer.{1}/", "")}"
+    alb_ndelius                   = "${local.ndelius_alb_id}"
     asg_ndelius                   = "${data.terraform_remote_state.ndelius.asg["name"]}"
     asg_interface                 = "${data.terraform_remote_state.interface.asg["name"]}"
     asg_spg                       = "${data.terraform_remote_state.spg.asg["name"]}"

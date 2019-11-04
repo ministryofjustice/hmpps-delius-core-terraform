@@ -276,7 +276,7 @@ pipeline {
             }
         }
 
-        stage('Monitoring') {
+        stage('Monitoring and Alerts') {
             steps {
                 script {
                   do_terraform(project.config, environment_name, project.dcore, 'monitoring')
