@@ -1,0 +1,185 @@
+{
+  "widgets": [
+    {
+      "type": "log",
+      "x": 9,
+      "y": 0,
+      "width": 15,
+      "height": 6,
+      "properties": {
+        "query": "SOURCE '${log_group_weblogic_ndelius}' | parse '* - * [*] \"* * *\" * *' as host, identity, dateTimeString, httpVerb, URL, protocol, statusCode, bytes\n| filter httpVerb='GET' and URL like /(?i)\\.jsp$/\n| stats count(*) as Requests by URL\n| sort Requests desc\n| limit 10",
+        "region": "${region}",
+        "stacked": false,
+        "title": "Top Pages",
+        "view": "table"
+      }
+    },
+    {
+      "type": "log",
+      "x": 18,
+      "y": 6,
+      "width": 6,
+      "height": 6,
+      "properties": {
+        "query": "SOURCE '${log_group_weblogic_ndelius}' | SOURCE '${log_group_weblogic_interface}' | SOURCE '${log_group_weblogic_spg}' | parse 'FATAL * * * - * Error Code: *' as date, timestamp, exception, user, ErrorCode\n| filter @logStream like /NDeliusLog_log/ and ErrorCode like /.*/ and @message not like /at .*\\(.*:.*\\)/ and @message not like /Caused by: /\n| stats count(*) as Count by ErrorCode\n| sort by Count desc\n| limit 10",
+        "region": "${region}",
+        "stacked": false,
+        "title": "Top Errors",
+        "view": "table"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 3,
+      "y": 0,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${alb_ndelius}", { "id": "m1", "stat": "Sum", "label": "NDelius", "yAxis": "left" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": true,
+        "region": "${region}",
+        "title": "Requests",
+        "period": 300
+      }
+    },
+    {
+      "type": "metric",
+      "x": 3,
+      "y": 3,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${alb_ndelius}", { "id": "m2", "label": "NDelius", "stat": "Average" } ],
+          [ { "expression": "ANOMALY_DETECTION_BAND(m2, 2)", "label": "NDelius (expected)", "id": "ad1", "color": "#666666", "region": "${region}" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${region}",
+        "title": "Response Time (seconds)",
+        "period": 300
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 12,
+      "width": 12,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${instance_delius_db_1}", { "label": "Database" } ],
+          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ],
+          [ "...", "${asg_ldap}", { "label": "LDAP" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${region}",
+        "period": 300,
+        "title": "CPU Load",
+        "legend": {
+          "position": "right"
+        },
+        "liveData": true
+      }
+    },
+    {
+      "type": "log",
+      "x": 9,
+      "y": 6,
+      "width": 9,
+      "height": 6,
+      "properties": {
+        "query": "SOURCE '${log_group_weblogic_ndelius}' | SOURCE '${log_group_weblogic_interface}' | SOURCE '${log_group_weblogic_spg}' | parse 'FATAL * * * - * Error Code: *' as date, timestamp, exception, user, ErrorCode\n| filter @logStream like /NDeliusLog_log/ and ErrorCode like /.*/ and @message not like /at .*\\(.*:.*\\)/ and @message not like /Caused by: /\n| stats count(*)/5 as Count by bin(5m)",
+        "region": "${region}",
+        "stacked": false,
+        "title": "Errors",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 0,
+      "width": 3,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [ "WebLogic", "OpenSessions", "AutoScalingGroupName", "${asg_ndelius}", { "label": "Current", "stat": "Sum" } ],
+          [ ".", "TotalSessions", ".", ".", { "label": "Total", "stat": "Sum" } ]
+        ],
+        "view": "singleValue",
+        "region": "${region}",
+        "title": "User Sessions",
+        "period": 300
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 6,
+      "width": 3,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [ "WebLogic", "InboundQueueSize", "AutoScalingGroupName", "${asg_spg}", { "label": "Inbound" } ],
+          [ ".", "OutboundQueueSize", ".", ".", { "label": "Outbound" } ]
+        ],
+        "view": "singleValue",
+        "region": "${region}",
+        "title": "SPG Queue Size"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 3,
+      "y": 6,
+      "width": 6,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "stat": "Sum", "label": "Inbound" } ],
+          [ ".", "OutboundQueueDispatchCount", ".", ".", { "stat": "Sum", "label": "Outbound" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": true,
+        "region": "${region}",
+        "period": 300,
+        "title": "SPG Messages",
+        "legend": {
+          "position": "bottom"
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 12,
+      "width": 12,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          [ { "expression": "m1-m2", "label": "Used", "id": "e1", "region": "${region}", "yAxis": "left" } ],
+          [ "WebLogic", "HeapSizeCurrent", "AutoScalingGroupName", "${asg_ndelius}", { "id": "m1", "label": "Max", "color": "#d62728" } ],
+          [ ".", "HeapFreeCurrent", ".", ".", { "id": "m2", "visible": false, "label": "Free" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${region}",
+        "title": "WebLogic Memory Usage",
+        "period": 300,
+        "legend": {
+          "position": "right"
+        },
+        "yAxis": {
+          "left": {
+            "min": 0
+          }
+        }
+      }
+    }
+  ]
+}

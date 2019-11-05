@@ -13,11 +13,3 @@ resource "aws_route53_record" "public_dns" {
   ttl     = "300"
   records = ["${module.external_nlb.dns_name}"]
 }
-
-output "private_fqdn_interface_wls_external" {
-  value = "${aws_route53_record.private_dns.fqdn}"
-}
-
-output "public_fqdn_interface_wls_external" {
-  value = "${aws_route53_record.public_dns.fqdn}"
-}
