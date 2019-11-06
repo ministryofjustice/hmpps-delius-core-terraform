@@ -72,8 +72,7 @@
       "properties": {
         "metrics": [
           [ "AWS/EC2", "CPUUtilization", "InstanceId", "${instance_delius_db_1}", { "label": "Database" } ],
-          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ],
-          [ "...", "${asg_ldap}", { "label": "LDAP" } ]
+          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ]
         ],
         "view": "timeSeries",
         "stacked": false,
@@ -141,8 +140,8 @@
       "height": 6,
       "properties": {
         "metrics": [
-          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "stat": "Sum", "label": "Inbound" } ],
-          [ ".", "OutboundQueueDispatchCount", ".", ".", { "stat": "Sum", "label": "Outbound" } ]
+          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "stat": "Average", "label": "Inbound" } ],
+          [ ".", "OutboundQueueDispatchCount", ".", ".", { "stat": "Average", "label": "Outbound" } ]
         ],
         "view": "timeSeries",
         "stacked": true,
