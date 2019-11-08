@@ -67,22 +67,6 @@ resource "aws_cloudwatch_metric_alarm" "weblogic_spg_cpu_util_alarm" {
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "ldap_cpu_util_alarm" {
-  alarm_name                = "${var.environment_name}-ldap-cpu-cwa"
-  alarm_description         = "LDAP ASG average CPU utilization exceeds 75%"
-  comparison_operator       = "GreaterThanOrEqualToThreshold"
-  evaluation_periods        = "1"
-  insufficient_data_actions = []
-  metric_name               = "CPUUtilization"
-  namespace                 = "AWS/EC2"
-  period                    = "60"
-  statistic                 = "Average"
-  threshold                 = "75"
-  dimensions {
-    AutoScalingGroupName = "${data.terraform_remote_state.ldap.asg["name"]}"
-  }
-}
-
 resource "aws_cloudwatch_metric_alarm" "weblogic_ndelius_heap_usage_alarm" {
   alarm_name                = "${var.environment_name}-ndelius-heap-cwa"
   alarm_description         = "WebLogic ASG average heap usage exceeds 75% for the ndelius domain"
