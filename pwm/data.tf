@@ -61,16 +61,14 @@ data "terraform_remote_state" "ldap" {
   }
 }
 
-data "aws_route53_zone" "public" {
-  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
-}
-
-data "aws_route53_zone" "private" {
-  zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
-}
-
 data "aws_acm_certificate" "cert" {
   domain      = "${data.terraform_remote_state.vpc.public_ssl_domain}"
+  types       = ["AMAZON_ISSUED"]
+  most_recent = true
+}
+
+data "aws_acm_certificate" "strategic_cert" {
+  domain      = "*.${data.terraform_remote_state.vpc.strategic_public_zone_name}"
   types       = ["AMAZON_ISSUED"]
   most_recent = true
 }
