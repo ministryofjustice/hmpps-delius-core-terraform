@@ -100,3 +100,9 @@ variable "aws_nameserver" {
   description = "IP of the VPC DNS resolver"
   type        = "string"
 }
+
+variable "delius_core_public_zone" {
+  description = "Whether to use the 'strategic' domain (gov.uk), or the 'legacy' domain (dsd.io) for user-facing services in this environment eg. NDelius, PWM"
+  type        = "string"
+  default     = "strategic"
+}

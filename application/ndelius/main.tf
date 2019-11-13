@@ -164,6 +164,12 @@ data "aws_acm_certificate" "cert" {
   most_recent = true
 }
 
+data "aws_acm_certificate" "strategic_cert" {
+  domain      = "*.${data.terraform_remote_state.vpc.strategic_public_zone_name}"
+  types       = ["AMAZON_ISSUED"]
+  most_recent = true
+}
+
 data "aws_route53_zone" "public" {
   zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
 }

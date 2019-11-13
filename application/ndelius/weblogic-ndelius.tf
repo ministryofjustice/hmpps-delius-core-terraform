@@ -53,7 +53,16 @@ module "ndelius" {
   public_zone_id               = "${data.terraform_remote_state.vpc.public_zone_id}"
   private_zone_id              = "${data.terraform_remote_state.vpc.private_zone_id}"
   private_domain               = "${data.terraform_remote_state.vpc.private_zone_name}"
-  certificate_arn              = "${data.aws_acm_certificate.cert.arn}"
+  # NOTE:
+  # This is only in place to support transition from the old public zone (dsd.io) to the strategic public zone (gov.uk).
+  # It allows us to configure which zone to use for public-facing services (eg. NDelius, PWM) on a per-environment
+  # basis. Currently only Prod and Pre-Prod should use the old public zone, once they are transitioned over we should
+  # remove this. Additionally, there are a few services that have DNS records in the public zone that should be moved
+  # over into the private zone before we complete the transition eg. delius-db-1, management.
+  # (see dns.tf)
+  certificate_arn              = "${(var.delius_core_public_zone) == "strategic" ?
+                      data.aws_acm_certificate.strategic_cert.arn :
+                      data.aws_acm_certificate.cert.arn}"
   weblogic_health_check_path   = "NDelius-war/delius/JSP/healthcheck.jsp"
   weblogic_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
   weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
