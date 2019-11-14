@@ -110,11 +110,11 @@
       "properties": {
         "metrics": [
           [ "WebLogic", "OpenSessions", "AutoScalingGroupName", "${asg_ndelius}", { "label": "Current", "stat": "Sum" } ],
-          [ ".", "TotalSessions", ".", ".", { "label": "Total", "stat": "Sum" } ]
+          [ ".", "TotalSessions", ".", ".", { "label": "Total (today)", "stat": "Sum" } ]
         ],
         "view": "singleValue",
         "region": "${region}",
-        "title": "User Sessions",
+        "title": "Sessions",
         "period": 300
       }
     },
