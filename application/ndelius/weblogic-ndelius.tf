@@ -72,7 +72,7 @@ module "ndelius" {
 
   app_bootstrap_name         = "hmpps-delius-core-bootstrap"
   app_bootstrap_src          = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
-  app_bootstrap_version      = "master"
+  app_bootstrap_version      = "feature/pw-reset-url"
   app_bootstrap_initial_role = "delius-core"
 
   ansible_vars = {
@@ -141,7 +141,7 @@ module "ndelius" {
     nomis_client_secret      = "${local.ansible_vars["nomis_client_secret"]}"
 
     # Password Reset Tool
-    password_reset_url       = "https://${data.terraform_remote_state.pwm.public_fqdn_pwm}"
+    password_reset_url       = "https://${data.terraform_remote_state.pwm.public_fqdn_pwm}/public/forgottenpassword"
 
     ## the following are retrieved from SSM Parameter Store
     ## weblogic_admin_password  = "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password"
