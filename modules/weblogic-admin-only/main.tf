@@ -81,5 +81,8 @@ data "template_file" "user_data" {
     nomis_url                = "${var.ansible_vars["nomis_url"]}"
     nomis_client_id          = "${var.ansible_vars["nomis_client_id"]}"
     nomis_client_secret      = "${var.ansible_vars["nomis_client_secret"]}"
+
+    # Password Reset Tool
+    password_reset_url       = "${var.ansible_vars["password_reset_url"]}"
   }
 }
