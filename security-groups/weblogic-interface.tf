@@ -101,20 +101,20 @@ resource "aws_security_group_rule" "interface_lb_self_ingress_tls" {
 }
 
 resource "aws_security_group_rule" "interface_lb_iaps_ingress_tls" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
   source_security_group_id = "${local.iaps_sg_id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  description       = "IAPS Ingress (TLS)"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "443"
+  to_port                  = "443"
+  description              = "IAPS Ingress (TLS)"
 }
 
 
 resource "aws_security_group_rule" "interface_lb_azure_communityproxy_ingress_tls" {
-  count = "${length(local.azure_community_proxy_source) >= 1  ? 1 : 0}"
+  count             = "${length(local.azure_community_proxy_source) >= 1 ? 1 : 0}"
   security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  cidr_blocks = [ "${local.azure_community_proxy_source}" ]
+  cidr_blocks       = ["${local.azure_community_proxy_source}"]
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
@@ -123,9 +123,9 @@ resource "aws_security_group_rule" "interface_lb_azure_communityproxy_ingress_tl
 }
 
 resource "aws_security_group_rule" "interface_lb_azure_oasys_ingress_tls" {
-  count = "${length(local.azure_oasys_proxy_source) >= 1  ? 1 : 0}"
+  count             = "${length(local.azure_oasys_proxy_source) >= 1 ? 1 : 0}"
   security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  cidr_blocks = [ "${local.azure_oasys_proxy_source}" ]
+  cidr_blocks       = ["${local.azure_oasys_proxy_source}"]
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
@@ -195,31 +195,31 @@ resource "aws_security_group_rule" "interface_external_elb_egress_newtechweb" {
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_casenotes" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
   source_security_group_id = "${aws_security_group.newtech_casenotes_out.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  description       = "New Tech Casenotes Poll/Push Ingress to interface LB"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "443"
+  to_port                  = "443"
+  description              = "New Tech Casenotes Poll/Push Ingress to interface LB"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_offenderapi" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
   source_security_group_id = "${aws_security_group.newtech_offenderapi_out.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  description       = "New Tech Offender API Ingress to interface LB"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "443"
+  to_port                  = "443"
+  description              = "New Tech Offender API Ingress to interface LB"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_dss" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
   source_security_group_id = "${aws_security_group.delius_dss_out.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  description       = "Delius DSS Offloc Ingress to interface LB"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "443"
+  to_port                  = "443"
+  description              = "Delius DSS Offloc Ingress to interface LB"
 }
