@@ -72,7 +72,7 @@ module "ndelius" {
 
   app_bootstrap_name         = "hmpps-delius-core-bootstrap"
   app_bootstrap_src          = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
-  app_bootstrap_version      = "feature/pw-reset-url"
+  app_bootstrap_version      = "master"
   app_bootstrap_initial_role = "delius-core"
 
   ansible_vars = {
