@@ -1,4 +1,5 @@
 {
+  "start": "-PT6H",
   "widgets": [
     {
       "type": "log",
@@ -42,7 +43,7 @@
         "stacked": true,
         "region": "${region}",
         "title": "Requests",
-        "period": 300,
+        "period": 60,
         "liveData": false
       }
     },
@@ -61,7 +62,7 @@
         "stacked": false,
         "region": "${region}",
         "title": "Response Time (seconds)",
-        "period": 300,
+        "period": 60,
         "liveData": false
       }
     },
@@ -115,7 +116,7 @@
         "view": "singleValue",
         "region": "${region}",
         "title": "Sessions",
-        "period": 300
+        "period": 60
       }
     },
     {
@@ -131,7 +132,8 @@
         ],
         "view": "singleValue",
         "region": "${region}",
-        "title": "SPG Queue Size"
+        "title": "SPG Queue Size",
+        "period": 60
       }
     },
     {
@@ -148,7 +150,7 @@
         "view": "timeSeries",
         "stacked": true,
         "region": "${region}",
-        "period": 300,
+        "period": 60,
         "title": "SPG Messages",
         "legend": {
           "position": "bottom"
