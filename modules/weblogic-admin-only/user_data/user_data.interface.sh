@@ -120,6 +120,9 @@ nomis_url: "${nomis_url}"
 nomis_client_id: "${nomis_client_id}"
 nomis_client_secret: "${nomis_client_secret}"
 
+# Password Reset Tool
+password_reset_url: "${password_reset_url}"
+
 # For user_update cron
 remote_user_filename: "${bastion_inventory}"
 

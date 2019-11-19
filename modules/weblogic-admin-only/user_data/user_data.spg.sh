@@ -126,6 +126,9 @@ nomis_url: "${nomis_url}"
 nomis_client_id: "${nomis_client_id}"
 nomis_client_secret: "${nomis_client_secret}"
 
+# Password Reset Tool
+password_reset_url: "${password_reset_url}"
+
 # NFS
 is_nfs_client: true
 nfs_mount_dir: "${activemq_data_folder}"
