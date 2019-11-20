@@ -63,6 +63,7 @@ resource "aws_autoscaling_group" "asg" {
     "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupPendingInstances",
     "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
   ]
+  health_check_type         = "ELB"
   launch_configuration      = "${aws_launch_configuration.launch_cfg.id}"
   min_size                  = "${var.pwm_config["ec2_scaling_min_capacity"]}"
   max_size                  = "${var.pwm_config["ec2_scaling_max_capacity"]}"
