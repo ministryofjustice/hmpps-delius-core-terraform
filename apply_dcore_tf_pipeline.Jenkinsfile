@@ -165,15 +165,6 @@ pipeline {
           }
         }
 
-        stage('Delius Backups bucket') {
-          steps {
-            script {
-              println("No Buckets (place holder while this is established during PROD golive fixes)")
-              // do_terraform(project.config, environment_name, project.dcore, 's3buckets')
-            }
-          }
-        }
-
         stage('Delius Keys and Profiles') {
           steps {
             script {
