@@ -275,7 +275,7 @@ pipeline {
                   stage('Build Delius Database High Availibilty') {
                       steps {
                           println("batch/dss")
-                          // build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+                          build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
                       }
                   }
 
