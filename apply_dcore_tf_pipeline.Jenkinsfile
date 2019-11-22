@@ -265,7 +265,7 @@ pipeline {
             }
         }
 
-        stage ('Monitoring and ') {
+        stage ('Monitoring and Batch') {
             parallel {
                 stage ('Delius DSS Batch Job') {
                     steps{
