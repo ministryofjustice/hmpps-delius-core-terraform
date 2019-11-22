@@ -261,7 +261,7 @@ pipeline {
             }
         }
 
-        stage ('Delius Weblogics') {
+        stage ('Delius supporting tasks') {
             parallel {
                   stage ('Delius DSS Batch Job') {
                     steps{
