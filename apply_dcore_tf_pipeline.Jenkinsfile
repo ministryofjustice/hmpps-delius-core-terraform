@@ -157,130 +157,147 @@ pipeline {
             }
         }
 
-        stage('Delius Security Groups') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'security-groups')
-            }
-          }
-        }
+        stage ('Security') {
+            parallel {
+                stage('Delius Security Groups') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'security-groups')
+                        }
+                    }
+                }
 
-        stage('Delius Backups bucket') {
-          steps {
-            script {
-              println("No Buckets (place holder while this is established during PROD golive fixes)")
-              // do_terraform(project.config, environment_name, project.dcore, 's3buckets')
-            }
-          }
-        }
-
-        stage('Delius Keys and Profiles') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'key_profile')
-            }
-          }
-        }
-
-        stage('Delius LoadRunner') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
-            }
-          }
-        }
-
-        stage('Delius Database') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'database_failover')
-            }
-          }
-        }
-
-        stage('Delius Management Server') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'management')
-            }
-          }
-        }
-
-        stage('Delius Application LDAP') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
-            }
-          }
-        }
-
-        stage ('Delius Password Self-Service Tool') {
-            steps{
-                script {
-                    do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                stage('Delius Keys and Profiles') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'key_profile')
+                        }
+                    }
                 }
             }
         }
 
-        stage ('Delius User Management Tool') {
-            steps{
-                script {
-                    do_terraform(project.config, environment_name, project.dcore, 'application/umt')
+
+        stage ('Data') {
+            parallel {
+                stage('Delius Database') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'database_failover')
+                        }
+                    }
+                }
+
+                stage('Delius Application LDAP') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
+                        }
+                    }
                 }
             }
         }
 
-        stage('Delius Application NDelius') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
-            }
-          }
-        }
+        stage ('Apps') {
+            parallel {
+                stage('Delius LoadRunner') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
+                        }
+                    }
+                }
 
-        stage('Delius Application SPG') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'application/spg')
-            }
-          }
-        }
+                stage('Delius Management Server') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'management')
+                        }
+                    }
+                }
 
-        stage('Delius Application Interface') {
-            steps {
-                script {
-                    do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+                stage ('Delius Password Self-Service Tool') {
+                    steps{
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                        }
+                    }
+                }
+
+                stage ('Delius User Management Tool') {
+                    steps{
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'application/umt')
+                        }
+                    }
                 }
             }
         }
 
-        stage ('Delius DSS Batch Job') {
-          steps{
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
+        stage ('Delius Apps') {
+            parallel {
+                stage('Delius Application NDelius') {
+                    steps {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            println("application/ndelius")
+                            do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
+                        }
+                    }
+                }
+
+                stage('Delius Application SPG') {
+                    steps {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            println("application/spg")
+                            do_terraform(project.config, environment_name, project.dcore, 'application/spg')
+                        }
+                    }
+                }
+
+                stage('Delius Application Interface') {
+                    steps {
+                      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            println("application/interface")
+                            do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+                        }
+                    }
+                }
             }
-          }
+        }
+
+        stage ('Monitoring and Batch') {
+            parallel {
+                stage ('Delius DSS Batch Job') {
+                    steps{
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            println("batch/dss")
+                            do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
+                        }
+                    }
+                }
+
+                stage('Pingdom checks') {
+                    steps {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+                        }
+                    }
+                }
+
+                stage('Monitoring and Alerts') {
+                    steps {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            do_terraform(project.config, environment_name, project.dcore, 'monitoring')
+                        }
+                    }
+                }
+            }
         }
 
         stage('Build Delius Database High Availibilty') {
             steps {
+                println("Build Database High Availibilty")
                 build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
-            }
-        }
-
-        stage('Pingdom checks') {
-            steps {
-                script {
-                    do_terraform(project.config, environment_name, project.dcore, 'pingdom')
-                }
-            }
-        }
-
-        stage('Monitoring and Alerts') {
-            steps {
-                script {
-                  do_terraform(project.config, environment_name, project.dcore, 'monitoring')
-                }
             }
         }
 
