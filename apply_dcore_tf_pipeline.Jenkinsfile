@@ -150,7 +150,7 @@ pipeline {
                   git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
                 dir( project.dcore ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: 'delius-stage_to_prod_access_build', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
 
                 prepare_env()
@@ -198,18 +198,18 @@ pipeline {
           }
         }
 
-        stage('Delius Management Server') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'management')
-            }
-          }
-        }
-
         stage('Delius Application LDAP') {
           steps {
             script {
               do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
+            }
+          }
+        }
+
+        stage('Delius Management Server') {
+          steps {
+            script {
+              do_terraform(project.config, environment_name, project.dcore, 'management')
             }
           }
         }
@@ -230,59 +230,72 @@ pipeline {
             }
         }
 
-        stage('Delius Application NDelius') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
-            }
-          }
-        }
+        stage ('Delius Weblogics') {
+            parallel {
+                stage('Delius Application NDelius') {
+                  steps {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      println("application/ndelius")
+                      do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
+                    }
+                  }
+                }
 
-        stage('Delius Application SPG') {
-          steps {
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'application/spg')
-            }
-          }
-        }
+                stage('Delius Application SPG') {
+                  steps {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      println("application/spg")
+                      do_terraform(project.config, environment_name, project.dcore, 'application/spg')
+                    }
+                  }
+                }
 
-        stage('Delius Application Interface') {
-            steps {
-                script {
-                    do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+                stage('Delius Application Interface') {
+                    steps {
+                      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        println("application/interface")
+                            do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+                        }
+                    }
                 }
             }
         }
 
-        stage ('Delius DSS Batch Job') {
-          steps{
-            script {
-              do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
-            }
+        stage ('Delius Weblogics') {
+            parallel {
+                  stage ('Delius DSS Batch Job') {
+                    steps{
+                      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        println("batch/dss")
+                        do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
+                      }
+                    }
+                  }
+
+                  stage('Build Delius Database High Availibilty') {
+                      steps {
+                          println("batch/dss")
+                          // build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+                      }
+                  }
+
+                  stage('Pingdom checks') {
+                      steps {
+                          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                              do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+                          }
+                      }
+                  }
+
+                  stage('Monitoring and Alerts') {
+                      steps {
+                          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            do_terraform(project.config, environment_name, project.dcore, 'monitoring')
+                          }
+                      }
+                  }
+              }
           }
-        }
-
-        stage('Build Delius Database High Availibilty') {
-            steps {
-                build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
-            }
-        }
-
-        stage('Pingdom checks') {
-            steps {
-                script {
-                    do_terraform(project.config, environment_name, project.dcore, 'pingdom')
-                }
-            }
-        }
-
-        stage('Monitoring and Alerts') {
-            steps {
-                script {
-                  do_terraform(project.config, environment_name, project.dcore, 'monitoring')
-                }
-            }
-        }
 
         stage('Smoke test') {
             steps {
