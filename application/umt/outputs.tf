@@ -1,6 +1,3 @@
-output "asg" {
-  value = {
-    id = "${aws_autoscaling_group.asg.id}"
-    arn = "${aws_autoscaling_group.asg.arn}"
-  }
+output "service_id" {
+  value = "${aws_ecs_service.service.id}"
 }

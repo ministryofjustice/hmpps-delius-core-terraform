@@ -59,7 +59,6 @@ module "interface" {
   weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
   activemq_port                = "${var.weblogic_domain_ports["activemq_port"]}"
   activemq_enabled             = "false"
-  umt_asg_id                   = "${data.terraform_remote_state.umt.asg["id"]}"
 
   app_bootstrap_name            = "hmpps-delius-core-bootstrap"
   app_bootstrap_src             =  "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
@@ -142,16 +141,4 @@ module "interface" {
     ## ldap_admin_password      = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
   }
 
-}
-
-output "ami_interface_wls" {
-  value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
-}
-
-output "private_fqdn_interface_wls_internal_alb" {
-  value = "${module.interface.private_fqdn_internal_alb}"
-}
-
-output "newtech_webfrontend_target_group_arn" {
-  value = "${module.interface.newtech_webfrontend_targetgroup_arn}"
 }

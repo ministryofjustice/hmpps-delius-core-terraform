@@ -45,11 +45,3 @@ resource "aws_route53_record" "jms_public" {
   ttl     = "300"
   records = ["${aws_elb.jms_lb.dns_name}"]
 }
-
-output "private_fqdn_jms_broker" {
-  value = "${aws_route53_record.jms_private.fqdn}"
-}
-
-output "public_fqdn_jms_broker" {
-  value = "${aws_route53_record.jms_public.fqdn}"
-}

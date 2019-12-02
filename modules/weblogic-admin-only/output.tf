@@ -30,3 +30,7 @@ output "newtech_webfrontend_targetgroup_arn" {
 output "cloudwatch_log_group" {
   value = "${var.ansible_vars["cldwatch_log_group"]}"
 }
+
+output "umt_targetgroup_arn" {
+  value = "${aws_lb_target_group.umt_target_group.arn}"
+}
