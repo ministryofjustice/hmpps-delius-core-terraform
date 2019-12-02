@@ -3,6 +3,7 @@
     "image": "${image_url}:${image_version}",
     "essential": true,
     "memory": ${memory},
+    "cpu": ${cpu},
     "portMappings": [{
         "hostPort": 8080,
         "containerPort": 8080

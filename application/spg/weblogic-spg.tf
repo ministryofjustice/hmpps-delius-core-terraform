@@ -60,7 +60,6 @@ module "spg" {
   weblogic_tls_port            = "${var.weblogic_domain_ports["weblogic_tls_port"]}"
   activemq_port                = "${var.weblogic_domain_ports["activemq_port"]}"
   activemq_enabled             = "true"
-  umt_asg_id                   = "${data.terraform_remote_state.umt.asg["id"]}"
 
   app_bootstrap_name           = "hmpps-delius-core-bootstrap"
   app_bootstrap_src            = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
@@ -141,16 +140,4 @@ module "spg" {
     ## database_password        = "/${environment_name}/${project}/delius-database/db/delius_pool_password"
     ## ldap_admin_password      = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
   }
-}
-
-output "ami_spg_wls" {
-  value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
-}
-
-output "private_fqdn_spg_wls_internal_alb" {
-  value = "${module.spg.private_fqdn_internal_alb}"
-}
-
-output "newtech_webfrontend_target_group_arn" {
-  value = "${module.spg.newtech_webfrontend_targetgroup_arn}"
 }

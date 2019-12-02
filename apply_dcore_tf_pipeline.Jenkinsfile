@@ -217,17 +217,9 @@ pipeline {
                 }
 
                 stage ('Delius Password Self-Service Tool') {
-                    steps{
+                    steps {
                         script {
                             do_terraform(project.config, environment_name, project.dcore, 'pwm')
-                        }
-                    }
-                }
-
-                stage ('Delius User Management Tool') {
-                    steps{
-                        script {
-                            do_terraform(project.config, environment_name, project.dcore, 'application/umt')
                         }
                     }
                 }
@@ -260,6 +252,14 @@ pipeline {
                             println("application/interface")
                             do_terraform(project.config, environment_name, project.dcore, 'application/interface')
                         }
+                    }
+                }
+            }
+
+            stage ('Delius User Management Tool') {
+                steps{
+                    script {
+                        do_terraform(project.config, environment_name, project.dcore, 'application/umt')
                     }
                 }
             }

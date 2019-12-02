@@ -1,7 +1,6 @@
 locals {
-  app_name        = "umt"
-  image_url       = "895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um"
-  image_version   = "${var.umt_config["version"]}"
-  config_location = "/app/config"
-  host_config_location = "/${local.app_name}/config"
+  app_name      = "usermanagement"
+  image_url     = "895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um"
+  umt_config    = "${merge(var.default_umt_config, var.umt_config)}"
+  ansible_vars  = "${merge(var.default_ansible_vars, var.ansible_vars)}"
 }
