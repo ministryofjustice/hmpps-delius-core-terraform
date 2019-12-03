@@ -255,12 +255,13 @@ pipeline {
                     }
                 }
             }
+        }
 
-            stage ('Delius User Management Tool') {
-                steps{
-                    script {
-                        do_terraform(project.config, environment_name, project.dcore, 'application/umt')
-                    }
+
+        stage ('Delius User Management Tool') {
+            steps{
+                script {
+                    do_terraform(project.config, environment_name, project.dcore, 'application/umt')
                 }
             }
         }
