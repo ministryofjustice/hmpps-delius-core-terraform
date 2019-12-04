@@ -46,7 +46,10 @@ resource "aws_autoscaling_group" "wls_asg" {
   desired_capacity     = "${var.instance_count}"
   launch_configuration = "${aws_launch_configuration.wls_launch_cfg.id}"
   health_check_type    = "EC2"
-
+  enabled_metrics           = [
+    "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupPendingInstances",
+    "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
+  ]
   lifecycle {
     create_before_destroy = true
   }
