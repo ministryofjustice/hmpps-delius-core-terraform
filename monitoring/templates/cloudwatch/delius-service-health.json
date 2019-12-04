@@ -1,4 +1,5 @@
 {
+  "start": "-PT6H",
   "widgets": [
     {
       "type": "log",
@@ -42,7 +43,8 @@
         "stacked": true,
         "region": "${region}",
         "title": "Requests",
-        "period": 300
+        "period": 60,
+        "liveData": false
       }
     },
     {
@@ -60,7 +62,8 @@
         "stacked": false,
         "region": "${region}",
         "title": "Response Time (seconds)",
-        "period": 300
+        "period": 60,
+        "liveData": false
       }
     },
     {
@@ -108,12 +111,12 @@
       "properties": {
         "metrics": [
           [ "WebLogic", "OpenSessions", "AutoScalingGroupName", "${asg_ndelius}", { "label": "Current", "stat": "Sum" } ],
-          [ ".", "TotalSessions", ".", ".", { "label": "Total", "stat": "Sum" } ]
+          [ ".", "TotalSessions", ".", ".", { "label": "Total (today)", "stat": "Sum" } ]
         ],
         "view": "singleValue",
         "region": "${region}",
-        "title": "User Sessions",
-        "period": 300
+        "title": "Sessions",
+        "period": 60
       }
     },
     {
@@ -124,12 +127,13 @@
       "height": 6,
       "properties": {
         "metrics": [
-          [ "WebLogic", "InboundQueueSize", "AutoScalingGroupName", "${asg_spg}", { "label": "Inbound" } ],
-          [ ".", "OutboundQueueSize", ".", ".", { "label": "Outbound" } ]
+          [ "WebLogic", "InboundQueueSize", "AutoScalingGroupName", "${asg_spg}", { "stat": "Sum", "label": "Inbound" } ],
+          [ ".", "OutboundQueueSize", ".", ".", { "stat": "Sum", "label": "Outbound" } ]
         ],
         "view": "singleValue",
         "region": "${region}",
-        "title": "SPG Queue Size"
+        "title": "SPG Queue Size",
+        "period": 60
       }
     },
     {
@@ -140,16 +144,22 @@
       "height": 6,
       "properties": {
         "metrics": [
-          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "stat": "Average", "label": "Inbound" } ],
-          [ ".", "OutboundQueueDispatchCount", ".", ".", { "stat": "Average", "label": "Outbound" } ]
+          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "stat": "Sum", "label": "Inbound" } ],
+          [ ".", "OutboundQueueDispatchCount", ".", ".", { "stat": "Sum", "label": "Outbound" } ]
         ],
         "view": "timeSeries",
         "stacked": true,
         "region": "${region}",
-        "period": 300,
+        "period": 60,
         "title": "SPG Messages",
         "legend": {
           "position": "bottom"
+        },
+        "liveData": false,
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          }
         }
       }
     },
