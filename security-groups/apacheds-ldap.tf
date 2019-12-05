@@ -179,6 +179,17 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_offapi_ingress" {
   description              = "New Tech Offender API In"
 }
 
+# Allow Approved Premises Tracker API in
+resource "aws_security_group_rule" "aptracker_api_db_in" {
+  security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.ldap_ports["ldap"]}"
+  to_port                  = "${var.ldap_ports["ldap"]}"
+  source_security_group_id = "${aws_security_group.aptracker_api.id}"
+  description              = "Approved Premises Tracker API in"
+}
+
 ################################################################################
 ## apacheds_ldap
 ################################################################################
