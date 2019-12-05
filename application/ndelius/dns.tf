@@ -15,7 +15,7 @@ resource "aws_route53_record" "public_dns" {
   # over into the private zone before we complete the transition eg. delius-db-1, management.
   # (see weblogic-ndelius.tf)
   zone_id = "${(var.delius_core_public_zone) == "strategic" ?
-                      data.terraform_remote_state.vpc.strategic_public_zone_id[0] :
+                      data.terraform_remote_state.vpc.strategic_public_zone_id :
                       data.terraform_remote_state.vpc.public_zone_id}"
   name    = "ndelius"
   type    = "CNAME"
