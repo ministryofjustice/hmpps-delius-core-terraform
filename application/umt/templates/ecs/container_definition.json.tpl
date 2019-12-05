@@ -30,6 +30,10 @@
         { "name": "SPRING_DATASOURCE_TYPE", "value": "oracle.jdbc.pool.OracleDataSource" },
         { "name": "SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT", "value": "org.hibernate.dialect.Oracle10gDialect" },
         { "name": "SPRING_JPA_HIBERNATE_DDL-AUTO", "value": "none" },
+        { "name": "SPRING_LDAP_URLS", "value": "${ldap_url}" },
+        { "name": "SPRING_LDAP_USERNAME", "value": "${ldap_username}" },
+        { "name": "SPRING_LDAP_BASE", "value": "${ldap_base}" },
+        { "name": "SPRING_LDAP_USEORACLEATTRIBUTES", "value": "false" },
 
         { "name": "OID_URLS", "value": "${ldap_url}" },
         { "name": "OID_USERNAME", "value": "${ldap_username}" },
