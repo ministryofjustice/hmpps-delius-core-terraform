@@ -180,7 +180,7 @@ resource "aws_security_group_rule" "apacheds_ldap_elb_offapi_ingress" {
 }
 
 # Allow Approved Premises Tracker API in
-resource "aws_security_group_rule" "aptracker_api_db_in" {
+resource "aws_security_group_rule" "aptracker_api_ldap_in" {
   security_group_id        = "${aws_security_group.apacheds_ldap_private_elb.id}"
   type                     = "ingress"
   protocol                 = "tcp"

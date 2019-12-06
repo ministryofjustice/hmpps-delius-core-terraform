@@ -14,7 +14,7 @@ output "sg_aptracker_api_id" {
   value = "${aws_security_group.aptracker_api.id}"
 }
 
-resource "aws_security_group_rule" "umt_instances_ingress_ndelius_lb" {
+resource "aws_security_group_rule" "aptracker_instances_ingress_ndelius_lb" {
   security_group_id        = "${aws_security_group.aptracker_api.id}"
   type                     = "ingress"
   protocol                 = "tcp"
@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "umt_instances_ingress_ndelius_lb" {
   description              = "WebLogic (ndelius) load balancer in"
 }
 
-resource "aws_security_group_rule" "umt_instances_ingress_spg_lb" {
+resource "aws_security_group_rule" "aptracker_instances_ingress_spg_lb" {
   security_group_id        = "${aws_security_group.aptracker_api.id}"
   type                     = "ingress"
   protocol                 = "tcp"
@@ -34,7 +34,7 @@ resource "aws_security_group_rule" "umt_instances_ingress_spg_lb" {
   description              = "WebLogic (spg) load balancer in"
 }
 
-resource "aws_security_group_rule" "umt_instances_ingress_interface_lb" {
+resource "aws_security_group_rule" "aptracker_instances_ingress_interface_lb" {
   security_group_id        = "${aws_security_group.aptracker_api.id}"
   type                     = "ingress"
   protocol                 = "tcp"
@@ -44,7 +44,7 @@ resource "aws_security_group_rule" "umt_instances_ingress_interface_lb" {
   description              = "WebLogic (interface) load balancer in"
 }
 
-resource "aws_security_group_rule" "umt_instances_egress_ldap" {
+resource "aws_security_group_rule" "aptracker_instances_egress_ldap" {
   security_group_id        = "${aws_security_group.aptracker_api.id}"
   type                     = "egress"
   protocol                 = "tcp"
@@ -54,7 +54,7 @@ resource "aws_security_group_rule" "umt_instances_egress_ldap" {
   description              = "LDAP out"
 }
 
-resource "aws_security_group_rule" "umt_instances_egress_db" {
+resource "aws_security_group_rule" "aptracker_instances_egress_db" {
   security_group_id        = "${aws_security_group.aptracker_api.id}"
   type                     = "egress"
   protocol                 = "tcp"
