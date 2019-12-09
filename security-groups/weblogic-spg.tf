@@ -98,6 +98,16 @@ resource "aws_security_group_rule" "spg_external_elb_egress_umt" {
   description              = "Out to UMT instances"
 }
 
+resource "aws_security_group_rule" "spg_external_elb_egress_aptracker_api" {
+  security_group_id        = "${aws_security_group.weblogic_spg_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = "${aws_security_group.aptracker_api.id}"
+  description              = "Out to Approved Premises Tracker API instances"
+}
+
 resource "aws_security_group_rule" "spg_jms_lb_ingress_spg_gw" {
   security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
   type              = "ingress"

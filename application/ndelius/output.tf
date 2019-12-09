@@ -33,3 +33,7 @@ output "newtech_webfrontend_target_group_arn" {
 output "umt_targetgroup_arn" {
   value = "${module.ndelius.umt_targetgroup_arn}"
 }
+
+output "aptracker_api_targetgroup_arn" {
+  value = "${module.ndelius.aptracker_api_targetgroup_arn}"
+}

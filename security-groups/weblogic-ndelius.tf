@@ -130,6 +130,16 @@ resource "aws_security_group_rule" "ndelius_external_elb_egress_newtechweb" {
   description              = "Out to New Tech Web ECS Service"
 }
 
+resource "aws_security_group_rule" "ndelius_external_elb_egress_aptracker_api" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = "${aws_security_group.aptracker_api.id}"
+  description              = "Out to Approved Premises Tracker API instances"
+}
+
 ################################################################################
 ## Instances
 ################################################################################

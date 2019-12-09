@@ -15,6 +15,21 @@ resource "aws_ecs_service" "service" {
   name            = "${var.short_environment_name}-${local.app_name}-service"
   cluster         = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_id}"
   task_definition = "${aws_ecs_task_definition.task_definition.arn}"
+  load_balancer {
+    container_name   = "${local.app_name}"
+    container_port   = 8080
+    target_group_arn = "${data.terraform_remote_state.ndelius.aptracker_api_targetgroup_arn}"
+  }
+  load_balancer {
+    container_name   = "${local.app_name}"
+    container_port   = 8080
+    target_group_arn = "${data.terraform_remote_state.spg.aptracker_api_targetgroup_arn}"
+  }
+  load_balancer {
+    container_name   = "${local.app_name}"
+    container_port   = 8080
+    target_group_arn = "${data.terraform_remote_state.interface.aptracker_api_targetgroup_arn}"
+  }
   service_registries {
     registry_arn   = "${aws_service_discovery_service.web_svc_record.arn}"
     container_name = "${local.app_name}"

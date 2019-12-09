@@ -12,7 +12,7 @@
         "interval": 30,
         "timeout": 5,
         "retries": 3,
-        "command": [ "CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1" ]
+        "command": [ "CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/aptracker-api/actuator/health || exit 1" ]
     },
     "logConfiguration": {
         "logDriver": "awslogs",
@@ -35,7 +35,7 @@
         { "name": "SPRING_LDAP_USERNAME", "value": "${ldap_username}" },
         { "name": "SPRING_LDAP_BASE", "value": "${ldap_base}" },
 
-        { "name": "LOGGING_LEVEL_UK_CO_JUSTICE", "value": "${log_level}" }
+        { "name": "LOGGING_LEVEL_COM_UNILINK_DELIUS", "value": "${log_level}" }
     ],
     "secrets": [
         {
