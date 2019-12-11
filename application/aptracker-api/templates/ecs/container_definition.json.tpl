@@ -35,7 +35,7 @@
         { "name": "SPRING_LDAP_USERNAME", "value": "${ldap_username}" },
         { "name": "SPRING_LDAP_BASE", "value": "${ldap_base}" },
 
-        { "name": "LOGGING_LEVEL_COM_UNILINK_DELIUS", "value": "${log_level}" }
+        { "name": "LOGGING_LEVEL_UK_GOV_JUSTICE", "value": "${log_level}" }
     ],
     "secrets": [
         {
