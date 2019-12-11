@@ -34,3 +34,7 @@ output "cloudwatch_log_group" {
 output "umt_targetgroup_arn" {
   value = "${aws_lb_target_group.umt_target_group.arn}"
 }
+
+output "aptracker_api_targetgroup_arn" {
+  value = "${aws_lb_target_group.aptracker_api_target_group.arn}"
+}

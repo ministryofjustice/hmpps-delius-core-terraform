@@ -33,3 +33,7 @@ output "newtech_webfrontend_target_group_arn" {
 output "umt_targetgroup_arn" {
   value = "${module.spg.umt_targetgroup_arn}"
 }
+
+output "aptracker_api_targetgroup_arn" {
+  value = "${module.spg.aptracker_api_targetgroup_arn}"
+}

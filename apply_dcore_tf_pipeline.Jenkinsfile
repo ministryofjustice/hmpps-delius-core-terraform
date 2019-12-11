@@ -257,11 +257,22 @@ pipeline {
             }
         }
 
+        stage ('Delius Micro-services') {
+            parallel {
+                stage('Delius User Management Tool') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'application/umt')
+                        }
+                    }
+                }
 
-        stage ('Delius User Management Tool') {
-            steps{
-                script {
-                    do_terraform(project.config, environment_name, project.dcore, 'application/umt')
+                stage('Delius Approved Premises Tracker API') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api')
+                        }
+                    }
                 }
             }
         }

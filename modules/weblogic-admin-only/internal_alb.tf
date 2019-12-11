@@ -65,6 +65,20 @@ resource "aws_lb_target_group" "newtechweb_target_group" {
   }
 }
 
+resource "aws_lb_target_group" "aptracker_api_target_group" {
+  name        = "${var.short_environment_name}-${local.tier_name_sub}-aptracker"
+  vpc_id      = "${var.vpc_id}"
+  protocol    = "HTTP"
+  port        = "8080"
+  target_type = "ip" # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
+  tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-aptracker"))}"
+  health_check {
+    protocol  = "HTTP"
+    path      = "/aptracker-api/actuator/health"
+    matcher   = "200-399"
+  }
+}
+
 # Listeners
 resource "aws_lb_listener" "internal_lb_http_listener" {
   load_balancer_arn   = "${aws_lb.internal_alb.arn}"
@@ -170,6 +184,18 @@ resource "aws_lb_listener_rule" "internal_lb_newtechweb_rule" {
   action {
     type             = "forward"
     target_group_arn = "${aws_lb_target_group.newtechweb_target_group.arn}"
+  }
+}
+
+resource "aws_lb_listener_rule" "internal_lb_aptracker_api_rule" {
+  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
+  condition {
+    field  = "path-pattern"
+    values = ["/aptracker-api/*"]
+  }
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.aptracker_api_target_group.arn}"
   }
 }
 
