@@ -198,6 +198,15 @@ pipeline {
             }
         }
 
+        stage('Check Oracle Software Patches on Primary') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    println("Check Oracle Software Patches")
+                    build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_primarydb'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                }
+            }
+        }
+
         stage ('Apps') {
             parallel {
                 stage('Delius LoadRunner') {
@@ -310,6 +319,29 @@ pipeline {
             steps {
                 println("Build Database High Availibilty")
                 build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+            }
+        }
+
+        stage ('Check Oracle Software and Patches on HA') {
+            parallel {
+
+                stage('Check Oracle Software Patches on HA 1') {
+                    steps {
+                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                       println("Check Oracle Software Patches")
+                       build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                       }
+                    }
+                }
+
+                stage('Check Oracle Software Patches on HA 2') {
+                    steps {
+                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                       println("Check Oracle Software Patches")
+                       build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                       }
+                    }
+                }
             }
         }
 
