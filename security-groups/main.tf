@@ -98,19 +98,6 @@ data "terraform_remote_state" "windows_slave" {
   }
 }
 
-#-------------------------------------------------------------
-### IAPS Security Group State
-#-------------------------------------------------------------
-data "terraform_remote_state" "iaps-sg" {
-  backend = "s3"
-
-  config {
-    bucket = "${var.remote_state_bucket_name}"
-    key    = "iaps/security-groups/terraform.tfstate"
-    region = "${var.region}"
-  }
-}
-
 ####################################################
 # Locals
 ####################################################
@@ -172,8 +159,6 @@ locals {
     "${local.windows_slave_public_ip}",
     "${local.bastion_public_ip}"
   )}"
-
-  iaps_sg_id = "${data.terraform_remote_state.iaps-sg.security_groups_sg_internal_instance_id}"
 
   azure_community_proxy_source = "${var.azure_community_proxy_source}"
   azure_oasys_proxy_source = "${var.azure_oasys_proxy_source}"
