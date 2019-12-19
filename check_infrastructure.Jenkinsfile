@@ -8,14 +8,11 @@ project.dcore     = 'hmpps-delius-core-terraform'
 //       name: 'environment_name'
 //       description: 'Environment name.'
 //     string:
-//       name: 'DCORE_BRANCH'
-//       description: 'Target Branch for hmpps-delius-core-terraform'
-//     string:
 //       name: 'CONFIG_BRANCH'
 //       description: 'Target Branch for hmpps-env-configs'
-//     booleanParam:
-//       name: 'confirmation'
-//       description: 'Whether to require manual confirmation of terraform plans.'
+//     string:
+//       name: 'DCORE_BRANCH'
+//       description: 'Target Branch for hmpps-delius-core-terraform'
 //     booleanParam:
 //       name: 'confirmation'
 //       description: 'Whether to require manual confirmation of terraform plans.'
@@ -61,10 +58,12 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
 pipeline {
 
     agent { label "jenkins_slave" }
+
     parameters {
-        string(name: 'DCORE_BRANCH', description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
         string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
+        string(name: 'DCORE_BRANCH',  description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
     }
+
     stages {
 
         stage('setup') {
