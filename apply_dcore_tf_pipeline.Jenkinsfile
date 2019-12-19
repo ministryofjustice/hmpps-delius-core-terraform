@@ -148,6 +148,7 @@ pipeline {
     parameters {
         string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
         string(name: 'DCORE_BRANCH',  description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
+        booleanParam(name: 'deploy_DATABASE_HA', defaultValue: true, description: 'Deploy/update Database High Availibilty?')
     }
 
 
@@ -327,6 +328,7 @@ pipeline {
         }
 
         stage('Build Delius Database High Availibilty') {
+            when { expression { return params.deploy_DATABASE_HA } }
             steps {
                 println("Build Database High Availibilty")
                 build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
