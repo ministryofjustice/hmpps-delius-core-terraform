@@ -2,9 +2,8 @@
 
 locals {
   # Override default values
-  ansible_vars = "${merge(var.default_ansible_vars, var.ansible_vars)}"
+  ansible_vars          = "${merge(var.default_ansible_vars, var.ansible_vars)}"
   ansible_vars_apacheds = "${merge(var.default_ansible_vars_apacheds, var.ansible_vars_apacheds)}"
-  spg_jms_default_url       = "tcp://${local.ansible_vars["spg_jms_host"]}.${data.aws_route53_zone.public.name}:61616"
 }
 
 module "ndelius" {
@@ -103,10 +102,7 @@ module "ndelius" {
     alfresco_office_port     = "${local.ansible_vars["alfresco_office_port"]}"
 
     # SPG
-    spg_jms_url             = "${var.spg_jms_host_src == "data" ?
-                                  data.terraform_remote_state.amazonmq.amazon_mq_broker_connect_url :
-                                  local.spg_jms_default_url}"
-
+    spg_jms_url              = "failover:(ssl://amazonmq-broker-1.${data.aws_route53_zone.private.name}:61617,ssl://amazonmq-broker-2.${data.aws_route53_zone.private.name}:61617)"
     activemq_data_folder     = "${local.ansible_vars["activemq_data_folder"]}"
 
     # LDAP
