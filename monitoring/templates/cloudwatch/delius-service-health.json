@@ -144,8 +144,9 @@
       "height": 6,
       "properties": {
         "metrics": [
-          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "stat": "Sum", "label": "Inbound" } ],
-          [ ".", "OutboundQueueDispatchCount", ".", ".", { "stat": "Sum", "label": "Outbound" } ]
+          [ { "expression": "RATE(METRICS())", "label": "" } ],
+          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "label": "Inbound", "visible": false } ],
+          [ ".", "OutboundQueueDispatchCount", ".", ".", { "label": "Outbound", "visible": false } ]
         ],
         "view": "timeSeries",
         "stacked": true,
@@ -158,9 +159,11 @@
         "liveData": false,
         "yAxis": {
           "left": {
-            "showUnits": false
+            "showUnits": false,
+            "min": 0
           }
-        }
+        },
+        "stat": "Sum"
       }
     },
     {
