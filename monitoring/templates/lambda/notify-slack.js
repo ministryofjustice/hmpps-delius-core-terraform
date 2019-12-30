@@ -3,31 +3,31 @@ var util = require("util");
 
 exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, 2));
-    var now = new Date().getHours();
+    const now = new Date().getHours();
     if (now >= +"${quiet_period_start_hour}" && now < +"${quiet_period_end_hour}") {
         console.log("In quiet period, dismissing alarm");
         return;
     }
 
-    var eventMessage = JSON.parse(event.Records[0].Sns.Message);
-    var severity = eventMessage.AlarmName.split("--")[1];    // could we use tags for this??
+    const eventMessage = JSON.parse(event.Records[0].Sns.Message);
+    let severity = eventMessage.AlarmName.split("--")[1];    // could we use tags for this??
     if (eventMessage.NewStateValue === "OK") severity = "ok";
     if (eventMessage.NewStateValue === "INSUFFICIENT_DATA") severity = "insufficient data";
 
-    var icon_emoji = ":twisted_rightwards_arrows:";
+    let icon_emoji = ":question:";
     if (severity === "ok")       icon_emoji = ":thumbsup:";
     if (severity === "warning")  icon_emoji = ":warning:";
     if (severity === "critical") icon_emoji = ":siren:";
     if (severity === "fatal")    icon_emoji = ":alert:";
 
-    var textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
+    let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Environment: ${environment_name}"
         + "\n> Description: " + eventMessage.AlarmDescription
         + "\nhttps://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/" + eventMessage.AlarmName;
     // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
 
-    var req = https.request({
+    const req = https.request({
         method: "POST",
         hostname: "hooks.slack.com",
         port: 443,

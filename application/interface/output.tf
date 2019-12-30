@@ -22,6 +22,10 @@ output "alb" {
   value = "${module.interface.alb}"
 }
 
+output "weblogic_targetgroup" {
+  value = "${module.interface.weblogic_targetgroup}"
+}
+
 output "ami_interface_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
