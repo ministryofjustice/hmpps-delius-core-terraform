@@ -59,3 +59,26 @@ data "template_file" "delius_service_health_dashboard_file" {
     instance_delius_db_1          = "${data.terraform_remote_state.db.ami_delius_db_1}"
   }
 }
+
+data "template_file" "notify_slack_lambda_file" {
+  template = "${file("${path.module}/templates/lambda/notify-slack.js")}"
+  vars {
+    environment_name        = "${var.environment_name}"
+    channel                 = "${var.environment_name == "delius-prod"? "delius-alerts-deliuscore-production": "delius-alerts-deliuscore-nonprod"}"
+    quiet_period_start_hour = "${local.quiet_period_start_hour}"
+    quiet_period_end_hour   = "${local.quiet_period_end_hour}"
+  }
+}
+
+data "archive_file" "lambda_handler_zip" {
+  type        = "zip"
+  output_path = "${path.module}/files/${local.lambda_name}.zip"
+  source {
+    content  = "${data.template_file.notify_slack_lambda_file.rendered}"
+    filename = "notify-slack.js"
+  }
+}
+
+data "aws_iam_role" "lambda_exec_role" {
+  name = "lambda_exec_role"
+}
