@@ -131,6 +131,9 @@ module "interface" {
     # Password Reset Tool
     password_reset_url       = "https://${data.terraform_remote_state.pwm.public_fqdn_pwm}/public/forgottenpassword"
 
+    # Approved Premises Tracker API
+    aptracker_api_errors_url = "${local.ansible_vars["aptracker_api_errors_url"]}"
+
     ## the following are retrieved from SSM Parameter Store
     ## weblogic_admin_password  = "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password"
     ## database_password        = "/${environment_name}/${project}/delius-database/db/delius_pool_password"
