@@ -7,6 +7,14 @@ output "asg" {
   }
 }
 
+output "weblogic_targetgroup" {
+  value = {
+    "id"    = "${aws_lb_target_group.internal_alb_target_group.id}",
+    "arn"   = "${aws_lb_target_group.internal_alb_target_group.arn}",
+    "name"  = "${aws_lb_target_group.internal_alb_target_group.name}",
+  }
+}
+
 output "alb" {
   value = {
     "id"    = "${aws_lb.internal_alb.id}",

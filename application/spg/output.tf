@@ -22,6 +22,18 @@ output "alb" {
   value = "${module.spg.alb}"
 }
 
+output "weblogic_targetgroup" {
+  value = "${module.spg.weblogic_targetgroup}"
+}
+
+output "jms_lb" {
+  value = {
+    "id"    = "${aws_elb.jms_lb.id}",
+    "arn"   = "${aws_elb.jms_lb.arn}",
+    "name"  = "${aws_elb.jms_lb.name}",
+  }
+}
+
 output "ami_spg_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
