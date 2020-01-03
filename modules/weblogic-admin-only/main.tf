@@ -84,5 +84,8 @@ data "template_file" "user_data" {
 
     # Password Reset Tool
     password_reset_url       = "${var.ansible_vars["password_reset_url"]}"
+
+    # Approved Premises Tracker API
+    aptracker_api_errors_url = "${var.ansible_vars["aptracker_api_errors_url"]}"
   }
 }

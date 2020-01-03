@@ -123,6 +123,9 @@ nomis_client_secret: "${nomis_client_secret}"
 # Password Reset Tool
 password_reset_url: "${password_reset_url}"
 
+# Approved Premises Tracker API
+aptracker_api_errors_url: "${aptracker_api_errors_url}"
+
 # For user_update cron
 remote_user_filename: "${bastion_inventory}"
 
@@ -154,22 +157,25 @@ PARAM=$(aws ssm get-parameters \
 "/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
 "/${environment_name}/${project_name}/delius-database/db/delius_pool_password" \
 "/${environment_name}/${project_name}/umt/umt/delius_secret" \
+"/${environment_name}/${project_name}/aptracker_api/errors_ui/delius_secret" \
 --query Parameters)
 
 # set parameter values
 weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
 ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
 database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
-usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("delius_secret")) | .Value' --raw-output)"
+usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
+aptracker_api_errors_secret="$(echo $PARAM | jq '.[] | select(.Name | test("errors_ui/delius_secret")) | .Value' --raw-output)"
 
 export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 --extra-vars "{\
-'instance_id':'$INSTANCE_ID', \
 'weblogic_admin_password':'$weblogic_admin_password', \
 'ldap_admin_password':'$ldap_admin_password', \
 'database_password':'$database_password', \
-'usermanagement_secret':'$usermanagement_secret' \
+'usermanagement_secret':'$usermanagement_secret', \
+'aptracker_api_errors_secret':'$aptracker_api_errors_secret', \
+'instance_id':'$INSTANCE_ID' \
 }"
