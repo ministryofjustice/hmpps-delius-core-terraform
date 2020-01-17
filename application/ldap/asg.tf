@@ -79,7 +79,7 @@ resource "aws_autoscaling_group" "asg" {
   max_size             = "6"
   launch_configuration = "${aws_launch_configuration.launch_cfg.id}"
   load_balancers       = ["${aws_elb.lb.id}"]
-  health_check_type    = "ELB"
+  health_check_type    = "EC2"
   health_check_grace_period = "21600" # 6 hours, to allow time for data to be loaded
   enabled_metrics      = [
     "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupPendingInstances",
