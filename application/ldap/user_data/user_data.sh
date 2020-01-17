@@ -57,8 +57,9 @@ cat << EOF > ~/requirements.yml
 EOF
 
 /usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
-
-/usr/bin/curl -o ~/delius-core.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/${route53_sub_domain}/ansible/group_vars/all.yml
+/usr/bin/curl -o ~/all.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/ansible/group_vars/all.yml
+/usr/bin/curl -o ~/env-all.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/${route53_sub_domain}/ansible/group_vars/all.yml
+/usr/bin/curl -o ~/env-ldap.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/${route53_sub_domain}/ansible/group_vars/ldap.yml
 
 cat << EOF > ~/vars.yml
 ---
@@ -100,7 +101,9 @@ cat << EOF > ~/bootstrap.yml
   vars_files:
    - "{{ playbook_dir }}/vars.yml"
    - "{{ playbook_dir }}/users.yml"
-   - "{{ playbook_dir }}/delius-core.yml"
+   - "{{ playbook_dir }}/all.yml"
+   - "{{ playbook_dir }}/env-all.yml"
+   - "{{ playbook_dir }}/env-ldap.yml"
   roles:
      - bootstrap
      - users
@@ -121,6 +124,8 @@ PARAM=$(aws ssm get-parameters \
 # set parameter values
 bind_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
 
+/usr/bin/curl -o ~/ansible.cfg https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/ansible/ansible.cfg
+export ANSIBLE_CONFIG=~/ansible.cfg
 export ANSIBLE_LOG_PATH=$HOME/.ansible.log
 
 ansible-galaxy install -f -r ~/requirements.yml
