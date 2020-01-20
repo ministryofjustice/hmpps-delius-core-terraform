@@ -34,6 +34,8 @@
         { "name": "SPRING_LDAP_USERNAME", "value": "${ldap_username}" },
         { "name": "SPRING_LDAP_BASE", "value": "${ldap_base}" },
         { "name": "SPRING_LDAP_USEORACLEATTRIBUTES", "value": "false" },
+        { "name": "SPRING_REDIS_HOST", "value": "${redis_host}" },
+        { "name": "SPRING_REDIS_PORT", "value": "${redis_port}" },
 
         { "name": "OID_URLS", "value": "${ldap_url}" },
         { "name": "OID_USERNAME", "value": "${ldap_username}" },

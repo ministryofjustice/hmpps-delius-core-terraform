@@ -27,12 +27,15 @@ variable "default_umt_config" {
   description = "Default values to be overridden by umt_config"
   type = "map"
   default = {
-    version = "1.6.6"               # Application version
-    memory = 2048                   # Memory to assign to ECS container in MB
-    cpu = 1024                      # CPU to assign to ECS container
-    ecs_scaling_min_capacity = 3    # Minimum number of running tasks
-    ecs_scaling_max_capacity = 30   # Maximum number of running tasks
-    ecs_target_cpu = 60             # CPU target value for scaling of ECS tasks
+    version                       = "1.6.6"           # Application version
+    memory                        = 2048              # Memory to assign to ECS container in MB
+    cpu                           = 1024              # CPU to assign to ECS container
+    ecs_scaling_min_capacity      = 3                 # Minimum number of running tasks
+    ecs_scaling_max_capacity      = 30                # Maximum number of running tasks
+    ecs_target_cpu                = 60                # CPU target value for scaling of ECS tasks
+    redis_node_type               = "cache.m5.large"  # Instance type to use for the Redis token store cluster
+    redis_node_groups             = 4                 # Number of Redis shards (node groups) in the cluster
+    redis_replicas_per_node_group = 1                 # Number of read-only replicas for each shard (node group)
   }
 }
 

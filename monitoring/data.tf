@@ -36,6 +36,15 @@ data "terraform_remote_state" "ldap" {
   }
 }
 
+data "terraform_remote_state" "umt" {
+  backend = "s3"
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/application/umt/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "terraform_remote_state" "db" {
   backend = "s3"
   config {

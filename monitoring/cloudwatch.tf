@@ -140,3 +140,39 @@ resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_critical_alarm" {
     AutoScalingGroupName = "${data.terraform_remote_state.spg.asg["name"]}"
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "redis_cluster_cpu" {
+  alarm_name                = "${var.environment_name}-redis-cluster-cpu--warning"
+  alarm_description         = "OAuth token store CPU utilization exceeded 75%."
+  namespace                 = "AWS/ElastiCache"
+  statistic                 = "Average"
+  metric_name               = "CPUUtilization"
+  comparison_operator       = "GreaterThanThreshold"
+  threshold                 = "75"
+  evaluation_periods        = "1"
+  period                    = "60"
+  alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
+  ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
+  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
+  dimensions {
+    CacheClusterId = "${data.terraform_remote_state.umt.token_store["replication_group_id"]}"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "redis_cluster_memory" {
+  alarm_name                = "${var.environment_name}-redis-cluster-memory--warning"
+  alarm_description         = "OAuth token store free memory dropped below 60%."
+  namespace                 = "AWS/ElastiCache"
+  statistic                 = "Average"
+  metric_name               = "FreeableMemory"
+  comparison_operator       = "LessThanThreshold"
+  threshold                 = "60"
+  evaluation_periods        = "1"
+  period                    = "60"
+  alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
+  ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
+  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
+  dimensions {
+    CacheClusterId = "${data.terraform_remote_state.umt.token_store["replication_group_id"]}"
+  }
+}
