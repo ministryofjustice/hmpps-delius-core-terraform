@@ -18,7 +18,6 @@ resource "aws_elasticache_replication_group" "token_store_replication_group" {
   port                          = 6379
   automatic_failover_enabled    = true
   at_rest_encryption_enabled    = true
-  transit_encryption_enabled    = true
   apply_immediately             = "${var.environment_name != "delius-prod"}"
   tags                          = "${var.tags}"
   node_type                     = "${local.umt_config["redis_node_type"]}"
