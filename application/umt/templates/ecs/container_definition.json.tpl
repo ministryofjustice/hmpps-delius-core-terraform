@@ -25,6 +25,7 @@
     },
     "entryPoint": ["java","-Duser.timezone=Europe/London","-jar","/app/app.jar"],
     "environment": [
+        { "name": "SERVER_USE-FORWARD-HEADERS", "value": "true" },
         { "name": "SPRING_DATASOURCE_URL", "value": "${database_url}" },
         { "name": "SPRING_DATASOURCE_USERNAME", "value": "${database_username}" },
         { "name": "SPRING_DATASOURCE_TYPE", "value": "oracle.jdbc.pool.OracleDataSource" },
@@ -34,6 +35,9 @@
         { "name": "SPRING_LDAP_USERNAME", "value": "${ldap_username}" },
         { "name": "SPRING_LDAP_BASE", "value": "${ldap_base}" },
         { "name": "SPRING_LDAP_USEORACLEATTRIBUTES", "value": "false" },
+        { "name": "SPRING_REDIS_HOST", "value": "${redis_host}" },
+        { "name": "SPRING_REDIS_PORT", "value": "${redis_port}" },
+        { "name": "SPRING_REDIS_CLUSTER_NODES", "value": "${redis_host}:${redis_port}" },
 
         { "name": "OID_URLS", "value": "${ldap_url}" },
         { "name": "OID_USERNAME", "value": "${ldap_username}" },

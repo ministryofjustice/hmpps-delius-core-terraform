@@ -167,6 +167,8 @@ data "template_file" "container_definition" {
     ldap_url            = "${data.terraform_remote_state.ldap.ldap_protocol}://${data.terraform_remote_state.ldap.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.ldap_port}"
     ldap_username       = "${data.terraform_remote_state.ldap.ldap_bind_user}"
     ldap_base           = "${data.terraform_remote_state.ldap.ldap_base_users}"
+    redis_host          = "${aws_route53_record.token_store_private_dns.fqdn}"
+    redis_port          = "${aws_elasticache_replication_group.token_store_replication_group.port}"
     ndelius_log_level   = "${local.ansible_vars["ndelius_log_level"]}"
   }
 }
