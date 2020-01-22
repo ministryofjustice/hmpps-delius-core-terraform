@@ -34,3 +34,9 @@ variable "tags" {
   description = "Tags to be applied to resources"
   type        = "map"
 }
+
+variable "lambda_runtime" {
+  description = "Lambda runtime"
+  type        = "string"
+  default     = "nodejs12.x"
+}

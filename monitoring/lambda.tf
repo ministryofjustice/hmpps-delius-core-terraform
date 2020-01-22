@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "notify_slack" {
-  runtime          = "nodejs8.10"
+  runtime          = "${var.lambda_runtime}"
   role             = "${data.aws_iam_role.lambda_exec_role.arn}"
   filename         = "${data.archive_file.lambda_handler_zip.output_path}"
   function_name    = "${local.lambda_name}"
