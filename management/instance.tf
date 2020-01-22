@@ -11,8 +11,8 @@ resource "aws_instance" "management_server" {
   tags                        = "${merge(var.tags, map("Name", "${data.terraform_remote_state.vpc.environment_name}-management"))}"
   vpc_security_group_ids = [
     "${data.terraform_remote_state.vpc_security_groups.sg_ssh_bastion_in_id}",
+    "${data.terraform_remote_state.vpc_security_groups.sg_management_server_id}",
     "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
-    "${data.terraform_remote_state.delius_core_security_groups.sg_management_id}",
   ]
   root_block_device = {
     delete_on_termination = true
