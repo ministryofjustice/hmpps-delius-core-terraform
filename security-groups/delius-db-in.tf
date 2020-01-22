@@ -68,13 +68,22 @@ resource "aws_security_group_rule" "db_to_db_ssh_in" {
   description       = "Inter db ssh comms"
 }
 
+resource "aws_security_group_rule" "management_db_out" {
+  security_group_id        = "${data.terraform_remote_state.network_security_groups.sg_management_server_id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${aws_security_group.delius_db_in.id}"
+  description              = "Delius DB out"
+}
 resource "aws_security_group_rule" "management_db_in" {
   security_group_id        = "${aws_security_group.delius_db_in.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "1521"
   to_port                  = "1521"
-  source_security_group_id = "${aws_security_group.management_server.id}"
+  source_security_group_id = "${data.terraform_remote_state.network_security_groups.sg_management_server_id}"
   description              = "Management server in"
 }
 
