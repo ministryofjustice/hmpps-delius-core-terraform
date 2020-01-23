@@ -40,7 +40,10 @@ resource "aws_ecs_service" "service" {
       data.terraform_remote_state.vpc.vpc_private-subnet-az2,
       data.terraform_remote_state.vpc.vpc_private-subnet-az3,
     )}"]
-    security_groups = ["${data.terraform_remote_state.delius_core_security_groups.sg_aptracker_api_id}"]
+    security_groups = [
+      "${data.terraform_remote_state.delius_core_security_groups.sg_umt_auth_id}",
+      "${data.terraform_remote_state.delius_core_security_groups.sg_aptracker_api_id}"
+    ]
   }
   depends_on = ["aws_iam_role.task"]
   lifecycle {

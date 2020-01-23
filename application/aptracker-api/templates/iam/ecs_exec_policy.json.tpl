@@ -24,7 +24,8 @@
         "kms:Decrypt"
       ],
       "Resource": [
-        "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password",
+        "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/aptracker_user",
+        "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/aptracker_password",
         "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password",
         "arn:aws:kms:${region}:${aws_account_id}:alias/aws/ssm"
       ]

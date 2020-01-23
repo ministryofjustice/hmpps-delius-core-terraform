@@ -31,9 +31,8 @@
         { "name": "SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT", "value": "org.hibernate.dialect.Oracle10gDialect" },
         { "name": "SPRING_JPA_HIBERNATE_DDL-AUTO", "value": "none" },
 
-        { "name": "SPRING_LDAP_URLS", "value": "${ldap_url}" },
-        { "name": "SPRING_LDAP_USERNAME", "value": "${ldap_username}" },
-        { "name": "SPRING_LDAP_BASE", "value": "${ldap_base}" },
+        { "name": "SECURITY_OAUTH2_RESOURCE_ID", "value": "NDelius" },
+        { "name": "SECURITY_OAUTH2_RESOURCE_TOKEN-INFO-URI", "value": "${oauth_token_uri}" },
 
         { "name": "LOGGING_LEVEL_UK_GOV_JUSTICE", "value": "${log_level}" }
     ],
@@ -43,8 +42,12 @@
             "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password"
         },
         {
-            "name": "SPRING_LDAP_PASSWORD",
-            "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password"
+            "name": "SECURITY_OAUTH2_CLIENT_CLIENT-ID",
+            "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/aptracker_user"
+        },
+        {
+            "name": "SECURITY_OAUTH2_CLIENT_CLIENT-SECRET",
+            "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/apacheds/apacheds/aptracker_password"
         }
     ]
 }]

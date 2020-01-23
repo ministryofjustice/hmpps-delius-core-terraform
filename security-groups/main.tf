@@ -41,6 +41,16 @@ data "terraform_remote_state" "network_security_groups" {
   }
 }
 
+data "terraform_remote_state" "persistent_eip" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "persistent-eip/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 #-------------------------------------------------------------
 ### Getting the shared oracle-db-operation security groups
 #-------------------------------------------------------------
@@ -159,6 +169,18 @@ locals {
     "${local.windows_slave_public_ip}",
     "${local.bastion_public_ip}"
   )}"
+
+  external_delius_lb_cidr_blocks = [
+    "${data.terraform_remote_state.persistent_eip.delius_ndelius_az1_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_ndelius_az2_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_ndelius_az3_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_interface_az1_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_interface_az2_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_interface_az3_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_spg_az1_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_spg_az2_lb_eip.public_ip}/32",
+    "${data.terraform_remote_state.persistent_eip.delius_spg_az3_lb_eip.public_ip}/32",
+  ]
 
   azure_community_proxy_source = "${var.azure_community_proxy_source}"
   azure_oasys_proxy_source = "${var.azure_oasys_proxy_source}"

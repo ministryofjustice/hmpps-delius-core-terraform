@@ -153,12 +153,11 @@ data "template_file" "container_definition" {
     memory          = "${local.aptracker_api_config["memory"]}"
     cpu             = "${local.aptracker_api_config["cpu"]}"
 
-    log_group_name      = "${var.environment_name}/${local.app_name}"
-    database_url        = "${data.terraform_remote_state.database.jdbc_failover_url}"
-    database_username   = "delius_app_schema"
-    ldap_url            = "${data.terraform_remote_state.ldap.ldap_protocol}://${data.terraform_remote_state.ldap.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.ldap_port}"
-    ldap_username       = "${data.terraform_remote_state.ldap.ldap_bind_user}"
-    ldap_base           = "${data.terraform_remote_state.ldap.ldap_base_users}"
-    log_level           = "${local.aptracker_api_config["log_level"]}"
+    log_group_name    = "${var.environment_name}/${local.app_name}"
+    log_level         = "${local.aptracker_api_config["log_level"]}"
+
+    database_url      = "${data.terraform_remote_state.database.jdbc_failover_url}"
+    database_username = "delius_app_schema"
+    oauth_token_uri   = "https://${data.terraform_remote_state.ndelius.public_fqdn_ndelius_wls_external}/umt/oauth/check_token"
   }
 }
