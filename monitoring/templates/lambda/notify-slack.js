@@ -15,7 +15,7 @@ exports.handler = function(event, context) {
     if (eventMessage.NewStateValue === "INSUFFICIENT_DATA") severity = "insufficient data";
 
     let icon_emoji = ":question:";
-    if (severity === "ok")       icon_emoji = ":thumbsup:";
+    if (severity === "ok")       icon_emoji = ":yep:";
     if (severity === "warning")  icon_emoji = ":warning:";
     if (severity === "critical") icon_emoji = ":siren:";
     if (severity === "fatal")    icon_emoji = ":alert:";
@@ -23,7 +23,7 @@ exports.handler = function(event, context) {
     let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Environment: ${environment_name}"
-        + "\n> Description: " + eventMessage.AlarmDescription
+        + "\n> Description: *" + eventMessage.AlarmDescription + "*"
         + "\nhttps://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/" + eventMessage.AlarmName;
     // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
 
