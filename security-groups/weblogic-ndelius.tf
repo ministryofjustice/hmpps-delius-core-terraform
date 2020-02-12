@@ -140,6 +140,26 @@ resource "aws_security_group_rule" "ndelius_external_elb_egress_aptracker_api" {
   description              = "Out to Approved Premises Tracker API instances"
 }
 
+resource "aws_security_group_rule" "ndelius_external_elb_egress_gdpr_api" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = "${aws_security_group.gdpr_api.id}"
+  description              = "Out to GDPR API instances"
+}
+
+resource "aws_security_group_rule" "ndelius_external_elb_egress_gdpr_ui" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "80"
+  to_port                  = "80"
+  source_security_group_id = "${aws_security_group.gdpr_ui.id}"
+  description              = "Out to GDPR UI instances"
+}
+
 ################################################################################
 ## Instances
 ################################################################################

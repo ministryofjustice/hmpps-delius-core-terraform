@@ -77,6 +77,7 @@ resource "aws_security_group_rule" "management_db_out" {
   source_security_group_id = "${aws_security_group.delius_db_in.id}"
   description              = "Delius DB out"
 }
+
 resource "aws_security_group_rule" "management_db_in" {
   security_group_id        = "${aws_security_group.delius_db_in.id}"
   type                     = "ingress"
@@ -156,4 +157,15 @@ resource "aws_security_group_rule" "newtech_offender_api_in" {
   to_port                  = "1521"
   source_security_group_id = "${aws_security_group.newtech_offenderapi_out.id}"
   description              = "New Tech Offender API In"
+}
+
+# Allow Delius GDPR API in
+resource "aws_security_group_rule" "gdpr_api_db_in" {
+  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${aws_security_group.gdpr_api.id}"
+  description              = "Delius GDPR API In"
 }

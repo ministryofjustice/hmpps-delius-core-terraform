@@ -80,6 +80,27 @@ resource "aws_security_group_rule" "interface_external_elb_egress_umt" {
   description              = "Out to UMT instances"
 }
 
+resource "aws_security_group_rule" "interface_external_elb_egress_gdpr_api" {
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = "${aws_security_group.gdpr_api.id}"
+  description              = "Out to GDPR API instances"
+}
+
+resource "aws_security_group_rule" "interface_external_elb_egress_gdpr_ui" {
+  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "80"
+  to_port                  = "80"
+  source_security_group_id = "${aws_security_group.gdpr_ui.id}"
+  description              = "Out to GDPR UI instances"
+}
+
+
 resource "aws_security_group_rule" "interface_lb_self_ingress" {
   security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
   type              = "ingress"
