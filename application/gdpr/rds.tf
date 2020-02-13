@@ -50,7 +50,7 @@ resource "aws_db_instance" "primary" {
   maintenance_window        = "${local.gdpr_config["db_maintenance_window"]}"
   backup_retention_period   = "${local.gdpr_config["db_backup_retention_period"]}"
   backup_window             = "${local.gdpr_config["db_backup_window"]}"
-  final_snapshot_identifier = "${var.environment_name}-final-snapshot-${md5(timestamp())}"
+  final_snapshot_identifier = "${var.environment_name}-final-snapshot"
 
   tags = "${merge(var.tags, map("Name", "${local.app_name}-primary-db"))}"
 }
