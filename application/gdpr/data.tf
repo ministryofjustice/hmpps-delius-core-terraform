@@ -139,14 +139,14 @@ data "template_file" "api_container_definition" {
     project_name     = "${var.project_name}"
 
     # container properties
-    container_name  = "${local.api_name}"
-    image_url       = "${local.gdpr_config["api_image_url"]}:${local.gdpr_config["api_version"]}"
-    memory          = "${local.gdpr_config["api_memory"]}"
-    cpu             = "${local.gdpr_config["api_cpu"]}"
+    container_name = "${local.api_name}"
+    image_url      = "${local.gdpr_config["api_image_url"]}:${local.gdpr_config["api_version"]}"
+    memory         = "${local.gdpr_config["api_memory"]}"
+    cpu            = "${local.gdpr_config["api_cpu"]}"
 
     # logging
-    log_group_name    = "${var.environment_name}/${local.app_name}"
-    log_level         = "${local.gdpr_config["log_level"]}"
+    log_group_name = "${var.environment_name}/${local.app_name}"
+    log_level      = "${local.gdpr_config["log_level"]}"
 
     # application config
     delius_database_url         = "${data.terraform_remote_state.database.jdbc_failover_url}"
@@ -160,5 +160,30 @@ data "template_file" "api_container_definition" {
     cron_eligiblefordeletion    = "${local.gdpr_config["cron_eligiblefordeletion"]}"
     cron_deleteoffenders        = "${local.gdpr_config["cron_deleteoffenders"]}"
     cron_destructionlogclearing = "${local.gdpr_config["cron_destructionlogclearing"]}"
+  }
+}
+
+data "template_file" "ui_container_definition" {
+  template = "${file("templates/ecs/ui_container_definition.json.tpl")}"
+  vars {
+    # environment
+    region           = "${var.region}"
+    aws_account_id   = "${data.aws_caller_identity.current.account_id}"
+    environment_name = "${var.environment_name}"
+    project_name     = "${var.project_name}"
+
+    # container properties
+    container_name = "${local.ui_name}"
+    image_url      = "${local.gdpr_config["ui_image_url"]}:${local.gdpr_config["ui_version"]}"
+    memory         = "${local.gdpr_config["ui_memory"]}"
+    cpu            = "${local.gdpr_config["ui_cpu"]}"
+
+    # logging
+    log_group_name = "${var.environment_name}/${local.app_name}"
+    log_level      = "${local.gdpr_config["log_level"]}"
+
+    # application config
+    nginx_config   = "${replace(file("nginx/default.conf"), "\n", "")}"
+    angular_config = "${replace(file("angular/config.js"), "\n", "")}"
   }
 }

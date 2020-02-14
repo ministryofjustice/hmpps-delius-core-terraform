@@ -88,7 +88,7 @@ resource "aws_lb_target_group" "gdpr_api_target_group" {
   tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-gdpr-api"))}"
   health_check {
     protocol  = "HTTP"
-    path      = "/gdpr/api/actuator/health"
+    path      = "/gdpr/api/actuator/info"
     matcher   = "200-399"
   }
 }
