@@ -295,6 +295,14 @@ pipeline {
                         }
                     }
                 }
+
+                stage('Delius GDPR') {
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'application/gdpr')
+                        }
+                    }
+                }
             }
         }
 
