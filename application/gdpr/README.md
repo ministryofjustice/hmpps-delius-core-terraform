@@ -10,3 +10,7 @@ It also defines an RDS Postgresql database used for storing retention and deleti
 * `ui-service.tf` - ECS service, task definition, scaling policies and service registry entry for the Front-end (UI)
 * `iam.tf` - IAM role and instance profile attached to the EC2 instances
 * `rds.tf` - An RDS database instance
+
+## Diagram
+
+![High-level diagram](diagram.png)
