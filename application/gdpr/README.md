@@ -13,4 +13,4 @@ It also defines an RDS Postgresql database used for storing retention and deleti
 
 ## Diagram
 
-![High-level diagram](diagram.png)
+![High-level diagram](diagram.svg)
