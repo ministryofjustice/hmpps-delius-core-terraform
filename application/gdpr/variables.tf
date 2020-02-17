@@ -53,6 +53,7 @@ variable "default_gdpr_config" {
     target_cpu                  = 60                     # CPU target value for scaling of ECS tasks
     log_level                   = "INFO"                 # Application log-level
   }
+}
 
 variable "tags" {
   description = "Tags to be applied to resources"
