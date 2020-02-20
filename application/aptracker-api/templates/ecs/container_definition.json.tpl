@@ -23,7 +23,7 @@
             "awslogs-stream-prefix": "ecs-${container_name}"
         }
     },
-    "entryPoint": ["java","-Duser.timezone=Europe/London","-jar","/app/app.jar"],
+    "entryPoint": ["java","-Duser.timezone=Europe/London","-Dui.config.redirectUri=/aptracker-api/errors","-jar","/app/app.jar"],
     "environment": [
         { "name": "SPRING_DATASOURCE_URL", "value": "${database_url}" },
         { "name": "SPRING_DATASOURCE_USERNAME", "value": "${database_username}" },
