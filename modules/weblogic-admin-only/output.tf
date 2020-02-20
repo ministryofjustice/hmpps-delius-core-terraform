@@ -46,3 +46,11 @@ output "umt_targetgroup_arn" {
 output "aptracker_api_targetgroup_arn" {
   value = "${aws_lb_target_group.aptracker_api_target_group.arn}"
 }
+
+output "gdpr_api_targetgroup_arn" {
+  value = "${aws_lb_target_group.gdpr_api_target_group.arn}"
+}
+
+output "gdpr_ui_targetgroup_arn" {
+  value = "${aws_lb_target_group.gdpr_ui_target_group.arn}"
+}

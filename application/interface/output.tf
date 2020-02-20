@@ -41,3 +41,11 @@ output "umt_targetgroup_arn" {
 output "aptracker_api_targetgroup_arn" {
   value = "${module.interface.aptracker_api_targetgroup_arn}"
 }
+
+output "gdpr_api_targetgroup_arn" {
+  value = "${module.interface.gdpr_api_targetgroup_arn}"
+}
+
+output "gdpr_ui_targetgroup_arn" {
+  value = "${module.interface.gdpr_ui_targetgroup_arn}"
+}
