@@ -38,6 +38,7 @@
         { "name": "SPRING_REDIS_HOST", "value": "${redis_host}" },
         { "name": "SPRING_REDIS_PORT", "value": "${redis_port}" },
         { "name": "SPRING_REDIS_CLUSTER_NODES", "value": "${redis_host}:${redis_port}" },
+        { "name": "REDIS_CONFIGURE_NO-OP", "value": "true" },
 
         { "name": "OID_URLS", "value": "${ldap_url}" },
         { "name": "OID_USERNAME", "value": "${ldap_username}" },
