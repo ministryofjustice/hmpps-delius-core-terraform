@@ -5,3 +5,7 @@ variable key_name {
 variable tags {
   type = "map"
 }
+
+variable "environment_name" {
+  type = "string"
+}
