@@ -148,6 +148,8 @@ pipeline {
     parameters {
         string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
         string(name: 'DCORE_BRANCH',  description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
+        booleanParam(name: 'deploy_DatabaseStandBy1', defaultValue: true, description: 'Deploy/update Database StandBy 1?')
+        booleanParam(name: 'deploy_DatabaseStandBy2', defaultValue: true, description: 'Deploy/update Database StandBy 2?')
         booleanParam(name: 'deploy_DATABASE_HA', defaultValue: true, description: 'Deploy/update Database High Availibilty?')
     }
 
