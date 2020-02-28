@@ -200,6 +200,24 @@ pipeline {
                     }
                 }
 
+                stage('Delius Database StandBy1') {
+                    when { expression { return params.deploy_DatabaseStandBy1 } }
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1')
+                        }
+                    }
+                }
+
+                stage('Delius Database StandBy2') {
+                    when { expression { return params.deploy_DatabaseStandBy2 } }
+                    steps {
+                        script {
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2')
+                        }
+                    }
+                }
+
                 stage('Delius Application LDAP') {
                     steps {
                         script {
