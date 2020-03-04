@@ -53,8 +53,8 @@ resource "aws_ecs_service" "ui_service" {
 
 # ECS autoscaling
 resource "aws_appautoscaling_target" "ui_scaling_target" {
-  min_capacity       = "${local.gdpr_config["scaling_min_capacity"]}"
-  max_capacity       = "${local.gdpr_config["scaling_max_capacity"]}"
+  min_capacity       = "${local.gdpr_config["ui_scaling_min_capacity"]}"
+  max_capacity       = "${local.gdpr_config["ui_scaling_max_capacity"]}"
   resource_id        = "service/${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_name}/${aws_ecs_service.ui_service.name}"
   role_arn           = "${aws_iam_role.exec.arn}"
   scalable_dimension = "ecs:service:DesiredCount"
@@ -77,7 +77,7 @@ resource "aws_appautoscaling_policy" "ui_scaling_policy" {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value             = "${local.gdpr_config["target_cpu"]}"
+    target_value             = "${local.gdpr_config["ui_target_cpu"]}"
   }
 }
 
