@@ -5,6 +5,8 @@
 
 ## important ignore due to centralised config
 **/env_configs/*
+./env_configs/
+env_configs/
 **/tmp_config/*
 
 .idea/
