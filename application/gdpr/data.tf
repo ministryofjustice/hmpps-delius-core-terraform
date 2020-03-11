@@ -151,7 +151,7 @@ data "template_file" "api_container_definition" {
     # application config
     delius_database_url          = "${data.terraform_remote_state.database.jdbc_failover_url}"
     delius_database_username     = "gdpr_pool"
-    delius_database_password_key = "/delius-database/db/gdpr_pool_password"
+    delius_database_password_key = "delius-database/db/gdpr_pool_password"
     gdpr_database_url            = "jdbc:postgresql://${aws_db_instance.primary.endpoint}/${aws_db_instance.primary.name}"
     gdpr_database_username       = "${aws_db_instance.primary.username}"
     oauth_token_uri              = "https://${data.terraform_remote_state.ndelius.public_fqdn_ndelius_wls_external}/umt/oauth/check_token"
