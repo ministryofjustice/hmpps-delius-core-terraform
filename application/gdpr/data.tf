@@ -149,17 +149,18 @@ data "template_file" "api_container_definition" {
     log_level      = "${local.gdpr_config["log_level"]}"
 
     # application config
-    delius_database_url         = "${data.terraform_remote_state.database.jdbc_failover_url}"
-    delius_database_username    = "delius_app_schema"
-    gdpr_database_url           = "jdbc:postgresql://${aws_db_instance.primary.endpoint}/${aws_db_instance.primary.name}"
-    gdpr_database_username      = "${aws_db_instance.primary.username}"
-    oauth_token_uri             = "https://${data.terraform_remote_state.ndelius.public_fqdn_ndelius_wls_external}/umt/oauth/check_token"
-    cron_identifyduplicates     = "${local.gdpr_config["cron_identifyduplicates"]}"
-    cron_retainedoffenders      = "${local.gdpr_config["cron_retainedoffenders"]}"
-    cron_retainedoffendersiicsa = "${local.gdpr_config["cron_retainedoffendersiicsa"]}"
-    cron_eligiblefordeletion    = "${local.gdpr_config["cron_eligiblefordeletion"]}"
-    cron_deleteoffenders        = "${local.gdpr_config["cron_deleteoffenders"]}"
-    cron_destructionlogclearing = "${local.gdpr_config["cron_destructionlogclearing"]}"
+    delius_database_url          = "${data.terraform_remote_state.database.jdbc_failover_url}"
+    delius_database_username     = "gdpr_pool"
+    delius_database_password_key = "/delius-database/db/gdpr_pool_password"
+    gdpr_database_url            = "jdbc:postgresql://${aws_db_instance.primary.endpoint}/${aws_db_instance.primary.name}"
+    gdpr_database_username       = "${aws_db_instance.primary.username}"
+    oauth_token_uri              = "https://${data.terraform_remote_state.ndelius.public_fqdn_ndelius_wls_external}/umt/oauth/check_token"
+    cron_identifyduplicates      = "${local.gdpr_config["cron_identifyduplicates"]}"
+    cron_retainedoffenders       = "${local.gdpr_config["cron_retainedoffenders"]}"
+    cron_retainedoffendersiicsa  = "${local.gdpr_config["cron_retainedoffendersiicsa"]}"
+    cron_eligiblefordeletion     = "${local.gdpr_config["cron_eligiblefordeletion"]}"
+    cron_deleteoffenders         = "${local.gdpr_config["cron_deleteoffenders"]}"
+    cron_destructionlogclearing  = "${local.gdpr_config["cron_destructionlogclearing"]}"
   }
 }
 
