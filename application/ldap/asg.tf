@@ -36,7 +36,6 @@ data "template_file" "user_data" {
     import_users_ldif             = "${local.ansible_vars_apacheds["import_users_ldif"]}"
     import_users_ldif_base_users  = "${local.ansible_vars_apacheds["import_users_ldif_base_users"]}"
     sanitize_oid_ldif             = "${local.ansible_vars_apacheds["sanitize_oid_ldif"]}"
-    perf_test_users               = "${local.ansible_vars_apacheds["perf_test_users"]}"
   }
 }
 
