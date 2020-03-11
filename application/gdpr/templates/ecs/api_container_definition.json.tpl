@@ -39,7 +39,7 @@
     ],
     "secrets": [
         { "name": "SPRING_DATASOURCE_PASSWORD", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/delius-gdpr-database/db/admin_password" },
-        { "name": "SPRING_SECOND-DATASOURCE_PASSWORD", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password" },
+        { "name": "SPRING_SECOND-DATASOURCE_PASSWORD", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/${delius_database_password_key}" },
         { "name": "SECURITY_OAUTH2_CLIENT_CLIENT-SECRET", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/gdpr/api/client_secret" }
     ]
 }]
