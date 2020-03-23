@@ -33,6 +33,16 @@ resource "aws_security_group_rule" "gdpr_api_out_to_delius_db" {
   description              = "Delius DB Out"
 }
 
+resource "aws_security_group_rule" "gdpr_api_out_to_alfresco" {
+  security_group_id        = "${aws_security_group.gdpr_api.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 443
+  to_port                  = 443
+  source_security_group_id = "${data.terraform_remote_state.network_security_groups.sg_alfresco_external_lb_in}"
+  description              = "Alfresco Out"
+}
+
 resource "aws_security_group_rule" "gdpr_api_in_from_ndelius_lb" {
   security_group_id        = "${aws_security_group.gdpr_api.id}"
   type                     = "ingress"

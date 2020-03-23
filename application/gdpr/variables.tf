@@ -34,6 +34,18 @@ variable "default_gdpr_config" {
   }
 }
 
+variable "ansible_vars" {
+  description = "Ansible config - used for pulling the Alfresco host"
+  type = "map"
+  default = {}
+}
+
+variable "default_ansible_vars" {
+  description = "Default values to be overridden by ansible_vars."
+  type = "map"
+  default = {}
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = "map"
