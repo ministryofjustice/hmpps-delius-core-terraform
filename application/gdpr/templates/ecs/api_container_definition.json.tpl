@@ -26,6 +26,8 @@
         { "name": "SPRING_JPA_HIBERNATE_DDL-AUTO", "value": "update" },
         { "name": "SPRING_BATCH_JOB_ENABLED", "value": "false" },
         { "name": "SPRING_BATCH_INITIALIZE-SCHEMA", "value": "always" },
+        { "name": "ALFRESCO_DMS-PROTOCOL", "value": "https" },
+        { "name": "ALFRESCO_DMS-HOST", "value": "${alfresco_host}" },
         { "name": "SCHEDULE_IDENTIFYDUPLICATES", "value": "${cron_identifyduplicates}" },
         { "name": "SCHEDULE_RETAINEDOFFENDERS", "value": "${cron_retainedoffenders}" },
         { "name": "SCHEDULE_RETAINEDOFFENDERSIICSA", "value": "${cron_retainedoffendersiicsa}" },
