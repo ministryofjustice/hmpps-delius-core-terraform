@@ -42,6 +42,7 @@ resource "aws_ecs_service" "api_service" {
       data.terraform_remote_state.vpc.vpc_private-subnet-az3,
     )}"]
     security_groups = [
+      "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
       "${data.terraform_remote_state.delius_core_security_groups.sg_umt_auth_id}",
       "${data.terraform_remote_state.delius_core_security_groups.sg_gdpr_api_id}"
     ]
