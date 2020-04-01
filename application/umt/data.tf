@@ -97,6 +97,16 @@ data "terraform_remote_state" "spg" {
   }
 }
 
+data "terraform_remote_state" "pwm" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/pwm/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "aws_route53_zone" "public" {
   zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
 }
@@ -169,6 +179,7 @@ data "template_file" "container_definition" {
     ldap_base           = "${data.terraform_remote_state.ldap.ldap_base_users}"
     redis_host          = "${aws_route53_record.token_store_private_dns.fqdn}"
     redis_port          = "${aws_elasticache_replication_group.token_store_replication_group.port}"
+    password_reset_url  = "https://${data.terraform_remote_state.pwm.public_fqdn_pwm}/public/forgottenpassword"
     ndelius_log_level   = "${local.ansible_vars["ndelius_log_level"]}"
   }
 }
