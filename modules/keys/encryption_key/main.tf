@@ -19,7 +19,8 @@ resource "aws_kms_key" "kms" {
         "Effect": "Allow",
         "Principal": {"AWS": [
           "arn:aws:iam::${local.aws_account}:root",
-          "arn:aws:iam::${local.aws_account}:role/${var.environment_name}-start-ec2-scheduler-lambda"
+          "arn:aws:iam::${local.aws_account}:role/${var.environment_name}-start-ec2-phase1-scheduler-lambda",
+          "arn:aws:iam::${local.aws_account}:role/${var.environment_name}-start-ec2-phase2-scheduler-lambda"
         ]},
         "Action": "kms:*",
         "Resource": "*"
