@@ -40,13 +40,13 @@
         { "name": "SPRING_REDIS_PORT", "value": "${redis_port}" },
         { "name": "SPRING_REDIS_CLUSTER_NODES", "value": "${redis_host}:${redis_port}" },
         { "name": "REDIS_CONFIGURE_NO-OP", "value": "true" },
+        { "name": "DELIUS_PASSWORD-RESET_URL", "value": "${password_reset_url}" },
+        { "name": "LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS", "value": "${ndelius_log_level}" },
 
         { "name": "OID_URLS", "value": "${ldap_url}" },
         { "name": "OID_USERNAME", "value": "${ldap_username}" },
         { "name": "OID_BASE", "value": "${ldap_base}" },
-        { "name": "OID_USEORACLEATTRIBUTES", "value": "false" },
-
-        { "name": "LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS", "value": "${ndelius_log_level}" }
+        { "name": "OID_USEORACLEATTRIBUTES", "value": "false" }
     ],
     "secrets": [
         {
