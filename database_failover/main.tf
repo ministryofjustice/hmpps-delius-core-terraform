@@ -111,6 +111,6 @@ data "aws_ami" "centos_oracle_db" {
 locals {
   tags = "${merge(
     var.tags,
-    map("autostop-${var.environment_type}", "ignored")
+    map("autostop-${var.environment_type}", "Phase1")
   )}"
 }
