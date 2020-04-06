@@ -2,47 +2,42 @@ data "template_file" "user_data" {
   template = "${file("${path.module}/user_data/user_data.sh")}"
 
   vars {
-    project_name                  = "${var.project_name}"
-    env_identifier                = "${var.environment_identifier}"
-    short_env_identifier          = "${var.short_environment_identifier}"
-    region                        = "${var.region}"
-    app_name                      = "ldap"
-    route53_sub_domain            = "${var.environment_name}"
-    environment_name              = "${var.environment_name}"
-    private_domain                = "${data.terraform_remote_state.vpc.private_zone_name}"
-    account_id                    = "${data.terraform_remote_state.vpc.vpc_account_id}"
-    bastion_inventory             = "${data.terraform_remote_state.vpc.bastion_inventory}"
+    project_name          = "${var.project_name}"
+    env_identifier        = "${var.environment_identifier}"
+    short_env_identifier  = "${var.short_environment_identifier}"
+    region                = "${var.region}"
+    app_name              = "ldap"
+    route53_sub_domain    = "${var.environment_name}"
+    environment_name      = "${var.environment_name}"
+    private_domain        = "${data.terraform_remote_state.vpc.private_zone_name}"
+    account_id            = "${data.terraform_remote_state.vpc.vpc_account_id}"
+    bastion_inventory     = "${data.terraform_remote_state.vpc.bastion_inventory}"
 
-    app_bootstrap_name            = "ldap"
-    app_bootstrap_src             = "https://github.com/ministryofjustice/hmpps-delius-core-ldap-bootstrap"
-    app_bootstrap_version         = "master"
-# Ansible vars:
-    workspace                     = "${local.ansible_vars_apacheds["workspace"]}"
+    app_bootstrap_name    = "ldap"
+    app_bootstrap_src     = "https://github.com/ministryofjustice/hmpps-delius-core-ldap-bootstrap"
+    app_bootstrap_version = "feature/use-ldap-config"
 
-    # AWS
-    cldwatch_log_group            = "${var.environment_name}/ldap"
-    s3_dependencies_bucket        = "${substr("${var.dependencies_bucket_arn}", 13, -1)}"
-    s3_backups_bucket             = "${data.terraform_remote_state.s3-ldap-backups.s3_ldap_backups.name}"
-
-    # LDAP
-    ldap_protocol                 = "${local.ansible_vars_apacheds["ldap_protocol"]}"
-    ldap_port                     = "${var.ldap_ports["ldap"]}"
-    bind_user                     = "${local.ansible_vars_apacheds["bind_user"]}"
-    # bind_password               = "/TG_ENVIRONMENT_NAME/TG_PROJECT_NAME/apacheds/apacheds/ldap_admin_password"
-    base_root                     = "${local.ansible_vars_apacheds["base_root"]}"
-    base_users                    = "${local.ansible_vars_apacheds["base_users"]}"
-
-    # Data import
-    import_users_ldif             = "${local.ansible_vars_apacheds["import_users_ldif"]}"
-    import_users_ldif_base_users  = "${local.ansible_vars_apacheds["import_users_ldif_base_users"]}"
-    sanitize_oid_ldif             = "${local.ansible_vars_apacheds["sanitize_oid_ldif"]}"
+    ldap_port             = "${local.ldap_config["port"]}"
+    bind_user             = "${local.ldap_config["bind_user"]}"
+    base_root             = "${local.ldap_config["base_root"]}"
+    base_users            = "${local.ldap_config["base_users"]}"
+    base_service_users    = "${local.ldap_config["base_service_users"]}"
+    base_roles            = "${local.ldap_config["base_roles"]}"
+    base_role_groups      = "${local.ldap_config["base_role_groups"]}"
+    base_groups           = "${local.ldap_config["base_groups"]}"
+    log_level             = "${local.ldap_config["log_level"]}"
+    cldwatch_log_group    = "${var.environment_name}/ldap"
+    s3_backups_bucket     = "${data.terraform_remote_state.s3-ldap-backups.s3_ldap_backups.name}"
+    backup_frequency      = "${local.ldap_config["backup_frequency"]}"
+    query_time_limit      = "${local.ldap_config["query_time_limit"]}"
+    db_max_size           = "${local.ldap_config["db_max_size"]}"
   }
 }
 
 resource "aws_launch_configuration" "launch_cfg" {
   name_prefix                 = "${var.environment_name}-ldap-launch-cfg-"
   image_id                    = "${data.aws_ami.centos.id}"
-  instance_type               = "${var.instance_type_ldap}"
+  instance_type               = "${local.ldap_config["instance_type"]}"
   iam_instance_profile        = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
   key_name                    = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   security_groups             = [
@@ -56,9 +51,9 @@ resource "aws_launch_configuration" "launch_cfg" {
   ebs_optimized               = "false"
 
   root_block_device {
-    volume_type = "${var.ldap_disk_config["volume_type"]}"
-    volume_size = "${var.ldap_disk_config["volume_size"]}"
-    iops        = "${var.ldap_disk_config["iops"]}"
+    volume_type = "${local.ldap_config["disk_volume_type"]}"
+    volume_size = "${local.ldap_config["disk_volume_size"]}"
+    iops        = "${local.ldap_config["disk_iops"]}"
   }
 
   lifecycle {
@@ -74,16 +69,21 @@ resource "aws_autoscaling_group" "asg" {
     data.terraform_remote_state.vpc.vpc_private-subnet-az2,
     data.terraform_remote_state.vpc.vpc_private-subnet-az3,
   )}"]
-  min_size             = "1"
-  desired_capacity     = "3"
-  max_size             = "6"
+  min_size             = "${local.ldap_config["instance_count"]}"
+  desired_capacity     = "${local.ldap_config["instance_count"]}"
+  max_size             = "${local.ldap_config["instance_count"]}"
   launch_configuration = "${aws_launch_configuration.launch_cfg.id}"
   load_balancers       = ["${aws_elb.lb.id}"]
   health_check_type    = "EC2"
-  health_check_grace_period = "21600" # 6 hours, to allow time for data to be loaded
   enabled_metrics      = [
-    "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupPendingInstances",
-    "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
+    "GroupMinSize",
+    "GroupMaxSize",
+    "GroupDesiredCapacity",
+    "GroupInServiceInstances",
+    "GroupPendingInstances",
+    "GroupStandbyInstances",
+    "GroupTerminatingInstances",
+    "GroupTotalInstances"
   ]
   lifecycle {
     create_before_destroy = true
@@ -97,7 +97,7 @@ resource "aws_autoscaling_group" "asg" {
       propagate_at_launch = true
     },
     {
-      key                 = "ndelius_version"
+      key                 = "rbac_version"
       value               = "None deployed"
       propagate_at_launch = true
     }

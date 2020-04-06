@@ -35,26 +35,17 @@ variable "ldap_ports" {
   description = "Map of the ports that the ldap ports"
 }
 
-variable "instance_type_ldap" {
-  description = "The ec2 instance type"
-}
-
 variable "dependencies_bucket_arn" {
   description = "S3 bucket arn for dependencies"
 }
 
-variable "default_ansible_vars_apacheds" {
-  description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars_apacheds"
+variable "default_ldap_config" {
+  description = "Default LDAP configuration. Overridden by ldap_config."
   type        = "map"
 }
 
-variable "ansible_vars_apacheds" {
-  description = "Ansible vars for user_data script"
-  type        = "map"
-}
-
-variable "ldap_disk_config" {
-  description = "Configuration for the LDAP EBS volume"
+variable "ldap_config" {
+  description = "LDAP configuration"
   type        = "map"
 }
 

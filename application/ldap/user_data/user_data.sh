@@ -64,29 +64,25 @@ EOF
 cat << EOF > ~/vars.yml
 ---
 
-region: "${region}"
-environment_name: "${environment_name}"
-project_name: "${project_name}"
-
-# AWS
-cldwatch_log_group: "${cldwatch_log_group}"
-s3_dependencies_bucket: "${s3_dependencies_bucket}"
-s3_backups_bucket: "${s3_backups_bucket}"
-
-# ApacheDS
-workspace: "${workspace}"
-
-# LDAP
-ldap_protocol: "${ldap_protocol}"
+# Connection
 ldap_port: "${ldap_port}"
 bind_user: "${bind_user}"
+# Structure
 base_root: "${base_root}"
 base_users: "${base_users}"
-
-# Data import
-import_users_ldif: "${import_users_ldif}"
-import_users_ldif_base_users: "${import_users_ldif_base_users}"
-sanitize_oid_ldif: ${sanitize_oid_ldif}
+base_service_users: "${base_service_users}"
+base_roles: "${base_roles}"
+base_role_groups: "${base_role_groups}"
+base_groups: "${base_groups}"
+# Logging
+log_level: "${log_level}"
+cldwatch_log_group: "${cldwatch_log_group}"
+# Backups
+s3_backups_bucket: "${s3_backups_bucket}"
+backup_frequency: "${backup_frequency}"
+# Performance/tuning
+query_time_limit: "${query_time_limit}"
+db_max_size: "${db_max_size}"
 
 # For user_update cron
 remote_user_filename: "${bastion_inventory}"
