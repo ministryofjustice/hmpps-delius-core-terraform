@@ -1,4 +1,13 @@
 # Shared NFS for the ActiveMQ persistence store
+
+#Overide autostop tag
+locals {
+  tags = "${merge(
+    var.tags,
+    map("autostop-${var.environment_type}", "Phase1")
+  )}"
+}
+
 module "activemq-nfs" {
   source                        = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//nfs-server"
   region                        = "${var.region}"
@@ -19,5 +28,5 @@ module "activemq-nfs" {
     "${data.terraform_remote_state.vpc.vpc_private-subnet-az2-availability_zone}",
     "${data.terraform_remote_state.vpc.vpc_private-subnet-az3-availability_zone}",
   ]
-  tags                          = "${var.tags}"
+  tags                          = "${local.tags}"
 }
