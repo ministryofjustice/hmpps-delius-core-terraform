@@ -7,19 +7,19 @@ output "ldap_port" {
 }
 
 output "ldap_protocol" {
-  value = "${local.ansible_vars_apacheds["ldap_protocol"]}"
+  value = "${local.ldap_config["protocol"]}"
 }
 
 output "ldap_base" {
-  value = "${local.ansible_vars_apacheds["base_root"]}"
+  value = "${local.ldap_config["base_root"]}"
 }
 
 output "ldap_base_users" {
-  value = "${local.ansible_vars_apacheds["base_users"]}"
+  value = "${local.ldap_config["base_users"]}"
 }
 
 output "ldap_bind_user" {
-  value = "${local.ansible_vars_apacheds["bind_user"]}"
+  value = "${local.ldap_config["bind_user"]}"
 }
 
 output "asg" {

@@ -1,6 +1,6 @@
 # LDAP
 
-Creates a private auto-scaling group containing a single centos instance that will be bootstrapped to run the National 
+Creates a private auto-scaling group containing instances that will be bootstrapped to run the National 
 Delius LDAP service.
 
 ## Resources
