@@ -47,6 +47,12 @@ resource "aws_appautoscaling_target" "scaling_target" {
   role_arn           = "${aws_iam_role.ecs.arn}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
+
+  # Use lifecycle rule as workaround for role_arn being changed every time due to
+  # role_arn being required field but AWS will always switch this to the auto created service role
+  lifecycle {
+    ignore_changes = "role_arn"
+  }
 }
 
 resource "aws_appautoscaling_policy" "scaling_policy" {
