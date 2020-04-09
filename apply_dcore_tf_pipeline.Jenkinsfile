@@ -90,12 +90,12 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     }
 }
 
-def confirm() {
+def confirm(message) {
     try {
         timeout(time: 15, unit: 'MINUTES') {
 
             env.Continue = input(
-                id: 'Proceed1', message: 'Apply plan?', parameters: [
+                id: 'Proceed1', message: message, parameters: [
                     [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Apply Terraform']
                 ]
             )
@@ -116,7 +116,7 @@ def do_terraform(config_dir, env_name, git_project, component) {
     plancode = plan_submodule(config_dir, env_name, git_project, component)
     if (plancode == "2") {
         if ("${confirmation}" == "true") {
-           confirm()
+           confirm('Apply changes to ' + component + '?')
         } else {
             env.Continue = true
         }
