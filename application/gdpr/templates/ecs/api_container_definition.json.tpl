@@ -26,6 +26,8 @@
         { "name": "SPRING_JPA_HIBERNATE_DDL-AUTO", "value": "update" },
         { "name": "SPRING_BATCH_JOB_ENABLED", "value": "false" },
         { "name": "SPRING_BATCH_INITIALIZE-SCHEMA", "value": "always" },
+        { "name": "ALFRESCO_DMS-PROTOCOL", "value": "https" },
+        { "name": "ALFRESCO_DMS-HOST", "value": "${alfresco_host}" },
         { "name": "SCHEDULE_IDENTIFYDUPLICATES", "value": "${cron_identifyduplicates}" },
         { "name": "SCHEDULE_RETAINEDOFFENDERS", "value": "${cron_retainedoffenders}" },
         { "name": "SCHEDULE_RETAINEDOFFENDERSIICSA", "value": "${cron_retainedoffendersiicsa}" },
@@ -39,7 +41,7 @@
     ],
     "secrets": [
         { "name": "SPRING_DATASOURCE_PASSWORD", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/delius-gdpr-database/db/admin_password" },
-        { "name": "SPRING_SECOND-DATASOURCE_PASSWORD", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/delius-database/db/delius_app_schema_password" },
+        { "name": "SPRING_SECOND-DATASOURCE_PASSWORD", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/${delius_database_password_key}" },
         { "name": "SECURITY_OAUTH2_CLIENT_CLIENT-SECRET", "valueFrom": "arn:aws:ssm:${region}:${aws_account_id}:parameter/${environment_name}/${project_name}/gdpr/api/client_secret" }
     ]
 }]

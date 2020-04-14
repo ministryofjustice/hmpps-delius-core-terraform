@@ -1,0 +1,2055 @@
+data.aws_ami.centos_oracle_db:
+  id = ami-0c0b19004ffb6ffed
+  architecture = x86_64
+  block_device_mappings.# = 2
+  block_device_mappings.1017707145.device_name = /dev/xvdb
+  block_device_mappings.1017707145.ebs.% = 6
+  block_device_mappings.1017707145.ebs.delete_on_termination = true
+  block_device_mappings.1017707145.ebs.encrypted = false
+  block_device_mappings.1017707145.ebs.iops = 1000
+  block_device_mappings.1017707145.ebs.snapshot_id = snap-04fc0387437eb10b0
+  block_device_mappings.1017707145.ebs.volume_size = 256
+  block_device_mappings.1017707145.ebs.volume_type = io1
+  block_device_mappings.1017707145.no_device =
+  block_device_mappings.1017707145.virtual_name =
+  block_device_mappings.3162127447.device_name = /dev/sda1
+  block_device_mappings.3162127447.ebs.% = 6
+  block_device_mappings.3162127447.ebs.delete_on_termination = true
+  block_device_mappings.3162127447.ebs.encrypted = false
+  block_device_mappings.3162127447.ebs.iops = 1000
+  block_device_mappings.3162127447.ebs.snapshot_id = snap-0ddcdb237cde2a638
+  block_device_mappings.3162127447.ebs.volume_size = 50
+  block_device_mappings.3162127447.ebs.volume_type = io1
+  block_device_mappings.3162127447.no_device =
+  block_device_mappings.3162127447.virtual_name =
+  creation_date = 2020-02-23T05:04:25.000Z
+  filter.# = 3
+  filter.1281954306.name = root-device-type
+  filter.1281954306.values.# = 1
+  filter.1281954306.values.0 = ebs
+  filter.1672316792.name = name
+  filter.1672316792.values.# = 1
+  filter.1672316792.values.0 = HMPPS Delius-Core OracleDB master *
+  filter.3386043752.name = architecture
+  filter.3386043752.values.# = 1
+  filter.3386043752.values.0 = x86_64
+  hypervisor = xen
+  image_id = ami-0c0b19004ffb6ffed
+  image_location = 895523100917/HMPPS Delius-Core OracleDB master 1582433351
+  image_type = machine
+  most_recent = true
+  name = HMPPS Delius-Core OracleDB master 1582433351
+  owner_id = 895523100917
+  owners.# = 1
+  owners.0 = 895523100917
+  product_codes.# = 0
+  public = false
+  root_device_name = /dev/sda1
+  root_device_type = ebs
+  root_snapshot_id = snap-0ddcdb237cde2a638
+  sriov_net_support = simple
+  state = available
+  state_reason.% = 2
+  state_reason.code = UNSET
+  state_reason.message = UNSET
+  tags.% = 0
+  virtualization_type = hvm
+data.terraform_remote_state.delius_core_security_groups:
+  id = 2020-02-25 13:28:08.53713002 +0000 UTC
+  backend = s3
+  bastion_ip.# = 1
+  bastion_ip.0 = 35.178.165.173/32
+  config.% = 3
+  config.bucket = tf-eu-west-2-hmpps-delius-core-dev-remote-state
+  config.key = delius-core/security-groups/terraform.tfstate
+  config.region = eu-west-2
+  environment = default
+  sg_apacheds_ldap_id = sg-0c2cfdd09d3868d93
+  sg_apacheds_ldap_private_elb_id = sg-03024add74e42057d
+  sg_aptracker_api_id = sg-0c1048a0c8dcb5f30
+  sg_common_out_id = sg-02caa8178991bbc6d
+  sg_delius_db_in_id = sg-0e53aab862eb4d910
+  sg_delius_db_out_id = sg-04703015022688e23
+  sg_delius_dss_out_id = sg-04e83b72cc6192b26
+  sg_gdpr_api_id = sg-06297fe72729e1f33
+  sg_gdpr_db_id = sg-03e34db4de45edc39
+  sg_gdpr_ui_id = sg-0deac7527bf555615
+  sg_loadrunner_id = sg-09c716131363e8247
+  sg_management_id = sg-089cf9e8c0306e5bd
+  sg_newtech_casenotes_out_id = sg-08e277c60ea6dde6c
+  sg_newtech_offenderapi_out_id = sg-0bfe411c886c4094c
+  sg_newtech_web_id = sg-063ac0c935848019e
+  sg_pingdom_in_id = sg-071ca33062f6eb0e4
+  sg_pwm_instances_id = sg-070f984d07859b7c8
+  sg_pwm_lb_id = sg-017db94fde7ef2b45
+  sg_umt_auth_id = sg-07a60fb88aa9ad3c4
+  sg_umt_instances_id = sg-06f4f0a8e79b4dd7f
+  sg_umt_tokenstore_id = sg-0e9761b07473e471c
+  sg_weblogic_interface_instances_id = sg-017449f7147d77069
+  sg_weblogic_interface_lb_id = sg-02ecb5012348c74f1
+  sg_weblogic_ndelius_instances_id = sg-04e9a0db7f25f16ba
+  sg_weblogic_ndelius_lb_id = sg-0d548232b9877fede
+  sg_weblogic_spg_instances_id = sg-0143836973c25ea99
+  sg_weblogic_spg_lb_id = sg-0ed6a64ca964c61ec
+  user_access_cidr_blocks_concatenated.# = 24
+  user_access_cidr_blocks_concatenated.0 = 81.134.202.29/32
+  user_access_cidr_blocks_concatenated.1 = 217.33.148.210/32
+  user_access_cidr_blocks_concatenated.10 = 213.48.246.99/32
+  user_access_cidr_blocks_concatenated.11 = 195.59.75.0/24
+  user_access_cidr_blocks_concatenated.12 = 194.33.192.0/25
+  user_access_cidr_blocks_concatenated.13 = 194.33.193.0/25
+  user_access_cidr_blocks_concatenated.14 = 194.33.196.0/25
+  user_access_cidr_blocks_concatenated.15 = 194.33.197.0/25
+  user_access_cidr_blocks_concatenated.16 = 212.137.36.230/32
+  user_access_cidr_blocks_concatenated.17 = 62.25.109.197/32
+  user_access_cidr_blocks_concatenated.18 = 195.92.38.16/28
+  user_access_cidr_blocks_concatenated.19 = 62.25.106.209/32
+  user_access_cidr_blocks_concatenated.2 = 35.176.14.16/32
+  user_access_cidr_blocks_concatenated.20 = 195.92.40.49/32
+  user_access_cidr_blocks_concatenated.21 = 62.232.198.64/28
+  user_access_cidr_blocks_concatenated.22 = 3.10.92.75/32
+  user_access_cidr_blocks_concatenated.23 = 35.178.165.173/32
+  user_access_cidr_blocks_concatenated.3 = 35.177.83.160/32
+  user_access_cidr_blocks_concatenated.4 = 18.130.108.149/32
+  user_access_cidr_blocks_concatenated.5 = 35.176.246.202/32
+  user_access_cidr_blocks_concatenated.6 = 18.130.186.182/32
+  user_access_cidr_blocks_concatenated.7 = 35.178.200.180/32
+  user_access_cidr_blocks_concatenated.8 = 35.176.195.86/32
+  user_access_cidr_blocks_concatenated.9 = 194.75.210.208/28
+  windows_slave_public_ip.# = 1
+  windows_slave_public_ip.0 = 3.10.92.75/32
+  workspace = default
+data.terraform_remote_state.key_profile:
+  id = 2020-02-25 13:28:08.471855875 +0000 UTC
+  backend = s3
+  config.% = 3
+  config.bucket = tf-eu-west-2-hmpps-delius-core-dev-remote-state
+  config.key = delius-core/key_profile/terraform.tfstate
+  config.region = eu-west-2
+  environment = default
+  instance_profile_ec2.% = 2
+  instance_profile_ec2.arn = arn:aws:iam::723123699647:instance-profile/dlc-dev-server-provison-ec2-role
+  instance_profile_ec2.id = dlc-dev-server-provison-ec2-role
+  instance_profile_ec2_arn = arn:aws:iam::723123699647:instance-profile/dlc-dev-server-provison-ec2-role
+  instance_profile_ec2_id = dlc-dev-server-provison-ec2-role
+  kms_arn_app = arn:aws:kms:eu-west-2:723123699647:key/3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  kms_key_id_app = 3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  workspace = default
+data.terraform_remote_state.ora_db_op_security_groups:
+  id = 2020-02-25 13:28:08.908844512 +0000 UTC
+  backend = s3
+  config.% = 4
+  config.bucket = tf-eu-west-2-hmpps-eng-dev-remote-state
+  config.key = oracle-db-operation/security-groups/terraform.tfstate
+  config.region = eu-west-2
+  config.role_arn = arn:aws:iam::895523100917:role/terraform
+  environment = default
+  sg_bastion_ssh_in_id = sg-08986e018ca7008e3
+  sg_common_out_id = sg-0af0bd07b79b82d74
+  sg_map_ids.% = 4
+  sg_map_ids.bastion_ssh_in = sg-08986e018ca7008e3
+  sg_map_ids.common_out = sg-0af0bd07b79b82d74
+  sg_map_ids.oem = sg-0467f610fe9156dad
+  sg_map_ids.rman_catalog = sg-0b499d0336f82cf91
+  sg_oem_id = sg-0467f610fe9156dad
+  sg_rman_catalog_id = sg-0b499d0336f82cf91
+  workspace = default
+data.terraform_remote_state.s3-oracledb-backups:
+  id = 2020-02-25 13:28:08.43444181 +0000 UTC
+  backend = s3
+  config.% = 3
+  config.bucket = tf-eu-west-2-hmpps-delius-core-dev-remote-state
+  config.key = s3/oracledb-backups/terraform.tfstate
+  config.region = eu-west-2
+  environment = default
+  s3_oracledb_backups.% = 4
+  s3_oracledb_backups.arn = arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups
+  s3_oracledb_backups.domain = eu-west-2-dlc-dev-oracledb-backups.s3.amazonaws.com
+  s3_oracledb_backups.name = eu-west-2-dlc-dev-oracledb-backups
+  s3_oracledb_backups.region = eu-west-2
+  workspace = default
+data.terraform_remote_state.vpc:
+  id = 2020-02-25 13:28:08.453494734 +0000 UTC
+  backend = s3
+  bastion_inventory = dev
+  bastion_remote_state_bucket_name = tf-eu-west-2-hmpps-bastion-dev-remote-state
+  bastion_role_arn = arn:aws:iam::895523100917:role/terraform
+  bastion_vpc_account_id = 895523100917
+  bastion_vpc_id = vpc-00d48e9851c261b47
+  bastion_vpc_public_cidr.% = 3
+  bastion_vpc_public_cidr.az1 = 10.161.98.0/28
+  bastion_vpc_public_cidr.az2 = 10.161.98.16/28
+  bastion_vpc_public_cidr.az3 = 10.161.98.32/28
+  config.% = 3
+  config.bucket = tf-eu-west-2-hmpps-delius-core-dev-remote-state
+  config.key = vpc/terraform.tfstate
+  config.region = eu-west-2
+  eng_vpc_account_id = 895523100917
+  eng_vpc_cidr = 10.161.96.0/24
+  eng_vpc_id = vpc-02321f288159e5d0e
+  environment = default
+  environment_name = delius-core-dev
+  private_zone_id = Z3K1XPXZ6S3VS9
+  private_zone_name = delius-core-dev.internal
+  public_ssl_arn = arn:aws:acm:eu-west-2:723123699647:certificate/1366549d-a1f4-4c1e-8a8e-9a3fe952dec0
+  public_ssl_domain = *.dev.delius-core.probation.hmpps.dsd.io
+  public_zone_id = Z2QF2SEPISTMNB
+  public_zone_name = dev.delius-core.probation.hmpps.dsd.io
+  ssh_deployer_key = tf-eu-west-2-hmpps-delius-core-dev-ssh-key
+  strategic_public_ssl_arn.# = 1
+  strategic_public_ssl_arn.0 = arn:aws:acm:eu-west-2:723123699647:certificate/694f0390-c001-4d8e-9e5f-70a421329ef1
+  strategic_public_zone_id = Z3JN6545N8RW90
+  strategic_public_zone_name = dev.probation.service.justice.gov.uk
+  tags.% = 11
+  tags.application = delius-core
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-network-terraform
+  vpc_account_id = 723123699647
+  vpc_cidr_block = 10.161.20.0/22
+  vpc_db-routetable-az1 = rtb-0c9580eb4c9b7b813
+  vpc_db-routetable-az2 = rtb-0c22216a4fa88521b
+  vpc_db-routetable-az3 = rtb-072459ae6f103589d
+  vpc_db-subnet-az1 = subnet-0435ad84bcea1d4c3
+  vpc_db-subnet-az1-availability_zone = eu-west-2a
+  vpc_db-subnet-az1-cidr_block = 10.161.23.0/26
+  vpc_db-subnet-az2 = subnet-0adf6066ba072cf89
+  vpc_db-subnet-az2-availability_zone = eu-west-2b
+  vpc_db-subnet-az2-cidr_block = 10.161.23.64/26
+  vpc_db-subnet-az3 = subnet-05b55966a54572682
+  vpc_db-subnet-az3-availability_zone = eu-west-2c
+  vpc_db-subnet-az3-cidr_block = 10.161.23.128/27
+  vpc_id = vpc-0c3ff172d65f5d1ac
+  vpc_private-routetable-az1 = rtb-0a98b0f3d4976d554
+  vpc_private-routetable-az2 = rtb-0745e2c32a6eb0e21
+  vpc_private-routetable-az3 = rtb-0d2a57e9a31fc53fb
+  vpc_private-subnet-az1 = subnet-01698e02f6582036b
+  vpc_private-subnet-az1-availability_zone = eu-west-2a
+  vpc_private-subnet-az1-cidr_block = 10.161.20.0/24
+  vpc_private-subnet-az2 = subnet-0ad3aacaeae7fa831
+  vpc_private-subnet-az2-availability_zone = eu-west-2b
+  vpc_private-subnet-az2-cidr_block = 10.161.21.0/24
+  vpc_private-subnet-az3 = subnet-01da8aefdd15983ec
+  vpc_private-subnet-az3-availability_zone = eu-west-2c
+  vpc_private-subnet-az3-cidr_block = 10.161.22.0/24
+  vpc_public-routetable-az1 = rtb-0c10f00f49213ed40
+  vpc_public-routetable-az2 = rtb-0176b42ced7509d94
+  vpc_public-routetable-az3 = rtb-0e46c97e14ef0e450
+  vpc_public-subnet-az1 = subnet-00898250bf6223821
+  vpc_public-subnet-az1-availability_zone = eu-west-2a
+  vpc_public-subnet-az1-cidr_block = 10.161.23.160/27
+  vpc_public-subnet-az2 = subnet-00998483a288b6715
+  vpc_public-subnet-az2-availability_zone = eu-west-2b
+  vpc_public-subnet-az2-cidr_block = 10.161.23.192/27
+  vpc_public-subnet-az3 = subnet-0cd20006f8956fee5
+  vpc_public-subnet-az3-availability_zone = eu-west-2c
+  vpc_public-subnet-az3-cidr_block = 10.161.23.224/27
+  vpc_remote_state_bucket_name = tf-eu-west-2-hmpps-delius-core-dev-remote-state
+  vpc_role_arn = arn:aws:iam::723123699647:role/terraform
+  workspace = default
+data.terraform_remote_state.vpc_security_groups:
+  id = 2020-02-25 13:28:08.675958996 +0000 UTC
+  backend = s3
+  config.% = 3
+  config.bucket = tf-eu-west-2-hmpps-delius-core-dev-remote-state
+  config.key = security-groups/terraform.tfstate
+  config.region = eu-west-2
+  environment = default
+  sg_alfresco_api_in = sg-0099f1f38770dcb02
+  sg_alfresco_db_in = sg-090f228937aba9c5e
+  sg_alfresco_efs_in = sg-0484acd87330c0b48
+  sg_alfresco_elasticache_in = sg-0d9ef550fc129f706
+  sg_alfresco_es_in = sg-0a2fd0ad09b4e8d9b
+  sg_alfresco_external_lb_in = sg-0342074180f9522c1
+  sg_alfresco_internal_lb_in = sg-02bdfcb9e725173b7
+  sg_alfresco_nginx_in = sg-0f0943b175142d3a6
+  sg_amazonmq_in = sg-0bd7179fde8504cc5
+  sg_bws_ldap = sg-050b9d79646ac2260
+  sg_delius_core_db_in_from_mis_id = sg-025830f652704d3bb
+  sg_elasticsearch = sg-06bebef0ca5e499d8
+  sg_https_out = sg-0c5750269b1e9428e
+  sg_iaps_api_in = sg-02febfa7890b74a0a
+  sg_iaps_api_out = sg-0e4f9f1cf0e2e5439
+  sg_iaps_db_in = sg-0dac410e3342bc7cb
+  sg_iaps_external_lb_in = sg-09ba1cfe0a7323e3b
+  sg_jumphost = sg-012bde7269845dce7
+  sg_ldap_inst = sg-048a70b981271018c
+  sg_ldap_lb = sg-0dfdce87fd0a00176
+  sg_ldap_proxy = sg-061b7e79b59dd2027
+  sg_management_server_id = sg-097fa9463b091a2a7
+  sg_mis_app_in = sg-0d8c3e1da4485a5d7
+  sg_mis_app_lb = sg-032449d4747bd2501
+  sg_mis_common = sg-017356dba3c1cbbb8
+  sg_mis_db_in = sg-03e255af55f30db02
+  sg_mis_db_in_out_rman_cat_id = sg-00412c12d5dd8c001
+  sg_mis_nextcloud_db = sg-0bd1dc90c4c08ddf6
+  sg_mis_nextcloud_efs_in = sg-0133f8feee11329af
+  sg_mis_nextcloud_lb = sg-0e67ce3f7bb96b61c
+  sg_mis_out_to_delius_db_id = sg-0d228721139cc72da
+  sg_mis_samba = sg-057a7268ff6bd0108
+  sg_mon_efs = sg-07327ba8895bac6a5
+  sg_mon_jenkins = sg-0e350b12756f4630b
+  sg_monitoring = sg-067615163d6ff92bd
+  sg_monitoring_client = sg-0a927ac2f4b8eb1f0
+  sg_monitoring_elb = sg-06683a680d8258418
+  sg_smtp_ses = sg-0c0a28d507ff41b31
+  sg_spg_api_in = sg-0c35c0650c6b032c3
+  sg_spg_db_in = sg-01fe67e7807eb0fc4
+  sg_spg_external_lb_in = sg-04e995dc29aa06ebb
+  sg_spg_internal_lb_in = sg-09b7df827fb97a8ad
+  sg_spg_nginx_in = sg-0ea5a84693db8eced
+  sg_ssh_bastion_in_id = sg-081df319e9d3cb209
+  sg_weblogic_interface_lb_decoupled = sg-0d70db98c77495cf5
+  workspace = default
+[0m
+module.delius_db_1.aws_instance.oracle_db:
+  id = i-0ce8e98d22e3db533
+  ami = ami-0e6d6114f34a933b4
+  arn = arn:aws:ec2:eu-west-2:723123699647:instance/i-0ce8e98d22e3db533
+  associate_public_ip_address = false
+  availability_zone = eu-west-2a
+  cpu_core_count = 1
+  cpu_threads_per_core = 2
+  credit_specification.# = 1
+  credit_specification.0.cpu_credits = unlimited
+  disable_api_termination = false
+  ebs_block_device.# = 3
+  ebs_block_device.203916009.delete_on_termination = false
+  ebs_block_device.203916009.device_name = /dev/xvdcb
+  ebs_block_device.203916009.encrypted = true
+  ebs_block_device.203916009.iops = 1000
+  ebs_block_device.203916009.snapshot_id =
+  ebs_block_device.203916009.volume_id = vol-00245f7ef9f5d2037
+  ebs_block_device.203916009.volume_size = 500
+  ebs_block_device.203916009.volume_type = io1
+  ebs_block_device.241253552.delete_on_termination = false
+  ebs_block_device.241253552.device_name = /dev/xvdca
+  ebs_block_device.241253552.encrypted = true
+  ebs_block_device.241253552.iops = 1000
+  ebs_block_device.241253552.snapshot_id =
+  ebs_block_device.241253552.volume_id = vol-0d904c8b0cb3bda4a
+  ebs_block_device.241253552.volume_size = 500
+  ebs_block_device.241253552.volume_type = io1
+  ebs_block_device.273246921.delete_on_termination = true
+  ebs_block_device.273246921.device_name = /dev/xvdb
+  ebs_block_device.273246921.encrypted = false
+  ebs_block_device.273246921.iops = 1000
+  ebs_block_device.273246921.snapshot_id = snap-0449cd7ba69426684
+  ebs_block_device.273246921.volume_id = vol-08a61d81a74075c0c
+  ebs_block_device.273246921.volume_size = 256
+  ebs_block_device.273246921.volume_type = io1
+  ebs_optimized = false
+  ephemeral_block_device.# = 0
+  get_password_data = false
+  iam_instance_profile = dlc-dev-server-provison-ec2-role
+  instance_state = running
+  instance_type = t3.large
+  ipv6_addresses.# = 0
+  key_name = tf-eu-west-2-hmpps-delius-core-dev-ssh-key
+  monitoring = false
+  network_interface.# = 0
+  network_interface_id = eni-03391bd5f16431ac6
+  password_data =
+  placement_group =
+  primary_network_interface_id = eni-03391bd5f16431ac6
+  private_dns = ip-10-161-23-21.eu-west-2.compute.internal
+  private_ip = 10.161.23.21
+  public_dns =
+  public_ip =
+  root_block_device.# = 1
+  root_block_device.0.delete_on_termination = true
+  root_block_device.0.iops = 1000
+  root_block_device.0.volume_id = vol-044ec50636ca457a6
+  root_block_device.0.volume_size = 256
+  root_block_device.0.volume_type = io1
+  security_groups.# = 0
+  source_dest_check = false
+  subnet_id = subnet-0435ad84bcea1d4c3
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-1
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  tenancy = default
+  user_data = b39eb885873b0e1984304a1c7ab38641402a95da
+  volume_tags.% = 12
+  volume_tags.Name = delius-core-dev-delius-db-1-xvdca
+  volume_tags.application = delius-core
+  volume_tags.bastion_inventory = dev
+  volume_tags.business-unit = hmpps
+  volume_tags.environment = dev
+  volume_tags.environment-name = delius-core-dev
+  volume_tags.infrastructure-support = Digital Studio
+  volume_tags.is-production = false
+  volume_tags.owner = Digital Studio
+  volume_tags.provisioned-with = Terraform
+  volume_tags.region = eu-west-2
+  volume_tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  vpc_security_group_ids.# = 5
+  vpc_security_group_ids.1130175883 = sg-025830f652704d3bb
+  vpc_security_group_ids.1233677136 = sg-02caa8178991bbc6d
+  vpc_security_group_ids.1973031606 = sg-04703015022688e23
+  vpc_security_group_ids.2352486177 = sg-0e53aab862eb4d910
+  vpc_security_group_ids.2464551154 = sg-081df319e9d3cb209
+module.delius_db_1.aws_route53_record.oracle_db_instance_internal:
+  id = Z3K1XPXZ6S3VS9_delius-db-1_A
+  allow_overwrite = true
+  fqdn = delius-db-1.delius-core-dev.internal
+  health_check_id =
+  name = delius-db-1
+  records.# = 1
+  records.1946092472 = 10.161.23.21
+  set_identifier =
+  ttl = 300
+  type = A
+  zone_id = Z3K1XPXZ6S3VS9
+module.delius_db_1.aws_route53_record.oracle_db_instance_public:
+  id = Z2QF2SEPISTMNB_delius-db-1_A
+  allow_overwrite = true
+  fqdn = delius-db-1.dev.delius-core.probation.hmpps.dsd.io
+  health_check_id =
+  name = delius-db-1
+  records.# = 1
+  records.1946092472 = 10.161.23.21
+  set_identifier =
+  ttl = 300
+  type = A
+  zone_id = Z2QF2SEPISTMNB
+module.delius_db_1.data.template_file.user_data:
+  id = e82d0709708169cf94643284fd30f24eb6c7586cfb6beefdb39fc5c9f9508d4e
+  rendered = #!/usr/bin/env bash
+set -x
+
+yum install -y wget git python-pip
+pip install -U pip
+pip install ansible
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
+
+PARAM=\$(aws ssm get-parameters \
+--region eu-west-2 \
+--with-decryption --name \
+"/delius-core-dev/delius-core/delius-database/db/oradb_sys_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_system_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_sysman_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_dbsnmp_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_asmsnmp_password" \
+--query Parameters)
+export oradb_sys_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sys_password")) | .Value' --raw-output)"
+export oradb_system_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_system_password")) | .Value' --raw-output)"
+export oradb_sysman_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sysman_password")) | .Value' --raw-output)"
+export oradb_dbsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_dbsnmp_password")) | .Value' --raw-output)"
+export oradb_asmsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_asmsnmp_password")) | .Value' --raw-output)"
+
+EOF
+chmod u+x ~/getcreds
+
+# get ssm parameters for bootstrap ansible
+. ~/getcreds
+
+# log bootstrap after creds obtained
+touch /var/log/user-data.log
+chmod 600 /var/log/user-data.log
+exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+
+echo BEGIN
+date '+%Y-%m-%d %H:%M:%S'
+
+cat << EOF >> /etc/environment
+export HMPPS_ROLE="delius"
+export HMPPS_FQDN="delius-db-1.delius-core-dev.internal"
+export HMPPS_STACKNAME=tf-eu-west-2-hmpps-delius-core-dev
+export HMPPS_STACK="tf-hmpps-dlc-dev"
+export HMPPS_ENVIRONMENT="delius-core-dev"
+export HMPPS_ACCOUNT_ID="723123699647"
+export HMPPS_DOMAIN="delius-core-dev.internal"
+export S3_ORACLEDB_BACKUPS_ARN="arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+export DEPENDENCIES_BUCKET_ARN="arn:aws:s3:::tf-eu-west-2-hmpps-eng-dev-delius-core-dependencies-s3bucket"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="eu-west-2"
+export APPLICATION="delius-core"
+EOF
+## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
+## just configured, so lets export them
+export HMPPS_ROLE="delius"
+export HMPPS_FQDN="delius-db-1.delius-core-dev.internal"
+export HMPPS_STACKNAME="tf-eu-west-2-hmpps-delius-core-dev"
+export HMPPS_STACK="tf-hmpps-dlc-dev"
+export HMPPS_ENVIRONMENT="delius-core-dev"
+export HMPPS_ACCOUNT_ID="723123699647"
+export HMPPS_DOMAIN="delius-core-dev.internal"
+export S3_ORACLEDB_BACKUPS_ARN="arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+export DEPENDENCIES_BUCKET_ARN="arn:aws:s3:::tf-eu-west-2-hmpps-eng-dev-delius-core-dependencies-s3bucket"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="eu-west-2"
+export APPLICATION="delius-core"
+
+cat << EOF > ~/requirements.yml
+---
+
+- name: bootstrap
+  src: https://github.com/ministryofjustice/hmpps-bootstrap
+  version: centos
+- name: users
+  src: singleplatform-eng.users
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+cat << EOF > ~/requirements_db.yml
+---
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+
+/usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/dev.yml
+
+cat << EOF > ~/vars.yml
+region: "eu-west-2"
+
+service_user_name: "oracle"
+database_global_database_name: "DNDA"
+database_sid: "DNDA"
+database_characterset: "AL32UTF8"
+oracle_dbca_template_file: "database"
+
+database_type: "primary"
+s3_oracledb_backups_arn: "arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+dependencies_bucket_arn: "arn:aws:s3:::tf-eu-west-2-hmpps-eng-dev-delius-core-dependencies-s3bucket"
+database_bootstrap_restore: "True"
+database_backup: "dbbackup/dev/delius"
+database_backup_sys_passwd: "/dbbackup/delius-core-dev/delius-core/oracle-database/db/oradb_sys_password"
+database_backup_location: "/u01/backup"
+asm_disks_quantity: "2"
+# These values are to be updated when the are injected and pulled from paramstore, consumed by oradb bootstrap
+# oradb_sys_password
+# oradb_system_password
+# oradb_sysman_password
+# oradb_dbsnmp_password
+# oradb_asmsnmp_password
+
+# For user_update cron
+remote_user_filename: "dev"
+
+EOF
+cat << EOF > ~/bootstrap_users.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - bootstrap
+     - users
+     - oracle-db
+EOF
+cat << EOF > ~/bootstrap_db.yml
+---
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - oracle-db
+EOF
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements_db.yml
+ansible-playbook ~/bootstrap_db.yml \
+--extra-vars "{\
+'oradb_sys_password':'\$oradb_sys_password', \
+'oradb_system_password':'\$oradb_system_password', \
+'oradb_sysman_password':'\$oradb_sysman_password', \
+'oradb_dbsnmp_password':'\$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'\$oradb_asmsnmp_password', \
+}" \
+-vvvv
+EOF
+chmod u+x ~/runboot.sh
+
+export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+
+ansible-galaxy install -f -r ~/requirements.yml
+CONFIGURE_SWAP=true SELF_REGISTER=true ansible-playbook ~/bootstrap_users.yml \
+--extra-vars "{\
+'oradb_sys_password':'$oradb_sys_password', \
+'oradb_system_password':'$oradb_system_password', \
+'oradb_sysman_password':'$oradb_sysman_password', \
+'oradb_dbsnmp_password':'$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'$oradb_asmsnmp_password', \
+}" \
+-v
+
+if [[ $? -eq 0 ]]
+then
+    ## allow Ansible jobs polling for readyness time to disconnect
+   /sbin/shutdown -r +1 "Rebooting in 1 minute"
+fi
+
+  template = #!/usr/bin/env bash
+set -x
+
+yum install -y wget git python-pip
+pip install -U pip
+pip install ansible
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
+
+PARAM=\$(aws ssm get-parameters \
+--region eu-west-2 \
+--with-decryption --name \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_sys_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_system_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_sysman_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_dbsnmp_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_asmsnmp_password" \
+--query Parameters)
+export oradb_sys_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sys_password")) | .Value' --raw-output)"
+export oradb_system_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_system_password")) | .Value' --raw-output)"
+export oradb_sysman_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sysman_password")) | .Value' --raw-output)"
+export oradb_dbsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_dbsnmp_password")) | .Value' --raw-output)"
+export oradb_asmsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_asmsnmp_password")) | .Value' --raw-output)"
+
+EOF
+chmod u+x ~/getcreds
+
+# get ssm parameters for bootstrap ansible
+. ~/getcreds
+
+# log bootstrap after creds obtained
+touch /var/log/user-data.log
+chmod 600 /var/log/user-data.log
+exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+
+echo BEGIN
+date '+%Y-%m-%d %H:%M:%S'
+
+cat << EOF >> /etc/environment
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="${server_name}.${private_domain}"
+export HMPPS_STACKNAME=${env_identifier}
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
+export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
+export APPLICATION="${application}"
+EOF
+## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
+## just configured, so lets export them
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="${server_name}.${private_domain}"
+export HMPPS_STACKNAME="${env_identifier}"
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
+export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
+export APPLICATION="${application}"
+
+cat << EOF > ~/requirements.yml
+---
+
+- name: bootstrap
+  src: https://github.com/ministryofjustice/hmpps-bootstrap
+  version: centos
+- name: users
+  src: singleplatform-eng.users
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+cat << EOF > ~/requirements_db.yml
+---
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+
+/usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
+
+cat << EOF > ~/vars.yml
+region: "${region}"
+
+service_user_name: "${service_user_name}"
+database_global_database_name: "${database_global_database_name}"
+database_sid: "${database_sid}"
+database_characterset: "${database_characterset}"
+oracle_dbca_template_file: "${oracle_dbca_template_file}"
+
+database_type: "${database_type}"
+s3_oracledb_backups_arn: "${s3_oracledb_backups_arn}"
+dependencies_bucket_arn: "${dependencies_bucket_arn}"
+database_bootstrap_restore: "${database_bootstrap_restore}"
+database_backup: "${database_backup}"
+database_backup_sys_passwd: "${database_backup_sys_passwd}"
+database_backup_location: "${database_backup_location}"
+asm_disks_quantity: "${asm_disks_quantity}"
+# These values are to be updated when the are injected and pulled from paramstore, consumed by oradb bootstrap
+# oradb_sys_password
+# oradb_system_password
+# oradb_sysman_password
+# oradb_dbsnmp_password
+# oradb_asmsnmp_password
+
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
+EOF
+cat << EOF > ~/bootstrap_users.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - bootstrap
+     - users
+     - oracle-db
+EOF
+cat << EOF > ~/bootstrap_db.yml
+---
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - oracle-db
+EOF
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements_db.yml
+ansible-playbook ~/bootstrap_db.yml \
+--extra-vars "{\
+'oradb_sys_password':'\$oradb_sys_password', \
+'oradb_system_password':'\$oradb_system_password', \
+'oradb_sysman_password':'\$oradb_sysman_password', \
+'oradb_dbsnmp_password':'\$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'\$oradb_asmsnmp_password', \
+}" \
+-vvvv
+EOF
+chmod u+x ~/runboot.sh
+
+export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+
+ansible-galaxy install -f -r ~/requirements.yml
+CONFIGURE_SWAP=true SELF_REGISTER=true ansible-playbook ~/bootstrap_users.yml \
+--extra-vars "{\
+'oradb_sys_password':'$oradb_sys_password', \
+'oradb_system_password':'$oradb_system_password', \
+'oradb_sysman_password':'$oradb_sysman_password', \
+'oradb_dbsnmp_password':'$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'$oradb_asmsnmp_password', \
+}" \
+-v
+
+if [[ $? -eq 0 ]]
+then
+    ## allow Ansible jobs polling for readyness time to disconnect
+   /sbin/shutdown -r +1 "Rebooting in 1 minute"
+fi
+
+  vars.% = 24
+  vars.account_id = 723123699647
+  vars.app_name = delius
+  vars.application = delius-core
+  vars.asm_disks_quantity = 2
+  vars.bastion_inventory = dev
+  vars.database_backup = dbbackup/dev/delius
+  vars.database_backup_location = /u01/backup
+  vars.database_backup_sys_passwd = /dbbackup/delius-core-dev/delius-core/oracle-database/db/oradb_sys_password
+  vars.database_bootstrap_restore = True
+  vars.database_characterset = AL32UTF8
+  vars.database_global_database_name = DNDA
+  vars.database_sid = DNDA
+  vars.database_type = primary
+  vars.dependencies_bucket_arn = arn:aws:s3:::tf-eu-west-2-hmpps-eng-dev-delius-core-dependencies-s3bucket
+  vars.env_identifier = tf-eu-west-2-hmpps-delius-core-dev
+  vars.oracle_dbca_template_file = database
+  vars.private_domain = delius-core-dev.internal
+  vars.project_name = delius-core
+  vars.region = eu-west-2
+  vars.route53_sub_domain = delius-core-dev
+  vars.s3_oracledb_backups_arn = arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups
+  vars.server_name = delius-db-1
+  vars.service_user_name = oracle
+  vars.short_env_identifier = tf-hmpps-dlc-dev
+[0m
+module.delius_db_2.aws_instance.oracle_db:
+  id = i-0926776a01123bac7
+  ami = ami-0e6d6114f34a933b4
+  arn = arn:aws:ec2:eu-west-2:723123699647:instance/i-0926776a01123bac7
+  associate_public_ip_address = false
+  availability_zone = eu-west-2b
+  cpu_core_count = 1
+  cpu_threads_per_core = 2
+  credit_specification.# = 1
+  credit_specification.0.cpu_credits = unlimited
+  disable_api_termination = false
+  ebs_block_device.# = 3
+  ebs_block_device.203916009.delete_on_termination = false
+  ebs_block_device.203916009.device_name = /dev/xvdcb
+  ebs_block_device.203916009.encrypted = true
+  ebs_block_device.203916009.iops = 1000
+  ebs_block_device.203916009.snapshot_id =
+  ebs_block_device.203916009.volume_id = vol-0c4a15ddbe470ac4f
+  ebs_block_device.203916009.volume_size = 500
+  ebs_block_device.203916009.volume_type = io1
+  ebs_block_device.241253552.delete_on_termination = false
+  ebs_block_device.241253552.device_name = /dev/xvdca
+  ebs_block_device.241253552.encrypted = true
+  ebs_block_device.241253552.iops = 1000
+  ebs_block_device.241253552.snapshot_id =
+  ebs_block_device.241253552.volume_id = vol-0a351ba792c16c9d8
+  ebs_block_device.241253552.volume_size = 500
+  ebs_block_device.241253552.volume_type = io1
+  ebs_block_device.273246921.delete_on_termination = true
+  ebs_block_device.273246921.device_name = /dev/xvdb
+  ebs_block_device.273246921.encrypted = false
+  ebs_block_device.273246921.iops = 1000
+  ebs_block_device.273246921.snapshot_id = snap-0449cd7ba69426684
+  ebs_block_device.273246921.volume_id = vol-003bd7a6877bcf7c0
+  ebs_block_device.273246921.volume_size = 256
+  ebs_block_device.273246921.volume_type = io1
+  ebs_optimized = false
+  ephemeral_block_device.# = 0
+  get_password_data = false
+  iam_instance_profile = dlc-dev-server-provison-ec2-role
+  instance_state = running
+  instance_type = t3.large
+  ipv6_addresses.# = 0
+  key_name = tf-eu-west-2-hmpps-delius-core-dev-ssh-key
+  monitoring = false
+  network_interface.# = 0
+  network_interface_id = eni-07a9cbb6281454c42
+  password_data =
+  placement_group =
+  primary_network_interface_id = eni-07a9cbb6281454c42
+  private_dns = ip-10-161-23-69.eu-west-2.compute.internal
+  private_ip = 10.161.23.69
+  public_dns =
+  public_ip =
+  root_block_device.# = 1
+  root_block_device.0.delete_on_termination = true
+  root_block_device.0.iops = 1000
+  root_block_device.0.volume_id = vol-08b9bc15094c1ce18
+  root_block_device.0.volume_size = 256
+  root_block_device.0.volume_type = io1
+  security_groups.# = 0
+  source_dest_check = false
+  subnet_id = subnet-0adf6066ba072cf89
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-2
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  tenancy = default
+  user_data = b4bb6ea6897a0f6c89942234f819927a2e8a8180
+  volume_tags.% = 12
+  volume_tags.Name = delius-core-dev-delius-db-2-xvdcb
+  volume_tags.application = delius-core
+  volume_tags.bastion_inventory = dev
+  volume_tags.business-unit = hmpps
+  volume_tags.environment = dev
+  volume_tags.environment-name = delius-core-dev
+  volume_tags.infrastructure-support = Digital Studio
+  volume_tags.is-production = false
+  volume_tags.owner = Digital Studio
+  volume_tags.provisioned-with = Terraform
+  volume_tags.region = eu-west-2
+  volume_tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  vpc_security_group_ids.# = 5
+  vpc_security_group_ids.1130175883 = sg-025830f652704d3bb
+  vpc_security_group_ids.1233677136 = sg-02caa8178991bbc6d
+  vpc_security_group_ids.1973031606 = sg-04703015022688e23
+  vpc_security_group_ids.2352486177 = sg-0e53aab862eb4d910
+  vpc_security_group_ids.2464551154 = sg-081df319e9d3cb209
+module.delius_db_2.aws_route53_record.oracle_db_instance_internal:
+  id = Z3K1XPXZ6S3VS9_delius-db-2_A
+  allow_overwrite = true
+  fqdn = delius-db-2.delius-core-dev.internal
+  health_check_id =
+  name = delius-db-2
+  records.# = 1
+  records.424169102 = 10.161.23.69
+  set_identifier =
+  ttl = 300
+  type = A
+  zone_id = Z3K1XPXZ6S3VS9
+module.delius_db_2.aws_route53_record.oracle_db_instance_public:
+  id = Z2QF2SEPISTMNB_delius-db-2_A
+  allow_overwrite = true
+  fqdn = delius-db-2.dev.delius-core.probation.hmpps.dsd.io
+  health_check_id =
+  name = delius-db-2
+  records.# = 1
+  records.424169102 = 10.161.23.69
+  set_identifier =
+  ttl = 300
+  type = A
+  zone_id = Z2QF2SEPISTMNB
+module.delius_db_2.data.template_file.user_data:
+  id = 5f2aee601e664a1d32f5415ff3ef208d0f40ca8e7316ad8434e5aa8a4f9c9530
+  rendered = #!/usr/bin/env bash
+set -x
+
+yum install -y wget git python-pip
+pip install -U pip
+pip install ansible
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
+
+PARAM=\$(aws ssm get-parameters \
+--region eu-west-2 \
+--with-decryption --name \
+"/delius-core-dev/delius-core/delius-database/db/oradb_sys_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_system_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_sysman_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_dbsnmp_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_asmsnmp_password" \
+--query Parameters)
+export oradb_sys_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sys_password")) | .Value' --raw-output)"
+export oradb_system_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_system_password")) | .Value' --raw-output)"
+export oradb_sysman_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sysman_password")) | .Value' --raw-output)"
+export oradb_dbsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_dbsnmp_password")) | .Value' --raw-output)"
+export oradb_asmsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_asmsnmp_password")) | .Value' --raw-output)"
+
+EOF
+chmod u+x ~/getcreds
+
+# get ssm parameters for bootstrap ansible
+. ~/getcreds
+
+# log bootstrap after creds obtained
+touch /var/log/user-data.log
+chmod 600 /var/log/user-data.log
+exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+
+echo BEGIN
+date '+%Y-%m-%d %H:%M:%S'
+
+cat << EOF >> /etc/environment
+export HMPPS_ROLE="delius"
+export HMPPS_FQDN="delius-db-2.delius-core-dev.internal"
+export HMPPS_STACKNAME=tf-eu-west-2-hmpps-delius-core-dev
+export HMPPS_STACK="tf-hmpps-dlc-dev"
+export HMPPS_ENVIRONMENT="delius-core-dev"
+export HMPPS_ACCOUNT_ID="723123699647"
+export HMPPS_DOMAIN="delius-core-dev.internal"
+export S3_ORACLEDB_BACKUPS_ARN="arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+export DEPENDENCIES_BUCKET_ARN="NOTSET"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="eu-west-2"
+export APPLICATION="delius-core"
+EOF
+## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
+## just configured, so lets export them
+export HMPPS_ROLE="delius"
+export HMPPS_FQDN="delius-db-2.delius-core-dev.internal"
+export HMPPS_STACKNAME="tf-eu-west-2-hmpps-delius-core-dev"
+export HMPPS_STACK="tf-hmpps-dlc-dev"
+export HMPPS_ENVIRONMENT="delius-core-dev"
+export HMPPS_ACCOUNT_ID="723123699647"
+export HMPPS_DOMAIN="delius-core-dev.internal"
+export S3_ORACLEDB_BACKUPS_ARN="arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+export DEPENDENCIES_BUCKET_ARN="NOTSET"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="eu-west-2"
+export APPLICATION="delius-core"
+
+cat << EOF > ~/requirements.yml
+---
+
+- name: bootstrap
+  src: https://github.com/ministryofjustice/hmpps-bootstrap
+  version: centos
+- name: users
+  src: singleplatform-eng.users
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+cat << EOF > ~/requirements_db.yml
+---
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+
+/usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/dev.yml
+
+cat << EOF > ~/vars.yml
+region: "eu-west-2"
+
+service_user_name: "oracle"
+database_global_database_name: "DNDA"
+database_sid: "DNDA"
+database_characterset: "AL32UTF8"
+oracle_dbca_template_file: "database"
+
+database_type: "standby"
+s3_oracledb_backups_arn: "arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+dependencies_bucket_arn: "NOTSET"
+database_bootstrap_restore: "False"
+database_backup: "NOTSET"
+database_backup_sys_passwd: "NOTSET"
+database_backup_location: "NOTSET"
+asm_disks_quantity: "2"
+# These values are to be updated when the are injected and pulled from paramstore, consumed by oradb bootstrap
+# oradb_sys_password
+# oradb_system_password
+# oradb_sysman_password
+# oradb_dbsnmp_password
+# oradb_asmsnmp_password
+
+# For user_update cron
+remote_user_filename: "dev"
+
+EOF
+cat << EOF > ~/bootstrap_users.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - bootstrap
+     - users
+     - oracle-db
+EOF
+cat << EOF > ~/bootstrap_db.yml
+---
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - oracle-db
+EOF
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements_db.yml
+ansible-playbook ~/bootstrap_db.yml \
+--extra-vars "{\
+'oradb_sys_password':'\$oradb_sys_password', \
+'oradb_system_password':'\$oradb_system_password', \
+'oradb_sysman_password':'\$oradb_sysman_password', \
+'oradb_dbsnmp_password':'\$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'\$oradb_asmsnmp_password', \
+}" \
+-vvvv
+EOF
+chmod u+x ~/runboot.sh
+
+export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+
+ansible-galaxy install -f -r ~/requirements.yml
+CONFIGURE_SWAP=true SELF_REGISTER=true ansible-playbook ~/bootstrap_users.yml \
+--extra-vars "{\
+'oradb_sys_password':'$oradb_sys_password', \
+'oradb_system_password':'$oradb_system_password', \
+'oradb_sysman_password':'$oradb_sysman_password', \
+'oradb_dbsnmp_password':'$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'$oradb_asmsnmp_password', \
+}" \
+-v
+
+if [[ $? -eq 0 ]]
+then
+    ## allow Ansible jobs polling for readyness time to disconnect
+   /sbin/shutdown -r +1 "Rebooting in 1 minute"
+fi
+
+  template = #!/usr/bin/env bash
+set -x
+
+yum install -y wget git python-pip
+pip install -U pip
+pip install ansible
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
+
+PARAM=\$(aws ssm get-parameters \
+--region eu-west-2 \
+--with-decryption --name \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_sys_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_system_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_sysman_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_dbsnmp_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_asmsnmp_password" \
+--query Parameters)
+export oradb_sys_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sys_password")) | .Value' --raw-output)"
+export oradb_system_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_system_password")) | .Value' --raw-output)"
+export oradb_sysman_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sysman_password")) | .Value' --raw-output)"
+export oradb_dbsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_dbsnmp_password")) | .Value' --raw-output)"
+export oradb_asmsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_asmsnmp_password")) | .Value' --raw-output)"
+
+EOF
+chmod u+x ~/getcreds
+
+# get ssm parameters for bootstrap ansible
+. ~/getcreds
+
+# log bootstrap after creds obtained
+touch /var/log/user-data.log
+chmod 600 /var/log/user-data.log
+exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+
+echo BEGIN
+date '+%Y-%m-%d %H:%M:%S'
+
+cat << EOF >> /etc/environment
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="${server_name}.${private_domain}"
+export HMPPS_STACKNAME=${env_identifier}
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
+export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
+export APPLICATION="${application}"
+EOF
+## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
+## just configured, so lets export them
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="${server_name}.${private_domain}"
+export HMPPS_STACKNAME="${env_identifier}"
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
+export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
+export APPLICATION="${application}"
+
+cat << EOF > ~/requirements.yml
+---
+
+- name: bootstrap
+  src: https://github.com/ministryofjustice/hmpps-bootstrap
+  version: centos
+- name: users
+  src: singleplatform-eng.users
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+cat << EOF > ~/requirements_db.yml
+---
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+
+/usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
+
+cat << EOF > ~/vars.yml
+region: "${region}"
+
+service_user_name: "${service_user_name}"
+database_global_database_name: "${database_global_database_name}"
+database_sid: "${database_sid}"
+database_characterset: "${database_characterset}"
+oracle_dbca_template_file: "${oracle_dbca_template_file}"
+
+database_type: "${database_type}"
+s3_oracledb_backups_arn: "${s3_oracledb_backups_arn}"
+dependencies_bucket_arn: "${dependencies_bucket_arn}"
+database_bootstrap_restore: "${database_bootstrap_restore}"
+database_backup: "${database_backup}"
+database_backup_sys_passwd: "${database_backup_sys_passwd}"
+database_backup_location: "${database_backup_location}"
+asm_disks_quantity: "${asm_disks_quantity}"
+# These values are to be updated when the are injected and pulled from paramstore, consumed by oradb bootstrap
+# oradb_sys_password
+# oradb_system_password
+# oradb_sysman_password
+# oradb_dbsnmp_password
+# oradb_asmsnmp_password
+
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
+EOF
+cat << EOF > ~/bootstrap_users.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - bootstrap
+     - users
+     - oracle-db
+EOF
+cat << EOF > ~/bootstrap_db.yml
+---
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - oracle-db
+EOF
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements_db.yml
+ansible-playbook ~/bootstrap_db.yml \
+--extra-vars "{\
+'oradb_sys_password':'\$oradb_sys_password', \
+'oradb_system_password':'\$oradb_system_password', \
+'oradb_sysman_password':'\$oradb_sysman_password', \
+'oradb_dbsnmp_password':'\$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'\$oradb_asmsnmp_password', \
+}" \
+-vvvv
+EOF
+chmod u+x ~/runboot.sh
+
+export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+
+ansible-galaxy install -f -r ~/requirements.yml
+CONFIGURE_SWAP=true SELF_REGISTER=true ansible-playbook ~/bootstrap_users.yml \
+--extra-vars "{\
+'oradb_sys_password':'$oradb_sys_password', \
+'oradb_system_password':'$oradb_system_password', \
+'oradb_sysman_password':'$oradb_sysman_password', \
+'oradb_dbsnmp_password':'$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'$oradb_asmsnmp_password', \
+}" \
+-v
+
+if [[ $? -eq 0 ]]
+then
+    ## allow Ansible jobs polling for readyness time to disconnect
+   /sbin/shutdown -r +1 "Rebooting in 1 minute"
+fi
+
+  vars.% = 24
+  vars.account_id = 723123699647
+  vars.app_name = delius
+  vars.application = delius-core
+  vars.asm_disks_quantity = 2
+  vars.bastion_inventory = dev
+  vars.database_backup = NOTSET
+  vars.database_backup_location = NOTSET
+  vars.database_backup_sys_passwd = NOTSET
+  vars.database_bootstrap_restore = False
+  vars.database_characterset = AL32UTF8
+  vars.database_global_database_name = DNDA
+  vars.database_sid = DNDA
+  vars.database_type = standby
+  vars.dependencies_bucket_arn = NOTSET
+  vars.env_identifier = tf-eu-west-2-hmpps-delius-core-dev
+  vars.oracle_dbca_template_file = database
+  vars.private_domain = delius-core-dev.internal
+  vars.project_name = delius-core
+  vars.region = eu-west-2
+  vars.route53_sub_domain = delius-core-dev
+  vars.s3_oracledb_backups_arn = arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups
+  vars.server_name = delius-db-2
+  vars.service_user_name = oracle
+  vars.short_env_identifier = tf-hmpps-dlc-dev
+[0m
+module.delius_db_3.aws_instance.oracle_db:
+  id = i-0f939dba361f3b018
+  ami = ami-0e6d6114f34a933b4
+  arn = arn:aws:ec2:eu-west-2:723123699647:instance/i-0f939dba361f3b018
+  associate_public_ip_address = false
+  availability_zone = eu-west-2c
+  cpu_core_count = 1
+  cpu_threads_per_core = 2
+  credit_specification.# = 1
+  credit_specification.0.cpu_credits = unlimited
+  disable_api_termination = false
+  ebs_block_device.# = 3
+  ebs_block_device.203916009.delete_on_termination = false
+  ebs_block_device.203916009.device_name = /dev/xvdcb
+  ebs_block_device.203916009.encrypted = true
+  ebs_block_device.203916009.iops = 1000
+  ebs_block_device.203916009.snapshot_id =
+  ebs_block_device.203916009.volume_id = vol-03eda57a4c8a43883
+  ebs_block_device.203916009.volume_size = 500
+  ebs_block_device.203916009.volume_type = io1
+  ebs_block_device.241253552.delete_on_termination = false
+  ebs_block_device.241253552.device_name = /dev/xvdca
+  ebs_block_device.241253552.encrypted = true
+  ebs_block_device.241253552.iops = 1000
+  ebs_block_device.241253552.snapshot_id =
+  ebs_block_device.241253552.volume_id = vol-09d970711dbab1527
+  ebs_block_device.241253552.volume_size = 500
+  ebs_block_device.241253552.volume_type = io1
+  ebs_block_device.273246921.delete_on_termination = true
+  ebs_block_device.273246921.device_name = /dev/xvdb
+  ebs_block_device.273246921.encrypted = false
+  ebs_block_device.273246921.iops = 1000
+  ebs_block_device.273246921.snapshot_id = snap-0449cd7ba69426684
+  ebs_block_device.273246921.volume_id = vol-0d2cad5112cb450db
+  ebs_block_device.273246921.volume_size = 256
+  ebs_block_device.273246921.volume_type = io1
+  ebs_optimized = false
+  ephemeral_block_device.# = 0
+  get_password_data = false
+  iam_instance_profile = dlc-dev-server-provison-ec2-role
+  instance_state = running
+  instance_type = t3.large
+  ipv6_addresses.# = 0
+  key_name = tf-eu-west-2-hmpps-delius-core-dev-ssh-key
+  monitoring = false
+  network_interface.# = 0
+  network_interface_id = eni-09f5ab1227d3fef00
+  password_data =
+  placement_group =
+  primary_network_interface_id = eni-09f5ab1227d3fef00
+  private_dns = ip-10-161-23-145.eu-west-2.compute.internal
+  private_ip = 10.161.23.145
+  public_dns =
+  public_ip =
+  root_block_device.# = 1
+  root_block_device.0.delete_on_termination = true
+  root_block_device.0.iops = 1000
+  root_block_device.0.volume_id = vol-072616aedadc32647
+  root_block_device.0.volume_size = 256
+  root_block_device.0.volume_type = io1
+  security_groups.# = 0
+  source_dest_check = false
+  subnet_id = subnet-05b55966a54572682
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-3
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  tenancy = default
+  user_data = 4cb731587dc088f576e57e30b48df8952f8afd91
+  volume_tags.% = 12
+  volume_tags.Name = delius-core-dev-delius-db-3-xvdca
+  volume_tags.application = delius-core
+  volume_tags.bastion_inventory = dev
+  volume_tags.business-unit = hmpps
+  volume_tags.environment = dev
+  volume_tags.environment-name = delius-core-dev
+  volume_tags.infrastructure-support = Digital Studio
+  volume_tags.is-production = false
+  volume_tags.owner = Digital Studio
+  volume_tags.provisioned-with = Terraform
+  volume_tags.region = eu-west-2
+  volume_tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  vpc_security_group_ids.# = 5
+  vpc_security_group_ids.1130175883 = sg-025830f652704d3bb
+  vpc_security_group_ids.1233677136 = sg-02caa8178991bbc6d
+  vpc_security_group_ids.1973031606 = sg-04703015022688e23
+  vpc_security_group_ids.2352486177 = sg-0e53aab862eb4d910
+  vpc_security_group_ids.2464551154 = sg-081df319e9d3cb209
+module.delius_db_3.aws_route53_record.oracle_db_instance_internal:
+  id = Z3K1XPXZ6S3VS9_delius-db-3_A
+  allow_overwrite = true
+  fqdn = delius-db-3.delius-core-dev.internal
+  health_check_id =
+  name = delius-db-3
+  records.# = 1
+  records.1045013775 = 10.161.23.145
+  set_identifier =
+  ttl = 300
+  type = A
+  zone_id = Z3K1XPXZ6S3VS9
+module.delius_db_3.aws_route53_record.oracle_db_instance_public:
+  id = Z2QF2SEPISTMNB_delius-db-3_A
+  allow_overwrite = true
+  fqdn = delius-db-3.dev.delius-core.probation.hmpps.dsd.io
+  health_check_id =
+  name = delius-db-3
+  records.# = 1
+  records.1045013775 = 10.161.23.145
+  set_identifier =
+  ttl = 300
+  type = A
+  zone_id = Z2QF2SEPISTMNB
+module.delius_db_3.data.template_file.user_data:
+  id = 00ca8a0f42e26dbc50a776f8df08835c906048ad4afdebd0394951e20ab995a6
+  rendered = #!/usr/bin/env bash
+set -x
+
+yum install -y wget git python-pip
+pip install -U pip
+pip install ansible
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
+
+PARAM=\$(aws ssm get-parameters \
+--region eu-west-2 \
+--with-decryption --name \
+"/delius-core-dev/delius-core/delius-database/db/oradb_sys_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_system_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_sysman_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_dbsnmp_password" \
+"/delius-core-dev/delius-core/delius-database/db/oradb_asmsnmp_password" \
+--query Parameters)
+export oradb_sys_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sys_password")) | .Value' --raw-output)"
+export oradb_system_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_system_password")) | .Value' --raw-output)"
+export oradb_sysman_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sysman_password")) | .Value' --raw-output)"
+export oradb_dbsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_dbsnmp_password")) | .Value' --raw-output)"
+export oradb_asmsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_asmsnmp_password")) | .Value' --raw-output)"
+
+EOF
+chmod u+x ~/getcreds
+
+# get ssm parameters for bootstrap ansible
+. ~/getcreds
+
+# log bootstrap after creds obtained
+touch /var/log/user-data.log
+chmod 600 /var/log/user-data.log
+exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+
+echo BEGIN
+date '+%Y-%m-%d %H:%M:%S'
+
+cat << EOF >> /etc/environment
+export HMPPS_ROLE="delius"
+export HMPPS_FQDN="delius-db-3.delius-core-dev.internal"
+export HMPPS_STACKNAME=tf-eu-west-2-hmpps-delius-core-dev
+export HMPPS_STACK="tf-hmpps-dlc-dev"
+export HMPPS_ENVIRONMENT="delius-core-dev"
+export HMPPS_ACCOUNT_ID="723123699647"
+export HMPPS_DOMAIN="delius-core-dev.internal"
+export S3_ORACLEDB_BACKUPS_ARN="arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+export DEPENDENCIES_BUCKET_ARN="NOTSET"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="eu-west-2"
+export APPLICATION="delius-core"
+EOF
+## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
+## just configured, so lets export them
+export HMPPS_ROLE="delius"
+export HMPPS_FQDN="delius-db-3.delius-core-dev.internal"
+export HMPPS_STACKNAME="tf-eu-west-2-hmpps-delius-core-dev"
+export HMPPS_STACK="tf-hmpps-dlc-dev"
+export HMPPS_ENVIRONMENT="delius-core-dev"
+export HMPPS_ACCOUNT_ID="723123699647"
+export HMPPS_DOMAIN="delius-core-dev.internal"
+export S3_ORACLEDB_BACKUPS_ARN="arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+export DEPENDENCIES_BUCKET_ARN="NOTSET"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="eu-west-2"
+export APPLICATION="delius-core"
+
+cat << EOF > ~/requirements.yml
+---
+
+- name: bootstrap
+  src: https://github.com/ministryofjustice/hmpps-bootstrap
+  version: centos
+- name: users
+  src: singleplatform-eng.users
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+cat << EOF > ~/requirements_db.yml
+---
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+
+/usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/dev.yml
+
+cat << EOF > ~/vars.yml
+region: "eu-west-2"
+
+service_user_name: "oracle"
+database_global_database_name: "DNDA"
+database_sid: "DNDA"
+database_characterset: "AL32UTF8"
+oracle_dbca_template_file: "database"
+
+database_type: "standby"
+s3_oracledb_backups_arn: "arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups"
+dependencies_bucket_arn: "NOTSET"
+database_bootstrap_restore: "False"
+database_backup: "NOTSET"
+database_backup_sys_passwd: "NOTSET"
+database_backup_location: "NOTSET"
+asm_disks_quantity: "2"
+# These values are to be updated when the are injected and pulled from paramstore, consumed by oradb bootstrap
+# oradb_sys_password
+# oradb_system_password
+# oradb_sysman_password
+# oradb_dbsnmp_password
+# oradb_asmsnmp_password
+
+# For user_update cron
+remote_user_filename: "dev"
+
+EOF
+cat << EOF > ~/bootstrap_users.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - bootstrap
+     - users
+     - oracle-db
+EOF
+cat << EOF > ~/bootstrap_db.yml
+---
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - oracle-db
+EOF
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements_db.yml
+ansible-playbook ~/bootstrap_db.yml \
+--extra-vars "{\
+'oradb_sys_password':'\$oradb_sys_password', \
+'oradb_system_password':'\$oradb_system_password', \
+'oradb_sysman_password':'\$oradb_sysman_password', \
+'oradb_dbsnmp_password':'\$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'\$oradb_asmsnmp_password', \
+}" \
+-vvvv
+EOF
+chmod u+x ~/runboot.sh
+
+export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+
+ansible-galaxy install -f -r ~/requirements.yml
+CONFIGURE_SWAP=true SELF_REGISTER=true ansible-playbook ~/bootstrap_users.yml \
+--extra-vars "{\
+'oradb_sys_password':'$oradb_sys_password', \
+'oradb_system_password':'$oradb_system_password', \
+'oradb_sysman_password':'$oradb_sysman_password', \
+'oradb_dbsnmp_password':'$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'$oradb_asmsnmp_password', \
+}" \
+-v
+
+if [[ $? -eq 0 ]]
+then
+    ## allow Ansible jobs polling for readyness time to disconnect
+   /sbin/shutdown -r +1 "Rebooting in 1 minute"
+fi
+
+  template = #!/usr/bin/env bash
+set -x
+
+yum install -y wget git python-pip
+pip install -U pip
+pip install ansible
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
+
+PARAM=\$(aws ssm get-parameters \
+--region eu-west-2 \
+--with-decryption --name \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_sys_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_system_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_sysman_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_dbsnmp_password" \
+"/${route53_sub_domain}/${project_name}/${app_name}-database/db/oradb_asmsnmp_password" \
+--query Parameters)
+export oradb_sys_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sys_password")) | .Value' --raw-output)"
+export oradb_system_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_system_password")) | .Value' --raw-output)"
+export oradb_sysman_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_sysman_password")) | .Value' --raw-output)"
+export oradb_dbsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_dbsnmp_password")) | .Value' --raw-output)"
+export oradb_asmsnmp_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("oradb_asmsnmp_password")) | .Value' --raw-output)"
+
+EOF
+chmod u+x ~/getcreds
+
+# get ssm parameters for bootstrap ansible
+. ~/getcreds
+
+# log bootstrap after creds obtained
+touch /var/log/user-data.log
+chmod 600 /var/log/user-data.log
+exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+
+echo BEGIN
+date '+%Y-%m-%d %H:%M:%S'
+
+cat << EOF >> /etc/environment
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="${server_name}.${private_domain}"
+export HMPPS_STACKNAME=${env_identifier}
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
+export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
+export APPLICATION="${application}"
+EOF
+## Ansible runs in the same shell that has just set the env vars for future logins so it has no knowledge of the vars we've
+## just configured, so lets export them
+export HMPPS_ROLE="${app_name}"
+export HMPPS_FQDN="${server_name}.${private_domain}"
+export HMPPS_STACKNAME="${env_identifier}"
+export HMPPS_STACK="${short_env_identifier}"
+export HMPPS_ENVIRONMENT="${route53_sub_domain}"
+export HMPPS_ACCOUNT_ID="${account_id}"
+export HMPPS_DOMAIN="${private_domain}"
+export S3_ORACLEDB_BACKUPS_ARN="${s3_oracledb_backups_arn}"
+export DEPENDENCIES_BUCKET_ARN="${dependencies_bucket_arn}"
+export INSTANCE_ID="`curl http://169.254.169.254/latest/meta-data/instance-id`"
+export REGION="${region}"
+export APPLICATION="${application}"
+
+cat << EOF > ~/requirements.yml
+---
+
+- name: bootstrap
+  src: https://github.com/ministryofjustice/hmpps-bootstrap
+  version: centos
+- name: users
+  src: singleplatform-eng.users
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+cat << EOF > ~/requirements_db.yml
+---
+- name: oracle-db
+  src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+EOF
+
+/usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
+
+cat << EOF > ~/vars.yml
+region: "${region}"
+
+service_user_name: "${service_user_name}"
+database_global_database_name: "${database_global_database_name}"
+database_sid: "${database_sid}"
+database_characterset: "${database_characterset}"
+oracle_dbca_template_file: "${oracle_dbca_template_file}"
+
+database_type: "${database_type}"
+s3_oracledb_backups_arn: "${s3_oracledb_backups_arn}"
+dependencies_bucket_arn: "${dependencies_bucket_arn}"
+database_bootstrap_restore: "${database_bootstrap_restore}"
+database_backup: "${database_backup}"
+database_backup_sys_passwd: "${database_backup_sys_passwd}"
+database_backup_location: "${database_backup_location}"
+asm_disks_quantity: "${asm_disks_quantity}"
+# These values are to be updated when the are injected and pulled from paramstore, consumed by oradb bootstrap
+# oradb_sys_password
+# oradb_system_password
+# oradb_sysman_password
+# oradb_dbsnmp_password
+# oradb_asmsnmp_password
+
+# For user_update cron
+remote_user_filename: "${bastion_inventory}"
+
+EOF
+cat << EOF > ~/bootstrap_users.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - bootstrap
+     - users
+     - oracle-db
+EOF
+cat << EOF > ~/bootstrap_db.yml
+---
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+  roles:
+     - oracle-db
+EOF
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements_db.yml
+ansible-playbook ~/bootstrap_db.yml \
+--extra-vars "{\
+'oradb_sys_password':'\$oradb_sys_password', \
+'oradb_system_password':'\$oradb_system_password', \
+'oradb_sysman_password':'\$oradb_sysman_password', \
+'oradb_dbsnmp_password':'\$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'\$oradb_asmsnmp_password', \
+}" \
+-vvvv
+EOF
+chmod u+x ~/runboot.sh
+
+export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+
+ansible-galaxy install -f -r ~/requirements.yml
+CONFIGURE_SWAP=true SELF_REGISTER=true ansible-playbook ~/bootstrap_users.yml \
+--extra-vars "{\
+'oradb_sys_password':'$oradb_sys_password', \
+'oradb_system_password':'$oradb_system_password', \
+'oradb_sysman_password':'$oradb_sysman_password', \
+'oradb_dbsnmp_password':'$oradb_dbsnmp_password', \
+'oradb_asmsnmp_password':'$oradb_asmsnmp_password', \
+}" \
+-v
+
+if [[ $? -eq 0 ]]
+then
+    ## allow Ansible jobs polling for readyness time to disconnect
+   /sbin/shutdown -r +1 "Rebooting in 1 minute"
+fi
+
+  vars.% = 24
+  vars.account_id = 723123699647
+  vars.app_name = delius
+  vars.application = delius-core
+  vars.asm_disks_quantity = 2
+  vars.bastion_inventory = dev
+  vars.database_backup = NOTSET
+  vars.database_backup_location = NOTSET
+  vars.database_backup_sys_passwd = NOTSET
+  vars.database_bootstrap_restore = False
+  vars.database_characterset = AL32UTF8
+  vars.database_global_database_name = DNDA
+  vars.database_sid = DNDA
+  vars.database_type = standby
+  vars.dependencies_bucket_arn = NOTSET
+  vars.env_identifier = tf-eu-west-2-hmpps-delius-core-dev
+  vars.oracle_dbca_template_file = database
+  vars.private_domain = delius-core-dev.internal
+  vars.project_name = delius-core
+  vars.region = eu-west-2
+  vars.route53_sub_domain = delius-core-dev
+  vars.s3_oracledb_backups_arn = arn:aws:s3:::eu-west-2-dlc-dev-oracledb-backups
+  vars.server_name = delius-db-3
+  vars.service_user_name = oracle
+  vars.short_env_identifier = tf-hmpps-dlc-dev
+[0m
+module.delius_db_1.dev_xvdca.aws_ebs_volume.oracle_db:
+  id = vol-0d904c8b0cb3bda4a
+  arn = arn:aws:ec2:eu-west-2:723123699647:volume/vol-0d904c8b0cb3bda4a
+  availability_zone = eu-west-2a
+  encrypted = true
+  iops = 1000
+  kms_key_id = arn:aws:kms:eu-west-2:723123699647:key/3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  size = 500
+  snapshot_id =
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-1-xvdca
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  type = io1
+module.delius_db_1.dev_xvdca.aws_volume_attachment.oracle_db:
+  id = vai-1099959382
+  device_name = /dev/xvdca
+  force_detach = true
+  instance_id = i-0ce8e98d22e3db533
+  volume_id = vol-0d904c8b0cb3bda4a
+[0m
+module.delius_db_1.dev_xvdcb.aws_ebs_volume.oracle_db:
+  id = vol-00245f7ef9f5d2037
+  arn = arn:aws:ec2:eu-west-2:723123699647:volume/vol-00245f7ef9f5d2037
+  availability_zone = eu-west-2a
+  encrypted = true
+  iops = 1000
+  kms_key_id = arn:aws:kms:eu-west-2:723123699647:key/3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  size = 500
+  snapshot_id =
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-1-xvdcb
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  type = io1
+module.delius_db_1.dev_xvdcb.aws_volume_attachment.oracle_db:
+  id = vai-1109807678
+  device_name = /dev/xvdcb
+  force_detach = true
+  instance_id = i-0ce8e98d22e3db533
+  volume_id = vol-00245f7ef9f5d2037
+[0m
+module.delius_db_2.dev_xvdca.aws_ebs_volume.oracle_db:
+  id = vol-0a351ba792c16c9d8
+  arn = arn:aws:ec2:eu-west-2:723123699647:volume/vol-0a351ba792c16c9d8
+  availability_zone = eu-west-2b
+  encrypted = true
+  iops = 1000
+  kms_key_id = arn:aws:kms:eu-west-2:723123699647:key/3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  size = 500
+  snapshot_id =
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-2-xvdca
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  type = io1
+module.delius_db_2.dev_xvdca.aws_volume_attachment.oracle_db:
+  id = vai-3850531398
+  device_name = /dev/xvdca
+  force_detach = true
+  instance_id = i-0926776a01123bac7
+  volume_id = vol-0a351ba792c16c9d8
+[0m
+module.delius_db_2.dev_xvdcb.aws_ebs_volume.oracle_db:
+  id = vol-0c4a15ddbe470ac4f
+  arn = arn:aws:ec2:eu-west-2:723123699647:volume/vol-0c4a15ddbe470ac4f
+  availability_zone = eu-west-2b
+  encrypted = true
+  iops = 1000
+  kms_key_id = arn:aws:kms:eu-west-2:723123699647:key/3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  size = 500
+  snapshot_id =
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-2-xvdcb
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  type = io1
+module.delius_db_2.dev_xvdcb.aws_volume_attachment.oracle_db:
+  id = vai-2424680747
+  device_name = /dev/xvdcb
+  force_detach = true
+  instance_id = i-0926776a01123bac7
+  volume_id = vol-0c4a15ddbe470ac4f
+[0m
+module.delius_db_3.dev_xvdca.aws_ebs_volume.oracle_db:
+  id = vol-09d970711dbab1527
+  arn = arn:aws:ec2:eu-west-2:723123699647:volume/vol-09d970711dbab1527
+  availability_zone = eu-west-2c
+  encrypted = true
+  iops = 1000
+  kms_key_id = arn:aws:kms:eu-west-2:723123699647:key/3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  size = 500
+  snapshot_id =
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-3-xvdca
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  type = io1
+module.delius_db_3.dev_xvdca.aws_volume_attachment.oracle_db:
+  id = vai-1004699981
+  device_name = /dev/xvdca
+  force_detach = true
+  instance_id = i-0f939dba361f3b018
+  volume_id = vol-09d970711dbab1527
+[0m
+module.delius_db_3.dev_xvdcb.aws_ebs_volume.oracle_db:
+  id = vol-03eda57a4c8a43883
+  arn = arn:aws:ec2:eu-west-2:723123699647:volume/vol-03eda57a4c8a43883
+  availability_zone = eu-west-2c
+  encrypted = true
+  iops = 1000
+  kms_key_id = arn:aws:kms:eu-west-2:723123699647:key/3d9dd664-214e-4c5b-ba9d-b54dedc27014
+  size = 500
+  snapshot_id =
+  tags.% = 13
+  tags.Name = delius-core-dev-delius-db-3-xvdcb
+  tags.application = delius-core
+  tags.autostop-dev = True
+  tags.bastion_inventory = dev
+  tags.business-unit = hmpps
+  tags.environment = dev
+  tags.environment-name = delius-core-dev
+  tags.infrastructure-support = Digital Studio
+  tags.is-production = false
+  tags.owner = Digital Studio
+  tags.provisioned-with = Terraform
+  tags.region = eu-west-2
+  tags.source-code = https://github.com/ministryofjustice/hmpps-delius-core-terraform
+  type = io1
+module.delius_db_3.dev_xvdcb.aws_volume_attachment.oracle_db:
+  id = vai-1815713287
+  device_name = /dev/xvdcb
+  force_detach = true
+  instance_id = i-0f939dba361f3b018
+  volume_id = vol-03eda57a4c8a43883
+[0m
+
+Outputs:
+
+ami_delius_db_1 = i-0ce8e98d22e3db533
+ami_delius_db_2 = i-0926776a01123bac7
+ami_delius_db_3 = i-0f939dba361f3b018
+db_disks_delius_db_1 = {
+  database_size = small
+  disks_quantity = 2
+  iops = 1000
+  iops_ratio = 2 (50 max)
+  size = 500
+  total_storage = 1000
+}
+db_disks_delius_db_2 = {
+  database_size = small
+  disks_quantity = 2
+  iops = 1000
+  iops_ratio = 2 (50 max)
+  size = 500
+  total_storage = 1000
+}
+db_disks_delius_db_3 = {
+  database_size = small
+  disks_quantity = 2
+  iops = 1000
+  iops_ratio = 2 (50 max)
+  size = 500
+  total_storage = 1000
+}
+delius_db_1 = {
+  ami_id = i-0ce8e98d22e3db533
+  db_disks = map[iops:1000 iops_ratio:2 (50 max) size:500 total_storage:1000 database_size:small disks_quantity:2]
+  delius_db_1 = ssh delius-db-1.dev.delius-core.probation.hmpps.dsd.io
+  internal_fqdn = delius-db-1.delius-core-dev.internal
+  private_ip = 10.161.23.21
+  public_fqdn = delius-db-1.dev.delius-core.probation.hmpps.dsd.io
+}
+delius_db_2 = {
+  ami_id = i-0926776a01123bac7
+  db_disks = map[iops_ratio:2 (50 max) size:500 total_storage:1000 database_size:small disks_quantity:2 iops:1000]
+  delius_db_2 = ssh delius-db-2.dev.delius-core.probation.hmpps.dsd.io
+  internal_fqdn = delius-db-2.delius-core-dev.internal
+  private_ip = 10.161.23.69
+  public_fqdn = delius-db-2.dev.delius-core.probation.hmpps.dsd.io
+}
+delius_db_3 = {
+  ami_id = i-0f939dba361f3b018
+  db_disks = map[total_storage:1000 database_size:small disks_quantity:2 iops:1000 iops_ratio:2 (50 max) size:500]
+  delius_db_3 = ssh delius-db-3.dev.delius-core.probation.hmpps.dsd.io
+  internal_fqdn = delius-db-3.delius-core-dev.internal
+  private_ip = 10.161.23.145
+  public_fqdn = delius-db-3.dev.delius-core.probation.hmpps.dsd.io
+}
+internal_fqdn_delius_db_1 = delius-db-1.delius-core-dev.internal
+internal_fqdn_delius_db_2 = delius-db-2.delius-core-dev.internal
+internal_fqdn_delius_db_3 = delius-db-3.delius-core-dev.internal
+jdbc_failover_url = jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(FAILOVER=ON)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-1.dev.delius-core.probation.hmpps.dsd.io)(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-2.dev.delius-core.probation.hmpps.dsd.io)(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-3.dev.delius-core.probation.hmpps.dsd.io)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=DNDA_TAF)))
+private_ip_delius_db_1 = 10.161.23.21
+private_ip_delius_db_2 = 10.161.23.69
+private_ip_delius_db_3 = 10.161.23.145
+public_fqdn_delius_db_1 = delius-db-1.dev.delius-core.probation.hmpps.dsd.io
+public_fqdn_delius_db_2 = delius-db-2.dev.delius-core.probation.hmpps.dsd.io
+public_fqdn_delius_db_3 = delius-db-3.dev.delius-core.probation.hmpps.dsd.io
