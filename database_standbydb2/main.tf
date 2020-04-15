@@ -106,3 +106,11 @@ data "aws_ami" "centos_oracle_db" {
     values = ["ebs"]
   }
 }
+
+#Overide autostop tag
+locals {
+  tags = "${merge(
+    var.tags,
+    map("autostop-${var.environment_type}", "Phase1")
+  )}"
+}
