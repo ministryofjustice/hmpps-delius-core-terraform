@@ -146,8 +146,9 @@ pipeline {
     agent { label "jenkins_slave" }
 
     parameters {
-        string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
-        string(name: 'DCORE_BRANCH',  description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
+        string(name: 'CONFIG_BRANCH',              description: 'Target Branch for hmpps-env-configs',           defaultValue: 'master')
+        string(name: 'DCORE_BRANCH',               description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
+        string(name: 'DB_HIGH_AVAILABILITY_COUNT', description: 'Number of HA DBs [ 0 | 1 | 2 ]',                defaultValue: '0')
         booleanParam(name: 'deploy_DatabaseStandBy1', defaultValue: true, description: 'Deploy/update Database StandBy 1?')
         booleanParam(name: 'deploy_DatabaseStandBy2', defaultValue: true, description: 'Deploy/update Database StandBy 2?')
         booleanParam(name: 'deploy_DATABASE_HA', defaultValue: true, description: 'Deploy/update Database High Availibilty?')
@@ -203,7 +204,7 @@ pipeline {
                 }
 
                 stage('Delius Database StandBy1') {
-                    when { expression { return params.deploy_DatabaseStandBy1 } }
+                    when {expression { params.DB_HIGH_AVAILABILITY_COUNT == "1" ||  params.DB_HIGH_AVAILABILITY_COUNT == "2" }}
                     steps {
                         script {
                             do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1')
@@ -212,7 +213,7 @@ pipeline {
                 }
 
                 stage('Delius Database StandBy2') {
-                    when { expression { return params.deploy_DatabaseStandBy2 } }
+                    when {expression { params.DB_HIGH_AVAILABILITY_COUNT == "2" }}
                     steps {
                         script {
                             do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2')
@@ -356,10 +357,10 @@ pipeline {
         }
 
         stage('Build Delius Database High Availibilty') {
-            when { expression { return params.deploy_DATABASE_HA } }
+            when {expression { params.DB_HIGH_AVAILABILITY_COUNT == "1" ||  params.DB_HIGH_AVAILABILITY_COUNT == "2" }}
             steps {
                 println("Build Database High Availibilty")
-                build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+                build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'high_availability_count', value: params.DB_HIGH_AVAILABILITY_COUNT]]
             }
         }
 
@@ -367,6 +368,7 @@ pipeline {
             parallel {
 
                 stage('Check Oracle Software Patches on HA 1') {
+                    when {expression { params.DB_HIGH_AVAILABILITY_COUNT == "1" ||  params.DB_HIGH_AVAILABILITY_COUNT == "2" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                        println("Check Oracle Software Patches")
@@ -376,6 +378,7 @@ pipeline {
                 }
 
                 stage('Check Oracle Software Patches on HA 2') {
+                    when {expression { params.DB_HIGH_AVAILABILITY_COUNT == "2" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                        println("Check Oracle Software Patches")
