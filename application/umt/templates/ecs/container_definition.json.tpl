@@ -50,7 +50,7 @@
 
         { "name": "OID_URLS",               "value": "${ldap_url}" },
         { "name": "OID_USERNAME",           "value": "${ldap_username}" },
-        { "name": "OID_BASE",               "value": "${ldap_base}" },
+        { "name": "OID_BASE",               "value": "${ldap_base_users},${ldap_base}" },
         { "name": "OID_USEORACLEATTRIBUTES","value": "false" }
     ],
     "secrets": [
