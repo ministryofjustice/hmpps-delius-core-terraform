@@ -194,7 +194,7 @@ CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 'ldap_admin_password':'$ldap_admin_password', \
 'database_password':'$database_password', \
 'usermanagement_secret':'$usermanagement_secret', \
-'activemq_remoteCF_username':'$remote_broker_username', \
-'activemq_remoteCF_password':'$remote_broker_password', \
+'remote_broker_username':'$remote_broker_username', \
+'remote_broker_password':'$remote_broker_password', \
 'instance_id':'$INSTANCE_ID' \
 }"
