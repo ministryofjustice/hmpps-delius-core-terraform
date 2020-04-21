@@ -32,6 +32,10 @@ if [ -f "${lockfile}" ]; then
     exit 0
 fi
 
+if [ ! -f "${module_ids}" ]; then
+    echo "Exiting no module list file to import"
+    exit 0
+fi
 
 echo "Show list of modules and IDs"
 
