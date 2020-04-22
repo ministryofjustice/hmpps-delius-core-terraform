@@ -107,6 +107,10 @@ data "aws_ami" "centos_oracle_db" {
   }
 }
 
+data "aws_route53_zone" "public" {
+  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+}
+
 #Overide autostop tag
 locals {
   tags = "${merge(
