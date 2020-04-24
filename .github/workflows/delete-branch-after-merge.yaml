@@ -15,6 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: gem install octokit
-      - run: ruby bin/delete-branch-after-merge.rb
+      - run: ruby /delete-branch-after-merge.rb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
