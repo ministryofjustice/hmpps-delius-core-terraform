@@ -88,3 +88,5 @@ It is even more recommended to use the automated CI build directly.
 ### Bastion
 
 To access an environment you will need to use the bastion host.
+
+## GitHub Actions
