@@ -10,7 +10,6 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts_warning_alarm" {
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
-  insufficient_data_actions = ["${var.action_arn}"]
   dimensions {
     LoadBalancer = "${local.lb_id}"
     TargetGroup = "${local.tg_id}"
@@ -29,7 +28,6 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts_fatal_alarm" {
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
-  insufficient_data_actions = ["${var.action_arn}"]
   dimensions {
     LoadBalancer = "${local.lb_id}"
     TargetGroup = "${local.tg_id}"
@@ -48,7 +46,6 @@ resource "aws_cloudwatch_metric_alarm" "cpu_util_warning_alarm" {
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
-  insufficient_data_actions = ["${var.action_arn}"]
   dimensions {
     AutoScalingGroupName = "${var.asg_name}"
   }
@@ -66,7 +63,6 @@ resource "aws_cloudwatch_metric_alarm" "cpu_util_critical_alarm" {
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
-  insufficient_data_actions = ["${var.action_arn}"]
   dimensions {
     AutoScalingGroupName = "${var.asg_name}"
   }
@@ -80,7 +76,6 @@ resource "aws_cloudwatch_metric_alarm" "heap_usage_warning_alarm" {
   evaluation_periods        = "1"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
-  insufficient_data_actions = ["${var.action_arn}"]
   metric_query {
     id          = "e1"
     expression  = "100*(m2-m1)/m2"
@@ -121,7 +116,6 @@ resource "aws_cloudwatch_metric_alarm" "heap_usage_critical_alarm" {
   evaluation_periods        = "1"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
-  insufficient_data_actions = ["${var.action_arn}"]
   metric_query {
     id          = "e1"
     expression  = "100*(m2-m1)/m2"

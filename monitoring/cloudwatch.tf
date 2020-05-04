@@ -45,7 +45,6 @@ resource "aws_cloudwatch_metric_alarm" "response_time_warning_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     LoadBalancer = "${local.ndelius_alb_id}"
   }
@@ -63,7 +62,6 @@ resource "aws_cloudwatch_metric_alarm" "response_time_critical_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     LoadBalancer = "${local.ndelius_alb_id}"
   }
@@ -81,7 +79,6 @@ resource "aws_cloudwatch_metric_alarm" "response_time_fatal_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     LoadBalancer = "${local.ndelius_alb_id}"
   }
@@ -99,7 +96,6 @@ resource "aws_cloudwatch_metric_alarm" "activemq_healthy_hosts_fatal_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     LoadBalancerName = "${data.terraform_remote_state.spg.jms_lb["name"]}"
   }
@@ -117,7 +113,6 @@ resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_warning_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     AutoScalingGroupName = "${data.terraform_remote_state.spg.asg["name"]}"
   }
@@ -135,7 +130,6 @@ resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_critical_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     AutoScalingGroupName = "${data.terraform_remote_state.spg.asg["name"]}"
   }
@@ -153,7 +147,6 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_warning_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     AutoScalingGroupName = "${data.terraform_remote_state.ldap.asg["name"]}"
   }
@@ -171,7 +164,6 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_critical_alarm" {
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
-  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
   dimensions {
     AutoScalingGroupName = "${data.terraform_remote_state.ldap.asg["name"]}"
   }
