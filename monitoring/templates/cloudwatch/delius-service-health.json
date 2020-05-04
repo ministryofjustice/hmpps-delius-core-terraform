@@ -183,7 +183,7 @@
         "stacked": false,
         "region": "${region}",
         "title": "WebLogic Memory Usage",
-        "period": 300,
+        "period": 60,
         "legend": {
           "position": "right"
         },
@@ -191,7 +191,8 @@
           "left": {
             "min": 0
           }
-        }
+        },
+        "stat": "Sum"
       }
     }
   ]
