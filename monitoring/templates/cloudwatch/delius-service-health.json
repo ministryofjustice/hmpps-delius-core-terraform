@@ -75,7 +75,8 @@
       "properties": {
         "metrics": [
           [ "AWS/EC2", "CPUUtilization", "InstanceId", "${instance_delius_db_1}", { "label": "Database" } ],
-          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ]
+          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ],
+          [ "...", "${asg_ldap}", { "label": "LDAP" } ]
         ],
         "view": "timeSeries",
         "stacked": false,

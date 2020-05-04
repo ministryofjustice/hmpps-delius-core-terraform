@@ -56,6 +56,7 @@ data "template_file" "delius_service_health_dashboard_file" {
     asg_ndelius                   = "${data.terraform_remote_state.ndelius.asg["name"]}"
     asg_interface                 = "${data.terraform_remote_state.interface.asg["name"]}"
     asg_spg                       = "${data.terraform_remote_state.spg.asg["name"]}"
+    asg_ldap                      = "${data.terraform_remote_state.ldap.asg["name"]}"
     instance_delius_db_1          = "${data.terraform_remote_state.db.ami_delius_db_1}"
   }
 }

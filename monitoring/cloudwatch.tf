@@ -140,3 +140,39 @@ resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_critical_alarm" {
     AutoScalingGroupName = "${data.terraform_remote_state.spg.asg["name"]}"
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "ldap_cpu_warning_alarm" {
+  alarm_name                = "${var.environment_name}-ldap-cpu-cwa--warning"
+  alarm_description         = "LDAP average CPU utilization exceeded 75%."
+  namespace                 = "AWS/EC2"
+  statistic                 = "Average"
+  metric_name               = "CPUUtilization"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  threshold                 = "75"
+  evaluation_periods        = "1"
+  period                    = "60"
+  alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
+  ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
+  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
+  dimensions {
+    AutoScalingGroupName = "${data.terraform_remote_state.ldap.asg["name"]}"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "ldap_cpu_critical_alarm" {
+  alarm_name                = "${var.environment_name}-ldap-cpu-cwa--critical"
+  alarm_description         = "LDAP average CPU utilization exceeded 90%."
+  namespace                 = "AWS/EC2"
+  statistic                 = "Average"
+  metric_name               = "CPUUtilization"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  threshold                 = "90"
+  evaluation_periods        = "1"
+  period                    = "60"
+  alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
+  ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
+  insufficient_data_actions = ["${aws_sns_topic.alarm_notification.arn}"]
+  dimensions {
+    AutoScalingGroupName = "${data.terraform_remote_state.ldap.asg["name"]}"
+  }
+}
