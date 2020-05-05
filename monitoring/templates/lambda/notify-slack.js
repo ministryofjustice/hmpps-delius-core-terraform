@@ -3,7 +3,8 @@ var util = require("util");
 
 exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, 2));
-    const now = new Date().getHours();
+    const londonTime = new Date().toLocaleString("en-GB", {timeZone: "Europe/London"});
+    const now = new Date(londonTime).getHours();
     if (now >= +"${quiet_period_start_hour}" && now < +"${quiet_period_end_hour}") {
         console.log("In quiet period, dismissing alarm");
         return;
@@ -12,7 +13,12 @@ exports.handler = function(event, context) {
     const eventMessage = JSON.parse(event.Records[0].Sns.Message);
     let severity = eventMessage.AlarmName.split("--")[1];    // could we use tags for this??
     if (eventMessage.NewStateValue === "OK") severity = "ok";
-    if (eventMessage.NewStateValue === "INSUFFICIENT_DATA") severity = "insufficient data";
+
+    if (eventMessage.NewStateValue === "INSUFFICIENT_DATA"
+        || (eventMessage.NewStateValue === "OK" && eventMessage.OldStateValue === "INSUFFICIENT_DATA")) {
+        console.log("Ignoring 'INSUFFICIENT_DATA' notification");
+        return;
+    }
 
     let icon_emoji = ":question:";
     if (severity === "ok")       icon_emoji = ":yep:";
@@ -24,7 +30,7 @@ exports.handler = function(event, context) {
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Environment: ${environment_name}"
         + "\n> Description: *" + eventMessage.AlarmDescription + "*"
-        + "\nhttps://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/" + eventMessage.AlarmName;
+        + "\n<https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/" + eventMessage.AlarmName + "|View Details>";
     // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
 
     const req = https.request({

@@ -29,3 +29,11 @@ output "asg" {
     "name"  = "${aws_autoscaling_group.asg.name}",
   }
 }
+
+output "lb" {
+  value = {
+    "id"    = "${aws_elb.lb.id}",
+    "arn"   = "${aws_elb.lb.arn}",
+    "name"  = "${aws_elb.lb.name}",
+  }
+}
