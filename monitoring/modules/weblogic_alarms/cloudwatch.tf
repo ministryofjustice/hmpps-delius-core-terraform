@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_metric_alarm" "healthy_hosts_warning_alarm" {
   alarm_name                = "${var.environment_name}-${var.tier_name}-weblogic-healthy-hosts-cwa--warning"
-  alarm_description         = "Unhealthy WebLogic instances exceeded 1 for the ${var.tier_name} domain."
+  alarm_description         = "One or more WebLogic instances in the `${var.tier_name}` domain stopped responding."
   namespace                 = "AWS/ApplicationELB"
   statistic                 = "Minimum"
   metric_name               = "UnHealthyHostCount"
@@ -18,7 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts_warning_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "healthy_hosts_fatal_alarm" {
   alarm_name                = "${var.environment_name}-${var.tier_name}-weblogic-healthy-hosts-cwa--fatal"
-  alarm_description         = "Healthy WebLogic instances dropped below 1 for the ${var.tier_name} domain."
+  alarm_description         = "All WebLogic instances in the `${var.tier_name}` domain stopped responding."
   namespace                 = "AWS/ApplicationELB"
   statistic                 = "Minimum"
   metric_name               = "HealthyHostCount"
