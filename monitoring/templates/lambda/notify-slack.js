@@ -3,7 +3,8 @@ var util = require("util");
 
 exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, 2));
-    const now = new Date().getHours();
+    const londonTime = new Date().toLocaleString("en-GB", {timeZone: "Europe/London"});
+    const now = new Date(londonTime).getHours();
     if (now >= +"${quiet_period_start_hour}" && now < +"${quiet_period_end_hour}") {
         console.log("In quiet period, dismissing alarm");
         return;
