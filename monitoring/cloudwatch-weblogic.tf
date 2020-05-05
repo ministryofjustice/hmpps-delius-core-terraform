@@ -36,7 +36,7 @@ resource "aws_cloudwatch_metric_alarm" "response_time_warning_alarm" {
   statistic                 = "Average"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "1"
-  evaluation_periods        = "1"
+  evaluation_periods        = "3"
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
@@ -53,7 +53,7 @@ resource "aws_cloudwatch_metric_alarm" "response_time_critical_alarm" {
   metric_name               = "TargetResponseTime"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "5"
-  evaluation_periods        = "1"
+  evaluation_periods        = "3"
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
