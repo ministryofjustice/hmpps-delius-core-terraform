@@ -317,13 +317,14 @@ pipeline {
                     }
                 }
 
-                stage('Pingdom checks') {
-                    steps {
-                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
-                        }
-                    }
-                }
+                // Skipping this stage, due to Pingdom credentials issue. May need to review whether we need the checks at all.
+//                stage('Pingdom checks') {
+//                    steps {
+//                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+//                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+//                        }
+//                    }
+//                }
 
                 stage('Monitoring and Alerts') {
                     steps {
