@@ -13,8 +13,8 @@ resource "aws_security_group_rule" "delius_dss_out" {
   cidr_blocks = ["0.0.0.0/0"]
   type              = "egress"
   protocol          = "tcp"
-  from_port         = 0
-  to_port           = 0
+  from_port         = 443
+  to_port           = 443
   description       = "Outbound HTTPS"
 }
 
