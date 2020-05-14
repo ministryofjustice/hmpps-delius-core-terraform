@@ -6,7 +6,7 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts_warning_alarm" {
   metric_name               = "UnHealthyHostCount"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "1"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts_fatal_alarm" {
   metric_name               = "HealthyHostCount"
   comparison_operator       = "LessThanThreshold"
   threshold                 = "1"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
@@ -36,13 +36,13 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts_fatal_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_util_warning_alarm" {
   alarm_name                = "${var.environment_name}-${var.tier_name}-weblogic-cpu-cwa--warning"
-  alarm_description         = "WebLogic average CPU utilization exceeded 75% for the ${var.tier_name} domain."
+  alarm_description         = "WebLogic average CPU utilization exceeded 75% for the `${var.tier_name}` domain."
   namespace                 = "AWS/EC2"
   statistic                 = "Average"
   metric_name               = "CPUUtilization"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "75"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
@@ -53,13 +53,13 @@ resource "aws_cloudwatch_metric_alarm" "cpu_util_warning_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_util_critical_alarm" {
   alarm_name                = "${var.environment_name}-${var.tier_name}-weblogic-cpu-cwa--critical"
-  alarm_description         = "WebLogic average CPU utilization exceeded 90% for the ${var.tier_name} domain."
+  alarm_description         = "WebLogic average CPU utilization exceeded 90% for the `${var.tier_name}` domain."
   namespace                 = "AWS/EC2"
   statistic                 = "Average"
   metric_name               = "CPUUtilization"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "90"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
@@ -70,10 +70,10 @@ resource "aws_cloudwatch_metric_alarm" "cpu_util_critical_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "heap_usage_warning_alarm" {
   alarm_name                = "${var.environment_name}-${var.tier_name}-weblogic-heap-cwa--warning"
-  alarm_description         = "WebLogic average heap usage exceeded 75% for the ${var.tier_name} domain."
+  alarm_description         = "WebLogic average heap usage exceeded 75% for the `${var.tier_name}` domain."
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "75"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
   metric_query {
@@ -110,10 +110,10 @@ resource "aws_cloudwatch_metric_alarm" "heap_usage_warning_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "heap_usage_critical_alarm" {
   alarm_name                = "${var.environment_name}-${var.tier_name}-weblogic-heap-cwa--critical"
-  alarm_description         = "WebLogic average heap usage exceeded 90% for the ${var.tier_name} domain."
+  alarm_description         = "WebLogic average heap usage exceeded 90% for the `${var.tier_name}` domain."
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "90"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   alarm_actions             = ["${var.action_arn}"]
   ok_actions                = ["${var.action_arn}"]
   metric_query {
