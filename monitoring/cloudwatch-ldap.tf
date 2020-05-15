@@ -6,7 +6,7 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_warning_alarm" {
   metric_name               = "CPUUtilization"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "75"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
@@ -23,7 +23,7 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_critical_alarm" {
   metric_name               = "CPUUtilization"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   threshold                 = "90"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
@@ -40,7 +40,7 @@ resource "aws_cloudwatch_metric_alarm" "ldap_healthy_hosts_fatal_alarm" {
   metric_name               = "HealthyHostCount"
   comparison_operator       = "LessThanThreshold"
   threshold                 = "1"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]

@@ -6,7 +6,7 @@ resource "aws_cloudwatch_metric_alarm" "activemq_healthy_hosts_fatal_alarm" {
   metric_name               = "HealthyHostCount"
   comparison_operator       = "LessThanThreshold"
   threshold                 = "1"
-  evaluation_periods        = "1"
+  evaluation_periods        = "5"
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
   ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
