@@ -1,6 +1,8 @@
 def project = [:]
 project.config    = 'hmpps-env-configs'
 project.dcore     = 'hmpps-delius-core-terraform'
+project.config_version  = ''
+project.dcore_version   = ''
 
 // Parameters required for job
 // parameters:
@@ -16,7 +18,29 @@ project.dcore     = 'hmpps-delius-core-terraform'
 //     booleanParam:
 //       name: 'confirmation'
 //       description: 'Whether to require manual confirmation of terraform plans.'
+def get_version(env_name, repo_name, override_version) {
+  ssm_param_version = sh (
+    script: "aws ssm get-parameters --region eu-west-2 --name \"/versions/delius-core/repo/${repo_name}/${env_name}\" --query Parameters | jq '.[] | select(.Name | test(\"${env_name}\")) | .Value' --raw-output",
+    returnStdout: true
+  ).trim()
 
+  if (ssm_param_version!="" && override_version=="master") {
+    return ssm_param_version
+  } else {
+    return override_version
+  }
+}
+
+def checkout_version(git_project_dir, git_version) {
+  sh """
+    #!/usr/env/bin bash
+    set +e
+    pushd "${git_project_dir}"
+    git checkout "${git_version}"
+    echo `git symbolic-ref -q --short HEAD || git describe --tags --exact-match`
+    popd
+  """
+}
 
 def prepare_env() {
     sh '''
@@ -133,14 +157,6 @@ def do_terraform(config_dir, env_name, git_project, component) {
     }
 }
 
-def debug_env() {
-    sh '''
-    #!/usr/env/bin bash
-    pwd
-    ls -al
-    '''
-}
-
 pipeline {
 
     agent { label "jenkins_slave" }
@@ -156,14 +172,25 @@ pipeline {
 
         stage('setup') {
             steps {
+                script {
+                  project.config_version = get_version(environment_name, project.config, env.CONFIG_BRANCH)
+                  println("Version from function (project.config_version) -- " + project.config_version)
+
+                  project.dcore_version  = get_version(environment_name, project.dcore, env.DCORE_BRANCH)
+                  println("Version from function (project.dcore_version) -- " + project.dcore_version)
+                }
+
                 slackSend(message: "\"Apply\" started on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
 
                 dir( project.config ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: env.CONFIG_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
+                checkout_version(project.config, project.config_version)
+
                 dir( project.dcore ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: env.DCORE_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
+                checkout_version(project.dcore, project.dcore_version)
 
                 prepare_env()
             }
@@ -339,8 +366,8 @@ pipeline {
         stage('Build Delius Database High Availibilty') {
             when { expression { return params.deploy_DATABASE_HA } }
             steps {
-                println("Build Database High Availibilty")
-                build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+              println("Build Database High Availibilty")
+              build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
             }
         }
 
@@ -350,8 +377,8 @@ pipeline {
                 stage('Check Oracle Software Patches on HA 1') {
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                       println("Check Oracle Software Patches")
-                       build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                         println("Check Oracle Software Patches")
+                         build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                        }
                     }
                 }
@@ -359,8 +386,8 @@ pipeline {
                 stage('Check Oracle Software Patches on HA 2') {
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                       println("Check Oracle Software Patches")
-                       build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                         println("Check Oracle Software Patches")
+                         build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                        }
                     }
                 }
@@ -369,7 +396,8 @@ pipeline {
 
         stage('Smoke test') {
             steps {
-                build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+              println("Smoke test")
+              build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
             }
         }
     }
