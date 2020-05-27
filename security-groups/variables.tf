@@ -95,3 +95,8 @@ variable "azure_oasys_proxy_source" {
   type        = "list"
   default     = []
 }
+
+variable "ci_db_ingress_1521" {
+  description = "Enable sg rule for ingress to port 1521 from CI eg Jenkins/AWS CodePipeline"
+  default     = false
+}

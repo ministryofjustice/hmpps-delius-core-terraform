@@ -169,3 +169,15 @@ resource "aws_security_group_rule" "gdpr_api_db_in" {
   source_security_group_id = "${aws_security_group.gdpr_api.id}"
   description              = "Delius GDPR API In"
 }
+
+# Allow CI (Jenkins/AWS CodePipeline) access to DB
+resource "aws_security_group_rule" "eng_ci_db_in_1521" {
+  count                    = "${var.ci_db_ingress_1521}"
+  security_group_id        = "${aws_security_group.delius_db_in.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = "${data.terraform_remote_state.ora_db_op_security_groups_support_ci.sg_map_ids.ci_delius_db}"
+  description              = "CI in 1521"
+}
