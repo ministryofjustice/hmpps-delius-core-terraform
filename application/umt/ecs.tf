@@ -1,4 +1,3 @@
-
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = "${var.environment_name}-${local.app_name}-task-definition"
   container_definitions    = "${data.template_file.container_definition.rendered}"
@@ -15,6 +14,9 @@ resource "aws_ecs_service" "service" {
   name            = "${var.short_environment_name}-${local.app_name}-service"
   cluster         = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_id}"
   task_definition = "${aws_ecs_task_definition.task_definition.arn}"
+
+  health_check_grace_period_seconds = 180
+
   load_balancer {
     target_group_arn = "${data.terraform_remote_state.ndelius.umt_targetgroup_arn}"
     container_name   = "${local.app_name}"
