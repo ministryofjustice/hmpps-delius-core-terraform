@@ -26,7 +26,7 @@
     "entryPoint": ["java","-Duser.timezone=Europe/London","-jar","/app/app.jar"],
     "environment": [
         { "name": "SERVER_USE-FORWARD-HEADERS",             "value": "true" },
-        { "name": "SERVER_FORWARD-HEADER-STRATEGY",         "value": "native" },
+        { "name": "SERVER_FORWARD-HEADERS-STRATEGY",        "value": "native" },
         { "name": "SPRING_DATASOURCE_URL",                  "value": "${database_url}" },
         { "name": "SPRING_DATASOURCE_USERNAME",             "value": "${database_username}" },
         { "name": "SPRING_DATASOURCE_TYPE",                 "value": "oracle.jdbc.pool.OracleDataSource" },
