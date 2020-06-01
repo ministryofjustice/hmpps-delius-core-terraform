@@ -258,7 +258,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform security-groups")
-                          //do_terraform(project.config, environment_name, project.dcore, 'security-groups')
+                          do_terraform(project.config, environment_name, project.dcore, 'security-groups')
                         }
                     }
                 }
@@ -267,7 +267,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform key_profile")
-                          //do_terraform(project.config, environment_name, project.dcore, 'key_profile')
+                          do_terraform(project.config, environment_name, project.dcore, 'key_profile')
                         }
                     }
                 }
@@ -281,7 +281,7 @@ pipeline {
                     steps {
                         script {
                             println("terraform database_failover")
-                            // do_terraform(project.config, environment_name, project.dcore, 'database_failover')
+                            do_terraform(project.config, environment_name, project.dcore, 'database_failover')
                         }
                     }
                 }
@@ -291,7 +291,7 @@ pipeline {
                     steps {
                         script {
                             println("terraform database_standbydb1")
-                            // do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1')
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1')
                         }
                     }
                 }
@@ -301,16 +301,16 @@ pipeline {
                     steps {
                         script {
                             println("terraform database_standbydb2")
-                            // do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2')
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2')
                         }
                     }
                 }
-                
+
                 stage('Delius Application LDAP') {
                     steps {
                         script {
                           println("terraform application/ldap")
-                          //do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
                         }
                     }
                 }
@@ -321,7 +321,7 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     println("Check Oracle Software Patches on Primary")
-                    //build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_primarydb'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                    build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_primarydb'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                 }
             }
         }
@@ -332,7 +332,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform loadrunner")
-                          //do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
+                          do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
                         }
                     }
                 }
@@ -341,7 +341,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform management")
-                          //do_terraform(project.config, environment_name, project.dcore, 'management')
+                          do_terraform(project.config, environment_name, project.dcore, 'management')
                         }
                     }
                 }
@@ -350,7 +350,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform pwm")
-                          //do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                          do_terraform(project.config, environment_name, project.dcore, 'pwm')
                         }
                     }
                 }
@@ -363,7 +363,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/ndelius")
-                            //do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
                         }
                     }
                 }
@@ -372,7 +372,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/spg")
-                            //do_terraform(project.config, environment_name, project.dcore, 'application/spg')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/spg')
                         }
                     }
                 }
@@ -381,7 +381,7 @@ pipeline {
                     steps {
                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/interface")
-                            //do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/interface')
                         }
                     }
                 }
@@ -394,7 +394,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/umt")
-                          //do_terraform(project.config, environment_name, project.dcore, 'application/umt')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/umt')
                         }
                     }
                 }
@@ -403,7 +403,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/aptracker-api")
-                          //do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api')
                         }
                     }
                 }
@@ -412,7 +412,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/gdpr")
-                          //do_terraform(project.config, environment_name, project.dcore, 'application/gdpr')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/gdpr')
                         }
                     }
                 }
@@ -425,7 +425,7 @@ pipeline {
                     steps{
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("batch/dss")
-                            //do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
+                            do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
                         }
                     }
                 }
@@ -435,7 +435,7 @@ pipeline {
 //                    steps {
 //                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 //                            println("terraform pingdom")
-//                            //do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+//                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
 //                        }
 //                    }
 //                }
@@ -444,7 +444,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                           println("terraform monitoring")
-                          //do_terraform(project.config, environment_name, project.dcore, 'monitoring')
+                          do_terraform(project.config, environment_name, project.dcore, 'monitoring')
                         }
                     }
                 }
@@ -455,7 +455,7 @@ pipeline {
             when {expression { (db_high_availability_count == 1 || db_high_availability_count == 2) && deploy_DATABASE_HA == "true" }}
             steps {
               println("Build Database High Availibilty")
-              //build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+              build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
             }
         }
 
@@ -467,7 +467,7 @@ pipeline {
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                          println("Check Oracle Software Patcheson HA 1")
-                         //build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                         build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                        }
                     }
                 }
@@ -477,7 +477,7 @@ pipeline {
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                          println("Check Oracle Software Patcheson HA 2")
-                         //build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                         build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                        }
                     }
                 }
@@ -487,7 +487,7 @@ pipeline {
         stage('Smoke test') {
             steps {
               println("Smoke test")
-              //build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+              build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
             }
         }
     }
