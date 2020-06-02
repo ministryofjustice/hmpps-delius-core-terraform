@@ -227,7 +227,7 @@ pipeline {
                               userRemoteConfigs:
                                 [[url: 'git@github.com:ministryofjustice/' + project.config, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]],
                               branches:
-                                [[name: 'origin/*' + project.config_version]]],
+                                [[name: project.config_version]]],
                               poll: false
                 }
                 debug_env(project.config, project.config_version)
@@ -238,7 +238,7 @@ pipeline {
                               userRemoteConfigs:
                                 [[url: 'git@github.com:ministryofjustice/' + project.dcore, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]],
                               branches:
-                                [[name: 'origin/*' + project.dcore_version]]],
+                                [[name: project.dcore_version]]],
                               poll: false
                 }
                 debug_env(project.dcore, project.dcore_version)
