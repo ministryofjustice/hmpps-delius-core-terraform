@@ -103,29 +103,79 @@ cat << EOF > ~/bootstrap.yml
      - bootstrap
      - users
      - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}"
-     # - rsyslog
-     # - elasticbeats
-     # - tier specific role
 EOF
 
+## Cut down script for running the application bootstrap for dev purposes
+cat << EOF > ~/devbootstrap.yml
+---
+
+- hosts: localhost
+vars_files:
+ - "{{ playbook_dir }}/vars.yml"
+ - "{{ playbook_dir }}/users.yml"
+ - "{{ playbook_dir }}/all.yml"
+ - "{{ playbook_dir }}/env-all.yml"
+ - "{{ playbook_dir }}/env-ldap.yml"
+roles:
+   - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}"
+EOF
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
 # get ssm parameters
 # TODO replace project name with sub-project name
-PARAM=$(aws ssm get-parameters \
+export PARAM=\$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
 "/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
 --query Parameters)
 
-# set parameter values
-bind_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+export bind_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
 
+EOF
+chmod u+x ~/getcreds
+
+# Create boot script to allow for easier reruns if needed
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+. /etc/environment
 /usr/bin/curl -o ~/ansible.cfg https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/ansible/ansible.cfg
 export ANSIBLE_CONFIG=~/ansible.cfg
-export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
 
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
---extra-vars "{\
-'instance_id':'$INSTANCE_ID', \
-'bind_password':'$bind_password'\
-}"
+   --extra-vars "{\
+     'instance_id':'\$INSTANCE_ID', \
+     'bind_password':'\$bind_password'\
+   }" \
+   -b -vvvv
+EOF
+#
+chmod u+x ~/runboot.sh
+
+# Create boot script to allow for easier reruns if needed
+cat << EOF > ~/devboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+. /etc/environment
+/usr/bin/curl -o ~/ansible.cfg https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/ansible/ansible.cfg
+export ANSIBLE_CONFIG=~/ansible.cfg
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+
+ansible-galaxy install -f -r ~/requirements.yml
+ansible-playbook ~/devbootstrap.yml \
+   --extra-vars "{\
+     'instance_id':'\$INSTANCE_ID', \
+     'bind_password':'\$bind_password'\
+   }" \
+   -b -vvvv
+EOF
+#
+chmod u+x ~/devboot.sh
+
+# Run the boot script
+~/runboot.sh
