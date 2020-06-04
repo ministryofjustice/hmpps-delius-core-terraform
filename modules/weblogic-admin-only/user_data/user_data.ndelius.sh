@@ -166,10 +166,10 @@ export PARAM=$(aws ssm get-parameters \
 --query Parameters)
 
 # set parameter values
-export weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
-export ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
-export database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
-export usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
+export weblogic_admin_password="\$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
+export ldap_admin_password="\$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+export database_password="\$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
+export usermanagement_secret="\$(echo $PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
 
 EOF
 chmod u+x ~/getcreds
@@ -177,38 +177,24 @@ chmod u+x ~/getcreds
 # Create boot script to allow for easier reruns if needed
 cat << EOF > ~/runboot.sh
 #!/usr/bin/env bash
+playbook=\$1
+
 . ~/getcreds
 . /etc/environment
 export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
 ansible-galaxy install -f -r ~/requirements.yml
-CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
-   -b -vvvv \
-   -e weblogic_admin_password="$(echo $weblogic_admin_password)" \
-   -e ldap_admin_password="$(echo $ldap_admin_password)" \
-   -e database_password="$(echo $database_password)" \
-   -e usermanagement_secret="$(echo $usermanagement_secret)" \
-   -e instance_id="$(echo $INSTANCE_ID)"
+CONFIGURE_SWAP=true ansible-playbook "~/\${playbook}.yml" \
+   --extra-vars "{\
+     'weblogic_admin_password':'\$weblogic_admin_password', \
+     'ldap_admin_password':'\$ldap_admin_password', \
+     'database_password':'\$database_password', \
+     'usermanagement_secret':'\$usermanagement_secret', \
+     'instance_id':'\$INSTANCE_ID', \
+   }" \
+   -b -vvvv
 EOF
 #
 chmod u+x ~/runboot.sh
 
-## Cut down script for running the application bootstrap for dev purposes
-cat << EOF > ~/devboot.sh
-#!/usr/bin/env bash
-. ~/getcreds
-. /etc/environment
-export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
-ansible-galaxy install -f -r ~/requirements.yml
-ansible-playbook ~/devbootstrap.yml \
-   -b -vvvv \
-   -e weblogic_admin_password="$(echo $weblogic_admin_password)" \
-   -e ldap_admin_password="$(echo $ldap_admin_password)" \
-   -e database_password="$(echo $database_password)" \
-   -e usermanagement_secret="$(echo $usermanagement_secret)" \
-   -e instance_id="$(echo $INSTANCE_ID)"
-EOF
-#
-chmod u+x ~/devboot.sh
-
 # Run the boot script
-~/runboot.sh
+~/runboot.sh bootstrap
