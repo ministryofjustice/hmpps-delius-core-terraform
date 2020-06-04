@@ -164,10 +164,10 @@ export PARAM=\$(aws ssm get-parameters \
 "/${environment_name}/${project_name}/umt/umt/delius_secret" \
 "/${environment_name}/${project_name}/aptracker_api/errors_ui/delius_secret" \
 --query Parameters)
-export weblogic_admin_password="\$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
-export ldap_admin_password="\$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
-export database_password="\$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
-export usermanagement_secret="\$(echo $PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
+export weblogic_admin_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
+export ldap_admin_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+export database_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
+export usermanagement_secret="\$(echo \$PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
 
 EOF
 chmod u+x ~/getcreds
