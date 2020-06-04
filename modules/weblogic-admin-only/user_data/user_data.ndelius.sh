@@ -177,13 +177,12 @@ chmod u+x ~/getcreds
 # Create boot script to allow for easier reruns if needed
 cat << EOF > ~/runboot.sh
 #!/usr/bin/env bash
-playbook=\$1
 
 . ~/getcreds
 . /etc/environment
 export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
 ansible-galaxy install -f -r ~/requirements.yml
-CONFIGURE_SWAP=true ansible-playbook "~/\${playbook}.yml" \
+CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
    --extra-vars "{\
      'weblogic_admin_password':'\$weblogic_admin_password', \
      'ldap_admin_password':'\$ldap_admin_password', \
@@ -196,5 +195,26 @@ EOF
 #
 chmod u+x ~/runboot.sh
 
+# Create boot script to allow for easier reruns if needed
+cat << EOF > ~/devboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+. /etc/environment
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements.yml
+ansible-playbook ~/devbootstrap.yml \
+   --extra-vars "{\
+     'weblogic_admin_password':'\$weblogic_admin_password', \
+     'ldap_admin_password':'\$ldap_admin_password', \
+     'database_password':'\$database_password', \
+     'usermanagement_secret':'\$usermanagement_secret', \
+     'instance_id':'\$INSTANCE_ID', \
+   }" \
+   -b -vvvv
+EOF
+#
+chmod u+x ~/devboot.sh
+
 # Run the boot script
-~/runboot.sh bootstrap
+~/runboot.sh
