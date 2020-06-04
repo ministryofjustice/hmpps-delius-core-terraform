@@ -208,3 +208,13 @@ resource "aws_security_group_rule" "ndelius_instances_egress_ldap" {
   source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
   description              = "LDAP ELB out"
 }
+
+resource "aws_security_group_rule" "ndelius_instances_egress_gdpr_db" {
+  security_group_id        = "${aws_security_group.weblogic_ndelius_instances.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.gdpr_db.id}"
+  description              = "GDPR DB out"
+}

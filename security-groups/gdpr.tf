@@ -141,6 +141,16 @@ resource "aws_security_group_rule" "gdpr_db_in_from_api" {
   description              = "GDPR API In"
 }
 
+resource "aws_security_group_rule" "gdpr_db_in_from_weblogic_ndelius" {
+  security_group_id        = "${aws_security_group.gdpr_db.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.weblogic_ndelius_instances.id}"
+  description              = "Weblogic NDelius In"
+}
+
 resource "aws_security_group_rule" "gdpr_db_in_from_bastion" {
   security_group_id = "${aws_security_group.gdpr_db.id}"
   type              = "ingress"
