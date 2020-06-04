@@ -148,9 +148,11 @@ cat << EOF > ~/bootstrap.yml
      # - tier specific role
 EOF
 
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
 # get ssm parameters
 # TODO replace project name with sub-project name
-PARAM=$(aws ssm get-parameters \
+export PARAM=$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
@@ -161,19 +163,31 @@ PARAM=$(aws ssm get-parameters \
 --query Parameters)
 
 # set parameter values
-weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
-ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
-database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
-usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
+export weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
+export ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+export database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
+export usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
 
-export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+EOF
+chmod u+x ~/getcreds
 
+# Create boot script to allow for easier reruns if needed
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+. ~/getcreds
+. /etc/environment
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
---extra-vars "{\
-'weblogic_admin_password':'$weblogic_admin_password', \
-'ldap_admin_password':'$ldap_admin_password', \
-'database_password':'$database_password', \
-'usermanagement_secret':'$usermanagement_secret', \
-'instance_id':'$INSTANCE_ID' \
-}"
+   -b -vvvv \
+   -e weblogic_admin_password="$(echo $weblogic_admin_password)" \
+   -e ldap_admin_password="$(echo $ldap_admin_password)" \
+   -e database_password="$(echo $database_password)" \
+   -e usermanagement_secret="$(echo $usermanagement_secret)" \
+   -e instance_id="$(echo $INSTANCE_ID)"
+EOF
+#
+chmod u+x ~/runboot.sh
+
+# Run the boot script
+~/runboot.sh
