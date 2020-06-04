@@ -46,13 +46,6 @@ cat << EOF > ~/requirements.yml
   src: "${app_bootstrap_src}"
   version: "${app_bootstrap_version}"
 
-# - name: rsyslog
-#   src: https://github.com/ministryofjustice/hmpps-rsyslog-role
-# - name: elasticbeats
-#   src: https://github.com/ministryofjustice/hmpps-beats-monitoring
-# - name: tier specific role
-#   src: https://github.com/ministryofjustice/tier specific role
-
 EOF
 
 /usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
@@ -143,9 +136,19 @@ cat << EOF > ~/bootstrap.yml
      - bootstrap
      - users
      - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_initial_role}"
-     # - rsyslog
-     # - elasticbeats
-     # - tier specific role
+EOF
+
+## Cut down script for running the application bootstrap for dev purposes
+cat << EOF > ~/devbootstrap.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+   - "{{ playbook_dir }}/delius-core.yml"
+  roles:
+     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_initial_role}"
 EOF
 
 cat << EOF > ~/getcreds
@@ -188,6 +191,24 @@ CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
 EOF
 #
 chmod u+x ~/runboot.sh
+
+## Cut down script for running the application bootstrap for dev purposes
+cat << EOF > ~/devboot.sh
+#!/usr/bin/env bash
+. ~/getcreds
+. /etc/environment
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements.yml
+ansible-playbook ~/devbootstrap.yml \
+   -b -vvvv \
+   -e weblogic_admin_password="$(echo $weblogic_admin_password)" \
+   -e ldap_admin_password="$(echo $ldap_admin_password)" \
+   -e database_password="$(echo $database_password)" \
+   -e usermanagement_secret="$(echo $usermanagement_secret)" \
+   -e instance_id="$(echo $INSTANCE_ID)"
+EOF
+#
+chmod u+x ~/devboot.sh
 
 # Run the boot script
 ~/runboot.sh
