@@ -48,13 +48,6 @@ cat << EOF > ~/requirements.yml
   src: "${app_bootstrap_src}"
   version: "${app_bootstrap_version}"
 
-# - name: rsyslog
-#   src: https://github.com/ministryofjustice/hmpps-rsyslog-role
-# - name: elasticbeats
-#   src: https://github.com/ministryofjustice/hmpps-beats-monitoring
-# - name: tier specific role
-#   src: https://github.com/ministryofjustice/tier specific role
-
 EOF
 
 /usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
@@ -157,44 +150,93 @@ cat << EOF > ~/bootstrap.yml
      - nfs
      - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_initial_role}"
      - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_secondary_role}"
-     # - rsyslog
-     # - elasticbeats
-     # - tier specific role
 EOF
 
+## Cut down script for running the application bootstrap for dev purposes
+cat << EOF > ~/devbootstrap.yml
+---
+
+- hosts: localhost
+  vars_files:
+   - "{{ playbook_dir }}/vars.yml"
+   - "{{ playbook_dir }}/users.yml"
+   - "{{ playbook_dir }}/delius-core.yml"
+  roles:
+     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_initial_role}"
+     - "{{ playbook_dir }}/.ansible/roles/${app_bootstrap_name}/roles/${app_bootstrap_secondary_role}"
+EOF
+
+cat << EOF > ~/getcreds
+#!/usr/bin/env bash
 # get ssm parameters
 # TODO replace project name with sub-project name
-PARAM=$(aws ssm get-parameters \
+export PARAM=\$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
-"/${environment_name}/${project_name}/delius-database/db/delius_pool_password" \
 "/${environment_name}/${project_name}/apacheds/apacheds/ldap_admin_password" \
+"/${environment_name}/${project_name}/delius-database/db/delius_pool_password" \
 "/${environment_name}/${project_name}/umt/umt/delius_secret" \
 "/${environment_name}/${project_name}/aptracker_api/errors_ui/delius_secret" \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/remote_broker_username" \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/remote_broker_password" \
 --query Parameters)
-
-# set parameter values
-weblogic_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
-ldap_admin_password="$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
-database_password="$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
-usermanagement_secret="$(echo $PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
-remote_broker_username="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_username")) | .Value' --raw-output)"
-remote_broker_password="$(echo $PARAM | jq '.[] | select(.Name | test("remote_broker_password")) | .Value' --raw-output)"
+export weblogic_admin_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
+export ldap_admin_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
+export database_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
+export usermanagement_secret="\$(echo \$PARAM | jq '.[] | select(.Name | test("umt/delius_secret")) | .Value' --raw-output)"
+export remote_broker_username="\$(echo \$PARAM | jq '.[] | select(.Name | test("remote_broker_username")) | .Value' --raw-output)"
+export remote_broker_password="\$(echo \$PARAM | jq '.[] | select(.Name | test("remote_broker_password")) | .Value' --raw-output)"
 
 
-export ANSIBLE_LOG_PATH=$HOME/.ansible.log
+EOF
+chmod u+x ~/getcreds
 
+# Create boot script to allow for easier reruns if needed
+cat << EOF > ~/runboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+. /etc/environment
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
 ansible-galaxy install -f -r ~/requirements.yml
 CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml \
---extra-vars "{\
-'weblogic_admin_password':'$weblogic_admin_password', \
-'ldap_admin_password':'$ldap_admin_password', \
-'database_password':'$database_password', \
-'usermanagement_secret':'$usermanagement_secret', \
-'remote_broker_username':'$remote_broker_username', \
-'remote_broker_password':'$remote_broker_password', \
-'instance_id':'$INSTANCE_ID' \
-}"
+   --extra-vars "{\
+     'weblogic_admin_password':'\$weblogic_admin_password', \
+     'ldap_admin_password':'\$ldap_admin_password', \
+     'database_password':'\$database_password', \
+     'usermanagement_secret':'\$usermanagement_secret', \
+     'remote_broker_username':'\$remote_broker_username', \
+     'remote_broker_password':'\$remote_broker_password', \
+     'instance_id':'\$INSTANCE_ID', \
+   }" \
+   -b -vvvv
+EOF
+#
+chmod u+x ~/runboot.sh
+
+# Create boot script to allow for easier reruns if needed
+cat << EOF > ~/devboot.sh
+#!/usr/bin/env bash
+
+. ~/getcreds
+. /etc/environment
+export ANSIBLE_LOG_PATH=\$HOME/.ansible.log
+ansible-galaxy install -f -r ~/requirements.yml
+ansible-playbook ~/devbootstrap.yml \
+   --extra-vars "{\
+     'weblogic_admin_password':'\$weblogic_admin_password', \
+     'ldap_admin_password':'\$ldap_admin_password', \
+     'database_password':'\$database_password', \
+     'usermanagement_secret':'\$usermanagement_secret', \
+     'remote_broker_username':'\$remote_broker_username', \
+     'remote_broker_password':'\$remote_broker_password', \
+     'instance_id':'\$INSTANCE_ID', \
+   }" \
+   -b -vvvv
+EOF
+#
+chmod u+x ~/devboot.sh
+
+# Run the boot script
+~/runboot.sh
