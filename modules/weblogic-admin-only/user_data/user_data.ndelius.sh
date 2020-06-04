@@ -155,7 +155,7 @@ cat << EOF > ~/getcreds
 #!/usr/bin/env bash
 # get ssm parameters
 # TODO replace project name with sub-project name
-export PARAM=$(aws ssm get-parameters \
+export PARAM=\$(aws ssm get-parameters \
 --region eu-west-2 \
 --with-decryption --name \
 "/${environment_name}/${project_name}/weblogic/${app_name}-domain/weblogic_admin_password" \
@@ -164,8 +164,6 @@ export PARAM=$(aws ssm get-parameters \
 "/${environment_name}/${project_name}/umt/umt/delius_secret" \
 "/${environment_name}/${project_name}/aptracker_api/errors_ui/delius_secret" \
 --query Parameters)
-
-# set parameter values
 export weblogic_admin_password="\$(echo $PARAM | jq '.[] | select(.Name | test("weblogic_admin_password")) | .Value' --raw-output)"
 export ldap_admin_password="\$(echo $PARAM | jq '.[] | select(.Name | test("ldap_admin_password")) | .Value' --raw-output)"
 export database_password="\$(echo $PARAM | jq '.[] | select(.Name | test("delius_pool_password")) | .Value' --raw-output)"
