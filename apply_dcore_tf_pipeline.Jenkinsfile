@@ -222,6 +222,14 @@ pipeline {
 
                   project.dcore_version  = get_version(environment_name, project.dcore, env.DCORE_BRANCH)
                   println("Version from function (project.dcore_version) -- " + project.dcore_version)
+
+                  def information = """
+                  Started on ${starttime}
+                  project.config_version -- ${project.config_version}
+                  project.dcore_version  -- ${project.dcore_version}
+                  """
+
+                  println information
                 }
 
                 slackSend(message: "\"Apply\" of \"${project.dcore_version}\" started on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
