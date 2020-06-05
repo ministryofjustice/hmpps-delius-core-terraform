@@ -205,6 +205,7 @@ pipeline {
         string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
         string(name: 'DCORE_BRANCH',  description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
         booleanParam(name: 'deploy_DATABASE_HA', defaultValue: true, description: 'Deploy/update Database High Availibilty?')
+        booleanParam(name: 'db_patch_check', defaultValue: true, description: 'Check Oracle DB patches?')
     }
 
 
@@ -318,6 +319,7 @@ pipeline {
         }
 
         stage('Check Oracle Software Patches on Primary') {
+            when {expression { db_patch_check == "true" }}
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     println("Check Oracle Software Patches on Primary")
@@ -463,7 +465,7 @@ pipeline {
             parallel {
 
                 stage('Check Oracle Software Patches on HA 1') {
-                    when {expression { db_high_availability_count == 1 || db_high_availability_count == 2 }}
+                    when {expression { (db_high_availability_count == 1 || db_high_availability_count == 2) && db_patch_check == "true" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                          println("Check Oracle Software Patcheson HA 1")
@@ -473,7 +475,7 @@ pipeline {
                 }
 
                 stage('Check Oracle Software Patches on HA 2') {
-                    when {expression { db_high_availability_count == 2 }}
+                    when {expression { db_high_availability_count == 2 && db_patch_check == "true" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                          println("Check Oracle Software Patcheson HA 2")
