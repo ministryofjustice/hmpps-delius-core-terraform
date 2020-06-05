@@ -214,6 +214,12 @@ pipeline {
         stage('setup') {
             steps {
                 script {
+
+                  def now = new Date()
+                  println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+
+                  
+
                   project.config_version = get_version(environment_name, project.config, env.CONFIG_BRANCH)
                   println("Version from function (project.config_version) -- " + project.config_version)
 
