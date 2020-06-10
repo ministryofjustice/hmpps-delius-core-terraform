@@ -1,3 +1,11 @@
+#Overide autostop tag
+locals {
+  tags = "${merge(
+    var.tags,
+    map("autostop-${var.environment_type}", "Phase1")
+  )}"
+}
+
 module "delius_db_1" {
   source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git?ref=master//modules//oracle-database"
   server_name = "delius-db-1"
