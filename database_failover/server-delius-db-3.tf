@@ -15,7 +15,7 @@ module "delius_db_3" {
     "${data.terraform_remote_state.vpc_security_groups.sg_delius_core_db_in_from_mis_id}",
   ]
 
-  tags                         = "${local.tags}"
+  tags                         = "${var.tags}"
   environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
   bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
   project_name                 = "${var.project_name}"
