@@ -37,7 +37,6 @@ if [ ! -f "${module_ids}" ]; then
     exit 0
 fi
 
-
 echo "Show list of modules and IDs"
 
 for line in $(cat ${module_ids})
