@@ -8,12 +8,6 @@
         "hostPort": 8080,
         "containerPort": 8080
     }],
-    "healthCheck": {
-        "interval": 30,
-        "timeout": 5,
-        "retries": 3,
-        "command": [ "CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/umt/actuator/health || exit 1" ]
-    },
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -23,10 +17,10 @@
             "awslogs-stream-prefix": "ecs-${container_name}"
         }
     },
-    "entryPoint": ["java","-Duser.timezone=Europe/London","-jar","/app/app.jar"],
     "environment": [
+        { "name": "TZ",                                     "value": "Europe/London" },
         { "name": "SERVER_USE-FORWARD-HEADERS",             "value": "true" },
-        { "name": "SERVER_FORWARD-HEADER-STRATEGY",         "value": "native" },
+        { "name": "SERVER_FORWARD-HEADERS-STRATEGY",        "value": "native" },
         { "name": "SPRING_DATASOURCE_URL",                  "value": "${database_url}" },
         { "name": "SPRING_DATASOURCE_USERNAME",             "value": "${database_username}" },
         { "name": "SPRING_DATASOURCE_TYPE",                 "value": "oracle.jdbc.pool.OracleDataSource" },

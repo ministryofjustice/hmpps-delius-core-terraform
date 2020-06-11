@@ -1,6 +1,9 @@
 def project = [:]
-project.config    = 'hmpps-env-configs'
-project.dcore     = 'hmpps-delius-core-terraform'
+project.config          = 'hmpps-env-configs'
+project.dcore           = 'hmpps-delius-core-terraform'
+project.config_version  = ''
+project.dcore_version   = ''
+db_high_availability_count = 0
 
 // Parameters required for job
 // parameters:
@@ -16,7 +19,68 @@ project.dcore     = 'hmpps-delius-core-terraform'
 //     booleanParam:
 //       name: 'confirmation'
 //       description: 'Whether to require manual confirmation of terraform plans.'
+def get_version(env_name, repo_name, override_version) {
+  ssm_param_version = sh (
+    script: "aws ssm get-parameters --region eu-west-2 --name \"/versions/delius-core/repo/${repo_name}/${env_name}\" --query Parameters | jq '.[] | select(.Name | test(\"${env_name}\")) | .Value' --raw-output",
+    returnStdout: true
+  ).trim()
 
+  echo "ssm_param_version - " + ssm_param_version
+  echo "override_version - " + override_version
+
+  if (ssm_param_version!="" && override_version=="master") {
+    return ":refs/tags/" + ssm_param_version
+  } else {
+    return override_version
+  }
+}
+
+def get_db_ha_count(git_project_dir, env_name, db_name) {
+    file = "${git_project_dir}/${env_name}/ansible/group_vars/all.yml"
+    item = "database.${db_name}.high_availability_count"
+    db_ha_count = get_yaml_value(file, item)
+
+    echo "db_ha_count - " + db_ha_count
+
+    if (db_ha_count!="") {
+        return db_ha_count
+    } else {
+        return 0
+    }
+}
+
+def get_yaml_value(file, item_name) {
+    item = sh (
+        script: "cat \"${file}\" | shyaml --quiet get-value \"${item_name}\"",
+        returnStdout: true
+    ).trim()
+
+    echo "item - " + item
+    return item
+}
+
+def checkout_version(git_project_dir, git_version) {
+  sh """
+    #!/usr/env/bin bash
+    set +e
+    pushd "${git_project_dir}"
+    git checkout "${git_version}"
+    echo `git symbolic-ref -q --short HEAD || git describe --tags --exact-match`
+    popd
+  """
+}
+
+def debug_env(git_project_dir, git_version) {
+  sh """
+    #!/usr/env/bin bash
+    set +e
+    pushd "${git_project_dir}"
+    git branch
+    git describe --tags
+    echo `git symbolic-ref -q --short HEAD || git describe --tags --exact-match`
+    popd
+  """
+}
 
 def prepare_env() {
     sh '''
@@ -133,14 +197,6 @@ def do_terraform(config_dir, env_name, git_project, component) {
     }
 }
 
-def debug_env() {
-    sh '''
-    #!/usr/env/bin bash
-    pwd
-    ls -al
-    '''
-}
-
 pipeline {
 
     agent { label "jenkins_slave" }
@@ -152,6 +208,7 @@ pipeline {
         booleanParam(name: 'deploy_DatabaseStandBy1', defaultValue: true, description: 'Deploy/update Database StandBy 1?')
         booleanParam(name: 'deploy_DatabaseStandBy2', defaultValue: true, description: 'Deploy/update Database StandBy 2?')
         booleanParam(name: 'deploy_DATABASE_HA', defaultValue: true, description: 'Deploy/update Database High Availibilty?')
+        booleanParam(name: 'db_patch_check', defaultValue: true, description: 'Check Oracle DB patches?')
     }
 
 
@@ -159,13 +216,51 @@ pipeline {
 
         stage('setup') {
             steps {
-                slackSend(message: "\"Apply\" started on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
+                script {
+                  def starttime = new Date()
+                  println ("Started on " + starttime)
+
+                  project.config_version = get_version(environment_name, project.config, env.CONFIG_BRANCH)
+                  println("Version from function (project.config_version) -- " + project.config_version)
+
+                  project.dcore_version  = get_version(environment_name, project.dcore, env.DCORE_BRANCH)
+                  println("Version from function (project.dcore_version) -- " + project.dcore_version)
+
+                  def information = """
+                  Started on ${starttime}
+                  project.config_version -- ${project.config_version}
+                  project.dcore_version  -- ${project.dcore_version}
+                  """
+
+                  println information
+                }
+
+                slackSend(message: "\"Apply\" of \"${project.dcore_version}\" started on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
 
                 dir( project.config ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: env.CONFIG_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  checkout scm: [$class: 'GitSCM',
+                              userRemoteConfigs:
+                                [[url: 'git@github.com:ministryofjustice/' + project.config, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]],
+                              branches:
+                                [[name: project.config_version]]],
+                              poll: false
                 }
+                debug_env(project.config, project.config_version)
+
+
                 dir( project.dcore ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.dcore, branch: env.DCORE_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  checkout scm: [$class: 'GitSCM',
+                              userRemoteConfigs:
+                                [[url: 'git@github.com:ministryofjustice/' + project.dcore, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]],
+                              branches:
+                                [[name: project.dcore_version]]],
+                              poll: false
+                }
+                debug_env(project.dcore, project.dcore_version)
+
+                script {
+                    db_high_availability_count = get_db_ha_count(project.config, environment_name, "delius")
+                    echo "DB HIGH AVAILABILITY COUNT is " + db_high_availability_count
                 }
 
                 prepare_env()
@@ -177,7 +272,8 @@ pipeline {
                 stage('Delius Security Groups') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'security-groups')
+                          println("terraform security-groups")
+                          do_terraform(project.config, environment_name, project.dcore, 'security-groups')
                         }
                     }
                 }
@@ -185,7 +281,8 @@ pipeline {
                 stage('Delius Keys and Profiles') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'key_profile')
+                          println("terraform key_profile")
+                          do_terraform(project.config, environment_name, project.dcore, 'key_profile')
                         }
                     }
                 }
@@ -198,6 +295,7 @@ pipeline {
                 stage('Delius Database') {
                     steps {
                         script {
+                            println("terraform database_failover")
                             do_terraform(project.config, environment_name, project.dcore, 'database_failover')
                         }
                     }
@@ -224,7 +322,8 @@ pipeline {
                 stage('Delius Application LDAP') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
+                          println("terraform application/ldap")
+                          do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
                         }
                     }
                 }
@@ -232,9 +331,10 @@ pipeline {
         }
 
         stage('Check Oracle Software Patches on Primary') {
+            when {expression { db_patch_check == "true" }}
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    println("Check Oracle Software Patches")
+                    println("Check Oracle Software Patches on Primary")
                     build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_primarydb'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                 }
             }
@@ -245,7 +345,8 @@ pipeline {
                 stage('Delius LoadRunner') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
+                          println("terraform loadrunner")
+                          do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
                         }
                     }
                 }
@@ -253,7 +354,8 @@ pipeline {
                 stage('Delius Management Server') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'management')
+                          println("terraform management")
+                          do_terraform(project.config, environment_name, project.dcore, 'management')
                         }
                     }
                 }
@@ -261,7 +363,8 @@ pipeline {
                 stage ('Delius Password Self-Service Tool') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                          println("terraform pwm")
+                          do_terraform(project.config, environment_name, project.dcore, 'pwm')
                         }
                     }
                 }
@@ -304,7 +407,8 @@ pipeline {
                 stage('Delius User Management Tool') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'application/umt')
+                          println("terraform application/umt")
+                          do_terraform(project.config, environment_name, project.dcore, 'application/umt')
                         }
                     }
                 }
@@ -312,7 +416,8 @@ pipeline {
                 stage('Delius Approved Premises Tracker API') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api')
+                          println("terraform application/aptracker-api")
+                          do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api')
                         }
                     }
                 }
@@ -320,7 +425,8 @@ pipeline {
                 stage('Delius GDPR') {
                     steps {
                         script {
-                            do_terraform(project.config, environment_name, project.dcore, 'application/gdpr')
+                          println("terraform application/gdpr")
+                          do_terraform(project.config, environment_name, project.dcore, 'application/gdpr')
                         }
                     }
                 }
@@ -338,18 +444,21 @@ pipeline {
                     }
                 }
 
-                stage('Pingdom checks') {
-                    steps {
-                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
-                        }
-                    }
-                }
+                // Skipping this stage, due to Pingdom credentials issue. May need to review whether we need the checks at all.
+//                stage('Pingdom checks') {
+//                    steps {
+//                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+//                            println("terraform pingdom")
+//                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+//                        }
+//                    }
+//                }
 
                 stage('Monitoring and Alerts') {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            do_terraform(project.config, environment_name, project.dcore, 'monitoring')
+                          println("terraform monitoring")
+                          do_terraform(project.config, environment_name, project.dcore, 'monitoring')
                         }
                     }
                 }
@@ -371,8 +480,8 @@ pipeline {
                     when {expression { params.DB_HIGH_AVAILABILITY_COUNT == "1" ||  params.DB_HIGH_AVAILABILITY_COUNT == "2" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                       println("Check Oracle Software Patches")
-                       build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                         println("Check Oracle Software Patcheson HA 1")
+                         build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                        }
                     }
                 }
@@ -381,8 +490,8 @@ pipeline {
                     when {expression { params.DB_HIGH_AVAILABILITY_COUNT == "2" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                       println("Check Oracle Software Patches")
-                       build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+                         println("Check Oracle Software Patcheson HA 2")
+                         build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
                        }
                     }
                 }
@@ -391,7 +500,8 @@ pipeline {
 
         stage('Smoke test') {
             steps {
-                build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
+              println("Smoke test")
+              build job: "DAMS/Environments/${environment_name}/Delius/Smoke test", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
             }
         }
     }
@@ -401,10 +511,10 @@ pipeline {
             deleteDir()
         }
         success {
-            slackSend(message: "\"Apply\" completed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'good')
+            slackSend(message: "\"Apply\" of \"${project.dcore_version}\" completed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'good')
         }
         failure {
-            slackSend(message: "\"Apply\" failed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'danger')
+            slackSend(message: "\"Apply\" of \"${project.dcore_version}\" failed on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} ", color: 'danger')
         }
     }
 

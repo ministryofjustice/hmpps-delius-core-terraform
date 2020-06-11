@@ -15,7 +15,7 @@ module "delius_db_3" {
     "${data.terraform_remote_state.vpc_security_groups.sg_delius_core_db_in_from_mis_id}",
   ]
 
-  tags                         = "${local.tags}"
+  tags                         = "${var.tags}"
   environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
   bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
   project_name                 = "${var.project_name}"
@@ -34,8 +34,8 @@ module "delius_db_3" {
 
   ansible_vars = {
     service_user_name             = "${var.ansible_vars_oracle_db["service_user_name"]}"
-    database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}"
-    database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
+    database_global_database_name = "${var.ansible_vars_oracle_db["database_global_database_name"]}S2"
+    database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}S2"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
     oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
     s3_oracledb_backups_arn       = "${data.terraform_remote_state.s3-oracledb-backups.s3_oracledb_backups.arn}"

@@ -75,7 +75,8 @@
       "properties": {
         "metrics": [
           [ "AWS/EC2", "CPUUtilization", "InstanceId", "${instance_delius_db_1}", { "label": "Database" } ],
-          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ]
+          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ],
+          [ "...", "${asg_ldap}", { "label": "LDAP", "stat": "Maximum" } ]
         ],
         "view": "timeSeries",
         "stacked": false,
@@ -182,7 +183,7 @@
         "stacked": false,
         "region": "${region}",
         "title": "WebLogic Memory Usage",
-        "period": 300,
+        "period": 60,
         "legend": {
           "position": "right"
         },
@@ -190,7 +191,8 @@
           "left": {
             "min": 0
           }
-        }
+        },
+        "stat": "Sum"
       }
     }
   ]

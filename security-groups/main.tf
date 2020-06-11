@@ -66,6 +66,20 @@ data "terraform_remote_state" "ora_db_op_security_groups" {
 }
 
 #-------------------------------------------------------------
+### Getting the shared oracle-db-operation CI security groups
+#-------------------------------------------------------------
+data "terraform_remote_state" "ora_db_op_security_groups_support_ci" {
+  backend = "s3"
+
+  config {
+    bucket   = "${var.eng_remote_state_bucket_name}"
+    key      = "oracle-db-operation/security-groups-support-ci/terraform.tfstate"
+    region   = "${var.region}"
+    role_arn = "${var.eng_role_arn}"
+  }
+}
+
+#-------------------------------------------------------------
 ### Getting the engineering jenkins remote state
 #-------------------------------------------------------------
 
