@@ -102,7 +102,7 @@ def prepare_env() {
     '''
 }
 
-def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, ami_version) {
+def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
         #!/usr/env/bin bash
@@ -115,10 +115,9 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, ami_ve
             -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
-                [ ${submodule_name} == 'pingdom' ] && source pingdom/ssm.properties; \
-                [[ ${submodule_name} == "database_"* ]] && export TF_VAR_db_aws_ami=\\\"${ami_version}\\\"; \
-                echo && echo && env | sort && echo; \
                 cd ${submodule_name}; \
+                [[ -e ssm.properties ]] && source ssm.properties; \
+                echo && echo && env | sort && echo; \
                 if [ -d .terraform ]; then rm -rf .terraform; fi; sleep 5; \
                 terragrunt init; \
                 terragrunt plan -detailed-exitcode --out ${env_name}.plan > tf.plan.out; \
@@ -138,7 +137,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, ami_ve
     }
 }
 
-def apply_submodule(config_dir, env_name, git_project_dir, submodule_name, ami_version) {
+def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
         #!/usr/env/bin bash
@@ -151,10 +150,9 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name, ami_v
           -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
           bash -c " \
               source env_configs/${env_name}/${env_name}.properties; \
-              [ ${submodule_name} == 'pingdom' ] && source pingdom/ssm.properties; \
-              [[ ${submodule_name} == "database_"* ]] && export TF_VAR_db_aws_ami=\\\"${ami_version}\\\"; \
-              echo && echo && env | sort && echo; \
               cd ${submodule_name}; \
+              [[ -e ssm.properties ]] && source ssm.properties; \
+              echo && echo && env | sort && echo; \
               terragrunt apply ${env_name}.plan; \
               tgexitcode=\\\$?; \
               echo \\\"TG exited with code \\\$tgexitcode\\\"; \
@@ -193,8 +191,8 @@ def confirm(message) {
     }
 }
 
-def do_terraform(config_dir, env_name, git_project, component, ami_version) {
-    plancode = plan_submodule(config_dir, env_name, git_project, component, ami_version)
+def do_terraform(config_dir, env_name, git_project, component) {
+    plancode = plan_submodule(config_dir, env_name, git_project, component)
     if (plancode == "2") {
         if ("${confirmation}" == "true") {
            confirm('Apply changes to ' + component + '?')
@@ -202,11 +200,11 @@ def do_terraform(config_dir, env_name, git_project, component, ami_version) {
             env.Continue = true
         }
         if (env.Continue == "true") {
-           apply_submodule(config_dir, env_name, git_project, component, ami_version)
+           apply_submodule(config_dir, env_name, git_project, component)
         }
     }
     else if (plancode == "3") {
-        apply_submodule(config_dir, env_name, git_project, component, ami_version)
+        apply_submodule(config_dir, env_name, git_project, component)
         env.Continue = true
     }
     else {
@@ -291,7 +289,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform security-groups")
-                          do_terraform(project.config, environment_name, project.dcore, 'security-groups', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'security-groups')
                         }
                     }
                 }
@@ -300,7 +298,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform key_profile")
-                          do_terraform(project.config, environment_name, project.dcore, 'key_profile', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'key_profile')
                         }
                     }
                 }
@@ -314,7 +312,7 @@ pipeline {
                     steps {
                         script {
                             println("terraform database_failover")
-                            do_terraform(project.config, environment_name, project.dcore, 'database_failover', db_ami_version)
+                            do_terraform(project.config, environment_name, project.dcore, 'database_failover')
                         }
                     }
                 }
@@ -324,7 +322,7 @@ pipeline {
                     steps {
                         script {
                             println("terraform database_standbydb1")
-                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1', db_ami_version)
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1')
                         }
                     }
                 }
@@ -334,7 +332,7 @@ pipeline {
                     steps {
                         script {
                             println("terraform database_standbydb2")
-                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2', db_ami_version)
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2')
                         }
                     }
                 }
@@ -343,7 +341,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/ldap")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/ldap', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
                         }
                     }
                 }
@@ -366,7 +364,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform loadrunner")
-                          do_terraform(project.config, environment_name, project.dcore, 'loadrunner', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
                         }
                     }
                 }
@@ -375,7 +373,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform management")
-                          do_terraform(project.config, environment_name, project.dcore, 'management', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'management')
                         }
                     }
                 }
@@ -384,7 +382,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform pwm")
-                          do_terraform(project.config, environment_name, project.dcore, 'pwm', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'pwm')
                         }
                     }
                 }
@@ -397,7 +395,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/ndelius")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/ndelius', '')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
                         }
                     }
                 }
@@ -406,7 +404,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/spg")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/spg', '')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/spg')
                         }
                     }
                 }
@@ -415,7 +413,7 @@ pipeline {
                     steps {
                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/interface")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/interface', '')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/interface')
                         }
                     }
                 }
@@ -428,7 +426,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/umt")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/umt', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/umt')
                         }
                     }
                 }
@@ -437,7 +435,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/aptracker-api")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api')
                         }
                     }
                 }
@@ -446,7 +444,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/gdpr")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/gdpr', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/gdpr')
                         }
                     }
                 }
@@ -459,7 +457,7 @@ pipeline {
                     steps{
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("batch/dss")
-                            do_terraform(project.config, environment_name, project.dcore, 'batch/dss', '')
+                            do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
                         }
                     }
                 }
@@ -469,7 +467,7 @@ pipeline {
 //                    steps {
 //                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 //                            println("terraform pingdom")
-//                            do_terraform(project.config, environment_name, project.dcore, 'pingdom', '')
+//                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
 //                        }
 //                    }
 //                }
@@ -478,7 +476,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                           println("terraform monitoring")
-                          do_terraform(project.config, environment_name, project.dcore, 'monitoring', '')
+                          do_terraform(project.config, environment_name, project.dcore, 'monitoring')
                         }
                     }
                 }
