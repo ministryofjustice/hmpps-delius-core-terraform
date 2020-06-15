@@ -93,7 +93,7 @@ data "aws_ami" "centos_oracle_db" {
 
   filter {
     name   = "name"
-    values = ["HMPPS Delius-Core OracleDB master *"]
+    values = ["${var.db_aws_ami}"]
   }
 
   filter {

@@ -3,6 +3,7 @@ project.config          = 'hmpps-env-configs'
 project.dcore           = 'hmpps-delius-core-terraform'
 project.config_version  = ''
 project.dcore_version   = ''
+db_ami_version          = ''
 db_high_availability_count = 0
 
 // Parameters required for job
@@ -19,6 +20,18 @@ db_high_availability_count = 0
 //     booleanParam:
 //       name: 'confirmation'
 //       description: 'Whether to require manual confirmation of terraform plans.'
+def get_db_ami_version(env_name) {
+  ssm_param_db_version = sh (
+    script: "aws ssm get-parameters --region eu-west-2 --name \"/versions/delius-core/ami/db-ami/${env_name}\" --query Parameters | jq '.[] | .Value' --raw-output",
+    returnStdout: true
+  ).trim()
+
+  echo "db_ami_version - " + ssm_param_db_version
+
+  return ssm_param_db_version
+}
+
+
 def get_version(env_name, repo_name, override_version) {
   ssm_param_version = sh (
     script: "aws ssm get-parameters --region eu-west-2 --name \"/versions/delius-core/repo/${repo_name}/${env_name}\" --query Parameters | jq '.[] | select(.Name | test(\"${env_name}\")) | .Value' --raw-output",
@@ -102,8 +115,9 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
             -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
-                [ ${submodule_name} == 'pingdom' ] && source pingdom/ssm.properties; \
                 cd ${submodule_name}; \
+                [[ -e ssm.properties ]] && source ssm.properties; \
+                echo && echo && env | sort && echo; \
                 if [ -d .terraform ]; then rm -rf .terraform; fi; sleep 5; \
                 terragrunt init; \
                 terragrunt plan -detailed-exitcode --out ${env_name}.plan > tf.plan.out; \
@@ -136,8 +150,9 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
           -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
           bash -c " \
               source env_configs/${env_name}/${env_name}.properties; \
-              [ ${submodule_name} == 'pingdom' ] && source pingdom/ssm.properties; \
               cd ${submodule_name}; \
+              [[ -e ssm.properties ]] && source ssm.properties; \
+              echo && echo && env | sort && echo; \
               terragrunt apply ${env_name}.plan; \
               tgexitcode=\\\$?; \
               echo \\\"TG exited with code \\\$tgexitcode\\\"; \
@@ -223,10 +238,14 @@ pipeline {
                   project.dcore_version  = get_version(environment_name, project.dcore, env.DCORE_BRANCH)
                   println("Version from function (project.dcore_version) -- " + project.dcore_version)
 
+                  db_ami_version = get_db_ami_version(environment_name)
+                  println("DB AMI Version from function (db_ami_version) -- " + db_ami_version)
+
                   def information = """
                   Started on ${starttime}
                   project.config_version -- ${project.config_version}
                   project.dcore_version  -- ${project.dcore_version}
+                  db_ami_version         -- ${db_ami_version}
                   """
 
                   println information
