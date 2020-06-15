@@ -10,7 +10,7 @@ module "delius_db_1" {
   source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git?ref=master//modules//oracle-database"
   server_name = "delius-db-1"
 
-  ami_id               = "${var.db_aws_ami}"
+  ami_id               = "${data.aws_ami.centos_oracle_db.id}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
