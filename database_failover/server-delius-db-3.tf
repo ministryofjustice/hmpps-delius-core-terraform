@@ -2,7 +2,7 @@ module "delius_db_3" {
   source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git?ref=master//modules//oracle-database"
   server_name = "delius-db-3"
 
-  ami_id               = "${data.aws_ami.centos_oracle_db.id}"
+  ami_id               = "${var.db_aws_ami}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az3}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
@@ -74,6 +74,7 @@ output "db_disks_delius_db_3" {
 # map (tidier)
 output "delius_db_3" {
   value = {
+    db_aws_ami    = "${var.db_aws_ami}"
     ami_id        = "${module.delius_db_3.ami_id}",
     public_fqdn   = "${module.delius_db_3.public_fqdn}",
     internal_fqdn = "${module.delius_db_3.internal_fqdn}",

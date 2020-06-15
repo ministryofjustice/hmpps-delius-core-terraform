@@ -86,23 +86,3 @@ data "terraform_remote_state" "key_profile" {
     region = "${var.region}"
   }
 }
-
-data "aws_ami" "centos_oracle_db" {
-  owners      = ["895523100917"]
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["HMPPS Delius-Core OracleDB master *"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-}
