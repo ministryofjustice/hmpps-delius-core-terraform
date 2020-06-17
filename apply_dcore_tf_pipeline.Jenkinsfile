@@ -246,6 +246,8 @@ pipeline {
                   project.config_version -- ${project.config_version}
                   project.dcore_version  -- ${project.dcore_version}
                   db_ami_version         -- ${db_ami_version}
+                  deploy_DATABASE_HA     -- ${env.deploy_DATABASE_HA}
+                  db_patch_check         -- ${env.db_patch_check}
                   """
 
                   println information
@@ -318,9 +320,9 @@ pipeline {
                 }
 
                 stage('Delius Database StandBy1') {
-                    when {expression { db_high_availability_count == 1 ||  db_high_availability_count == 2 }}
+                    when {expression { db_high_availability_count == "1" ||  db_high_availability_count == "2" }}
                     steps {
-                        script {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { // this is temp catchError will remove after migration to new terraformstructure
                             println("terraform database_standbydb1")
                             do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1')
                         }
@@ -328,9 +330,9 @@ pipeline {
                 }
 
                 stage('Delius Database StandBy2') {
-                    when {expression { db_high_availability_count == 2 }}
+                    when {expression { db_high_availability_count == "2" }}
                     steps {
-                        script {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { // this is temp catchError will remove after migration to new terraformstructure
                             println("terraform database_standbydb2")
                             do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2')
                         }
@@ -349,7 +351,7 @@ pipeline {
         }
 
         stage('Check Oracle Software Patches on Primary') {
-            when {expression { db_patch_check == "true" }}
+            when {expression { env.db_patch_check == "true" }}
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     println("Check Oracle Software Patches on Primary")
@@ -467,7 +469,7 @@ pipeline {
 //                    steps {
 //                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 //                            println("terraform pingdom")
-//                            do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+//                           do_terraform(project.config, environment_name, project.dcore, 'pingdom')
 //                        }
 //                    }
 //                }
@@ -484,7 +486,7 @@ pipeline {
         }
 
         stage('Build Delius Database High Availibilty') {
-            when {expression { (db_high_availability_count == 1 || db_high_availability_count == 2) && deploy_DATABASE_HA == "true" }}
+            when {expression { (db_high_availability_count == "1" || db_high_availability_count == "2") && env.deploy_DATABASE_HA == "true" }}
             steps {
               println("Build Database High Availibilty")
               build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"]]
@@ -495,7 +497,7 @@ pipeline {
             parallel {
 
                 stage('Check Oracle Software Patches on HA 1') {
-                    when {expression { (db_high_availability_count == 1 || db_high_availability_count == 2) && db_patch_check == "true" }}
+                    when {expression { (db_high_availability_count == "1" || db_high_availability_count == "2") && env.db_patch_check == "true" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                          println("Check Oracle Software Patcheson HA 1")
@@ -505,7 +507,7 @@ pipeline {
                 }
 
                 stage('Check Oracle Software Patches on HA 2') {
-                    when {expression { db_high_availability_count == 2 && db_patch_check == "true" }}
+                    when {expression { db_high_availability_count == "2" && env.db_patch_check == "true" }}
                     steps {
                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                          println("Check Oracle Software Patcheson HA 2")
