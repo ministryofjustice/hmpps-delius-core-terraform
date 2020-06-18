@@ -3,7 +3,7 @@
 resource "aws_launch_configuration" "wls_launch_cfg" {
   name_prefix                 = "${var.environment_name}-${var.tier_name}-launch-cfg-"
   image_id                    = "${var.ami_id}"
-  instance_type               = "${var.instance_type}"
+  instance_type               = "m5.xlarge"
   iam_instance_profile        = "${var.iam_instance_profile}"
   key_name                    = "${var.key_name}"
   security_groups             = ["${var.instance_security_groups}"]
