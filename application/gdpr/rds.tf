@@ -25,9 +25,9 @@ resource "aws_db_instance" "primary" {
   identifier        = "${var.environment_name}-${local.app_name}-primary-db"
   engine            = "postgres"
   engine_version    = "11.5"
-  instance_class    = "${local.gdpr_config["db_instance_class"]}"
+  instance_class    = "db.m5.12xlarge"
 
-  allocated_storage = "${local.gdpr_config["db_storage"]}"
+  allocated_storage = "500"
   storage_encrypted = true
 
   name     = "gdpr"
