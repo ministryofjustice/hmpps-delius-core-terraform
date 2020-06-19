@@ -236,7 +236,7 @@ resource "aws_security_group_rule" "spg_external_elb_egress_newtechweb" {
   description              = "Out to New Tech Web ECS Service"
 }
 
-resource "aws_security_group_rule" "ndelius_instances_egress_gdpr_db" {
+resource "aws_security_group_rule" "spg_instances_egress_gdpr_db" {
   security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
   type                     = "egress"
   protocol                 = "tcp"

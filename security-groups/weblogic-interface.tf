@@ -244,7 +244,7 @@ resource "aws_security_group_rule" "interface_external_elb_ingress_dss" {
   description              = "Delius DSS Offloc Ingress to interface LB"
 }
 
-resource "aws_security_group_rule" "ndelius_instances_egress_gdpr_db" {
+resource "aws_security_group_rule" "interface_instances_egress_gdpr_db" {
   security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
   type                     = "egress"
   protocol                 = "tcp"
