@@ -216,5 +216,5 @@ resource "aws_security_group_rule" "ndelius_instances_egress_gdpr_db" {
   from_port                = 5432
   to_port                  = 5432
   source_security_group_id = "${aws_security_group.gdpr_db.id}"
-  description              = "GDPR DB out"
+  description              = "GDPR DB out (NDelius)"
 }

@@ -235,3 +235,13 @@ resource "aws_security_group_rule" "spg_external_elb_egress_newtechweb" {
   source_security_group_id = "${aws_security_group.newtech_web.id}"
   description              = "Out to New Tech Web ECS Service"
 }
+
+resource "aws_security_group_rule" "ndelius_instances_egress_gdpr_db" {
+  security_group_id        = "${aws_security_group.weblogic_spg_instances.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.gdpr_db.id}"
+  description              = "GDPR DB out (SPG)"
+}

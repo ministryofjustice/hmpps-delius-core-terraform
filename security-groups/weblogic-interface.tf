@@ -243,3 +243,13 @@ resource "aws_security_group_rule" "interface_external_elb_ingress_dss" {
   to_port                  = "443"
   description              = "Delius DSS Offloc Ingress to interface LB"
 }
+
+resource "aws_security_group_rule" "ndelius_instances_egress_gdpr_db" {
+  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.gdpr_db.id}"
+  description              = "GDPR DB out (interface)"
+}
