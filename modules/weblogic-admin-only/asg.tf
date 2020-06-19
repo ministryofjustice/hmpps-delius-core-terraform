@@ -19,7 +19,7 @@ resource "aws_launch_configuration" "wls_launch_cfg" {
 
   lifecycle {
     create_before_destroy = true
-    ignore_changes        = ["image_id"]
+    #ignore_changes        = ["image_id"]
   }
 }
 
@@ -46,7 +46,7 @@ resource "aws_autoscaling_group" "wls_asg" {
   max_size             = "${var.instance_count}"
   desired_capacity     = "${var.instance_count}"
   launch_configuration = "${aws_launch_configuration.wls_launch_cfg.id}"
-  health_check_type    = "EC2"
+  health_check_type    = "ELB"
   enabled_metrics           = [
     "GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupPendingInstances",
     "GroupStandbyInstances", "GroupTerminatingInstances", "GroupTotalInstances"
