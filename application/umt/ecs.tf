@@ -13,7 +13,7 @@ module "ecs" {
   required_memory      = "${local.umt_config["memory"]}"
   min_capacity         = "${local.umt_config["ecs_scaling_min_capacity"]}"
   max_capacity         = "${local.umt_config["ecs_scaling_max_capacity"]}"
-  target_cpu_usage     = "${local.umt_config["ecs_scaling_target_cpu"]}"
+  target_cpu_usage     = "${local.umt_config["ecs_target_cpu"]}"
 
   health_check_grace_period_seconds = 180
 
