@@ -6,15 +6,17 @@ module "ecs" {
   short_environment_name = "${var.short_environment_name}"
   tags                   = "${var.tags}"
 
-  service_name         = "${local.app_name}"
-  container_definition = "${data.template_file.container_definition.rendered}"
-  lb_target_group_arn  = "${data.terraform_remote_state.ndelius.umt_targetgroup_arn}"
-  required_cpu         = "${local.umt_config["cpu"]}"
-  required_memory      = "${local.umt_config["memory"]}"
-  min_capacity         = "${local.umt_config["ecs_scaling_min_capacity"]}"
-  max_capacity         = "${local.umt_config["ecs_scaling_max_capacity"]}"
-  target_cpu_usage     = "${local.umt_config["ecs_target_cpu"]}"
-
+  service_name                      = "${local.app_name}"
+  container_definition              = "${data.template_file.container_definition.rendered}"
+  required_cpu                      = "${local.umt_config["cpu"]}"
+  required_memory                   = "${local.umt_config["memory"]}"
+  min_capacity                      = "${local.umt_config["ecs_scaling_min_capacity"]}"
+  max_capacity                      = "${local.umt_config["ecs_scaling_max_capacity"]}"
+  target_cpu_usage                  = "${local.umt_config["ecs_target_cpu"]}"
+  vpc_id                            = "${data.terraform_remote_state.vpc.vpc_id}"
+  lb_listener_arn                   = "${data.terraform_remote_state.ndelius.lb_listener_arn}"
+  lb_path_patterns                  = ["/umt", "/umt/*"]
+  health_check_path                 = "/umt/actuator/health/ping"
   health_check_grace_period_seconds = 180
 
   ecs_cluster = {

@@ -100,19 +100,6 @@ data "terraform_remote_state" "persistent-eip" {
 }
 
 #-------------------------------------------------------------
-### Getting the user management tool
-#-------------------------------------------------------------
-data "terraform_remote_state" "umt" {
-  backend = "s3"
-
-  config {
-    bucket = "${var.remote_state_bucket_name}"
-    key    = "delius-core/application/umt/terraform.tfstate"
-    region = "${var.region}"
-  }
-}
-
-#-------------------------------------------------------------
 ### Getting the LDAP
 #-------------------------------------------------------------
 data "terraform_remote_state" "ldap" {

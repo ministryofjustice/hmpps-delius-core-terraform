@@ -18,7 +18,7 @@ resource "aws_ecs_service" "service" {
   health_check_grace_period_seconds = "${var.health_check_grace_period_seconds}"
 
   load_balancer {
-    target_group_arn = "${var.lb_target_group_arn}"
+    target_group_arn = "${aws_lb_target_group.target_group.arn}"
     container_name   = "${var.service_name}"
     container_port   = "${var.service_port}"
   }
