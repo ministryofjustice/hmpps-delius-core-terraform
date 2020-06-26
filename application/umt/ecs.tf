@@ -16,7 +16,7 @@ module "ecs" {
   vpc_id                            = "${data.terraform_remote_state.vpc.vpc_id}"
   lb_listener_arn                   = "${data.terraform_remote_state.ndelius.lb_listener_arn}"
   lb_path_patterns                  = ["/umt", "/umt/*"]
-  health_check_path                 = "/umt/actuator/health/ping"
+  health_check_path                 = "/umt/actuator/health"
   health_check_grace_period_seconds = 180
 
   ecs_cluster = {

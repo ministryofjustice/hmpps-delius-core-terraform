@@ -16,23 +16,7 @@
         "arn:aws:logs:${region}:${aws_account_id}:*"
       ]
     },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ssm:GetParameter",
-        "ssm:GetParameters"
-      ],
-      "Resource": ${required_ssm_parameters}
-  },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:Decrypt"
-      ],
-      "Resource": [
-        "arn:aws:kms:${region}:${aws_account_id}:alias/aws/ssm"
-      ]
-  },
+    ${ssm_statement}
     {
       "Effect": "Allow",
       "Action": [

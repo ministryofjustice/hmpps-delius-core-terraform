@@ -22,15 +22,19 @@ resource "aws_ecs_service" "service" {
     container_name   = "${var.service_name}"
     container_port   = "${var.service_port}"
   }
+
   service_registries {
     registry_arn   = "${aws_service_discovery_service.web_svc_record.arn}"
     container_name = "${var.service_name}"
   }
+
   network_configuration = {
     subnets         = ["${var.subnets}"]
     security_groups = ["${var.security_groups}"]
   }
+
   depends_on = ["aws_iam_role.task"]
+
   lifecycle {
     ignore_changes = ["desired_count"]
   }
@@ -39,14 +43,18 @@ resource "aws_ecs_service" "service" {
 # Create a service record in the ecs cluster's private namespace
 resource "aws_service_discovery_service" "web_svc_record" {
   name = "${var.service_name}"
+
   dns_config {
     namespace_id = "${var.ecs_cluster["namespace_id"]}"
+
     dns_records {
       ttl  = 10
       type = "A"
     }
+
     routing_policy = "MULTIVALUE"
   }
+
   health_check_custom_config {
     failure_threshold = 1
   }

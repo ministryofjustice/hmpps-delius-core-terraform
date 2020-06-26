@@ -14,15 +14,17 @@ resource "aws_appautoscaling_target" "scaling_target" {
 }
 
 resource "aws_appautoscaling_policy" "scaling_policy" {
-  name                       = "${var.environment_name}-${var.service_name}-cpu-scaling-policy"
-  policy_type                = "TargetTrackingScaling"
-  resource_id                = "${aws_appautoscaling_target.scaling_target.resource_id}"
-  scalable_dimension         = "${aws_appautoscaling_target.scaling_target.scalable_dimension}"
-  service_namespace          = "${aws_appautoscaling_target.scaling_target.service_namespace}"
+  name               = "${var.environment_name}-${var.service_name}-cpu-scaling-policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = "${aws_appautoscaling_target.scaling_target.resource_id}"
+  scalable_dimension = "${aws_appautoscaling_target.scaling_target.scalable_dimension}"
+  service_namespace  = "${aws_appautoscaling_target.scaling_target.service_namespace}"
+
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value             = "${var.target_cpu_usage}"
+
+    target_value = "${var.target_cpu_usage}"
   }
 }

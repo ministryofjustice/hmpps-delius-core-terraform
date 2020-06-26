@@ -16,7 +16,7 @@ module "ecs_service" {
   vpc_id               = "${data.terraform_remote_state.vpc.vpc_id}"
   lb_listener_arn      = "${data.terraform_remote_state.ndelius.lb_listener_arn}"
   lb_path_patterns     = ["/aptracker-api", "/aptracker-api/*"]
-  health_check_path    = "/aptracker-api/actuator/health/ping"
+  health_check_path    = "/aptracker-api/actuator/health"
 
   ecs_cluster = {
     name         = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_name}"

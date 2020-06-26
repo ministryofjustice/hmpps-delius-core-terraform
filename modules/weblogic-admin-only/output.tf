@@ -42,11 +42,3 @@ output "cloudwatch_log_group" {
 output "lb_listener_arn" {
   value = "${aws_lb_listener.internal_lb_https_listener.arn}"
 }
-
-output "gdpr_api_targetgroup_arn" {
-  value = "${aws_lb_target_group.gdpr_api_target_group.arn}"
-}
-
-output "gdpr_ui_targetgroup_arn" {
-  value = "${aws_lb_target_group.gdpr_ui_target_group.arn}"
-}

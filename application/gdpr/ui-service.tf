@@ -1,98 +1,38 @@
+module "ui" {
+  source                 = "../../modules/ecs_service"
+  region                 = "${var.region}"
+  project_name           = "${var.project_name}"
+  environment_name       = "${var.environment_name}"
+  short_environment_name = "${var.short_environment_name}"
+  tags                   = "${var.tags}"
 
-resource "aws_ecs_task_definition" "ui_task_definition" {
-  family                   = "${var.environment_name}-${local.ui_name}-task-definition"
-  container_definitions    = "${data.template_file.ui_container_definition.rendered}"
-  task_role_arn            = "${aws_iam_role.task.arn}"
-  execution_role_arn       = "${aws_iam_role.exec.arn}"
-  network_mode             = "awsvpc"
-  memory                   = "${local.gdpr_config["ui_memory"]}"
-  cpu                      = "${local.gdpr_config["ui_cpu"]}"
-  requires_compatibilities = ["EC2"]
-  tags                     = "${merge(var.tags, map("Name", "${var.environment_name}-${local.ui_name}-task-definition"))}"
-}
+  service_name         = "${local.ui_name}"
+  service_port         = 80
+  container_definition = "${data.template_file.ui_container_definition.rendered}"
+  required_cpu         = "${local.gdpr_config["ui_cpu"]}"
+  required_memory      = "${local.gdpr_config["ui_memory"]}"
+  min_capacity         = "${local.gdpr_config["ui_scaling_min_capacity"]}"
+  max_capacity         = "${local.gdpr_config["ui_scaling_min_capacity"]}"
+  target_cpu_usage     = "${local.gdpr_config["ui_target_cpu"]}"
+  vpc_id               = "${data.terraform_remote_state.vpc.vpc_id}"
+  lb_listener_arn      = "${data.terraform_remote_state.ndelius.lb_listener_arn}"
+  lb_path_patterns     = ["/gdpr/ui", "/gdpr/ui/*"]
+  health_check_path    = "/gdpr/ui/homepage"
 
-resource "aws_ecs_service" "ui_service" {
-  name            = "${var.short_environment_name}-${local.ui_name}-service"
-  cluster         = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_id}"
-  task_definition = "${aws_ecs_task_definition.ui_task_definition.arn}"
-  load_balancer {
-    container_name   = "${local.ui_name}"
-    container_port   = 80
-    target_group_arn = "${data.terraform_remote_state.ndelius.gdpr_ui_targetgroup_arn}"
-  }
-  load_balancer {
-    container_name   = "${local.ui_name}"
-    container_port   = 80
-    target_group_arn = "${data.terraform_remote_state.spg.gdpr_ui_targetgroup_arn}"
-  }
-  load_balancer {
-    container_name   = "${local.ui_name}"
-    container_port   = 80
-    target_group_arn = "${data.terraform_remote_state.interface.gdpr_ui_targetgroup_arn}"
-  }
-  service_registries {
-    registry_arn   = "${aws_service_discovery_service.ui_web_svc_record.arn}"
-    container_name = "${local.ui_name}"
-  }
-  network_configuration = {
-    subnets         = ["${list(
-      data.terraform_remote_state.vpc.vpc_private-subnet-az1,
-      data.terraform_remote_state.vpc.vpc_private-subnet-az2,
-      data.terraform_remote_state.vpc.vpc_private-subnet-az3,
-    )}"]
-    security_groups = [
-      "${data.terraform_remote_state.delius_core_security_groups.sg_umt_auth_id}",
-      "${data.terraform_remote_state.delius_core_security_groups.sg_gdpr_ui_id}"
-    ]
-  }
-  depends_on = ["aws_iam_role.task"]
-  lifecycle {
-    ignore_changes = ["desired_count"]
-  }
-}
-
-# ECS autoscaling
-resource "aws_appautoscaling_target" "ui_scaling_target" {
-  min_capacity       = "${local.gdpr_config["ui_scaling_min_capacity"]}"
-  max_capacity       = "${local.gdpr_config["ui_scaling_max_capacity"]}"
-  resource_id        = "service/${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_name}/${aws_ecs_service.ui_service.name}"
-  role_arn           = "${aws_iam_role.exec.arn}"
-  scalable_dimension = "ecs:service:DesiredCount"
-  service_namespace  = "ecs"
-
-  # Use lifecycle rule as workaround for role_arn being changed every time due to
-  # role_arn being required field but AWS will always switch this to the auto created service role
-  lifecycle {
-    ignore_changes = "role_arn"
-  }
-}
-
-resource "aws_appautoscaling_policy" "ui_scaling_policy" {
-  name                       = "${var.environment_name}-${local.ui_name}-cpu-scaling-policy"
-  policy_type                = "TargetTrackingScaling"
-  resource_id                = "${aws_appautoscaling_target.ui_scaling_target.resource_id}"
-  scalable_dimension         = "${aws_appautoscaling_target.ui_scaling_target.scalable_dimension}"
-  service_namespace          = "${aws_appautoscaling_target.ui_scaling_target.service_namespace}"
-  target_tracking_scaling_policy_configuration {
-    predefined_metric_specification {
-      predefined_metric_type = "ECSServiceAverageCPUUtilization"
-    }
-    target_value             = "${local.gdpr_config["ui_target_cpu"]}"
-  }
-}
-
-# Create a service record in the ecs cluster's private namespace
-resource "aws_service_discovery_service" "ui_web_svc_record" {
-  name = "${local.ui_name}"
-  dns_config {
+  ecs_cluster = {
+    name         = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_name}"
+    cluster_id   = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_id}"
     namespace_id = "${data.terraform_remote_state.ecs_cluster.private_cluster_namespace["id"]}"
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-    routing_policy = "MULTIVALUE"
   }
-  health_check_custom_config {
-    failure_threshold = 1
-  }
+
+  subnets = [
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az2}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az3}",
+  ]
+
+  security_groups = [
+    "${data.terraform_remote_state.delius_core_security_groups.sg_umt_auth_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_gdpr_ui_id}"
+  ]
 }

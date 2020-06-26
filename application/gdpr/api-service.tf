@@ -1,67 +1,42 @@
+module "api" {
+  source                 = "../../modules/ecs_service"
+  region                 = "${var.region}"
+  project_name           = "${var.project_name}"
+  environment_name       = "${var.environment_name}"
+  short_environment_name = "${var.short_environment_name}"
+  tags                   = "${var.tags}"
 
-resource "aws_ecs_task_definition" "api_task_definition" {
-  family                   = "${var.environment_name}-${local.api_name}-task-definition"
-  container_definitions    = "${data.template_file.api_container_definition.rendered}"
-  task_role_arn            = "${aws_iam_role.task.arn}"
-  execution_role_arn       = "${aws_iam_role.exec.arn}"
-  network_mode             = "awsvpc"
-  memory                   = "${local.gdpr_config["api_memory"]}"
-  cpu                      = "${local.gdpr_config["api_cpu"]}"
-  requires_compatibilities = ["EC2"]
-  tags                     = "${merge(var.tags, map("Name", "${var.environment_name}-${local.api_name}-task-definition"))}"
-}
+  service_name         = "${local.api_name}"
+  container_definition = "${data.template_file.api_container_definition.rendered}"
+  required_cpu         = "${local.gdpr_config["api_cpu"]}"
+  required_memory      = "${local.gdpr_config["api_memory"]}"
+  max_capacity         = "1" # Fix to a single instance, as currently the batch processes cannot be scaled horizontally
+  vpc_id               = "${data.terraform_remote_state.vpc.vpc_id}"
+  lb_listener_arn      = "${data.terraform_remote_state.ndelius.lb_listener_arn}"
+  lb_path_patterns     = ["/gdpr/api", "/gdpr/api/*"]
+  health_check_path    = "/gdpr/api/actuator/health"
 
-resource "aws_ecs_service" "api_service" {
-  name            = "${var.short_environment_name}-${local.api_name}-service"
-  cluster         = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_id}"
-  task_definition = "${aws_ecs_task_definition.api_task_definition.arn}"
-  desired_count   = 1 # Fix to a single instance, as currently the batch processes cannot be scaled horizontally
-  load_balancer {
-    container_name   = "${local.api_name}"
-    container_port   = 8080
-    target_group_arn = "${data.terraform_remote_state.ndelius.gdpr_api_targetgroup_arn}"
-  }
-  load_balancer {
-    container_name   = "${local.api_name}"
-    container_port   = 8080
-    target_group_arn = "${data.terraform_remote_state.spg.gdpr_api_targetgroup_arn}"
-  }
-  load_balancer {
-    container_name   = "${local.api_name}"
-    container_port   = 8080
-    target_group_arn = "${data.terraform_remote_state.interface.gdpr_api_targetgroup_arn}"
-  }
-  service_registries {
-    registry_arn   = "${aws_service_discovery_service.api_web_svc_record.arn}"
-    container_name = "${local.api_name}"
-  }
-  network_configuration = {
-    subnets         = ["${list(
-      data.terraform_remote_state.vpc.vpc_private-subnet-az1,
-      data.terraform_remote_state.vpc.vpc_private-subnet-az2,
-      data.terraform_remote_state.vpc.vpc_private-subnet-az3,
-    )}"]
-    security_groups = [
-      "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
-      "${data.terraform_remote_state.delius_core_security_groups.sg_umt_auth_id}",
-      "${data.terraform_remote_state.delius_core_security_groups.sg_gdpr_api_id}"
-    ]
-  }
-  depends_on = ["aws_iam_role.task"]
-}
-
-# Create a service record in the ecs cluster's private namespace
-resource "aws_service_discovery_service" "api_web_svc_record" {
-  name = "${local.api_name}"
-  dns_config {
+  ecs_cluster = {
+    name         = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_name}"
+    cluster_id   = "${data.terraform_remote_state.ecs_cluster.shared_ecs_cluster_id}"
     namespace_id = "${data.terraform_remote_state.ecs_cluster.private_cluster_namespace["id"]}"
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-    routing_policy = "MULTIVALUE"
   }
-  health_check_custom_config {
-    failure_threshold = 1
-  }
+
+  subnets = [
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az2}",
+    "${data.terraform_remote_state.vpc.vpc_private-subnet-az3}",
+  ]
+
+  security_groups = [
+    "${data.terraform_remote_state.delius_core_security_groups.sg_common_out_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_umt_auth_id}",
+    "${data.terraform_remote_state.delius_core_security_groups.sg_gdpr_api_id}"
+  ]
+
+  required_ssm_parameters = [
+    "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/delius-gdpr-database/db/admin_password",
+    "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/delius-database/db/gdpr_pool_password",
+    "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/gdpr/api/client_secret",
+  ]
 }

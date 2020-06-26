@@ -20,12 +20,12 @@ variable "service_name" {
 
 variable "ecs_cluster" {
   description = "ECS cluster details. Sould be a map with the keys 'name', 'cluster_id', 'namespace_id'."
-  type = "map"
+  type        = "map"
 }
 
 variable "container_definition" {
   description = "Container definition JSON string"
-  type = "string"
+  type        = "string"
 }
 
 variable "required_memory" {
@@ -38,12 +38,13 @@ variable "required_cpu" {
 
 variable "required_ssm_parameters" {
   description = "List of SSM parameters to allow access to via IAM policy"
-  type = "list"
+  type        = "list"
+  default     = []
 }
 
 variable "service_port" {
   description = "Port to expose via the load balancer"
-  default = "8080"
+  default     = "8080"
 }
 
 variable "vpc_id" {
@@ -52,49 +53,66 @@ variable "vpc_id" {
 
 variable "subnets" {
   description = "List of network subnets to assign to the tasks"
-  type = "list"
+  type        = "list"
 }
 
 variable "security_groups" {
   description = "Security groups to apply to the ECS tasks"
-  type = "list"
+  type        = "list"
 }
 
 variable "lb_listener_arn" {
   description = "ARN of the listener to attach service tasks to for load balancing"
-  default = ""
+  default     = ""
 }
 
 variable "lb_path_patterns" {
   description = "Load balancer path patterns to use for forwarding traffic"
-  default = ["/*"]
+  default     = ["/*"]
 }
 
-variable "health_check_path" { default = "/" }
-variable "health_check_matcher" { default = "200" }
-variable "health_check_timeout" { default = "5" }
-variable "health_check_interval" { default = "30" }
-variable "health_check_healthy_threshold" { default = "5" }
-variable "health_check_unhealthy_threshold" { default = "2" }
+variable "health_check_path" {
+  default = "/"
+}
+
+variable "health_check_matcher" {
+  default = "200"
+}
+
+variable "health_check_timeout" {
+  default = "5"
+}
+
+variable "health_check_interval" {
+  default = "30"
+}
+
+variable "health_check_healthy_threshold" {
+  default = "5"
+}
+
+variable "health_check_unhealthy_threshold" {
+  default = "2"
+}
 
 variable "health_check_grace_period_seconds" {
   description = "Health check grace period. Increaase this if tasks are stopped before they have time to start up."
-  default = 0
+  default     = 60
 }
 
 variable "min_capacity" {
   description = "Minimum number of tasks to run at any one time"
-  default = 1
+  default     = 1
 }
 
 variable "max_capacity" {
   description = "Maximum number of tasks to run at any one time"
-  default = 10
+  default     = 10
 }
 
 variable "target_cpu_usage" {
   description = "Target CPU usage (percentage). If the average CPU Utilization is above this value, the service will scale up. Otherwise it will scale down."
-  default = 60
+  default     = 60
 }
 
 variable "tags" {
