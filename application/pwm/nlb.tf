@@ -1,10 +1,10 @@
 module "external_nlb" {
-  source               = "../modules/nlb_to_alb"
-  tier_name            = "pwm"
+  source               = "../../modules/nlb_to_alb"
+  tier_name            = "${local.app_name}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
-  eip_allocation_ids   = [
+  eip_allocation_ids = [
     "${data.terraform_remote_state.persistent-eip.delius_pwm_az1_lb_eip.allocation_id}",
     "${data.terraform_remote_state.persistent-eip.delius_pwm_az2_lb_eip.allocation_id}",
     "${data.terraform_remote_state.persistent-eip.delius_pwm_az3_lb_eip.allocation_id}",

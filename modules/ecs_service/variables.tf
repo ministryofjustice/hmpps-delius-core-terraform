@@ -71,6 +71,11 @@ variable "lb_path_patterns" {
   default     = ["/*"]
 }
 
+variable "lb_stickiness_enabled" {
+  description = "Whether stickiness should be enabled on the load balancer"
+  default     = false
+}
+
 variable "health_check_path" {
   default = "/"
 }

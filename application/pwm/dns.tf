@@ -17,6 +17,7 @@ resource "aws_route53_record" "public_dns" {
   zone_id = "${(var.delius_core_public_zone) == "strategic" ?
                       data.terraform_remote_state.vpc.strategic_public_zone_id :
                       data.terraform_remote_state.vpc.public_zone_id}"
+
   name    = "password-reset"
   type    = "CNAME"
   ttl     = "300"

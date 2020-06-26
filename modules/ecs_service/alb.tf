@@ -16,6 +16,11 @@ resource "aws_lb_target_group" "target_group" {
     unhealthy_threshold = "${var.health_check_unhealthy_threshold}"
   }
 
+  stickiness {
+    enabled = "${var.lb_stickiness_enabled}"
+    type = "lb_cookie"
+  }
+
   lifecycle {
     create_before_destroy = true
   }
