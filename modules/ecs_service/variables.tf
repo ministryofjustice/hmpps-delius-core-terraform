@@ -36,8 +36,8 @@ variable "required_cpu" {
   description = "CPU units to assign to the container (1 vcpu = 1024 units)"
 }
 
-variable "required_ssm_parameters" {
-  description = "List of SSM parameters to allow access to via IAM policy"
+variable "allowed_ssm_parameters" {
+  description = "List of ARNs for SSM parameters that the service is allowed to access."
   type        = "list"
   default     = []
 }
@@ -117,6 +117,11 @@ variable "max_capacity" {
 
 variable "target_cpu_usage" {
   description = "Target CPU usage (percentage). If the average CPU Utilization is above this value, the service will scale up. Otherwise it will scale down."
+  default     = 60
+}
+
+variable "deregistration_delay" {
+  description = "Number of seconds to spend draining tasks"
   default     = 60
 }
 

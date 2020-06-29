@@ -34,7 +34,7 @@ module "ecs_service" {
     "${data.terraform_remote_state.delius_core_security_groups.sg_aptracker_api_id}",
   ]
 
-  required_ssm_parameters = [
+  allowed_ssm_parameters = [
     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/apacheds/apacheds/aptracker_user",
     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/apacheds/apacheds/aptracker_password",
     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/delius-database/db/delius_app_schema_password",

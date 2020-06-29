@@ -1,6 +1,7 @@
 {
   "Version": "2012-10-17",
   "Statement": [
+    ${ssm_statement}
     {
       "Effect": "Allow",
       "Action": [
@@ -16,7 +17,6 @@
         "arn:aws:logs:${region}:${aws_account_id}:*"
       ]
     },
-    ${ssm_statement}
     {
       "Effect": "Allow",
       "Action": [

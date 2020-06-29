@@ -35,7 +35,7 @@ module "ecs" {
     "${data.terraform_remote_state.delius_core_security_groups.sg_umt_instances_id}",
   ]
 
-  required_ssm_parameters = [
+  allowed_ssm_parameters = [
     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password",
     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/delius-database/db/delius_app_schema_password",
     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/umt/umt/jwt_secret",

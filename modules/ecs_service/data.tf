@@ -10,7 +10,7 @@ data "template_file" "ssm_policy_statement_template" {
     {
       "Effect": "Allow",
       "Action": ["ssm:GetParameter","ssm:GetParameters"],
-      "Resource": $${required_ssm_parameters}
+      "Resource": $${allowed_ssm_parameters}
     },
     {
       "Effect": "Allow",
@@ -20,9 +20,9 @@ data "template_file" "ssm_policy_statement_template" {
 EOF
 
   vars {
-    aws_account_id          = "${data.aws_caller_identity.current.account_id}"
-    region                  = "${var.region}"
-    required_ssm_parameters = "${jsonencode(var.required_ssm_parameters)}"
+    aws_account_id         = "${data.aws_caller_identity.current.account_id}"
+    region                 = "${var.region}"
+    allowed_ssm_parameters = "${jsonencode(var.allowed_ssm_parameters)}"
   }
 }
 
@@ -34,6 +34,6 @@ data "template_file" "ecs_exec_policy_template" {
     region           = "${var.region}"
     environment_name = "${var.environment_name}"
     project_name     = "${var.project_name}"
-    ssm_statement    = "${length(var.required_ssm_parameters) == 0 ? "": data.template_file.ssm_policy_statement_template.rendered}"
+    ssm_statement    = "${length(var.allowed_ssm_parameters) == 0 ? "": data.template_file.ssm_policy_statement_template.rendered}"
   }
 }

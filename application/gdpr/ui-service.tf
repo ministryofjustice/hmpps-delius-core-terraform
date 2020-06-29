@@ -12,7 +12,7 @@ module "ui" {
   required_cpu         = "${local.gdpr_config["ui_cpu"]}"
   required_memory      = "${local.gdpr_config["ui_memory"]}"
   min_capacity         = "${local.gdpr_config["ui_scaling_min_capacity"]}"
-  max_capacity         = "${local.gdpr_config["ui_scaling_min_capacity"]}"
+  max_capacity         = "${local.gdpr_config["ui_scaling_max_capacity"]}"
   target_cpu_usage     = "${local.gdpr_config["ui_target_cpu"]}"
   vpc_id               = "${data.terraform_remote_state.vpc.vpc_id}"
   lb_listener_arn      = "${data.terraform_remote_state.ndelius.lb_listener_arn}"
