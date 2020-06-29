@@ -12,3 +12,11 @@ output "target_group" {
     name = "${aws_lb_target_group.target_group.name}"
   }
 }
+
+output "task_role" {
+  value = {
+    id   = "${aws_iam_role.task.id}"
+    arn  = "${aws_iam_role.task.arn}"
+    name = "${aws_iam_role.task.name}"
+  }
+}

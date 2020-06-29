@@ -1,6 +1,6 @@
 resource "aws_route53_record" "internal_lb_private_dns" {
   zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
-  name    = "password-reset"
+  name    = "${local.app_name}"
   type    = "CNAME"
   ttl     = "300"
   records = ["${aws_lb.alb.dns_name}"]
@@ -18,7 +18,7 @@ resource "aws_route53_record" "public_dns" {
                       data.terraform_remote_state.vpc.strategic_public_zone_id :
                       data.terraform_remote_state.vpc.public_zone_id}"
 
-  name    = "password-reset"
+  name    = "${local.app_name}"
   type    = "CNAME"
   ttl     = "300"
   records = ["${module.external_nlb.dns_name}"]
