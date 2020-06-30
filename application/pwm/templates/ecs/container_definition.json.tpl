@@ -1,6 +1,6 @@
 [{
     "name": "${app_name}",
-    "image": "${image}:${version}",
+    "image": "${image}",
     "essential": true,
     "secrets": [
         { "name": "SECURITY_KEY",       "valueFrom": "${ssm_prefix}/pwm/pwm/security_key" },
