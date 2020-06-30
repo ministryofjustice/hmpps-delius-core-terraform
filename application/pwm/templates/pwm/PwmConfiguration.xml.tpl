@@ -13,7 +13,7 @@
   <settings>
     <setting key="pwm.securityKey" syntax="PASSWORD">
       <label>Security Key</label>
-      <value plaintext="true">$${PWM_SECURITY_KEY}</value>
+      <value plaintext="true">$${SECURITY_KEY}</value>
     </setting>
     <setting key="template.ldap" syntax="SELECT">
       <label>LDAP Vendor Default Settings</label>
@@ -29,15 +29,15 @@
     </setting>
     <setting key="ldap.serverUrls" syntax="STRING_ARRAY" profile="default">
       <label>LDAP URLs</label>
-      <value><![CDATA[${ldap_protocol}://${ldap_host}:${ldap_port}]]></value>
+      <value><![CDATA[${ldap_url}]]></value>
     </setting>
     <setting key="ldap.proxy.username" syntax="STRING" profile="default">
       <label>LDAP Proxy User</label>
-      <value><![CDATA[${ldap_bind_user}]]></value>
+      <value><![CDATA[${ldap_user}]]></value>
     </setting>
     <setting key="ldap.proxy.password" syntax="PASSWORD" profile="default">
       <label>LDAP Proxy Password</label>
-      <value plaintext="true">$${PWM_LDAP_BIND_PASSWORD}</value>
+      <value plaintext="true">$${LDAP_PASSWORD}</value>
     </setting>
     <setting key="ldap.rootContexts" syntax="STRING_ARRAY" profile="default">
       <label>LDAP Contextless Login Roots</label>
