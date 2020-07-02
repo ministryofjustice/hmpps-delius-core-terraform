@@ -360,16 +360,6 @@ pipeline {
             }
         }
 
-        stage('Password Self-Service Tool (OLD)') {
-            // TODO remove this stage once the old PWM code has been destroyed in all envs
-            steps {
-                script {
-                    println("terraform pwm")
-                    do_terraform(project.config, environment_name, project.dcore, 'pwm')
-                }
-            }
-        }
-
         stage ('Apps') {
             parallel {
                 stage('Delius LoadRunner') {
@@ -393,6 +383,8 @@ pipeline {
                 stage ('Delius Password Self-Service Tool') {
                     steps {
                         script {
+                            println("terraform pwm")
+                            do_terraform(project.config, environment_name, project.dcore, 'pwm')
                             println("terraform application/pwm")
                             do_terraform(project.config, environment_name, project.dcore, 'application/pwm')
                         }
