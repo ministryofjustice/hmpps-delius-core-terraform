@@ -54,26 +54,6 @@ resource "aws_security_group_rule" "umt_instances_ingress_ndelius_lb" {
   description              = "WebLogic (ndelius) load balancer in"
 }
 
-resource "aws_security_group_rule" "umt_instances_ingress_spg_lb" {
-  security_group_id        = "${aws_security_group.umt_instances.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
-  description              = "WebLogic (spg) load balancer in"
-}
-
-resource "aws_security_group_rule" "umt_instances_ingress_interface_lb" {
-  security_group_id        = "${aws_security_group.umt_instances.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  description              = "WebLogic (interface) load balancer in"
-}
-
 resource "aws_security_group_rule" "umt_instances_egress_ldap" {
   security_group_id        = "${aws_security_group.umt_instances.id}"
   type                     = "egress"

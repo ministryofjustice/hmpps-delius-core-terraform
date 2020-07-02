@@ -43,26 +43,6 @@ resource "aws_security_group_rule" "gdpr_api_in_from_ndelius_lb" {
   description              = "WebLogic LB (ndelius) In"
 }
 
-resource "aws_security_group_rule" "gdpr_api_in_from_interface_lb" {
-  security_group_id        = "${aws_security_group.gdpr_api.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 8080
-  to_port                  = 8080
-  source_security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  description              = "WebLogic LB (interface) In"
-}
-
-resource "aws_security_group_rule" "gdpr_api_in_from_spg_lb" {
-  security_group_id        = "${aws_security_group.gdpr_api.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 8080
-  to_port                  = 8080
-  source_security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
-  description              = "WebLogic LB (spg) In"
-}
-
 output "sg_gdpr_api_id" {
   value = "${aws_security_group.gdpr_api.id}"
 }
@@ -90,26 +70,6 @@ resource "aws_security_group_rule" "gdpr_ui_in_from_ndelius_lb" {
   to_port                  = 80
   source_security_group_id = "${aws_security_group.weblogic_ndelius_lb.id}"
   description              = "WebLogic LB (ndelius) In"
-}
-
-resource "aws_security_group_rule" "gdpr_ui_in_from_interface_lb" {
-  security_group_id        = "${aws_security_group.gdpr_ui.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 80
-  to_port                  = 80
-  source_security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  description              = "WebLogic LB (interface) In"
-}
-
-resource "aws_security_group_rule" "gdpr_ui_in_from_spg_lb" {
-  security_group_id        = "${aws_security_group.gdpr_ui.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 80
-  to_port                  = 80
-  source_security_group_id = "${aws_security_group.weblogic_spg_lb.id}"
-  description              = "WebLogic LB (spg) In"
 }
 
 output "sg_gdpr_ui_id" {
