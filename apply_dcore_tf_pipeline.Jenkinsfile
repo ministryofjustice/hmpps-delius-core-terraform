@@ -130,7 +130,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
                 fi; \
                 echo \\\"\\\$exitcode\\\" > plan_ret;" \
             || exitcode="\$?"; \
-            if [ "\$exitcode" == '1' ]; then exit 1; fi
+            if [ "\$exitcode" == '1' ]; then exit 1; else exit 0; fi
         set -e
         """
         return readFile("${git_project_dir}/${submodule_name}/plan_ret").trim()
@@ -163,7 +163,7 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
               fi;"; \
         dockerexitcode=\$?; \
         echo "Docker step exited with code \$dockerexitcode"; \
-        if [ \$dockerexitcode -ne 0 ]; then exit \$dockerexitcode; fi;
+        if [ \$dockerexitcode -ne 0 ]; then exit \$dockerexitcode; else exit 0; fi;
         set -e
         """
     }
@@ -360,6 +360,16 @@ pipeline {
             }
         }
 
+        stage('Password Self-Service Tool (OLD)') {
+            // TODO remove this stage once the old PWM code has been destroyed in all envs
+            steps {
+                script {
+                    println("terraform pwm")
+                    do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                }
+            }
+        }
+
         stage ('Apps') {
             parallel {
                 stage('Delius LoadRunner') {
@@ -382,10 +392,6 @@ pipeline {
 
                 stage ('Delius Password Self-Service Tool') {
                     steps {
-                        script {
-                            println("terraform pwm")
-                            do_terraform(project.config, environment_name, project.dcore, 'pwm')
-                        }
                         script {
                             println("terraform application/pwm")
                             do_terraform(project.config, environment_name, project.dcore, 'application/pwm')
