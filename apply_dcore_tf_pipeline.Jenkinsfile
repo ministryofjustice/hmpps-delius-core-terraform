@@ -130,7 +130,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
                 fi; \
                 echo \\\"\\\$exitcode\\\" > plan_ret;" \
             || exitcode="\$?"; \
-            if [ "\$exitcode" == '1' ]; then exit 1; else exit 0; fi
+            if [ "\$exitcode" == '1' ]; then exit 1; fi
         set -e
         """
         return readFile("${git_project_dir}/${submodule_name}/plan_ret").trim()
