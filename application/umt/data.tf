@@ -57,7 +57,7 @@ data "terraform_remote_state" "pwm" {
 
   config {
     bucket = "${var.remote_state_bucket_name}"
-    key    = "delius-core/pwm/terraform.tfstate"
+    key    = "delius-core/application/pwm/terraform.tfstate"
     region = "${var.region}"
   }
 }
@@ -96,7 +96,7 @@ data "template_file" "container_definition" {
     ldap_base_groups      = "${replace(local.ldap_config["base_groups"], format(",%s", local.ldap_config["base_root"]), "")}"
     redis_host            = "${aws_route53_record.token_store_private_dns.fqdn}"
     redis_port            = "${aws_elasticache_replication_group.token_store_replication_group.port}"
-    password_reset_url    = "https://${data.terraform_remote_state.pwm.public_fqdn_pwm}/public/forgottenpassword"
+    password_reset_url    = "${data.terraform_remote_state.pwm.url}"
     ndelius_log_level     = "${local.ansible_vars["ndelius_log_level"]}"
   }
 }
