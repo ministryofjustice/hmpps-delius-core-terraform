@@ -163,7 +163,7 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
               fi;"; \
         dockerexitcode=\$?; \
         echo "Docker step exited with code \$dockerexitcode"; \
-        if [ \$dockerexitcode -ne 0 ]; then exit \$dockerexitcode; else exit 0; fi;
+        if [ \$dockerexitcode -ne 0 ]; then exit \$dockerexitcode; fi;
         set -e
         """
     }
