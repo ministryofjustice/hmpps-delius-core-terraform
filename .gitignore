@@ -49,6 +49,7 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
+*.war
 *.ear
 *.zip
 *.tar.gz
