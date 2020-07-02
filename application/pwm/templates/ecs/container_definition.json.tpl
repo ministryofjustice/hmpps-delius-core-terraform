@@ -2,6 +2,7 @@
     "name": "${app_name}",
     "image": "${image}",
     "essential": true,
+    "environment": [{ "name": "CONFIG_XML_BASE64", "value": "${config_xml_base64}" }],
     "secrets": [
         { "name": "SECURITY_KEY",       "valueFrom": "${ssm_prefix}/pwm/pwm/security_key" },
         { "name": "CONFIG_PASSWORD",    "valueFrom": "${ssm_prefix}/pwm/pwm/config_password" },

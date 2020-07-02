@@ -90,20 +90,6 @@ data "aws_acm_certificate" "strategic_cert" {
 
 data "aws_caller_identity" "current" {}
 
-data "template_file" "container_definition" {
-  template = "${file("templates/ecs/container_definition.json.tpl")}"
-
-  vars {
-    region         = "${var.region}"
-    app_name       = "${local.app_name}"
-    image          = "${local.image_name}:${local.pwm_config["version"]}"
-    log_group_name = "${var.environment_name}/${local.app_name}"
-    ssm_prefix     = "${local.ssm_prefix}"
-    cpu            = "${local.pwm_config["cpu"]}"
-    memory         = "${local.pwm_config["memory"]}"
-  }
-}
-
 data "template_file" "pwm_configuration" {
   template = "${file("templates/pwm/PwmConfiguration.xml.tpl")}"
 
@@ -115,5 +101,20 @@ data "template_file" "pwm_configuration" {
     site_url           = "https://${aws_route53_record.public_dns.fqdn}"
     email_smtp_address = "smtp.${data.terraform_remote_state.vpc.private_zone_name}"
     email_from_address = "no-reply@${data.terraform_remote_state.vpc.public_zone_name}"
+  }
+}
+
+data "template_file" "container_definition" {
+  template = "${file("templates/ecs/container_definition.json.tpl")}"
+
+  vars {
+    region            = "${var.region}"
+    app_name          = "${local.app_name}"
+    image             = "${local.image_name}:${local.pwm_config["version"]}"
+    log_group_name    = "${var.environment_name}/${local.app_name}"
+    ssm_prefix        = "${local.ssm_prefix}"
+    cpu               = "${local.pwm_config["cpu"]}"
+    memory            = "${local.pwm_config["memory"]}"
+    config_xml_base64 = "${base64encode(data.template_file.pwm_configuration.rendered)}"
   }
 }
