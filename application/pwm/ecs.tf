@@ -14,6 +14,7 @@ module "service" {
   max_capacity          = "${local.pwm_config["max_capacity"]}"
   target_cpu_usage      = "${local.pwm_config["target_cpu"]}"
   vpc_id                = "${data.terraform_remote_state.vpc.vpc_id}"
+  health_check_matcher  = "200-399"
   lb_stickiness_enabled = true
 
   ecs_cluster = {
