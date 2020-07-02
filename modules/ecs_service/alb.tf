@@ -1,12 +1,13 @@
 resource "aws_lb_target_group" "target_group" {
-  name                 = "${var.short_environment_name}-${var.service_name}-tg"
-  vpc_id               = "${var.vpc_id}"
-  protocol             = "HTTP"
-  port                 = "${var.service_port}"
+  name     = "${local.short_name}-tg"
+  vpc_id   = "${var.vpc_id}"
+  protocol = "HTTP"
+  port     = "${var.service_port}"
+
   # Targets will be ECS tasks running in awsvpc mode so target_type needs to be ip
   target_type          = "ip"
   deregistration_delay = "${var.deregistration_delay}"
-  tags                 = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.service_name}-tg"))}"
+  tags                 = "${merge(var.tags, map("Name", "${local.name}-tg"))}"
 
   health_check {
     protocol            = "HTTP"
@@ -20,7 +21,7 @@ resource "aws_lb_target_group" "target_group" {
 
   stickiness {
     enabled = "${var.lb_stickiness_enabled}"
-    type = "lb_cookie"
+    type    = "lb_cookie"
   }
 
   lifecycle {

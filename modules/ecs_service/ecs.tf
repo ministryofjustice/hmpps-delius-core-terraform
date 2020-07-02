@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "task_definition" {
-  family                   = "${var.environment_name}-${var.service_name}-task-definition"
+  family                   = "${local.name}-task-definition"
   container_definitions    = "${var.container_definition}"
   task_role_arn            = "${aws_iam_role.task.arn}"
   execution_role_arn       = "${aws_iam_role.exec.arn}"
@@ -7,11 +7,11 @@ resource "aws_ecs_task_definition" "task_definition" {
   memory                   = "${var.required_memory}"
   cpu                      = "${var.required_cpu}"
   requires_compatibilities = ["EC2"]
-  tags                     = "${merge(var.tags, map("Name", "${var.environment_name}-${var.service_name}-task-definition"))}"
+  tags                     = "${merge(var.tags, map("Name", "${local.name}-task-definition"))}"
 }
 
 resource "aws_ecs_service" "service" {
-  name            = "${var.short_environment_name}-${var.service_name}-service"
+  name            = "${local.name}-service"
   cluster         = "${var.ecs_cluster["cluster_id"]}"
   task_definition = "${aws_ecs_task_definition.task_definition.arn}"
 

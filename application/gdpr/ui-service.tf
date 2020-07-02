@@ -1,8 +1,6 @@
 module "ui" {
   source                 = "../../modules/ecs_service"
   region                 = "${var.region}"
-  project_name           = "${var.project_name}"
-  environment_name       = "${var.environment_name}"
   short_environment_name = "${var.short_environment_name}"
   tags                   = "${var.tags}"
 

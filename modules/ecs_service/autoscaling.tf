@@ -14,7 +14,7 @@ resource "aws_appautoscaling_target" "scaling_target" {
 }
 
 resource "aws_appautoscaling_policy" "scaling_policy" {
-  name               = "${var.environment_name}-${var.service_name}-cpu-scaling-policy"
+  name               = "${local.name}-cpu-scaling-policy"
   policy_type        = "TargetTrackingScaling"
   resource_id        = "${aws_appautoscaling_target.scaling_target.resource_id}"
   scalable_dimension = "${aws_appautoscaling_target.scaling_target.scalable_dimension}"

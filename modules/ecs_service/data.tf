@@ -30,10 +30,8 @@ data "template_file" "ecs_exec_policy_template" {
   template = "${file("${path.module}/templates/iam/ecs_exec_policy.json.tpl")}"
 
   vars {
-    aws_account_id   = "${data.aws_caller_identity.current.account_id}"
-    region           = "${var.region}"
-    environment_name = "${var.environment_name}"
-    project_name     = "${var.project_name}"
-    ssm_statement    = "${length(var.allowed_ssm_parameters) == 0 ? "": data.template_file.ssm_policy_statement_template.rendered}"
+    aws_account_id = "${data.aws_caller_identity.current.account_id}"
+    region         = "${var.region}"
+    ssm_statement  = "${length(var.allowed_ssm_parameters) == 0 ? "": data.template_file.ssm_policy_statement_template.rendered}"
   }
 }
