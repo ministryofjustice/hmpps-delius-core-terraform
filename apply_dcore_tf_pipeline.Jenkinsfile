@@ -383,8 +383,10 @@ pipeline {
                 stage ('Delius Password Self-Service Tool') {
                     steps {
                         script {
-                          println("terraform pwm")
-                          do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                            println("terraform pwm")
+                            do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                            println("terraform application/pwm")
+                            do_terraform(project.config, environment_name, project.dcore, 'application/pwm')
                         }
                     }
                 }

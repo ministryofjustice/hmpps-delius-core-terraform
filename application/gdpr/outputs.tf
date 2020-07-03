@@ -1,7 +1,9 @@
 output "api_service" {
-  value = {
-    id = "${aws_ecs_service.api_service.id}"
-  }
+  value = "${module.api.service}"
+}
+
+output "ui_service" {
+  value = "${module.ui.service}"
 }
 
 output "primary_db" {

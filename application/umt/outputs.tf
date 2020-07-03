@@ -1,5 +1,5 @@
-output "service_id" {
-  value = "${aws_ecs_service.service.id}"
+output "service" {
+  value = "${module.ecs.service}"
 }
 
 output "token_store" {

@@ -26,15 +26,6 @@ variable "aptracker_api_config" {
 variable "default_aptracker_api_config" {
   description = "Default values to be overridden by aptracker_api_config"
   type = "map"
-  default = {
-    version                  = "1.11"     # Application version
-    memory                   = 2048       # Memory to assign to ECS container in MB
-    cpu                      = 1024       # CPU to assign to ECS container
-    ecs_scaling_min_capacity = 3          # Minimum number of running tasks
-    ecs_scaling_max_capacity = 30         # Maximum number of running tasks
-    ecs_target_cpu           = 60         # CPU target value for scaling of ECS tasks
-    log_level                = "INFO"     # Application log-level
-  }
 }
 
 variable "tags" {
