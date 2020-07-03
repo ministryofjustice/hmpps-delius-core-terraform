@@ -1,6 +1,6 @@
 module "external_nlb" {
   source               = "../../modules/nlb_to_alb"
-  tier_name            = "${local.app_name}"
+  tier_name            = "${local.short_name}"
   key_name             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
   iam_instance_profile = "${data.terraform_remote_state.key_profile.instance_profile_ec2_id}"
 
