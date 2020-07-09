@@ -17,7 +17,7 @@ resource "aws_cloudwatch_metric_alarm" "activemq_healthy_hosts_fatal_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_warning_alarm" {
   alarm_name                = "${var.environment_name}-activemq-inbound-queue-size-cwa--warning"
-  alarm_description         = "Inbound queue size exceeded 25 for 30 minutes."
+  alarm_description         = "Inbound queue size exceeded 30 for 30 minutes."
   namespace                 = "WebLogic"
   statistic                 = "Sum"
   metric_name               = "InboundQueueSize"
