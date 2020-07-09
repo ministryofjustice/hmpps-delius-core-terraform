@@ -22,7 +22,7 @@ resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_warning_alarm" {
   statistic                 = "Sum"
   metric_name               = "InboundQueueSize"
   comparison_operator       = "GreaterThanThreshold"
-  threshold                 = "25"
+  threshold                 = "30"
   evaluation_periods        = "30"
   period                    = "60"
   alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
