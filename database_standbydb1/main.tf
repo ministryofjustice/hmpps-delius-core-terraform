@@ -106,7 +106,3 @@ data "aws_ami" "centos_oracle_db" {
     values = ["ebs"]
   }
 }
-
-data "aws_route53_zone" "public" {
-  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
-}
