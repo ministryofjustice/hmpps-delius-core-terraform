@@ -133,7 +133,7 @@ data "terraform_remote_state" "pwm" {
 
   config {
     bucket = "${var.remote_state_bucket_name}"
-    key    = "delius-core/pwm/terraform.tfstate"
+    key    = "delius-core/application/pwm/terraform.tfstate"
     region = "${var.region}"
   }
 }

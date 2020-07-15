@@ -128,7 +128,7 @@ module "interface" {
     nomis_client_secret      = "${local.ansible_vars["nomis_client_secret"]}"
 
     # Password Reset Tool
-    password_reset_url       = "https://${data.terraform_remote_state.pwm.public_fqdn_pwm}/public/forgottenpassword"
+    password_reset_url       = "${data.terraform_remote_state.pwm.url}"
 
     # Approved Premises Tracker API
     aptracker_api_errors_url = "${local.ansible_vars["aptracker_api_errors_url"]}"

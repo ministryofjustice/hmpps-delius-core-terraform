@@ -86,6 +86,7 @@ output "db_disks_delius_db_1" {
 # map (tidier)
 output "delius_db_1" {
   value = {
+    db_aws_ami    = "${var.db_aws_ami}"
     ami_id        = "${module.delius_db_1.ami_id}",
     public_fqdn   = "${module.delius_db_1.public_fqdn}",
     internal_fqdn = "${module.delius_db_1.internal_fqdn}",

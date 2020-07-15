@@ -34,23 +34,6 @@ resource "aws_lb_target_group" "internal_alb_target_group" {
   }
 }
 
-resource "aws_lb_target_group" "umt_target_group" {
-  name        = "${var.short_environment_name}-${local.tier_name_sub}-umt-tg"
-  vpc_id      = "${var.vpc_id}"
-  protocol    = "HTTP"
-  port        = "8080"
-  target_type = "ip"  # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
-  tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${local.tier_name_sub}-umt-tg"))}"
-  health_check {
-    protocol  = "HTTP"
-    path      = "/umt/actuator/health"
-    matcher   = "200-399"
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_lb_target_group" "newtechweb_target_group" {
   name        = "${var.short_environment_name}-${var.tier_name}-ntw"
   vpc_id      = "${var.vpc_id}"
@@ -61,48 +44,6 @@ resource "aws_lb_target_group" "newtechweb_target_group" {
   health_check {
     protocol  = "HTTP"
     path      = "/newTech/healthcheck"
-    matcher   = "200-399"
-  }
-}
-
-resource "aws_lb_target_group" "aptracker_api_target_group" {
-  name        = "${var.short_environment_name}-${local.tier_name_sub}-aptracker"
-  vpc_id      = "${var.vpc_id}"
-  protocol    = "HTTP"
-  port        = "8080"
-  target_type = "ip" # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
-  tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-aptracker"))}"
-  health_check {
-    protocol  = "HTTP"
-    path      = "/aptracker-api/actuator/health"
-    matcher   = "200-399"
-  }
-}
-
-resource "aws_lb_target_group" "gdpr_api_target_group" {
-  name        = "${var.short_environment_name}-${local.tier_name_sub}-gdpr-api"
-  vpc_id      = "${var.vpc_id}"
-  protocol    = "HTTP"
-  port        = "8080"
-  target_type = "ip" # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
-  tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-gdpr-api"))}"
-  health_check {
-    protocol  = "HTTP"
-    path      = "/gdpr/api/actuator/health"
-    matcher   = "200-399"
-  }
-}
-
-resource "aws_lb_target_group" "gdpr_ui_target_group" {
-  name        = "${var.short_environment_name}-${local.tier_name_sub}-gdpr-ui"
-  vpc_id      = "${var.vpc_id}"
-  protocol    = "HTTP"
-  port        = "80"
-  target_type = "ip" # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
-  tags        = "${merge(var.tags, map("Name", "${var.short_environment_name}-${var.tier_name}-gdpr-ui"))}"
-  health_check {
-    protocol  = "HTTP"
-    path      = "/gdpr/ui/homepage"
     matcher   = "200-399"
   }
 }
@@ -191,18 +132,6 @@ resource "aws_lb_listener_rule" "internal_lb_ndelius_jspell_rule" {
   }
 }
 
-resource "aws_lb_listener_rule" "internal_lb_umt_rule" {
-  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
-  condition {
-    field  = "path-pattern"
-    values = ["/umt/*"]
-  }
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_lb_target_group.umt_target_group.arn}"
-  }
-}
-
 resource "aws_lb_listener_rule" "internal_lb_newtechweb_rule" {
   listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
   condition {
@@ -212,42 +141,6 @@ resource "aws_lb_listener_rule" "internal_lb_newtechweb_rule" {
   action {
     type             = "forward"
     target_group_arn = "${aws_lb_target_group.newtechweb_target_group.arn}"
-  }
-}
-
-resource "aws_lb_listener_rule" "internal_lb_aptracker_api_rule" {
-  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
-  condition {
-    field  = "path-pattern"
-    values = ["/aptracker-api/*"]
-  }
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_lb_target_group.aptracker_api_target_group.arn}"
-  }
-}
-
-resource "aws_lb_listener_rule" "internal_lb_gdpr_api_rule" {
-  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
-  condition {
-    field  = "path-pattern"
-    values = ["/gdpr/api/*"]
-  }
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_lb_target_group.gdpr_api_target_group.arn}"
-  }
-}
-
-resource "aws_lb_listener_rule" "internal_lb_gdpr_ui_rule" {
-  listener_arn = "${aws_lb_listener.internal_lb_https_listener.arn}"
-  condition {
-    field  = "path-pattern"
-    values = ["/gdpr/ui/*"]
-  }
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_lb_target_group.gdpr_ui_target_group.arn}"
   }
 }
 

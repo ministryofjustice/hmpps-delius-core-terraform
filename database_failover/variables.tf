@@ -55,3 +55,7 @@ variable "db_size_delius_core" {
   description = "Details of the database resources size"
   type = "map"
 }
+
+variable "db_aws_ami" {
+  description = "Database AMI Name/Version"
+}
