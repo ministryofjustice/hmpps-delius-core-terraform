@@ -43,7 +43,7 @@ do
     echo
     echo "Module :: $(echo ${line})"
 
-    #terragrunt state rm "${line}"
+    terragrunt state rm "${line}"
 
   done
 
