@@ -219,9 +219,6 @@ pipeline {
     parameters {
         string(name: 'CONFIG_BRANCH',              description: 'Target Branch for hmpps-env-configs',           defaultValue: 'master')
         string(name: 'DCORE_BRANCH',               description: 'Target Branch for hmpps-delius-core-terraform', defaultValue: 'master')
-        string(name: 'DB_HIGH_AVAILABILITY_COUNT', description: 'Number of HA DBs [ 0 | 1 | 2 ]',                defaultValue: '0')
-        booleanParam(name: 'deploy_DatabaseStandBy1', defaultValue: true, description: 'Deploy/update Database StandBy 1?')
-        booleanParam(name: 'deploy_DatabaseStandBy2', defaultValue: true, description: 'Deploy/update Database StandBy 2?')
         booleanParam(name: 'deploy_DATABASE_HA', defaultValue: true, description: 'Deploy/update Database High Availibilty?')
         booleanParam(name: 'db_patch_check', defaultValue: true, description: 'Check Oracle DB patches?')
     }
@@ -494,7 +491,7 @@ pipeline {
             when {expression { (db_high_availability_count == "1" || db_high_availability_count == "2") && env.deploy_DATABASE_HA == "true" }}
             steps {
                 println("Build Database High Availibilty")
-                build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'high_availability_count', value: params.DB_HIGH_AVAILABILITY_COUNT]]
+                build job: "DAMS/Environments/${environment_name}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'high_availability_count', value: db_high_availability_count]]
             }
         }
 
