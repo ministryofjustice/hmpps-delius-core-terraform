@@ -102,7 +102,7 @@ def prepare_env() {
     '''
 }
 
-def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
+def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, db_high_availability_count) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
         #!/usr/env/bin bash
@@ -113,6 +113,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
         docker run --rm \
             -v `pwd`:/home/tools/data \
             -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
+            -e TF_VAR_high_availability_count=${db_high_availability_count} \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
                 cd ${submodule_name}; \
@@ -137,7 +138,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
     }
 }
 
-def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
+def apply_submodule(config_dir, env_name, git_project_dir, submodule_name, db_high_availability_count) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
         #!/usr/env/bin bash
@@ -148,6 +149,7 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name) {
         docker run --rm \
           -v `pwd`:/home/tools/data \
           -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
+          -e TF_VAR_high_availability_count=${db_high_availability_count} \
           bash -c " \
               source env_configs/${env_name}/${env_name}.properties; \
               cd ${submodule_name}; \
@@ -191,8 +193,8 @@ def confirm(message) {
     }
 }
 
-def do_terraform(config_dir, env_name, git_project, component) {
-    plancode = plan_submodule(config_dir, env_name, git_project, component)
+def do_terraform(config_dir, env_name, git_project, component, db_high_availability_count) {
+    plancode = plan_submodule(config_dir, env_name, git_project, component, db_high_availability_count)
     if (plancode == "2") {
         if ("${confirmation}" == "true") {
            confirm('Apply changes to ' + component + '?')
@@ -200,11 +202,11 @@ def do_terraform(config_dir, env_name, git_project, component) {
             env.Continue = true
         }
         if (env.Continue == "true") {
-           apply_submodule(config_dir, env_name, git_project, component)
+           apply_submodule(config_dir, env_name, git_project, component, db_high_availability_count)
         }
     }
     else if (plancode == "3") {
-        apply_submodule(config_dir, env_name, git_project, component)
+        apply_submodule(config_dir, env_name, git_project, component, db_high_availability_count)
         env.Continue = true
     }
     else {
@@ -291,7 +293,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform security-groups")
-                          do_terraform(project.config, environment_name, project.dcore, 'security-groups')
+                          do_terraform(project.config, environment_name, project.dcore, 'security-groups', db_high_availability_count)
                         }
                     }
                 }
@@ -300,7 +302,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform key_profile")
-                          do_terraform(project.config, environment_name, project.dcore, 'key_profile')
+                          do_terraform(project.config, environment_name, project.dcore, 'key_profile', db_high_availability_count)
                         }
                     }
                 }
@@ -314,7 +316,7 @@ pipeline {
                     steps {
                         script {
                             println("terraform database_failover")
-                            do_terraform(project.config, environment_name, project.dcore, 'database_failover')
+                            do_terraform(project.config, environment_name, project.dcore, 'database_failover', db_high_availability_count)
                         }
                     }
                 }
@@ -324,7 +326,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { // this is temp catchError will remove after migration to new terraformstructure
                             println("terraform database_standbydb1")
-                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1')
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb1', db_high_availability_count)
                         }
                     }
                 }
@@ -334,7 +336,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { // this is temp catchError will remove after migration to new terraformstructure
                             println("terraform database_standbydb2")
-                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2')
+                            do_terraform(project.config, environment_name, project.dcore, 'database_standbydb2', db_high_availability_count)
                         }
                     }
                 }
@@ -343,7 +345,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/ldap")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/ldap')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/ldap', db_high_availability_count)
                         }
                     }
                 }
@@ -366,7 +368,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform loadrunner")
-                          do_terraform(project.config, environment_name, project.dcore, 'loadrunner')
+                          do_terraform(project.config, environment_name, project.dcore, 'loadrunner', db_high_availability_count)
                         }
                     }
                 }
@@ -375,7 +377,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform management")
-                          do_terraform(project.config, environment_name, project.dcore, 'management')
+                          do_terraform(project.config, environment_name, project.dcore, 'management', db_high_availability_count)
                         }
                     }
                 }
@@ -384,9 +386,9 @@ pipeline {
                     steps {
                         script {
                             println("terraform pwm")
-                            do_terraform(project.config, environment_name, project.dcore, 'pwm')
+                            do_terraform(project.config, environment_name, project.dcore, 'pwm', db_high_availability_count)
                             println("terraform application/pwm")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/pwm')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/pwm', db_high_availability_count)
                         }
                     }
                 }
@@ -399,7 +401,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/ndelius")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/ndelius')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/ndelius', db_high_availability_count)
                         }
                     }
                 }
@@ -408,7 +410,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/spg")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/spg')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/spg', db_high_availability_count)
                         }
                     }
                 }
@@ -417,7 +419,7 @@ pipeline {
                     steps {
                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("application/interface")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/interface')
+                            do_terraform(project.config, environment_name, project.dcore, 'application/interface', db_high_availability_count)
                         }
                     }
                 }
@@ -430,7 +432,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/umt")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/umt')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/umt', db_high_availability_count)
                         }
                     }
                 }
@@ -439,7 +441,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/aptracker-api")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/aptracker-api', db_high_availability_count)
                         }
                     }
                 }
@@ -448,7 +450,7 @@ pipeline {
                     steps {
                         script {
                           println("terraform application/gdpr")
-                          do_terraform(project.config, environment_name, project.dcore, 'application/gdpr')
+                          do_terraform(project.config, environment_name, project.dcore, 'application/gdpr', db_high_availability_count)
                         }
                     }
                 }
@@ -461,7 +463,7 @@ pipeline {
                     steps{
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             println("batch/dss")
-                            do_terraform(project.config, environment_name, project.dcore, 'batch/dss')
+                            do_terraform(project.config, environment_name, project.dcore, 'batch/dss', db_high_availability_count)
                         }
                     }
                 }
@@ -471,7 +473,7 @@ pipeline {
 //                    steps {
 //                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 //                            println("terraform pingdom")
-//                           do_terraform(project.config, environment_name, project.dcore, 'pingdom')
+//                           do_terraform(project.config, environment_name, project.dcore, 'pingdom', db_high_availability_count)
 //                        }
 //                    }
 //                }
@@ -480,7 +482,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                           println("terraform monitoring")
-                          do_terraform(project.config, environment_name, project.dcore, 'monitoring')
+                          do_terraform(project.config, environment_name, project.dcore, 'monitoring', db_high_availability_count)
                         }
                     }
                 }
