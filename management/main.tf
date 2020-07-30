@@ -95,6 +95,7 @@ data "aws_route53_zone" "private" {
 }
 
 data "aws_ami" "amazon_ami" {
+  owners      = ["895523100917"]
   most_recent = true
 
   filter {
