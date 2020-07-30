@@ -98,7 +98,7 @@ def debug_env(git_project_dir, git_version) {
 def prepare_env() {
     sh '''
     #!/usr/env/bin bash
-    docker pull mojdigitalstudio/hmpps-terraform-builder:latest
+    docker pull mojdigitalstudio/hmpps-terraform-builder-0-11-14:latest
     '''
 }
 
@@ -123,6 +123,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hig
                 echo && echo && env | sort && echo; \
                 if [ -d .terraform ]; then rm -rf .terraform; fi; sleep 5; \
                 terragrunt init; \
+                terragrunt refresh; \
                 terragrunt plan -detailed-exitcode --out ${env_name}.plan > tf.plan.out; \
                 exitcode=\\\"\\\$?\\\"; \
                 echo \\\"\\\$exitcode\\\" > plan_ret; \
