@@ -59,3 +59,8 @@ variable "db_size_delius_core" {
 variable "db_aws_ami" {
   description = "Database AMI Name/Version"
 }
+
+variable "high_availability_count" {
+  description = "number of standby databases"
+  default     = 2
+}
