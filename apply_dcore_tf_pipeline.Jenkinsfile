@@ -113,8 +113,9 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hig
         export TF_VAR_high_availability_count=${db_high_availability_count}
         docker run --rm \
             -v `pwd`:/home/tools/data \
-            -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
+            -v ~/.aws:/home/tools/.aws \
             --env TF_VAR_high_availability_count \
+            mojdigitalstudio/hmpps-terraform-builder  \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
                 cd ${submodule_name}; \
@@ -124,12 +125,9 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hig
                 terragrunt init; \
                 terragrunt plan -detailed-exitcode --out ${env_name}.plan > tf.plan.out; \
                 exitcode=\\\"\\\$?\\\"; \
+                echo \\\"\\\$exitcode\\\" > plan_ret; \
                 cat tf.plan.out; \
                 if [ \\\"\\\$exitcode\\\" == '1' ]; then exit 1; fi; \
-                if [ \\\"\\\$exitcode\\\" == '2' ]; then \
-                    parse-terraform-plan -i tf.plan.out | jq '.changedResources[] | (.action != \\\"update\\\") or (.changedAttributes | to_entries | map(.key != \\\"tags.source-hash\\\") | reduce .[] as \\\$item (false; . or \\\$item))' | jq -e -s 'reduce .[] as \\\$item (false; . or \\\$item) == false'; \
-                    if [ \\\"\\\$?\\\" == '1' ]; then exitcode=2 ; else exitcode=3; fi; \
-                fi; \
                 echo \\\"\\\$exitcode\\\" > plan_ret;" \
             || exitcode="\$?"; \
             if [ "\$exitcode" == '1' ]; then exit 1; else exit 0; fi
@@ -150,9 +148,10 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hi
         export TF_VAR_high_availability_count=${db_high_availability_count}
         docker run --rm \
           -v `pwd`:/home/tools/data \
-          -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
+          -v ~/.aws:/home/tools/.aws \
           --env TF_VAR_high_availability_count \
-          bash -c " \
+          mojdigitalstudio/hmpps-terraform-builder  \
+          bash -c "\
               source env_configs/${env_name}/${env_name}.properties; \
               cd ${submodule_name}; \
               [[ -e ssm.properties ]] && source ssm.properties; \
@@ -206,10 +205,6 @@ def do_terraform(config_dir, env_name, git_project, component, db_high_availabil
         if (env.Continue == "true") {
            apply_submodule(config_dir, env_name, git_project, component, db_high_availability_count)
         }
-    }
-    else if (plancode == "3") {
-        apply_submodule(config_dir, env_name, git_project, component, db_high_availability_count)
-        env.Continue = true
     }
     else {
         env.Continue = true
