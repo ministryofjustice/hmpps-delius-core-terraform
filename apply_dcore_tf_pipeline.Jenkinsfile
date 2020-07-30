@@ -110,10 +110,11 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hig
         set +e
         cp -R -n "${config_dir}" "${git_project_dir}/env_configs"
         cd "${git_project_dir}"
+        export TF_VAR_high_availability_count=${db_high_availability_count} \
         docker run --rm \
             -v `pwd`:/home/tools/data \
             -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
-            -e TF_VAR_high_availability_count=${db_high_availability_count} \
+            -e TF_VAR_high_availability_count \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
                 cd ${submodule_name}; \
@@ -146,10 +147,11 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hi
         set +e
         cp -R -n "${config_dir}" "${git_project_dir}/env_configs"
         cd "${git_project_dir}"
+        export TF_VAR_high_availability_count=${db_high_availability_count} \
         docker run --rm \
           -v `pwd`:/home/tools/data \
           -v ~/.aws:/home/tools/.aws mojdigitalstudio/hmpps-terraform-builder \
-          -e TF_VAR_high_availability_count=${db_high_availability_count} \
+          -e TF_VAR_high_availability_count \
           bash -c " \
               source env_configs/${env_name}/${env_name}.properties; \
               cd ${submodule_name}; \
