@@ -156,5 +156,9 @@
       <label>Enable Bad Password Simulation</label>
       <value>false</value>
     </setting>
+    <setting key="enableSessionVerification" syntax="SELECT">
+      <label>Sticky Session Verification</label>
+      <value><![CDATA[OFF]]></value>
+    </setting>
   </settings>
 </PwmConfiguration>
