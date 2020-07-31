@@ -42,7 +42,7 @@ resource "aws_iam_instance_profile" "ecs_instance_profile" {
 }
 
 resource "aws_batch_compute_environment" "batch_ce" {
-  compute_environment_name = "${var.ce_name}-ce"
+  compute_environment_name_prefix = "${var.ce_name}-ce"
 
   compute_resources {
     instance_role = "${aws_iam_instance_profile.ecs_instance_profile.arn}"
@@ -70,6 +70,7 @@ resource "aws_batch_compute_environment" "batch_ce" {
     ignore_changes = [
       "compute_resources.0.desired_vcpus",
     ]
+    create_before_destroy = true
   }
 }
 
