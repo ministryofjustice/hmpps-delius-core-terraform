@@ -28,7 +28,7 @@ resource "aws_instance" "loadrunner" {
 }
 
 resource "aws_route53_record" "loadrunner_instance_internal" {
-  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+  zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
   name    = "loadrunner"
   type    = "A"
   ttl     = "300"
