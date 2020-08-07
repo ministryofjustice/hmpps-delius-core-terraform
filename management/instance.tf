@@ -25,7 +25,7 @@ resource "aws_instance" "management_server" {
 }
 
 resource "aws_route53_record" "management_instance_internal" {
-  zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+  zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
   name    = "management"
   type    = "A"
   ttl     = "300"
