@@ -115,7 +115,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hig
             -v `pwd`:/home/tools/data \
             -v ~/.aws:/home/tools/.aws \
             --env TF_VAR_high_availability_count \
-            mojdigitalstudio/hmpps-terraform-builder  \
+            mojdigitalstudio/hmpps-terraform-builder-0-11-14  \
             bash -c "\
                 source env_configs/${env_name}/${env_name}.properties; \
                 cd ${submodule_name}; \
@@ -151,7 +151,7 @@ def apply_submodule(config_dir, env_name, git_project_dir, submodule_name, db_hi
           -v `pwd`:/home/tools/data \
           -v ~/.aws:/home/tools/.aws \
           --env TF_VAR_high_availability_count \
-          mojdigitalstudio/hmpps-terraform-builder  \
+          mojdigitalstudio/hmpps-terraform-builder-0-11-14  \
           bash -c "\
               source env_configs/${env_name}/${env_name}.properties; \
               cd ${submodule_name}; \
