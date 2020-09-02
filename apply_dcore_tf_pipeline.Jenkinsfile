@@ -385,8 +385,8 @@ pipeline {
                         script {
                             println("terraform pwm")
                             do_terraform(project.config, environment_name, project.dcore, 'pwm', db_high_availability_count)
-                            println("terraform application/pwm")
-                            do_terraform(project.config, environment_name, project.dcore, 'application/pwm', db_high_availability_count)
+//                            println("terraform application/pwm")
+//                            do_terraform(project.config, environment_name, project.dcore, 'application/pwm', db_high_availability_count)
                         }
                     }
                 }
