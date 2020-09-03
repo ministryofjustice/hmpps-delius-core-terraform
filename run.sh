@@ -64,9 +64,12 @@ fi
 heading Parsing arguments...
 action=${*}
 options=""
-if [ -n "${CODEBUILD_CI}" ];        then options="${options} -no-color"; fi
-if [ "${action}" == "plan" ];       then options="${options} -detailed-exitcode -compact-warnings -out ${ENVIRONMENT}.plan"; fi
-if [ "${action}" == "apply" ];      then options="${options} ${ENVIRONMENT}.plan"; fi
+if [ -n "${CODEBUILD_CI}" ];   then options="${options} -no-color"; fi
+if [ "${action}" == "apply" ]; then options="${options} ${ENVIRONMENT}.plan"; fi
+if [ "${action}" == "plan" ];  then
+  if [[ "$(terraform -version)" != *0.11* ]]; then options="${options} -compact-warnings"; fi # this option is not available in Terraform 11
+  options="${options} -detailed-exitcode -out ${ENVIRONMENT}.plan"
+fi
 echo "Environment: ${ENVIRONMENT:--}"
 echo "Component:   ${COMPONENT:--}"
 echo "Command:     ${action}"
