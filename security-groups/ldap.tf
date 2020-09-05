@@ -207,3 +207,42 @@ resource "aws_security_group_rule" "ldap_instances_self_egress_80" {
   self              = true
   description       = "LDAP instances out"
 }
+
+resource "aws_security_group_rule" "ldap_instances_efs_egress" {
+  security_group_id        = "${aws_security_group.apacheds_ldap.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 2049
+  to_port                  = 2049
+  source_security_group_id = "${aws_security_group.ldap_efs.id}"
+  description              = "Out to EFS"
+}
+
+
+################################################################################
+## EFS File System
+################################################################################
+resource "aws_security_group" "ldap_efs" {
+  name        = "${var.environment_name}-ldap-efs"
+  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  description = "LDAP EFS File System"
+  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-ldap-efs", "Type", "Private"))}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+output "sg_ldap_efs_id" {
+  value = "${aws_security_group.ldap_efs.id}"
+}
+
+resource "aws_security_group_rule" "ldap_efs_instances_ingress" {
+  security_group_id        = "${aws_security_group.ldap_efs.id}"
+  type                     = "ingress"
+  from_port                = 2049
+  to_port                  = 2049
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.apacheds_ldap.id}"
+  description              = "In from LDAP instances"
+}

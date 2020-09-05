@@ -24,16 +24,25 @@ output "ldap_bind_user" {
 
 output "asg" {
   value = {
-    "id"    = "${aws_autoscaling_group.asg.id}",
-    "arn"   = "${aws_autoscaling_group.asg.arn}",
-    "name"  = "${aws_autoscaling_group.asg.name}",
+    "id"   = "${aws_autoscaling_group.asg.id}",
+    "arn"  = "${aws_autoscaling_group.asg.arn}",
+    "name" = "${aws_autoscaling_group.asg.name}",
   }
 }
 
 output "lb" {
   value = {
-    "id"    = "${aws_elb.lb.id}",
-    "arn"   = "${aws_elb.lb.arn}",
-    "name"  = "${aws_elb.lb.name}",
+    "id"   = "${aws_elb.lb.id}",
+    "arn"  = "${aws_elb.lb.arn}",
+    "name" = "${aws_elb.lb.name}",
+  }
+}
+
+output "efs" {
+  value = {
+    "id"             = "${aws_efs_file_system.efs.id}"
+    "arn"            = "${aws_efs_file_system.efs.arn}"
+    "dns_name"       = "${aws_efs_file_system.efs.dns_name}"
+    "creation_token" = "${aws_efs_file_system.efs.creation_token}"
   }
 }

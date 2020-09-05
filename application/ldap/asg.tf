@@ -31,6 +31,7 @@ data "template_file" "user_data" {
     backup_frequency      = "${local.ldap_config["backup_frequency"]}"
     query_time_limit      = "${local.ldap_config["query_time_limit"]}"
     db_max_size           = "${local.ldap_config["db_max_size"]}"
+    efs_dns_name          = "${aws_efs_file_system.efs.dns_name}"
   }
 }
 
@@ -48,7 +49,7 @@ resource "aws_launch_configuration" "launch_cfg" {
   associate_public_ip_address = "false"
   user_data                   = "${data.template_file.user_data.rendered}"
   enable_monitoring           = "true"
-  ebs_optimized               = "false"
+  ebs_optimized               = "true"
 
   root_block_device {
     volume_type = "${local.ldap_config["disk_volume_type"]}"

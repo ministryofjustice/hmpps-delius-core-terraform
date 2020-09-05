@@ -47,6 +47,17 @@
       ]
     },
     {
+      "Sid": "allowAccessToTestResultsBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "${s3_test_results_arn}",
+        "${s3_test_results_arn}/*"
+      ]
+    },
+    {
       "Sid": "allowAccessToMigrationBucket",
       "Effect": "Allow",
       "Action": [
