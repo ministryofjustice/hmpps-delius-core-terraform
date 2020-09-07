@@ -1,37 +1,31 @@
 #!/bin/bash
 set -e
 ## HMPPS Terragrunt wrapper script.
+##
 ## This script takes any number of arguments and will pass them to Terragrunt.
 ##
 ## Example usage:
-##    AWS_PROFILE=hmpps ENVIRONMENT=delius-test COMPONENT=vpc ./run.sh plan
-##
+##    AWS_PROFILE=hmpps_token ENVIRONMENT=delius-test COMPONENT=vpc ./run.sh plan
 ##
 ## Environment variables are used to configure the script:
 ##  * ENVIRONMENT        Required. Which environment to run against, used to select Terraform
 ##                                 configuration from the config repository.
-##  * CONFIG_LOCATION    Optional. Path to the environment configuration directory. Defaults
+##  * CONFIG_LOCATION    Optional. Path to the environment configuration repository. Defaults
 ##                                 to ../hmpps-env-configs.
 ##  * COMPONENT          Optional. Sub-directory containing the Terraform code to apply.
 ##                                 Defaults to current directory.
 ##  * CONTAINER          Optional. The container to run the Terragrunt commands in. Defaults to
 ##                                 mojdigitalstudio/hmpps-terraform-builder-0-12.
+##  * CMD                Optional. The executable to run in the container. Useful for debugging,
+##                                 for example by setting to 'bash'. Defaults to terragrunt.
 ## Any environment variables prefixed with AWS_ will also be passed to the Terragrunt container.
 ##
-##
-## The following shows a convenient way of temporarily set env vars once for multiple terragrunt
-## commands:
-##    AWS_PROFILE=hmpps ENVIRONMENT=delius-test COMPONENT=vpc ${SHELL}
-##     ./run.sh plan -out tfplan
-##     ./run.sh apply tfplan
-##     ...
-##    Then press Ctrl+D to reset env vars
 
 # Print usage if ENVIRONMENT not set:
 if [ "${ENVIRONMENT}" == "" ]; then grep '^##' "${0}" && exit; fi
 
 # Print heading items. Note CodeBuild doesn't support color/formatting
-heading() { [ -n "${CODEBUILD_CI}" ] && echo "${*}" || echo -e "\n\033[1m${*}\033[0m"; }
+heading() { [ -n "${CODEBUILD_CI}" ] && echo -e "\n* ${*}" || echo -e "\n\033[1m${*}\033[0m"; }
 
 # Start container with mounted config:
 if [ -z "${TF_IN_AUTOMATION}" ]; then
@@ -47,17 +41,15 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
   heading Starting container...
   CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
   echo "${CONTAINER}"
-  aws_env="$(env | grep ^AWS_ | sed 's/^/-e /')"
-  docker run \
-    ${aws_env} \
-    -e "COMPONENT=${COMPONENT}" \
-    -e "ENVIRONMENT=${ENVIRONMENT}" \
-    -e "GITHUB_TOKEN=${GITHUB_TOKEN}" \
-    -e TF_IN_AUTOMATION=True \
-    -v "${HOME}/.aws:/home/tools/.aws:ro" \
-    -v "$(pwd):/home/tools/data" \
-    -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro" \
-  "${CONTAINER}" bash -c "${0} ${*}"
+  docker run -it -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
+    -e "TF_IN_AUTOMATION=True"                              `# This flag is used by Terraform to indicate a script run` \
+    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass github token, in case we need to create CodeBuild resources` \
+    $(env | grep ^AWS_ | sed 's/^/-e /')                    `# Pass any environment variables prefixed with 'AWS_'` \
+    -v "${HOME}/.aws:/home/tools/.aws:ro"                   `# Mount the hosts AWS config files` \
+    -v "$(pwd):/home/tools/data"                            `# Mount the Terraform code` \
+    -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro" `# Mount the Terraform config` \
+    -v "$(cd "${0%/*}" && pwd):/home/tools/util:ro"         `# Mount the current script` \
+  "${CONTAINER}" bash -c "/home/tools/util/${0##*/} ${*}"    # Re-run the current script in the container
   exit $?
 fi
 
@@ -72,7 +64,7 @@ if [ "${action}" == "plan" ];  then
 fi
 echo "Environment: ${ENVIRONMENT:--}"
 echo "Component:   ${COMPONENT:--}"
-echo "Command:     ${action}"
+echo "Command:     ${action} ${options}"
 
 heading Loading configuration...
 test -f "env_configs/${ENVIRONMENT}/${ENVIRONMENT}.properties" && source "env_configs/${ENVIRONMENT}/${ENVIRONMENT}.properties"
@@ -88,4 +80,4 @@ pwd
 heading Running terragrunt...
 set -o pipefail
 set -x
-terragrunt ${action} ${options} | tee "${ENVIRONMENT}.plan.log"
+${CMD:-terragrunt} ${action} ${options} | tee "${ENVIRONMENT}.tg.log"
