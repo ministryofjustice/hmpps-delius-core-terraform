@@ -40,7 +40,7 @@ data "terraform_remote_state" "batch" {
   backend = "s3"
   config {
     bucket = "${var.remote_state_bucket_name}"
-    key    = "delius-core/application/batch/dss/terraform.tfstate"
+    key    = "delius-core/batch/dss/terraform.tfstate"
     region = "${var.region}"
   }
 }
