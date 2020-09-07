@@ -6,7 +6,9 @@
     "aws.batch"
   ],
   "detail": {
-    "jobQueue": "${job_queue_arn}",
+    "jobQueue": [
+      "${job_queue_arn}"
+    ],
     "status": [
       "FAILED"
     ]
