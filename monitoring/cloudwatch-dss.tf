@@ -6,28 +6,12 @@ resource "aws_cloudwatch_event_rule" "dss_failure_event_rule" {
   description = "${var.environment_name}-dss-batch-job-failure"
 
   event_pattern = "${data.template_file.dss_failure_event_rule_template.rendered}" 
-#   event_pattern = <<EOF
-# {
-#   "detail-type": [
-#     "Batch Job State Change"
-#   ],
-#   "source": [
-#     "aws.batch"
-#   ],
-#   "detail": {
-#     "jobQueue": "arn:aws:batch:eu-west-2:050243167760:job-queue/delius-prod-ndelius-queue",
-#     "status": [
-#       "FAILED"
-#     ]
-#   }
-# }   
-# EOF
 }
 
 resource "aws_cloudwatch_event_target" "sns" {
   rule      = "${aws_cloudwatch_event_rule.dss_failure_event_rule.name}"
   target_id = "SendToSNS"
-  arn       = "${aws_sns_topic.alarm_notification.arn}"
+  arn       = "${aws_sns_topic.alarm_notification_batch.arn}"
 }
 
 
@@ -36,6 +20,5 @@ data "template_file" "dss_failure_event_rule_template" {
 
   vars {
     job_queue_arn = "${data.terraform_remote_state.batch.job_queue_arn}"
-    # job_queue_arn = "arn:aws:batch:eu-west-2:050243167760:job-queue/delius-prod-ndelius-queue"
   }
 }

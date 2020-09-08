@@ -92,3 +92,23 @@ data "archive_file" "lambda_handler_zip" {
 data "aws_iam_role" "lambda_exec_role" {
   name = "lambda_exec_role"
 }
+
+
+data "template_file" "notify_slack_lambda_file_batch" {
+  template = "${file("${path.module}/templates/lambda/notify-slack-batch.js")}"
+  vars {
+    environment_name        = "${var.environment_name}"
+    channel                 = "${var.environment_name == "delius-prod"? "delius-alerts-deliuscore-production": "delius-alerts-deliuscore-nonprod"}"
+    quiet_period_start_hour = "${local.quiet_period_start_hour}"
+    quiet_period_end_hour   = "${local.quiet_period_end_hour}"
+  }
+}
+
+data "archive_file" "lambda_handler_zip_batch" {
+  type        = "zip"
+  output_path = "${path.module}/files/${local.lambda_name_batch}.zip"
+  source {
+    content  = "${data.template_file.notify_slack_lambda_file_batch.rendered}"
+    filename = "notify-slack-batch.js"
+  }
+}

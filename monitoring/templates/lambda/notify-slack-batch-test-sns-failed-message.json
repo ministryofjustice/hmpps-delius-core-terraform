@@ -1,0 +1,108 @@
+{
+   "version":"0",
+   "id":"bdebd09e-f1e7-cd01-e118-4d04eb81add8",
+   "detail-type":"Batch Job State Change",
+   "source":"aws.batch",
+   "account":"205048117103",
+   "time":"2020-09-08T09:40:46Z",
+   "region":"eu-west-2",
+   "resources":[
+      "arn:aws:batch:eu-west-2:205048117103:job/c154258a-c1cd-4efc-8e02-4640ef51a030"
+   ],
+   "detail":{
+      "jobName":"test10",
+      "jobId":"c154258a-c1cd-4efc-8e02-4640ef51a030",
+      "jobQueue":"arn:aws:batch:eu-west-2:205048117103:job-queue/delius-stage-ndelius-queue",
+      "status":"FAILED",
+      "attempts":[
+         {
+            "container":{
+               "containerInstanceArn":"arn:aws:ecs:eu-west-2:205048117103:container-instance/9cba2072-cd4e-45b2-99b1-f719cce47d4b",
+               "taskArn":"arn:aws:ecs:eu-west-2:205048117103:task/3621bcfe-2bd8-4ead-992c-a23f9562b791",
+               "reason":"CannotStartContainerError: Error response from daemon: OCI runtime create failed: container_linux.go:349: starting container process caused \"exec: \\\\\"exit999\\\\\": executable file not found in $PATH\": unknown",
+               "logStreamName":"delius-stage-ndelius-dss-job/default/3621bcfe-2bd8-4ead-992c-a23f9562b791",
+               "networkInterfaces":[
+                  
+               ]
+            },
+            "stoppedAt":1599558045587,
+            "statusReason":"Task failed to start"
+         }
+      ],
+      "statusReason":"Task failed to start",
+      "createdAt":1599557906287,
+      "retryStrategy":{
+         "attempts":1
+      },
+      "stoppedAt":1599558045587,
+      "dependsOn":[
+         
+      ],
+      "jobDefinition":"arn:aws:batch:eu-west-2:205048117103:job-definition/delius-stage-ndelius-dss-job:5",
+      "parameters":{
+         
+      },
+      "container":{
+         "image":"895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/dss:3.0",
+         "vcpus":1,
+         "memory":3096,
+         "command":[
+            "exit999"
+         ],
+         "jobRoleArn":"arn:aws:iam::205048117103:role/delius-stage-dss-job-role",
+         "volumes":[
+            
+         ],
+         "environment":[
+            {
+               "name":"DSS_TESTMODE",
+               "value":"false"
+            },
+            {
+               "name":"DSS_ENVIRONMENT",
+               "value":"delius-stage"
+            },
+            {
+               "name":"DSS_PROJECT",
+               "value":"delius"
+            },
+            {
+               "name":"DSS_DSSWEBSERVERURL",
+               "value":"https://interface-app-internal.stage.delius.probation.hmpps.dsd.io/NDeliusDSS/UpdateOffender"
+            },
+            {
+               "name":"DSS_HMPSSERVERURL",
+               "value":"https://www.offloc.service.justice.gov.uk/"
+            },
+            {
+               "name":"DSS_TESTINGAUTOCORRECT",
+               "value":"true"
+            },
+            {
+               "name":"JAVA_OPTS",
+               "value":"-Xms1024m -Xmx2048m"
+            }
+         ],
+         "mountPoints":[
+            
+         ],
+         "ulimits":[
+            {
+               "hardLimit":1024,
+               "name":"nofile",
+               "softLimit":1024
+            }
+         ],
+         "reason":"CannotStartContainerError: Error response from daemon: OCI runtime create failed: container_linux.go:349: starting container process caused \"exec: \\\\\"exit999\\\\\": executable file not found in $PATH\": unknown",
+         "containerInstanceArn":"arn:aws:ecs:eu-west-2:205048117103:container-instance/9cba2072-cd4e-45b2-99b1-f719cce47d4b",
+         "taskArn":"arn:aws:ecs:eu-west-2:205048117103:task/3621bcfe-2bd8-4ead-992c-a23f9562b791",
+         "logStreamName":"delius-stage-ndelius-dss-job/default/3621bcfe-2bd8-4ead-992c-a23f9562b791",
+         "networkInterfaces":[
+            
+         ],
+         "resourceRequirements":[
+            
+         ]
+      }
+   }
+}
