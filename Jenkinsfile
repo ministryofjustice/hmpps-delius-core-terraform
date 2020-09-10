@@ -19,7 +19,7 @@ String get_config_yaml(String file, String key, String defaultValue="") {
 
 boolean confirm(String component) {
 	if (!params.confirmation) return true;
-	def changes = sh(script: "grep 'Plan:' '${component}/${env.ENVIRONMENT}.plan.log' | sed -E 's/^.{18}(.+).{4}/\1/'", returnStdout: true).trim()
+	def changes = sh(script: "grep 'Plan:' '${component}/.terraform/out/${env.ENVIRONMENT}.tg.log' | col -b | sed -E 's/[0-9]+m//g", returnStdout: true).trim()
 	try {
 		timeout(time: 15, unit: 'MINUTES') {
 			return input(message: "Apply changes to ${component}?", parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: changes]])

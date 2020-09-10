@@ -59,10 +59,10 @@ heading Parsing arguments...
 action=${*}
 options=""
 if [ -n "${CODEBUILD_CI}" ];   then options="${options} -no-color"; fi
-if [ "${action}" == "apply" ]; then options="${options} ${ENVIRONMENT}.plan"; fi
+if [ "${action}" == "apply" ]; then options="${options} .terraform/out/${ENVIRONMENT}.plan"; fi
 if [ "${action}" == "plan" ];  then
   if [[ "$(terraform -version)" != *0.11* ]]; then options="${options} -compact-warnings"; fi # this option is not available in Terraform 11
-  options="${options} -detailed-exitcode -out ${ENVIRONMENT}.plan"
+  options="${options} -detailed-exitcode -out .terraform/out/${ENVIRONMENT}.plan"
 fi
 echo "Environment: ${ENVIRONMENT:--}"
 echo "Component:   ${COMPONENT:--}"
@@ -76,10 +76,11 @@ echo "Loaded $(env | grep -Ec '^(TF|TG)') properties"
 
 heading Setting up workspace...
 cd "${COMPONENT}"
+mkdir -p ./.terraform/out
 rm -rf ./.terraform/terraform.tfstate
 pwd
 
 heading Running terragrunt...
 set -o pipefail
 set -x
-${CMD:-terragrunt} ${action} ${options} | tee "${ENVIRONMENT}.tg.log"
+${CMD:-terragrunt} ${action} ${options} | tee ".terraform/out/${ENVIRONMENT}.tg.log"
