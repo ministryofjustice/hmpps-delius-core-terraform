@@ -15,10 +15,10 @@ resource "aws_elb" "lb" {
     lb_protocol         = "tcp"
   }
   health_check {
-    target              = "TCP:${var.ldap_ports["ldap"]}"
+    target              = "HTTP:80/is-primary"
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    timeout             = 3
+    timeout             = 15
     interval            = 30
   }
 }
