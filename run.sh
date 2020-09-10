@@ -42,9 +42,11 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
   CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
   echo "${CONTAINER}"
   docker run -it -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
-    -e "TF_IN_AUTOMATION=True"                              `# This flag is used by Terraform to indicate a script run` \
-    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass github token, in case we need to create CodeBuild resources` \
     $(env | grep ^AWS_ | sed 's/^/-e /')                    `# Pass any environment variables prefixed with 'AWS_'` \
+    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass github token, in case we need to create CodeBuild resources` \
+    -e "TF_IN_AUTOMATION=True"                              `# This flag is used by Terraform to indicate a script run` \
+    -e "TF_PLUGIN_CACHE_DIR=/home/tools/.terraform/plugins" `# Enable caching of Terraform plugins on host` \
+    -v "${TF_PLUGIN_CACHE_DIR:-"$(pwd)/${COMPONENT}/.terraform/plugins"}:/home/tools/.terraform/plugins" \
     -v "${HOME}/.aws:/home/tools/.aws:ro"                   `# Mount the hosts AWS config files` \
     -v "$(pwd):/home/tools/data"                            `# Mount the Terraform code` \
     -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro" `# Mount the Terraform config` \
