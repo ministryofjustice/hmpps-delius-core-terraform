@@ -1,11 +1,12 @@
-variable key_name {
-  type = "string"
+variable "key_name" {
+  type = string
 }
 
-variable tags {
-  type = "map"
+variable "tags" {
+  type = map(string)
 }
 
 variable "environment_name" {
-  type = "string"
+  type = string
 }
+

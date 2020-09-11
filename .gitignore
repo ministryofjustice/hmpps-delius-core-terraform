@@ -70,6 +70,8 @@ hs_err_pid*
 *.tfstate
 *.tfstate.*
 **.plan
+**/provider.tf
+**/backend.tf
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/

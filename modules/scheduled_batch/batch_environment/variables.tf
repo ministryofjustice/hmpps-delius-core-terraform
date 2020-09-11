@@ -4,7 +4,7 @@ variable "ce_name" {
 
 variable "ce_instances" {
   description = "List of EC2 instance types to use for CE"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "ce_min_vcpu" {
@@ -18,17 +18,17 @@ variable "ce_max_vcpu" {
 
 variable "ce_sg" {
   description = "List of Security Group IDs to attach to CE EC2 instances"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "ce_subnets" {
   description = "List of Subnet IDs to run CE EC2 instances in. ECS instances will need outbound access for pulling images"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "ce_tags" {
   description = "Map of tags to apply to EC2 instances operating in this CE"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "ce_queue_state" {
@@ -38,3 +38,4 @@ variable "ce_queue_state" {
 variable "ce_ec2_key_pair" {
   description = "EC2 key pair to launch Compute Environment instances with"
 }
+

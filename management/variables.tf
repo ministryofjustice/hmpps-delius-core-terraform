@@ -1,9 +1,9 @@
 variable "environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "short_environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "project_name" {
@@ -31,7 +31,7 @@ variable "short_environment_identifier" {
 }
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
 
 variable "dependencies_bucket_arn" {
@@ -40,15 +40,16 @@ variable "dependencies_bucket_arn" {
 
 variable "default_ansible_vars" {
   description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "ansible_vars" {
   description = "Ansible vars for user_data script"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "ldap_ports" {
-  type        = "map"
+  type        = map(string)
   description = "Map of the ports that the ldap ports"
 }
+

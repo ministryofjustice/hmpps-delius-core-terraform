@@ -31,38 +31,39 @@ variable "project_name" {
 }
 
 variable "delius_core_haproxy_instance_type" {
-  type        = "string"
+  type        = string
   description = "Instance type to use for the proxy servers sitting between the external and internal load-balancers"
 }
 
 variable "delius_core_haproxy_instance_count" {
-  type        = "string"
+  type        = string
   description = "Instance count to use for the proxy servers sitting between the external and internal load-balancers"
 }
 
 variable "default_pwm_config" {
   description = "Application-specific configuration items"
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
 
 variable "pwm_config" {
   description = "Application-specific configuration items"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "tags" {
   description = "Tags to be applied to resources"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "aws_nameserver" {
   description = "IP of the VPC DNS resolver"
-  type        = "string"
+  type        = string
 }
 
 variable "delius_core_public_zone" {
   description = "Whether to use the 'strategic' domain (gov.uk), or the 'legacy' domain (dsd.io) for user-facing services in this environment eg. NDelius, PWM"
-  type        = "string"
+  type        = string
   default     = "strategic"
 }
+

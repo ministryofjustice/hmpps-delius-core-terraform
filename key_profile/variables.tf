@@ -7,11 +7,11 @@ variable "remote_state_bucket_name" {
 }
 
 variable "environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "short_environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "dependencies_bucket_arn" {
@@ -23,5 +23,6 @@ variable "migration_bucket_arn" {
 }
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
+

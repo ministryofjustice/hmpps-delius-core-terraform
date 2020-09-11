@@ -20,15 +20,16 @@ variable "project_name" {
 
 variable "aptracker_api_config" {
   description = "Application-specific configuration items"
-  type = "map"
+  type        = map(string)
 }
 
 variable "default_aptracker_api_config" {
   description = "Default values to be overridden by aptracker_api_config"
-  type = "map"
+  type        = map(string)
 }
 
 variable "tags" {
   description = "Tags to be applied to resources"
-  type        = "map"
+  type        = map(string)
 }
+

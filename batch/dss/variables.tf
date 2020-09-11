@@ -1,9 +1,9 @@
 variable "environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "short_environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "project_name" {
@@ -35,12 +35,12 @@ variable "dependencies_bucket_arn" {
 }
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
 
 variable "dss_batch_instances" {
   description = "List of permitted EC2 instance types to use for AWS Batch compute Environment"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "dss_max_vcpu" {
@@ -69,12 +69,12 @@ variable "dss_job_retries" {
 
 variable "dss_job_envvars" {
   description = "List of aps of Environment Variables to pass to DSS batch job"
-  type        = "list"
+  type        = list(map(string))
 }
 
 variable "dss_job_ulimits" {
   description = "List of maps for ulimit values for DSS batch job definition"
-  type        = "list"
+  type        = list(map(string))
 }
 
 variable "dss_queue_state" {
@@ -84,3 +84,4 @@ variable "dss_queue_state" {
 variable "dss_job_schedule" {
   description = "cron or rate expression for Cloudwatch Event Rule schedule"
 }
+

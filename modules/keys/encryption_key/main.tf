@@ -1,14 +1,18 @@
 locals {
-    aws_account = "${data.aws_caller_identity.current.account_id}"
- }
+  aws_account = data.aws_caller_identity.current.account_id
+}
 
-
-data "aws_caller_identity" "current" {}
-
+data "aws_caller_identity" "current" {
+}
 
 resource "aws_kms_key" "kms" {
-  description = "${var.key_name}"
-  tags        = "${merge(var.tags, map("Name", var.key_name))}"
+  description = var.key_name
+  tags = merge(
+    var.tags,
+    {
+      "Name" = var.key_name
+    },
+  )
   policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -27,10 +31,13 @@ resource "aws_kms_key" "kms" {
      }
     ]
    }
-  POLICY
- }
+  
+POLICY
+
+}
 
 resource "aws_kms_alias" "kms" {
   name          = "alias/${var.key_name}"
-  target_key_id = "${aws_kms_key.kms.key_id}"
+  target_key_id = aws_kms_key.kms.key_id
 }
+

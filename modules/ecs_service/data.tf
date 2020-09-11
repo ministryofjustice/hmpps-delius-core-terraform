@@ -1,8 +1,11 @@
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
+}
 
 data "template_file" "ecs_assume_role_policy_template" {
-  template = "${file("${path.module}/templates/iam/ecs_assume_role_policy.json.tpl")}"
-  vars     = {}
+  template = file(
+    "${path.module}/templates/iam/ecs_assume_role_policy.json.tpl",
+  )
+  vars = {}
 }
 
 data "template_file" "ssm_policy_statement_template" {
@@ -19,19 +22,21 @@ data "template_file" "ssm_policy_statement_template" {
     },
 EOF
 
-  vars {
-    aws_account_id         = "${data.aws_caller_identity.current.account_id}"
-    region                 = "${var.region}"
-    allowed_ssm_parameters = "${jsonencode(var.allowed_ssm_parameters)}"
+
+  vars = {
+    aws_account_id         = data.aws_caller_identity.current.account_id
+    region                 = var.region
+    allowed_ssm_parameters = jsonencode(var.allowed_ssm_parameters)
   }
 }
 
 data "template_file" "ecs_exec_policy_template" {
-  template = "${file("${path.module}/templates/iam/ecs_exec_policy.json.tpl")}"
+  template = file("${path.module}/templates/iam/ecs_exec_policy.json.tpl")
 
-  vars {
-    aws_account_id = "${data.aws_caller_identity.current.account_id}"
-    region         = "${var.region}"
-    ssm_statement  = "${length(var.allowed_ssm_parameters) == 0 ? "": data.template_file.ssm_policy_statement_template.rendered}"
+  vars = {
+    aws_account_id = data.aws_caller_identity.current.account_id
+    region         = var.region
+    ssm_statement  = length(var.allowed_ssm_parameters) == 0 ? "" : data.template_file.ssm_policy_statement_template.rendered
   }
 }
+

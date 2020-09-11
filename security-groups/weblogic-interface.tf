@@ -5,9 +5,15 @@
 ################################################################################
 resource "aws_security_group" "weblogic_interface_lb" {
   name        = "${var.environment_name}-weblogic-interface-lb"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
   description = "Weblogic interface LB"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-lb", "Type", "Private"))}"
+  tags = merge(
+    var.tags,
+    {
+      "Name" = "${var.environment_name}-weblogic-interface-lb"
+      "Type" = "Private"
+    },
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -15,7 +21,7 @@ resource "aws_security_group" "weblogic_interface_lb" {
 }
 
 output "sg_weblogic_interface_lb_id" {
-  value = "${aws_security_group.weblogic_interface_lb.id}"
+  value = aws_security_group.weblogic_interface_lb.id
 }
 
 # Allow EIS users into the external ELB
@@ -41,68 +47,67 @@ output "sg_weblogic_interface_lb_id" {
 #}
 
 resource "aws_security_group_rule" "interface_public_subnet_ingress" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id = aws_security_group.weblogic_interface_lb.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "80"
   to_port           = "80"
-  cidr_blocks       = ["${local.public_cidr_block}"]
+  cidr_blocks       = local.public_cidr_block
   description       = "Public subnet in"
 }
 
 resource "aws_security_group_rule" "interface_public_subnet_ingress_tls" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id = aws_security_group.weblogic_interface_lb.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
-  cidr_blocks       = ["${local.public_cidr_block}"]
+  cidr_blocks       = local.public_cidr_block
   description       = "Public subnet in (TLS)"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_egress_wls" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
-  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_instances.id}"
+  from_port                = var.weblogic_domain_ports["weblogic_port"]
+  to_port                  = var.weblogic_domain_ports["weblogic_port"]
+  source_security_group_id = aws_security_group.weblogic_interface_instances.id
   description              = "Out to instances"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_egress_umt" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "8080"
   to_port                  = "8080"
-  source_security_group_id = "${aws_security_group.umt_instances.id}"
+  source_security_group_id = aws_security_group.umt_instances.id
   description              = "Out to UMT instances"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_egress_gdpr_api" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "8080"
   to_port                  = "8080"
-  source_security_group_id = "${aws_security_group.gdpr_api.id}"
+  source_security_group_id = aws_security_group.gdpr_api.id
   description              = "Out to GDPR API instances"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_egress_gdpr_ui" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "80"
   to_port                  = "80"
-  source_security_group_id = "${aws_security_group.gdpr_ui.id}"
+  source_security_group_id = aws_security_group.gdpr_ui.id
   description              = "Out to GDPR UI instances"
 }
 
-
 resource "aws_security_group_rule" "interface_lb_self_ingress" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id = aws_security_group.weblogic_interface_lb.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "80"
@@ -112,7 +117,7 @@ resource "aws_security_group_rule" "interface_lb_self_ingress" {
 }
 
 resource "aws_security_group_rule" "interface_lb_self_ingress_tls" {
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id = aws_security_group.weblogic_interface_lb.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
@@ -122,9 +127,9 @@ resource "aws_security_group_rule" "interface_lb_self_ingress_tls" {
 }
 
 resource "aws_security_group_rule" "interface_lb_azure_communityproxy_ingress_tls" {
-  count             = "${length(local.azure_community_proxy_source) >= 1 ? 1 : 0}"
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  cidr_blocks       = ["${local.azure_community_proxy_source}"]
+  count             = length(local.azure_community_proxy_source) >= 1 ? 1 : 0
+  security_group_id = aws_security_group.weblogic_interface_lb.id
+  cidr_blocks       = local.azure_community_proxy_source
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
@@ -133,9 +138,9 @@ resource "aws_security_group_rule" "interface_lb_azure_communityproxy_ingress_tl
 }
 
 resource "aws_security_group_rule" "interface_lb_azure_oasys_ingress_tls" {
-  count             = "${length(local.azure_oasys_proxy_source) >= 1 ? 1 : 0}"
-  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-  cidr_blocks       = ["${local.azure_oasys_proxy_source}"]
+  count             = length(local.azure_oasys_proxy_source) >= 1 ? 1 : 0
+  security_group_id = aws_security_group.weblogic_interface_lb.id
+  cidr_blocks       = local.azure_oasys_proxy_source
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
@@ -143,16 +148,20 @@ resource "aws_security_group_rule" "interface_lb_azure_oasys_ingress_tls" {
   description       = "Azure OASys Proxy Ingress (TLS)"
 }
 
-
-
 ################################################################################
 ## Instances
 ################################################################################
 resource "aws_security_group" "weblogic_interface_instances" {
   name        = "${var.environment_name}-weblogic-interface-instances"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
   description = "Weblogic interface instances"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-weblogic-interface-instances", "Type", "Private"))}"
+  tags = merge(
+    var.tags,
+    {
+      "Name" = "${var.environment_name}-weblogic-interface-instances"
+      "Type" = "Private"
+    },
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -160,63 +169,63 @@ resource "aws_security_group" "weblogic_interface_instances" {
 }
 
 output "sg_weblogic_interface_instances_id" {
-  value = "${aws_security_group.weblogic_interface_instances.id}"
+  value = aws_security_group.weblogic_interface_instances.id
 }
 
 #Allow the ELB into the Admin port
 resource "aws_security_group_rule" "interface_instances_external_elb_ingress" {
-  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
+  security_group_id        = aws_security_group.weblogic_interface_instances.id
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "${var.weblogic_domain_ports["weblogic_port"]}"
-  to_port                  = "${var.weblogic_domain_ports["weblogic_port"]}"
-  source_security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
+  from_port                = var.weblogic_domain_ports["weblogic_port"]
+  to_port                  = var.weblogic_domain_ports["weblogic_port"]
+  source_security_group_id = aws_security_group.weblogic_interface_lb.id
   description              = "Load balancer in"
 }
 
 resource "aws_security_group_rule" "interface_instances_egress_1521" {
-  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
+  security_group_id        = aws_security_group.weblogic_interface_instances.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = 1521
   to_port                  = 1521
-  source_security_group_id = "${aws_security_group.delius_db_in.id}"
+  source_security_group_id = aws_security_group.delius_db_in.id
   description              = "Delius DB out"
 }
 
 resource "aws_security_group_rule" "interface_instances_egress_ldap" {
-  security_group_id        = "${aws_security_group.weblogic_interface_instances.id}"
+  security_group_id        = aws_security_group.weblogic_interface_instances.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "${var.ldap_ports["ldap"]}"
-  to_port                  = "${var.ldap_ports["ldap"]}"
-  source_security_group_id = "${aws_security_group.apacheds_ldap_private_elb.id}"
+  from_port                = var.ldap_ports["ldap"]
+  to_port                  = var.ldap_ports["ldap"]
+  source_security_group_id = aws_security_group.apacheds_ldap_private_elb.id
   description              = "LDAP ELB out"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_egress_newtechweb" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "9000"
   to_port                  = "9000"
-  source_security_group_id = "${aws_security_group.newtech_web.id}"
+  source_security_group_id = aws_security_group.newtech_web.id
   description              = "Out to New Tech Web ECS Service"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_egress_aptracker_api" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "8080"
   to_port                  = "8080"
-  source_security_group_id = "${aws_security_group.aptracker_api.id}"
+  source_security_group_id = aws_security_group.aptracker_api.id
   description              = "Out to Approved Premises Tracker API instances"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_casenotes" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
-  source_security_group_id = "${aws_security_group.newtech_casenotes_out.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
+  source_security_group_id = aws_security_group.newtech_casenotes_out.id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "443"
@@ -225,8 +234,8 @@ resource "aws_security_group_rule" "interface_external_elb_ingress_casenotes" {
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_offenderapi" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
-  source_security_group_id = "${aws_security_group.newtech_offenderapi_out.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
+  source_security_group_id = aws_security_group.newtech_offenderapi_out.id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "443"
@@ -235,11 +244,12 @@ resource "aws_security_group_rule" "interface_external_elb_ingress_offenderapi" 
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_dss" {
-  security_group_id        = "${aws_security_group.weblogic_interface_lb.id}"
-  source_security_group_id = "${aws_security_group.delius_dss_out.id}"
+  security_group_id        = aws_security_group.weblogic_interface_lb.id
+  source_security_group_id = aws_security_group.delius_dss_out.id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "443"
   to_port                  = "443"
   description              = "Delius DSS Offloc Ingress to interface LB"
 }
+
