@@ -45,10 +45,11 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
   heading Starting container...
   CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
   echo "${CONTAINER}"
-  docker run -it -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
+  docker run -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
+    "$(test -t 0 && echo '-it')"                            `# Allocate an interactive terminal if one is available` \
     --env-file <(env | grep '^AWS_')                        `# Pass any environment variables prefixed with 'AWS_'` \
     --env-file <(env | grep '^TF_')                         `# Pass any environment variables prefixed with 'TF_'` \
-    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass github token, in case we need to create CodeBuild resources` \
+    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass GitHub token, in case we need to create CodeBuild resources` \
     -e "TF_IN_AUTOMATION=True"                              `# This flag is used by Terraform to indicate a script run` \
     -e "TF_PLUGIN_CACHE_DIR=/home/tools/.terraform/plugins" `# Enable caching of Terraform plugins on host` \
     -v "${TF_PLUGIN_CACHE_DIR:-"$(pwd)/${COMPONENT}/.terraform/plugins"}:/home/tools/.terraform/plugins" \
