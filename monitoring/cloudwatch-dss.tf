@@ -9,9 +9,8 @@ resource "aws_cloudwatch_event_rule" "dss_failure_event_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "sns" {
-  rule      = "${aws_cloudwatch_event_rule.dss_failure_event_rule.name}"
-  target_id = "SendToSNS"
-  arn       = "${aws_sns_topic.alarm_notification_batch.arn}"
+  rule     = "${aws_cloudwatch_event_rule.dss_failure_event_rule.name}"
+  arn      = "${aws_sns_topic.batch_notification.arn}"
 }
 
 

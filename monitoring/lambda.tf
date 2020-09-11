@@ -30,5 +30,5 @@ resource "aws_lambda_permission" "sns_batch" {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.notify_slack_batch.arn}"
   principal     = "sns.amazonaws.com"
-  source_arn    = "${aws_sns_topic.alarm_notification_batch.arn}"
+  source_arn    = "${aws_sns_topic.batch_notification.arn}"
 }
