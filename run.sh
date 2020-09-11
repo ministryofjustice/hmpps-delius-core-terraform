@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 ## HMPPS Terragrunt wrapper script.
+## Runs Terragrunt commands in the HMPPS container, with sensible defaults and mounted config.
 ##
-## This script takes any number of arguments and will pass them to Terragrunt.
+## This script takes any number of arguments and will pass them directly to Terragrunt.
 ##
 ## Example usage:
 ##    AWS_PROFILE=hmpps_token ENVIRONMENT=delius-test COMPONENT=vpc ./run.sh plan
@@ -18,7 +19,10 @@ set -e
 ##                                 mojdigitalstudio/hmpps-terraform-builder-0-12.
 ##  * CMD                Optional. The executable to run in the container. Useful for debugging,
 ##                                 for example by setting to 'bash'. Defaults to terragrunt.
-## Any environment variables prefixed with AWS_ will also be passed to the Terragrunt container.
+##
+## Additionally, any environment variables prefixed with AWS_or TF_ will also be passed to the
+## Terragrunt container. This enables you to set your AWS credentials/profile on the host, and
+## also to pass any extra Terraform vars using TF_VAR_xxx=...
 ##
 
 # Print usage if ENVIRONMENT not set:
@@ -42,7 +46,8 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
   CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
   echo "${CONTAINER}"
   docker run -it -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
-    $(env | grep ^AWS_ | sed 's/^/-e /')                    `# Pass any environment variables prefixed with 'AWS_'` \
+    --env-file <(env | grep '^AWS_')                        `# Pass any environment variables prefixed with 'AWS_'` \
+    --env-file <(env | grep '^TF_')                         `# Pass any environment variables prefixed with 'TF_'` \
     -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass github token, in case we need to create CodeBuild resources` \
     -e "TF_IN_AUTOMATION=True"                              `# This flag is used by Terraform to indicate a script run` \
     -e "TF_PLUGIN_CACHE_DIR=/home/tools/.terraform/plugins" `# Enable caching of Terraform plugins on host` \

@@ -61,6 +61,7 @@ pipeline {
 	environment {
 		CONTAINER = 'mojdigitalstudio/hmpps-terraform-builder-0-12'
 		ENVIRONMENT = sh(script: 'basename $(dirname $(dirname $(pwd)))', returnStdout: true).trim()
+		TF_VAR_db_aws_ami = get_parameter("/versions/delius-core/ami/db-ami/${env.ENVIRONMENT}")
 		TF_VAR_high_availability_count = get_config_yaml('/ansible/group_vars/all.yml', 'database.delius.high_availability_count', '0')
 	}
 
