@@ -62,13 +62,14 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
 fi
 
 heading Parsing arguments...
+OUT_DIR=${OUT_DIR:-.terraform/output/${ENVIRONMENT}}
 action=${*}
 options=""
 if [ -n "${CODEBUILD_CI}" ];   then options="${options} -no-color"; fi
-if [ "${action}" == "apply" ]; then options="${options} .terraform/out/${ENVIRONMENT}.plan"; fi
+if [ "${action}" == "apply" ]; then options="${options} ${OUT_DIR}/tfplan"; fi
 if [ "${action}" == "plan" ];  then
   if [[ "$(terraform -version)" != *0.11* ]]; then options="${options} -compact-warnings"; fi # this option is not available in Terraform 11
-  options="${options} -detailed-exitcode -out .terraform/out/${ENVIRONMENT}.plan"
+  options="${options} -detailed-exitcode -out ${OUT_DIR}/tfplan"
 fi
 echo "Environment: ${ENVIRONMENT:--}"
 echo "Component:   ${COMPONENT:--}"
@@ -82,11 +83,11 @@ echo "Loaded $(env | grep -Ec '^(TF|TG)') properties"
 
 heading Setting up workspace...
 cd "${COMPONENT}"
-mkdir -p ./.terraform/out
-rm -rf ./.terraform/terraform.tfstate
+mkdir -p "${OUT_DIR}"
+rm -rf .terraform/terraform.tfstate
 pwd
 
 heading Running terragrunt...
 set -o pipefail
 set -x
-${CMD:-terragrunt} ${action} ${options} | tee ".terraform/out/${ENVIRONMENT}.tg.log"
+${CMD:-terragrunt} ${action} ${options} | tee "${OUT_DIR}/tg.log"
