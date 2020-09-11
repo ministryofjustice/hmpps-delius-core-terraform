@@ -47,7 +47,7 @@ exports.handler = function(event, context) {
     });
     req.write(util.format("%j", {
         "channel": "# ${channel}",
-        "username": "AWS SNS via Lambda :: Alarm notification",
+        "username": "Delius-Core Alarm Notification",
         "text": textMessage,
         "icon_emoji": ":amazon:",
         "link_names": "1"

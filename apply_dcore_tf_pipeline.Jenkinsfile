@@ -455,33 +455,23 @@ pipeline {
             }
         }
 
-        stage ('Monitoring and Batch') {
-            parallel {
-                stage ('Delius DSS Batch Job') {
-                    steps{
-                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            println("batch/dss")
-                            do_terraform(project.config, environment_name, project.dcore, 'batch/dss', db_high_availability_count)
-                        }
+        stage ('Batch') {
+            stage ('Delius DSS Batch Job') {
+                steps{
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        println("batch/dss")
+                        do_terraform(project.config, environment_name, project.dcore, 'batch/dss', db_high_availability_count)
                     }
                 }
+            }
+        }
 
-                // Skipping this stage, due to Pingdom credentials issue. May need to review whether we need the checks at all.
-//                stage('Pingdom checks') {
-//                    steps {
-//                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-//                            println("terraform pingdom")
-//                           do_terraform(project.config, environment_name, project.dcore, 'pingdom', db_high_availability_count)
-//                        }
-//                    }
-//                }
-
-                stage('Monitoring and Alerts') {
-                    steps {
-                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                          println("terraform monitoring")
-                          do_terraform(project.config, environment_name, project.dcore, 'monitoring', db_high_availability_count)
-                        }
+        stage ('Monitoring') {
+            stage('Monitoring and Alerts') {
+                steps {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        println("terraform monitoring")
+                        do_terraform(project.config, environment_name, project.dcore, 'monitoring', db_high_availability_count)
                     }
                 }
             }
