@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 ## HMPPS Terragrunt wrapper script.
 ## Runs Terragrunt commands in the HMPPS container, with sensible defaults and mounted config.
 ##
@@ -46,7 +46,7 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
   CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
   echo "${CONTAINER}"
   docker run -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
-    "$(test -t 0 && echo '-it')"                            `# Allocate an interactive terminal if one is available` \
+    $(test -t 0 && echo '-it')                              `# Allocate an interactive terminal if one is available` \
     --env-file <(env | grep '^AWS_')                        `# Pass any environment variables prefixed with 'AWS_'` \
     --env-file <(env | grep '^TF_')                         `# Pass any environment variables prefixed with 'TF_'` \
     -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass GitHub token, in case we need to create CodeBuild resources` \
