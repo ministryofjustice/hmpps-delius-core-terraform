@@ -12,12 +12,8 @@ exports.handler = function(event, context) {
 
     const eventMessage = JSON.parse(event.Records[0].Sns.Message);
     console.log(JSON.stringify(eventMessage.detail, null, 2));
-    
-    let environment_name = "unknown";
-    let sendSlackNotification = false;
-    let severity = "ok";
-    let icon_emoji = ":question:";
-    
+
+    let sendSlackNotification, severity, icon_emoji;
     switch(eventMessage.detail.status) {
       case "SUCCEEDED":
         severity = "ok";
@@ -34,43 +30,17 @@ exports.handler = function(event, context) {
         icon_emoji = ":yep:";
         sendSlackNotification = false;
     }
-    
-    console.log("severity:" + severity);
-    console.log("icon_emoji:" + icon_emoji);
-    console.log("sendSlackNotification:" + sendSlackNotification);
-    
-    // let jobId = eventMessage.detail.jobId;
-    // let jobName = eventMessage.detail.jobName;
-    // let jobQueue = eventMessage.detail.jobQueue;
-    let logsPath = "https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups/log-group/$252Faws$252Flambda$252F" + environment_name + "-notify-delius-core-slack-channel-batch";
-    let statusReason = eventMessage.detail.statusReason;
-    // console.log("jobId:" + jobId);
-    // console.log("jobName:" + jobName);
-    // console.log("jobQueue:" + jobQueue);
-    // console.log("logsPath:" + logsPath);
-    // console.log("statusReason:" + statusReason);
-    
-    let envvars = eventMessage.detail.container.environment;
-    for (var current in envvars) {
-      // console.log(envvars[current].name);
-      if(envvars[current].name === "DSS_ENVIRONMENT") {
-          environment_name = envvars[current].value;
-          console.log("setting environment_name to " + environment_name);
-      }
-    }
-    // console.log("environment_name:" + environment_name);
-    
+
     let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Status: " + eventMessage.detail.status
-        + "\n> Environment: " + environment_name
-        + "\n> Description: *" + statusReason + "*"
-        + "\n " + logsPath;
+        + "\n> Environment: ${environment_name}"
+        + "\n> Description: *" + eventMessage.detail.jobName + " " + eventMessage.detail.status.toLowerCase() + " with message '" + eventMessage.detail.statusReason + "'*"
+        + "\n <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups/log-group/$252Faws$252Flambda$252F${lambda_name}|Logs>";
     // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
-    console.log(textMessage);
-   
+
    //Only send for specific events (SUCCEEDED, FAILED)
-   if(sendSlackNotification == true) {
+   if (sendSlackNotification) {
       console.log("Sending slack Notification..");
       const req = https.request({
           method: "POST",
@@ -86,7 +56,7 @@ exports.handler = function(event, context) {
       });
       req.write(util.format("%j", {
           "channel": "# delius-alerts-deliuscore-nonprod",
-          "username": "AWS SNS via Lambda :: DSS Offloc AWS Batch Alarms",
+          "username": "Delius-Core Batch Notification",
           "text": textMessage,
           "icon_emoji": ":amazon:",
           "link_names": "1"
@@ -94,6 +64,6 @@ exports.handler = function(event, context) {
       req.end();
    }
    else {
-    console.log("Skipping sending slack notification as this is for an event we don't notify on (RUNNABLE, STARTING,etc)..") 
+       console.log("Skipping sending slack notification as this is for an event we don't notify on (RUNNABLE, STARTING,etc)..")
    }
 };
