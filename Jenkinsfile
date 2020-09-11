@@ -10,9 +10,9 @@ String get_parameter(GString key, String defaultValue="", String prefix="") {
 	return value != ""? prefix + value: defaultValue
 }
 
-String get_config_yaml(String file, String key, String defaultValue="") {
+String get_config_yaml(GString file, String key, String defaultValue="") {
 	return sh(script: """
-			cat '${project.config}/${env.ENVIRONMENT}/${file}' | \
+			cat '${file}' | \
 			shyaml --quiet get-value '${key}' '${defaultValue}'
 			""", returnStdout: true).trim()
 }
@@ -48,21 +48,20 @@ void do_terraform(String repo, String component) {
 }
 
 pipeline {
-
 	agent { label "jenkins_slave" }
+	options { ansiColor('xterm') }
 
 	parameters {
-		string(name: 'CONFIG_BRANCH', description: "Target Branch for ${project.config}", defaultValue: 'master')
-		string(name: 'SOURCE_BRANCH', description: "Target Branch for ${project.source}", defaultValue: 'master')
-		booleanParam(name: 'deploy_DATABASE_HA', defaultValue: true, description: 'Deploy/update Database High Availibilty?')
-		booleanParam(name: 'db_patch_check', defaultValue: true, description: 'Check Oracle DB patches?')
+		string(name: 'CONFIG_BRANCH', description: "Target Branch for hmpps-env-configs", defaultValue: 'master')
+		string(name: 'SOURCE_BRANCH', description: "Target Branch for hmpps-delius-core-terraform", defaultValue: 'master')
+		booleanParam(name: 'deploy_DATABASE_HA', description: 'Deploy/update Database High Availibilty?', defaultValue: true)
+		booleanParam(name: 'db_patch_check', description: 'Check Oracle DB patches?', defaultValue: true)
+		booleanParam(name: 'confirmation', description: 'Confirm Terraform changes?', defaultValue: true)
 	}
 
 	environment {
 		CONTAINER = 'mojdigitalstudio/hmpps-terraform-builder-0-12'
 		ENVIRONMENT = sh(script: 'basename $(dirname $(dirname $(pwd)))', returnStdout: true).trim()
-		TF_VAR_db_aws_ami = get_parameter("/versions/delius-core/ami/db-ami/${env.ENVIRONMENT}")
-		TF_VAR_high_availability_count = get_config_yaml('/ansible/group_vars/all.yml', 'database.delius.high_availability_count', '0')
 	}
 
 	stages {
@@ -77,6 +76,11 @@ pipeline {
 
 				dir(project.config) { checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'git@github.com:ministryofjustice/' + project.config, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]], branches: [[name: project.config_version]]], poll: false }
 				dir(project.source) { checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'git@github.com:ministryofjustice/' + project.source, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]], branches: [[name: project.source_version]]], poll: false }
+
+				script {
+					env.TF_VAR_db_aws_ami = get_parameter("/versions/delius-core/ami/db-ami/${env.ENVIRONMENT}")
+					env.TF_VAR_high_availability_count = get_config_yaml("${project.config}/${env.ENVIRONMENT}/ansible/group_vars/all.yml", 'database.delius.high_availability_count', '0')
+				}
 
 				sh('docker pull "${CONTAINER}"')
 			}
