@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 ## HMPPS Terragrunt wrapper script.
 ## Runs Terragrunt commands in the HMPPS container, with sensible defaults and mounted config.
 ##
