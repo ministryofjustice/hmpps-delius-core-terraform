@@ -10,10 +10,12 @@ exports.handler = function(event, context) {
         return;
     }
 
+    let environment_name = process.env.ENVIRONMENT_NAME;
+    console.log("environment_name:" + environment_name);
+    
     const eventMessage = JSON.parse(event.Records[0].Sns.Message);
     console.log(JSON.stringify(eventMessage.detail, null, 2));
     
-    let environment_name = "unknown";
     let sendSlackNotification = false;
     let severity = "ok";
     let icon_emoji = ":question:";
@@ -50,16 +52,6 @@ exports.handler = function(event, context) {
     // console.log("logsPath:" + logsPath);
     // console.log("statusReason:" + statusReason);
     
-    let envvars = eventMessage.detail.container.environment;
-    for (var current in envvars) {
-      // console.log(envvars[current].name);
-      if(envvars[current].name === "DSS_ENVIRONMENT") {
-          environment_name = envvars[current].value;
-          console.log("setting environment_name to " + environment_name);
-      }
-    }
-    // console.log("environment_name:" + environment_name);
-    
     let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Status: " + eventMessage.detail.status
@@ -94,6 +86,6 @@ exports.handler = function(event, context) {
       req.end();
    }
    else {
-    console.log("Skipping sending slack notification as this is for an event we don't notify on (RUNNABLE, STARTING,etc)..") 
+    console.log("Skipping sending slack notification as this is for an event we don't notify on (RUNNABLE, STARTING,etc)..");
    }
 };

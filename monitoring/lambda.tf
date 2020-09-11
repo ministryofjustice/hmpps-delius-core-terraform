@@ -23,6 +23,13 @@ resource "aws_lambda_function" "notify_slack_batch" {
   function_name    = "${local.lambda_name_batch}"
   handler          = "notify-slack-batch.handler"
   source_code_hash = "${base64sha256(file("${data.archive_file.lambda_handler_zip_batch.output_path}"))}"
+
+  environment {
+    variables = {
+      ENVIRONMENT_NAME = "${var.environment_name}"
+    }
+  }
+
 }
 
 resource "aws_lambda_permission" "with_sns_batch" {
