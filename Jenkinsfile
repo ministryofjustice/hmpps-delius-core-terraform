@@ -117,19 +117,16 @@ pipeline {
 			parallel {
 				stage('LoadRunner') { steps { do_terraform(project.source, 'loadrunner') } }
 				stage('Management Server') { steps { do_terraform(project.source, 'management') } }
-				stage('Password Reset Tool') { steps {
-					// Destroy old resources, then build new ones:
-					do_terraform(project.source, 'pwm')
-					do_terraform(project.source, 'application/pwm')
-				} }
+				stage('Password Reset Tool') { steps { do_terraform(project.source, 'application/pwm') } }
 			}
 		}
 
-		stage ('WebLogic') {
+		stage ('Core Services') {
 			parallel {
 				stage('Front-End App - ndelius') { steps { do_terraform(project.source, 'application/ndelius') } }
 				stage('Message Queue - spg') { steps { do_terraform(project.source, 'application/spg') } }
 				stage('API Endpoints - interface') { steps { do_terraform(project.source, 'application/interface') } }
+				stage('DSS Batch Job') { steps { do_terraform(project.source, 'batch/dss') } }
 			}
 		}
 
@@ -141,10 +138,9 @@ pipeline {
 			}
 		}
 
-		stage ('Monitoring and Batch') {
+		stage ('Monitoring') {
 			parallel {
-				stage('DSS Batch Job') { steps { do_terraform(project.source, 'batch/dss') } }
-				stage('Monitoring and Alerts') { steps { do_terraform(project.source, 'monitoring') } }
+				stage('Monitoring') { steps { do_terraform(project.source, 'monitoring') } }
 			}
 		}
 
