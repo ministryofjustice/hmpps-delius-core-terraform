@@ -1,0 +1,22 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:eu-west-2:205048117103:delius-stage-delius-core-alarm-notification:49298807-e204-4578-bff6-e4b42dbe631f",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "69bb93dc-2b0f-575e-8a1d-c40c643e0e5b",
+                "TopicArn": "arn:aws:sns:eu-west-2:205048117103:delius-stage-delius-core-alarm-notification",
+                "Subject": null,
+                "Message": "{\"version\":\"0\",\"id\":\"17214269-88cd-fb9e-ea78-b0a60d9e3186\",\"detail-type\":\"Batch Job State Change\",\"source\":\"aws.batch\",\"account\":\"205048117103\",\"time\":\"2020-09-07T15:08:33Z\",\"region\":\"eu-west-2\",\"resources\":[\"arn:aws:batch:eu-west-2:205048117103:job/0e50c5ab-494e-428a-8335-4790a376c29e\"],\"detail\":{\"jobName\":\"test7\",\"jobId\":\"0e50c5ab-494e-428a-8335-4790a376c29e\",\"jobQueue\":\"arn:aws:batch:eu-west-2:205048117103:job-queue/delius-stage-ndelius-queue\",\"status\":\"SUCCEEDED\",\"attempts\":[{\"container\":{\"containerInstanceArn\":\"arn:aws:ecs:eu-west-2:205048117103:container-instance/4de91d32-2272-469d-a9ac-45f52342eb51\",\"taskArn\":\"arn:aws:ecs:eu-west-2:205048117103:task/f4dc906f-c5f9-4695-9342-0b46abde26a2\",\"exitCode\":0,\"logStreamName\":\"delius-stage-ndelius-dss-job/default/f4dc906f-c5f9-4695-9342-0b46abde26a2\",\"networkInterfaces\":[]},\"startedAt\":1599491312667,\"stoppedAt\":1599491312839,\"statusReason\":\"Essential container in task exited\"}],\"statusReason\":\"Essential container in task exited\",\"createdAt\":1599491308519,\"retryStrategy\":{\"attempts\":1},\"startedAt\":1599491312667,\"stoppedAt\":1599491312839,\"dependsOn\":[],\"jobDefinition\":\"arn:aws:batch:eu-west-2:205048117103:job-definition/delius-stage-ndelius-dss-job:5\",\"parameters\":{},\"container\":{\"image\":\"895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/dss:3.0\",\"vcpus\":1,\"memory\":3096,\"command\":[\"/bin/sh\",\"-c\",\"exit 0\"],\"jobRoleArn\":\"arn:aws:iam::205048117103:role/delius-stage-dss-job-role\",\"volumes\":[],\"environment\":[{\"name\":\"DSS_TESTMODE\",\"value\":\"false\"},{\"name\":\"DSS_ENVIRONMENT\",\"value\":\"delius-stage\"},{\"name\":\"DSS_PROJECT\",\"value\":\"delius\"},{\"name\":\"DSS_DSSWEBSERVERURL\",\"value\":\"https://interface-app-internal.stage.delius.probation.hmpps.dsd.io/NDeliusDSS/UpdateOffender\"},{\"name\":\"DSS_HMPSSERVERURL\",\"value\":\"https://www.offloc.service.justice.gov.uk/\"},{\"name\":\"DSS_TESTINGAUTOCORRECT\",\"value\":\"true\"},{\"name\":\"JAVA_OPTS\",\"value\":\"-Xms1024m -Xmx2048m\"}],\"mountPoints\":[],\"ulimits\":[{\"hardLimit\":1024,\"name\":\"nofile\",\"softLimit\":1024}],\"exitCode\":0,\"containerInstanceArn\":\"arn:aws:ecs:eu-west-2:205048117103:container-instance/4de91d32-2272-469d-a9ac-45f52342eb51\",\"taskArn\":\"arn:aws:ecs:eu-west-2:205048117103:task/f4dc906f-c5f9-4695-9342-0b46abde26a2\",\"logStreamName\":\"delius-stage-ndelius-dss-job/default/f4dc906f-c5f9-4695-9342-0b46abde26a2\",\"networkInterfaces\":[],\"resourceRequirements\":[]}}}",
+                "Timestamp": "2020-09-07T15:08:33.700Z",
+                "SignatureVersion": "1",
+                "Signature": "Ik3OtEJtr+YUob+JQcqQ6TWyUNwe9XFcjHQ5uAK1dKYzUteS1b/H4x42JyQD52H1e1pQBNu6bVkVSZQCYXD/3Nl5YmEcalU6lvh/27bz2asLC0HJhMYOIptIn21u0coJSJJsGhH5rgA1z88b1ErqBpYUZU3UjwSWPKff1Jz7ywVwwh6BHzD5NkDG9f8FfZE4H+QDL5lylHFsTQDSf82LHNsmv/DymkFQfTx8u3dPH9I0eP0cR5sEKf5pMqidUervMPbvN/Y6bFmz6cVe4Og60jrbsau0LxR0cL8ktClncR/GRzFbmyGnA+6iNCoA6+diNOlHe9JDKShYUQ5UZ5AKZw==",
+                "SigningCertUrl": "https://sns.eu-west-2.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem",
+                "UnsubscribeUrl": "https://sns.eu-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-2:205048117103:delius-stage-delius-core-alarm-notification:49298807-e204-4578-bff6-e4b42dbe631f",
+                "MessageAttributes": {}
+            }
+        }
+    ]
+}

@@ -36,6 +36,15 @@ data "terraform_remote_state" "ldap" {
   }
 }
 
+data "terraform_remote_state" "batch" {
+  backend = "s3"
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "delius-core/batch/dss/terraform.tfstate"
+    region = "${var.region}"
+  }
+}
+
 data "terraform_remote_state" "db" {
   backend = "s3"
   config {
@@ -61,8 +70,8 @@ data "template_file" "delius_service_health_dashboard_file" {
   }
 }
 
-data "template_file" "notify_slack_lambda_file" {
-  template = "${file("${path.module}/templates/lambda/notify-slack.js")}"
+data "template_file" "notify_slack_alarm_lambda_file" {
+  template = "${file("${path.module}/templates/lambda/notify-slack-alarm.js")}"
   vars {
     environment_name        = "${var.environment_name}"
     channel                 = "${var.environment_name == "delius-prod"? "delius-alerts-deliuscore-production": "delius-alerts-deliuscore-nonprod"}"
@@ -71,15 +80,36 @@ data "template_file" "notify_slack_lambda_file" {
   }
 }
 
-data "archive_file" "lambda_handler_zip" {
+data "archive_file" "alarm_lambda_handler_zip" {
   type        = "zip"
-  output_path = "${path.module}/files/${local.lambda_name}.zip"
+  output_path = "${path.module}/files/${local.lambda_name_alarm}.zip"
   source {
-    content  = "${data.template_file.notify_slack_lambda_file.rendered}"
-    filename = "notify-slack.js"
+    content  = "${data.template_file.notify_slack_alarm_lambda_file.rendered}"
+    filename = "notify-slack-alarm.js"
   }
 }
 
 data "aws_iam_role" "lambda_exec_role" {
   name = "lambda_exec_role"
+}
+
+
+data "template_file" "notify_slack_batch_lambda_file" {
+  template = "${file("${path.module}/templates/lambda/notify-slack-batch.js")}"
+  vars {
+    environment_name        = "${var.environment_name}"
+    channel                 = "${var.environment_name == "delius-prod"? "delius-alerts-deliuscore-production": "delius-alerts-deliuscore-nonprod"}"
+    quiet_period_start_hour = "${local.quiet_period_start_hour}"
+    quiet_period_end_hour   = "${local.quiet_period_end_hour}"
+    lambda_name             = "${local.lambda_name_batch}"
+  }
+}
+
+data "archive_file" "batch_lambda_handler_zip" {
+  type        = "zip"
+  output_path = "${path.module}/files/${local.lambda_name_batch}.zip"
+  source {
+    content  = "${data.template_file.notify_slack_batch_lambda_file.rendered}"
+    filename = "notify-slack-batch.js"
+  }
 }
