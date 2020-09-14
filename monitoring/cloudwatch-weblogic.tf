@@ -1,6 +1,6 @@
 module "ndelius_weblogic_alarms" {
   environment_name = var.environment_name
-  source           = "./modules/weblogic_alarms"
+  source           = "../modules/weblogic_alarms"
   tier_name        = "ndelius"
   asg_name         = data.terraform_remote_state.ndelius.outputs.asg["name"]
   loadbalancer_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
@@ -10,7 +10,7 @@ module "ndelius_weblogic_alarms" {
 
 module "interface_weblogic_alarms" {
   environment_name = var.environment_name
-  source           = "./modules/weblogic_alarms"
+  source           = "../modules/weblogic_alarms"
   tier_name        = "interface"
   asg_name         = data.terraform_remote_state.interface.outputs.asg["name"]
   loadbalancer_arn = data.terraform_remote_state.interface.outputs.alb["arn"]
@@ -20,7 +20,7 @@ module "interface_weblogic_alarms" {
 
 module "spg_weblogic_alarms" {
   environment_name = var.environment_name
-  source           = "./modules/weblogic_alarms"
+  source           = "../modules/weblogic_alarms"
   tier_name        = "spg"
   asg_name         = data.terraform_remote_state.spg.outputs.asg["name"]
   loadbalancer_arn = data.terraform_remote_state.spg.outputs.alb["arn"]
