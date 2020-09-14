@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 ## HMPPS Terragrunt wrapper script.
 ## Runs Terragrunt commands in the HMPPS container, with sensible defaults and mounted config.
 ##
@@ -51,6 +51,8 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
     --env-file <(env | grep '^TF_')                         `# Pass any environment variables prefixed with 'TF_'` \
     -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass GitHub token, in case we need to create CodeBuild resources` \
     -e "TF_IN_AUTOMATION=True"                              `# This flag is used by Terraform to indicate a script run` \
+    -e "TF_PLUGIN_CACHE_DIR=/tmp/plugin-cache"              `# Enable caching of Terraform plugins on host` \
+    $(test -n "${TF_PLUGIN_CACHE_DIR}" && echo "-v ${TF_PLUGIN_CACHE_DIR}:/tmp/plugin-cache") \
     -v "${HOME}/.aws:/home/tools/.aws:ro"                   `# Mount the hosts AWS config files` \
     -v "$(pwd):/home/tools/data"                            `# Mount the Terraform code` \
     -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro" `# Mount the Terraform config` \
