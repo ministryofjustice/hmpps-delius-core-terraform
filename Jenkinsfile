@@ -139,7 +139,7 @@ pipeline {
 		stage('Oracle DB High Availability') {
 			when { expression { params.deploy_DATABASE_HA && env.TF_VAR_high_availability_count >= 1 } }
 			steps {
-				build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'high_availability_count', value: db_high_availability_count]]
+				build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'high_availability_count', value: env.TF_VAR_high_availability_count]]
 			}
 		}
 
