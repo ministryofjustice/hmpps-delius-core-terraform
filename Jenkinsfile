@@ -48,7 +48,7 @@ void do_terraform(String repo, String component) {
 }
 
 pipeline {
-	agent { label "jenkins_slave" }
+	agent { label "jenkins_agent" }
 	options { ansiColor('xterm') }
 
 	parameters {
