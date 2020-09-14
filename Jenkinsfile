@@ -78,8 +78,8 @@ pipeline {
 				dir(project.source) { checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'git@github.com:ministryofjustice/' + project.source, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]], branches: [[name: project.source_version]]], poll: false }
 
 				script {
-					env.TF_VAR_db_aws_ami = get_parameter("/versions/delius-core/ami/db-ami/${env.ENVIRONMENT}")
-					env.TF_VAR_high_availability_count = get_config_yaml("${project.config}/${env.ENVIRONMENT}/ansible/group_vars/all.yml", 'database.delius.high_availability_count', '0')
+					env.TF_VAR_db_aws_ami = get_parameter("/versions/delius-core/ami/db-ami/${env.ENVIRONMENT}") as Integer
+					env.TF_VAR_high_availability_count = get_config_yaml("${project.config}/${env.ENVIRONMENT}/ansible/group_vars/all.yml", 'database.delius.high_availability_count', '0') as Integer
 				}
 
 				sh('docker pull "${CONTAINER}"')
@@ -98,11 +98,11 @@ pipeline {
 				stage('LDAP') { steps { do_terraform(project.source, 'application/ldap') } }
 				stage('Primary Database') { steps { do_terraform(project.source, 'database_failover') } }
 				stage('Standby Database 1') {
-					when { expression { +env.TF_VAR_high_availability_count >= 1 } }
+					when { expression { env.TF_VAR_high_availability_count >= 1 } }
 					steps { do_terraform(project.source, 'database_standbydb1') }
 				}
 				stage('Standby Database 2') {
-					when { expression { +env.TF_VAR_high_availability_count >= 2 } }
+					when { expression { env.TF_VAR_high_availability_count >= 2 } }
 					steps { do_terraform(project.source, 'database_standbydb2') }
 				}
 			}
@@ -150,7 +150,7 @@ pipeline {
 		}
 
 		stage('Database High Availibilty') {
-			when { expression { params.deploy_DATABASE_HA && +env.TF_VAR_high_availability_count >= 1 } }
+			when { expression { params.deploy_DATABASE_HA && env.TF_VAR_high_availability_count >= 1 } }
 			steps {
 				println('Build Database High Availibilty')
 				build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'high_availability_count', value: db_high_availability_count]]
@@ -160,7 +160,7 @@ pipeline {
 		stage ('Check Oracle Software and Patches on standbys') {
 			parallel {
 				stage('Check Standby 1') {
-					when { expression { params.db_patch_check && +env.TF_VAR_high_availability_count >= 1 } }
+					when { expression { params.db_patch_check && env.TF_VAR_high_availability_count >= 1 } }
 					steps {
 						catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 							println('Check Oracle Software Patches on Standby 1')
@@ -169,7 +169,7 @@ pipeline {
 					}
 				}
 				stage('Check Standby 2') {
-					when { expression { params.db_patch_check && +env.TF_VAR_high_availability_count >= 2 } }
+					when { expression { params.db_patch_check && env.TF_VAR_high_availability_count >= 2 } }
 					steps {
 						catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 							println('Check Oracle Software Patches on Standby 2')
