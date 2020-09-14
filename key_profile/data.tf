@@ -12,19 +12,6 @@ data "terraform_remote_state" "vpc" {
 }
 
 #-------------------------------------------------------------
-### Getting the s3buckets
-#-------------------------------------------------------------
-data "terraform_remote_state" "s3bucket" {
-  backend = "s3"
-
-  config = {
-    bucket = var.remote_state_bucket_name
-    key    = "delius-core/s3buckets/terraform.tfstate"
-    region = var.region
-  }
-}
-
-#-------------------------------------------------------------
 ### Getting the oracledb backup s3 bucket
 #-------------------------------------------------------------
 data "terraform_remote_state" "s3-oracledb-backups" {
