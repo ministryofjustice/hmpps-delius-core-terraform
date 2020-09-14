@@ -5,9 +5,18 @@ def project = [
 		config_version: ''
 ];
 
-String get_parameter(GString key, String defaultValue="", String prefix="") {
+String get_parameter(GString key, String defaultValue="") {
 	String value = sh(script: "aws ssm get-parameter --name ${key} --query Parameter.Value --region eu-west-2 --output text || true", returnStdout: true).trim()
-	return value != ""? prefix + value: defaultValue
+	return value != ""? value: defaultValue
+}
+
+String get_version(String repo_name, String override_version) {
+	String ssm_param_version = get_parameter("/versions/delius-core/repo/${repo_name}/${env.ENVIRONMENT}")
+	if (ssm_param_version != "" && override_version == "master") {
+		return "refs/tags/${ssm_param_version}"
+	} else {
+		return override_version
+	}
 }
 
 String get_config_yaml(GString file, String key, String defaultValue="") {
@@ -68,11 +77,11 @@ pipeline {
 	stages {
 		stage('setup') {
 			steps {
-                slackSend(message: "\"Apply\" of \"${project.source_version}\" started on \"${env.ENVIRONMENT}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
+				slackSend(message: "\"Apply\" of \"${project.source_version}\" started on \"${env.ENVIRONMENT}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
 
 				script {
-					project.source_version = get_parameter("/versions/delius-core/repo/${project.source}/${env.ENVIRONMENT}", params.SOURCE_BRANCH)
-					project.config_version = get_parameter("/versions/delius-core/repo/${project.config}/${env.ENVIRONMENT}", params.CONFIG_BRANCH)
+					project.source_version = get_version(project.source, params.SOURCE_BRANCH)
+					project.config_version = get_version(project.config, params.CONFIG_BRANCH)
 				}
 
 				dir(project.config) { checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'git@github.com:ministryofjustice/' + project.config, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a' ]], branches: [[name: project.config_version]]], poll: false }
@@ -139,7 +148,7 @@ pipeline {
 		stage('Oracle DB High Availability') {
 			when { expression { params.deploy_DATABASE_HA && env.TF_VAR_high_availability_count >= 1 } }
 			steps {
-				build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'high_availability_count', value: env.TF_VAR_high_availability_count]]
+				build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'db_group', value: 'delius']]
 			}
 		}
 
@@ -148,7 +157,7 @@ pipeline {
 			parallel {
 				stage('Check Primary') {
 					steps {
-						build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${environment_name}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_primarydb'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
+						build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_primarydb'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
 					}
 				}
 				stage('Check Standby 1') {
