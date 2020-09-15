@@ -46,18 +46,18 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
   CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
   echo "${CONTAINER}"
   docker run -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
-    $(test -t 0 && echo '-it')                              `# Allocate an interactive terminal if one is available` \
-    --env-file <(env | grep '^AWS_')                        `# Pass any environment variables prefixed with 'AWS_'` \
-    --env-file <(env | grep '^TF_')                         `# Pass any environment variables prefixed with 'TF_'` \
-    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                       `# Pass GitHub token, in case we need to create CodeBuild resources` \
-    -e "TF_IN_AUTOMATION=True"                              `# This flag is used by Terraform to indicate a script run` \
-    -e "TF_PLUGIN_CACHE_DIR=/tmp/plugin-cache"              `# Enable caching of Terraform plugins on host` \
-    $(test -n "${TF_PLUGIN_CACHE_DIR}" && echo "-v ${TF_PLUGIN_CACHE_DIR}:/tmp/plugin-cache") \
-    -v "${HOME}/.aws:/home/tools/.aws:ro"                   `# Mount the hosts AWS config files` \
-    -v "$(pwd):/home/tools/data"                            `# Mount the Terraform code` \
-    -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro" `# Mount the Terraform config` \
-    -v "$(cd "${0%/*}" && pwd):/home/tools/util:ro"         `# Mount the current script` \
-  "${CONTAINER}" bash -c "/home/tools/util/${0##*/} ${*}"    # Re-run the current script in the container
+    $(test -t 0 && echo '-it')                                `# Allocate an interactive terminal if one is available` \
+    --env-file <(env | grep '^AWS_')                          `# Pass any environment variables prefixed with 'AWS_'` \
+    --env-file <(env | grep '^TF_')                           `# Pass any environment variables prefixed with 'TF_'` \
+    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                         `# Pass GitHub token, in case we need to create CodeBuild resources` \
+    -e "TF_IN_AUTOMATION=True"                                `# This flag is used by Terraform to indicate a script run` \
+    ${TF_PLUGIN_CACHE_DIR:+-e TF_PLUGIN_CACHE_DIR=/plugins}   `# Enable caching of Terraform plugins on host, if TF_PLUGIN_CACHE_DIR is set` \
+    ${TF_PLUGIN_CACHE_DIR:+-v ${TF_PLUGIN_CACHE_DIR}:/plugins}` \
+    -v "${HOME}/.aws:/home/tools/.aws:ro"                     `# Mount the hosts AWS config files` \
+    -v "$(pwd):/home/tools/data"                              `# Mount the Terraform code` \
+    -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro"   `# Mount the Terraform config` \
+    -v "$(cd "${0%/*}" && pwd):/home/tools/util:ro"           `# Mount the current script` \
+  "${CONTAINER}" bash -c "/home/tools/util/${0##*/} ${*}"      # Re-run the current script in the container
   exit $?
 fi
 
