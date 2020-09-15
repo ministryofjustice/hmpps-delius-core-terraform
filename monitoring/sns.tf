@@ -18,3 +18,10 @@ resource "aws_sns_topic_subscription" "batch_subscription" {
   endpoint  = aws_lambda_function.notify_slack_batch.arn
 }
 
+output "aws_sns_topic_alarm_notification_arn" {
+  value = "${aws_sns_topic.alarm_notification.arn}"
+}
+
+output "aws_sns_topic_alarm_notification_name" {
+  value = "${aws_sns_topic.alarm_notification.name}"
+}
