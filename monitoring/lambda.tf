@@ -15,7 +15,6 @@ resource "aws_lambda_permission" "sns_alarm" {
   source_arn    = "${aws_sns_topic.alarm_notification.arn}"
 }
 
-
 resource "aws_lambda_function" "notify_slack_batch" {
   runtime          = "nodejs12.x"
   role             = "${data.aws_iam_role.lambda_exec_role.arn}"

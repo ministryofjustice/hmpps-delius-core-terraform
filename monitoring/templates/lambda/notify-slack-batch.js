@@ -55,7 +55,7 @@ exports.handler = function(event, context) {
           return console.log("problem with request: " + e.message);
       });
       req.write(util.format("%j", {
-          "channel": "# delius-alerts-deliuscore-nonprod",
+          "channel": "# ${channel}",
           "username": "Delius-Core Batch Notification",
           "text": textMessage,
           "icon_emoji": ":amazon:",
