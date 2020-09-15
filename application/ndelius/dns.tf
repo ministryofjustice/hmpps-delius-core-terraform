@@ -1,9 +1,9 @@
 resource "aws_route53_record" "private_dns" {
-  zone_id = "${data.aws_route53_zone.private.id}"
+  zone_id = data.aws_route53_zone.private.id
   name    = "ndelius"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${module.external_nlb.dns_name}"]
+  records = [module.external_nlb.dns_name]
 }
 
 resource "aws_route53_record" "public_dns" {
@@ -14,11 +14,11 @@ resource "aws_route53_record" "public_dns" {
   # remove this. Additionally, there are a few services that have DNS records in the public zone that should be moved
   # over into the private zone before we complete the transition eg. delius-db-1, management.
   # (see weblogic-ndelius.tf)
-  zone_id = "${(var.delius_core_public_zone) == "strategic" ?
-                      data.terraform_remote_state.vpc.strategic_public_zone_id :
-                      data.terraform_remote_state.vpc.public_zone_id}"
-  name    = "ndelius"
-  type    = "CNAME"
-  ttl     = "300"
-  records = ["${module.external_nlb.dns_name}"]
+  zone_id = var.delius_core_public_zone == "strategic" ? data.terraform_remote_state.vpc.outputs.strategic_public_zone_id : data.terraform_remote_state.vpc.outputs.public_zone_id
+
+  name = "ndelius"
+  type = "CNAME"
+  ttl  = "300"
+  records = [module.external_nlb.dns_name]
 }
+

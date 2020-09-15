@@ -12,12 +12,12 @@ variable "service_name" {
 
 variable "ecs_cluster" {
   description = "ECS cluster details. Sould be a map with the keys 'name', 'cluster_id', 'namespace_id'."
-  type        = "map"
+  type        = map(string)
 }
 
 variable "container_definition" {
   description = "Container definition JSON string"
-  type        = "string"
+  type        = string
 }
 
 variable "required_memory" {
@@ -30,7 +30,7 @@ variable "required_cpu" {
 
 variable "allowed_ssm_parameters" {
   description = "List of ARNs for SSM parameters that the service is allowed to access."
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -45,12 +45,12 @@ variable "vpc_id" {
 
 variable "subnets" {
   description = "List of network subnets to assign to the tasks"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "security_groups" {
   description = "Security groups to apply to the ECS tasks"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "lb_listener_arn" {
@@ -119,5 +119,6 @@ variable "deregistration_delay" {
 
 variable "tags" {
   description = "Tags to be applied to resources"
-  type        = "map"
+  type        = map(string)
 }
+

@@ -20,35 +20,36 @@ variable "project_name" {
 
 variable "umt_config" {
   description = "Application-specific configuration items"
-  type = "map"
+  type        = map(string)
 }
 
 variable "default_umt_config" {
   description = "Default values to be overridden by umt_config"
-  type = "map"
+  type        = map(string)
 }
 
 variable "ldap_config" {
   description = "LDAP configuration"
-  type = "map"
+  type        = map(string)
 }
 
 variable "default_ldap_config" {
   description = "Default values to be overridden by ldap_config"
-  type = "map"
+  type        = map(string)
 }
 
 variable "tags" {
   description = "Tags to be applied to resources"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "default_ansible_vars" {
   description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "ansible_vars" {
   description = "Ansible vars for user_data script"
-  type        = "map"
+  type        = map(string)
 }
+

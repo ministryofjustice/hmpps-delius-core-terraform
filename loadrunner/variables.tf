@@ -1,9 +1,9 @@
 variable "environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "short_environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "project_name" {
@@ -31,7 +31,7 @@ variable "short_environment_identifier" {
 }
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
 
 variable "dependencies_bucket_arn" {
@@ -39,8 +39,9 @@ variable "dependencies_bucket_arn" {
 }
 
 variable "loadrunner_config" {
-  type    = "map"
+  type = map(string)
   default = {
     instance_type = "t2.micro"
   }
 }
+

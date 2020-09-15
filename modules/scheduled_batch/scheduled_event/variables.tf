@@ -21,3 +21,4 @@ variable "event_job_def_arn" {
 variable "event_job_attempts" {
   description = "Retry count for failed jobs"
 }
+

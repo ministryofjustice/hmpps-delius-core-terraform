@@ -1,17 +1,13 @@
 variable "environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "short_environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "project_name" {
   description = "The project name - delius-core"
-}
-
-variable "environment_type" {
-  description = "The environment type - e.g. dev"
 }
 
 variable "region" {
@@ -31,24 +27,21 @@ variable "short_environment_identifier" {
 }
 
 variable "ldap_ports" {
-  type        = "map"
+  type        = map(string)
   description = "Map of the ports that the ldap ports"
-}
-
-variable "dependencies_bucket_arn" {
-  description = "S3 bucket arn for dependencies"
 }
 
 variable "default_ldap_config" {
   description = "Default LDAP configuration. Overridden by ldap_config."
-  type        = "map"
+  type        = map(string)
 }
 
 variable "ldap_config" {
   description = "LDAP configuration"
-  type        = "map"
+  type        = map(string)
 }
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
+

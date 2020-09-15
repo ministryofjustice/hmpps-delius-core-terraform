@@ -5,9 +5,15 @@
 ################################################################################
 resource "aws_security_group" "common_out" {
   name        = "${var.environment_name}-common-out"
-  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
   description = "Common egress rules"
-  tags        = "${merge(var.tags, map("Name", "${var.environment_name}-common-out", "Type", "COMMON"))}"
+  tags = merge(
+    var.tags,
+    {
+      "Name" = "${var.environment_name}-common-out"
+      "Type" = "COMMON"
+    },
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -15,14 +21,14 @@ resource "aws_security_group" "common_out" {
 }
 
 output "sg_common_out_id" {
-  value = "${aws_security_group.common_out.id}"
+  value = aws_security_group.common_out.id
 }
 
 # This is a temp solution to enable quick access to yum repos from dev env
 # during discovery.
 resource "aws_security_group_rule" "common_out_80" {
-  count             = "${var.egress_80}"
-  security_group_id = "${aws_security_group.common_out.id}"
+  count             = var.egress_80 ? 1 : 0
+  security_group_id = aws_security_group.common_out.id
   type              = "egress"
   protocol          = "tcp"
   from_port         = 80
@@ -34,8 +40,8 @@ resource "aws_security_group_rule" "common_out_80" {
 # This is a temp solution to enable quick access to S3 bucket from dev env
 # during discovery.
 resource "aws_security_group_rule" "common_out_443" {
-  count             = "${var.egress_443}"
-  security_group_id = "${aws_security_group.common_out.id}"
+  count             = var.egress_443 ? 1 : 0
+  security_group_id = aws_security_group.common_out.id
   type              = "egress"
   protocol          = "tcp"
   from_port         = 443
@@ -43,3 +49,4 @@ resource "aws_security_group_rule" "common_out_443" {
   cidr_blocks       = ["0.0.0.0/0"]
   description       = "tmp s3"
 }
+
