@@ -52,7 +52,7 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
     -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                         `# Pass GitHub token, in case we need to create CodeBuild resources` \
     -e "TF_IN_AUTOMATION=True"                                `# This flag is used by Terraform to indicate a script run` \
     ${TF_PLUGIN_CACHE_DIR:+-e TF_PLUGIN_CACHE_DIR=/plugins}   `# Enable caching of Terraform plugins on host, if TF_PLUGIN_CACHE_DIR is set` \
-    ${TF_PLUGIN_CACHE_DIR:+-v ${TF_PLUGIN_CACHE_DIR}:/plugins}` \
+    ${TF_PLUGIN_CACHE_DIR:+-v ${TF_PLUGIN_CACHE_DIR}:/plugins} \
     -v "${HOME}/.aws:/home/tools/.aws:ro"                     `# Mount the hosts AWS config files` \
     -v "$(pwd):/home/tools/data"                              `# Mount the Terraform code` \
     -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro"   `# Mount the Terraform config` \
