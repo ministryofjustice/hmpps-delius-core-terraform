@@ -89,7 +89,7 @@ pipeline {
 
 				script {
 					env.TF_VAR_db_aws_ami = get_parameter("/versions/delius-core/ami/db-ami/${env.ENVIRONMENT}")
-					env.TF_VAR_high_availability_count = get_config_yaml("${project.config}/${env.ENVIRONMENT}/ansible/group_vars/all.yml", 'database.delius.high_availability_count', '0') as Integer
+					env.TF_VAR_high_availability_count = get_config_yaml("${project.config}/${env.ENVIRONMENT}/ansible/group_vars/all.yml", 'database.delius.high_availability_count', '0')
 				}
 
 				sh('docker pull "${CONTAINER}"')
@@ -108,11 +108,11 @@ pipeline {
 				stage('LDAP') { steps { do_terraform(project.source, 'application/ldap') } }
 				stage('Primary Database') { steps { do_terraform(project.source, 'database_failover') } }
 				stage('Standby Database 1') {
-					when { expression { env.TF_VAR_high_availability_count >= 1 } }
+					when { expression { (env.TF_VAR_high_availability_count as Integer) >= 1 } }
 					steps { do_terraform(project.source, 'database_standbydb1') }
 				}
 				stage('Standby Database 2') {
-					when { expression { env.TF_VAR_high_availability_count >= 2 } }
+					when { expression { (env.TF_VAR_high_availability_count as Integer) >= 2 } }
 					steps { do_terraform(project.source, 'database_standbydb2') }
 				}
 			}
@@ -146,7 +146,7 @@ pipeline {
 		stage('Monitoring') { steps { do_terraform(project.source, 'monitoring') } }
 
 		stage('Oracle DB High Availability') {
-			when { expression { params.deploy_DATABASE_HA && env.TF_VAR_high_availability_count >= 1 } }
+			when { expression { params.deploy_DATABASE_HA && (env.TF_VAR_high_availability_count as Integer) >= 1 } }
 			steps {
 				build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Build_Oracle_DB_HA", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'db_group', value: 'delius']]
 			}
@@ -161,13 +161,13 @@ pipeline {
 					}
 				}
 				stage('Check Standby 1') {
-					when { expression { env.TF_VAR_high_availability_count >= 1 } }
+					when { expression { (env.TF_VAR_high_availability_count as Integer) >= 1 } }
 					steps {
 						build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb1'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
 					}
 				}
 				stage('Check Standby 2') {
-					when { expression { env.TF_VAR_high_availability_count >= 2 } }
+					when { expression { (env.TF_VAR_high_availability_count as Integer) >= 2 } }
 					steps {
 						build job: "Ops/Oracle_Operations/Patch_Oracle_Software", parameters: [[$class: 'StringParameterValue', name: 'environment_name', value: "${env.ENVIRONMENT}"],[$class: 'StringParameterValue', name: 'target_host', value: 'delius_standbydb2'],[$class: 'BooleanParameterValue', name: 'install_absent_patches', value: false],[$class: 'StringParameterValue', name: 'patch_id', value: 'ALL']]
 					}
