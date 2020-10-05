@@ -1,5 +1,5 @@
 module "delius_db_3" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.0.0"
+  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.1.0"
   server_name = "delius-db-3"
 
   ami_id               = data.aws_ami.centos_oracle_db.id

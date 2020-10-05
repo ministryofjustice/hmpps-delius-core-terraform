@@ -58,6 +58,17 @@
       ]
     },
     {
+      "Sid": "allowAccessToSSMAnsibleBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "${s3_ssm_ansible_arn}",
+        "${s3_ssm_ansible_arn}/*"
+      ]
+    },
+    {
       "Sid": "allowAccessToMigrationBucket",
       "Effect": "Allow",
       "Action": [
