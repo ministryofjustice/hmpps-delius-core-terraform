@@ -175,10 +175,6 @@ output "user_access_cidr_blocks_concatenated" {
   value = local.user_access_cidr_blocks
 }
 
-# output "windows_slave_public_ip" {
-#   value = local.windows_slave_public_ip
-# }
-
 output "bastion_ip" {
   value = local.bastion_public_ip
 }
