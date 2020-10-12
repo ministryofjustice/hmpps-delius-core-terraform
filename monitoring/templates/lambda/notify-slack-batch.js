@@ -18,7 +18,7 @@ exports.handler = function(event, context) {
       case "SUCCEEDED":
         severity = "ok";
         icon_emoji = ":yep:";
-        sendSlackNotification = true;
+        sendSlackNotification = false;
         break;
       case "FAILED":
         severity = "critical";
@@ -36,8 +36,8 @@ exports.handler = function(event, context) {
         + "\n> Status: " + eventMessage.detail.status
         + "\n> Environment: ${environment_name}"
         + "\n> Description: *" + eventMessage.detail.jobName + " " + eventMessage.detail.status.toLowerCase() + " with message '" + eventMessage.detail.statusReason + "'*"
-        + "\n <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups/log-group/$252Faws$252Flambda$252F${lambda_name}|Logs>";
-    
+        + "\n <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups/log-group/$252Faws$252Fbatch$252Fjob|Cloudwatch Logs>";
+
    //Only send for specific events (SUCCEEDED, FAILED)
    if (sendSlackNotification) {
       console.log("Sending slack Notification..");
