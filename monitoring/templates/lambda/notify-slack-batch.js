@@ -31,14 +31,13 @@ exports.handler = function(event, context) {
         sendSlackNotification = false;
     }
 
-    let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
+    let textMessage = icon_emoji + " " + (severity === "ok"? "*SUCCEEDED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Status: " + eventMessage.detail.status
         + "\n> Environment: ${environment_name}"
         + "\n> Description: *" + eventMessage.detail.jobName + " " + eventMessage.detail.status.toLowerCase() + " with message '" + eventMessage.detail.statusReason + "'*"
         + "\n <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups/log-group/$252Faws$252Flambda$252F${lambda_name}|Logs>";
-    // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
-
+    
    //Only send for specific events (SUCCEEDED, FAILED)
    if (sendSlackNotification) {
       console.log("Sending slack Notification..");
