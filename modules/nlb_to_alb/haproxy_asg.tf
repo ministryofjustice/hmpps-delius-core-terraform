@@ -18,7 +18,6 @@ resource "aws_launch_configuration" "haproxy_launch_cfg" {
 
   lifecycle {
     create_before_destroy = true
-    ignore_changes        = [image_id]
   }
 }
 
