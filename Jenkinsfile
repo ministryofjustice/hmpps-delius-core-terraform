@@ -175,6 +175,8 @@ pipeline {
 			}
 		}
 
+		stage('Oracle SSM Agent') { steps { build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Install SSM Agent on Oracle Databases" } }
+
 		stage('Smoke test') { steps { build job: "DAMS/Environments/${env.ENVIRONMENT}/Delius/Smoke test" } }
 	}
 
