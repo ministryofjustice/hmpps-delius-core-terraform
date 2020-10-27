@@ -52,11 +52,10 @@ resource "aws_db_instance" "primary" {
   backup_window             = local.gdpr_config["db_backup_window"]
   final_snapshot_identifier = "${var.environment_name}-final-snapshot"
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${local.app_name}-primary-db"
-    },
-  )
+  tags = merge(var.tags, { Name = "${local.app_name}-primary-db" })
+
+  lifecycle {
+    ignore_changes = [engine_version] # Allow automated minor version upgrades
+  }
 }
 
