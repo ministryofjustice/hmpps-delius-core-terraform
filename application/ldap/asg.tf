@@ -15,7 +15,7 @@ data "template_file" "user_data" {
 
     app_bootstrap_name    = "ldap"
     app_bootstrap_src     = "https://github.com/ministryofjustice/hmpps-delius-core-ldap-bootstrap"
-    app_bootstrap_version = "1.1.0"
+    app_bootstrap_version = "1.1.1"
 
     ldap_port             = local.ldap_config["port"]
     bind_user             = local.ldap_config["bind_user"]
