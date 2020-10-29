@@ -8,6 +8,7 @@ module "server_provision_ec2_role" {
   s3_oracledb_backups_arn = data.terraform_remote_state.s3-oracledb-backups.outputs.s3_oracledb_backups.arn
   s3_ldap_backups_arn     = data.terraform_remote_state.s3-ldap-backups.outputs.s3_ldap_backups.arn
   s3_test_results_arn     = data.terraform_remote_state.s3-test-results.outputs.s3_test_results.arn
+  s3_ssm_ansible_arn      = data.terraform_remote_state.ci_common.outputs.ssm_ansible_bucket.arn
   migration_bucket_arn    = var.migration_bucket_arn
 }
 

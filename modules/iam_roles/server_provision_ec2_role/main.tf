@@ -19,6 +19,7 @@ data "template_file" "bucket_access_policy" {
     s3_oracledb_backups_arn = var.s3_oracledb_backups_arn
     s3_ldap_backups_arn     = var.s3_ldap_backups_arn
     s3_test_results_arn     = var.s3_test_results_arn
+    s3_ssm_ansible_arn      = var.s3_ssm_ansible_arn
     migration_bucket_arn    = var.migration_bucket_arn
   }
 }
@@ -52,20 +53,6 @@ resource "aws_iam_role_policy_attachment" "container_registry" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-data "template_file" "cloudwatch_logs_policy" {
-  template = file("${path.module}/policies/cloudwatch_logs.json")
-}
-
-resource "aws_iam_policy" "delius_core_cloudwatch_logs" {
-  name   = "${var.environment_name}-cloudwatch-logs"
-  policy = data.template_file.cloudwatch_logs_policy.rendered
-}
-
-resource "aws_iam_role_policy_attachment" "delius_core_cloudwatch_logs" {
-  role       = aws_iam_role.ec2.name
-  policy_arn = aws_iam_policy.delius_core_cloudwatch_logs.arn
-}
-
 resource "aws_iam_role_policy_attachment" "delius_core_ec2_read_only" {
   role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
@@ -83,5 +70,15 @@ resource "aws_iam_policy" "ec2_create_tags" {
 resource "aws_iam_role_policy_attachment" "ec2_create_tags" {
   role       = aws_iam_role.ec2.name
   policy_arn = aws_iam_policy.ec2_create_tags.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_agent" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 

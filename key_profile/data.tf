@@ -50,3 +50,16 @@ data "terraform_remote_state" "s3-test-results" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the ssm docs s3 bucket
+#-------------------------------------------------------------
+data "terraform_remote_state" "ci_common" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-pipelines/components/common/terraform.tfstate"
+    region = var.region
+  }
+}
+

@@ -188,3 +188,24 @@ resource "aws_security_group_rule" "eng_ci_db_in_1521" {
   description              = "CI in 1521"
 }
 
+resource "aws_security_group_rule" "alfresco_smoke_test_ci_db_in_1521" {
+  count                    = var.ci_db_ingress_1521 ? 1 : 0
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = data.terraform_remote_state.ci_alfresco.outputs.smoke_tests["security_group"]["id"]
+  description              = "CI - Alfresco Smoke Tests in 1521"
+}
+
+resource "aws_security_group_rule" "delius_smoke_test_ci_db_in_1521" {
+  count                    = var.ci_db_ingress_1521 ? 1 : 0
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.smoke_tests["security_group"]["id"]
+  description              = "CI - Delius Smoke Tests in 1521"
+}
