@@ -41,6 +41,26 @@ data "terraform_remote_state" "persistent_eip" {
   }
 }
 
+data "terraform_remote_state" "ci_delius_core" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-pipelines/components/delius-core/terraform.tfstate"
+    region = var.region
+  }
+}
+
+data "terraform_remote_state" "ci_alfresco" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-pipelines/components/alfresco/terraform.tfstate"
+    region = var.region
+  }
+}
+
 #-------------------------------------------------------------
 ### Getting the shared oracle-db-operation security groups
 #-------------------------------------------------------------
