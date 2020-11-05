@@ -231,3 +231,14 @@ resource "aws_security_group_rule" "delius_functional_test_ci_db_in_1521" {
   source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.functional_tests["security_group"]["id"]
   description              = "CI - Delius Functional Tests in 1521"
 }
+
+resource "aws_security_group_rule" "delius_int_smoke_test_ci_db_in_1521" {
+  count                    = var.ci_db_ingress_1521 ? 1 : 0
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.int_smoke_tests["security_group"]["id"]
+  description              = "CI - Delius Integration Smoke Tests in 1521"
+}
