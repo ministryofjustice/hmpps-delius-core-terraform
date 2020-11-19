@@ -82,3 +82,16 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
+data "template_file" "ssm_update_policy" {
+  template = file("${path.module}/policies/ssm_update.json")
+}
+
+resource "aws_iam_policy" "delius_core_ssm_update" {
+  name   = "${var.environment_name}-ssm-update"
+  policy = data.template_file.ssm_update_policy.rendered
+}
+
+resource "aws_iam_role_policy_attachment" "delius_core_ssm_update" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = aws_iam_policy.delius_core_ssm_update.arn
+}
