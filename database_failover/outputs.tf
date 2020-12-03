@@ -5,7 +5,7 @@ locals {
   public_fqdn = substr(data.aws_route53_zone.public.name, 0, local.public_fqdn_length)
 
   # db_size_delius_core attribute may not be set in all envs, if not we default to two
-  high_availability_count = var.high_availability_count
+  high_availability_count = var.database_high_availability_count["delius"]
   empty                   = ""
   db1                     = "delius-db-1.${local.public_fqdn}"
   db2                     = "delius-db-2.${local.public_fqdn}"

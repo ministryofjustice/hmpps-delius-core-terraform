@@ -56,12 +56,8 @@ variable "db_size_delius_core" {
   type        = map(string)
 }
 
-variable "db_aws_ami" {
-  description = "Database AMI Name/Version"
-}
-
-variable "high_availability_count" {
+variable "database_high_availability_count" {
   description = "number of standby databases"
-  default     = 2
+  type        = map(number)
 }
 

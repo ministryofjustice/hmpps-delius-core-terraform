@@ -77,13 +77,17 @@ data "terraform_remote_state" "key_profile" {
   }
 }
 
+data "aws_ssm_parameter" "db_ami_version" {
+  name = "/versions/delius-core/ami/db-ami/${var.environment_name}"
+}
+
 data "aws_ami" "centos_oracle_db" {
   owners      = ["895523100917"]
   most_recent = true
 
   filter {
     name   = "name"
-    values = [var.db_aws_ami]
+    values = [data.aws_ssm_parameter.db_ami_version.value]
   }
 
   filter {
