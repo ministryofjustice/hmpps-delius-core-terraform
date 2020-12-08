@@ -56,7 +56,3 @@ variable "db_size_delius_core" {
   type        = map(string)
 }
 
-variable "db_aws_ami" {
-  description = "Database AMI Name/Version"
-}
-
