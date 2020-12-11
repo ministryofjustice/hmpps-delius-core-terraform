@@ -3,16 +3,21 @@ var util = require("util");
 
 exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, 2));
-    const londonTime = new Date().toLocaleString("en-GB", {timeZone: "Europe/London"});
-    const now = new Date(londonTime).getHours();
-    if (now >= +"${quiet_period_start_hour}" && now < +"${quiet_period_end_hour}") {
-        console.log("In quiet period, dismissing alarm");
+
+    const enabled = "${enabled}";
+    const quietStart = +"${quiet_period_start_hour}", quietEnd = +"${quiet_period_end_hour}";
+
+    const now = new Date(new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})).getHours();
+    const inQuietPeriod =
+        quietStart <= quietEnd && (now >= quietStart && now < quietEnd) ||
+        quietStart >  quietEnd && (now >= quietStart || now < quietEnd); // account for overnight periods (eg. 23:00-06:00)
+
+    if (!enabled || inQuietPeriod) {
+        console.log("Alarms disabled, dismissing notification.");
         return;
     }
 
     const eventMessage = JSON.parse(event.Records[0].Sns.Message);
-    console.log(JSON.stringify(eventMessage.detail, null, 2));
-
     let sendSlackNotification, severity, icon_emoji;
     switch(eventMessage.detail.status) {
       case "SUCCEEDED":

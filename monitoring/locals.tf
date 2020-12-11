@@ -4,9 +4,7 @@ locals {
     "/.+:loadbalancer.{1}/",
     "",
   )
-  lambda_name_alarm       = "${var.environment_name}-notify-delius-core-slack-channel-alarm"
-  lambda_name_batch       = "${var.environment_name}-notify-delius-core-slack-channel-batch"
-  quiet_period_start_hour = "0"
-  quiet_period_end_hour   = "3"
+  lambda_name_alarm = "${var.environment_name}-notify-delius-core-slack-channel-alarm"
+  lambda_name_batch = "${var.environment_name}-notify-delius-core-slack-channel-batch"
 }
 

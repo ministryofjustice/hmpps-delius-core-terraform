@@ -76,8 +76,9 @@ data "template_file" "notify_slack_alarm_lambda_file" {
   vars = {
     environment_name        = var.environment_name
     channel                 = var.environment_name == "delius-prod" ? "delius-alerts-deliuscore-production" : "delius-alerts-deliuscore-nonprod"
-    quiet_period_start_hour = local.quiet_period_start_hour
-    quiet_period_end_hour   = local.quiet_period_end_hour
+    enabled                 = var.delius_alarms_config.enabled
+    quiet_period_start_hour = var.delius_alarms_config.quiet_hours[0]
+    quiet_period_end_hour   = var.delius_alarms_config.quiet_hours[1]
   }
 }
 
@@ -99,8 +100,9 @@ data "template_file" "notify_slack_batch_lambda_file" {
   vars = {
     environment_name        = var.environment_name
     channel                 = var.environment_name == "delius-prod" ? "delius-alerts-deliuscore-production" : "delius-alerts-deliuscore-nonprod"
-    quiet_period_start_hour = local.quiet_period_start_hour
-    quiet_period_end_hour   = local.quiet_period_end_hour
+    enabled                 = var.delius_alarms_config.enabled
+    quiet_period_start_hour = var.delius_alarms_config.quiet_hours[0]
+    quiet_period_end_hour   = var.delius_alarms_config.quiet_hours[1]
     lambda_name             = local.lambda_name_batch
   }
 }
