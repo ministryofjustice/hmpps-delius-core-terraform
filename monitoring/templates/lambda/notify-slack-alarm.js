@@ -7,15 +7,13 @@ exports.handler = function (event, context) {
     const enabled = "${enabled}";
     const quietStart = +"${quiet_period_start_hour}", quietEnd = +"${quiet_period_end_hour}";
 
-    const now = new Date(new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})).getHours();
+    const now = new Date(new Date().toLocaleString([], {timeZone: "Europe/London"})).getHours();
     const inQuietPeriod =
         quietStart <= quietEnd && (now >= quietStart && now < quietEnd) ||
         quietStart >  quietEnd && (now >= quietStart || now < quietEnd); // account for overnight periods (eg. 23:00-06:00)
 
-    if (!enabled || inQuietPeriod) {
-        console.log("Alarms disabled, dismissing notification.");
-        return;
-    }
+    console.log("Alarms enabled:", enabled, ". Current hour:", now);
+    if (!enabled || inQuietPeriod) { console.log("Dismissing notification."); return }
 
     const eventMessage = JSON.parse(event.Records[0].Sns.Message);
     let severity = eventMessage.AlarmName.split("--")[1];    // could we use tags for this??
