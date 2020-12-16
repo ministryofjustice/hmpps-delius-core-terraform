@@ -2,36 +2,36 @@ data "template_file" "user_data" {
   template = file("${path.module}/user_data/user_data.sh")
 
   vars = {
-    project_name          = var.project_name
-    env_identifier        = var.environment_identifier
-    short_env_identifier  = var.short_environment_identifier
-    region                = var.region
-    app_name              = "ldap"
-    route53_sub_domain    = var.environment_name
-    environment_name      = var.environment_name
-    private_domain        = data.terraform_remote_state.vpc.outputs.private_zone_name
-    account_id            = data.terraform_remote_state.vpc.outputs.vpc_account_id
-    bastion_inventory     = data.terraform_remote_state.vpc.outputs.bastion_inventory
+    project_name         = var.project_name
+    env_identifier       = var.environment_identifier
+    short_env_identifier = var.short_environment_identifier
+    region               = var.region
+    app_name             = "ldap"
+    route53_sub_domain   = var.environment_name
+    environment_name     = var.environment_name
+    private_domain       = data.terraform_remote_state.vpc.outputs.private_zone_name
+    account_id           = data.terraform_remote_state.vpc.outputs.vpc_account_id
+    bastion_inventory    = data.terraform_remote_state.vpc.outputs.bastion_inventory
 
     app_bootstrap_name    = "ldap"
     app_bootstrap_src     = "https://github.com/ministryofjustice/hmpps-delius-core-ldap-bootstrap"
-    app_bootstrap_version = "1.1.1"
+    app_bootstrap_version = "1.2.0"
 
-    ldap_port             = local.ldap_config["port"]
-    bind_user             = local.ldap_config["bind_user"]
-    base_root             = local.ldap_config["base_root"]
-    base_users            = local.ldap_config["base_users"]
-    base_service_users    = local.ldap_config["base_service_users"]
-    base_roles            = local.ldap_config["base_roles"]
-    base_role_groups      = local.ldap_config["base_role_groups"]
-    base_groups           = local.ldap_config["base_groups"]
-    log_level             = local.ldap_config["log_level"]
-    cldwatch_log_group    = "${var.environment_name}/ldap"
-    s3_backups_bucket     = data.terraform_remote_state.s3-ldap-backups.outputs.s3_ldap_backups["name"]
-    backup_frequency      = local.ldap_config["backup_frequency"]
-    query_time_limit      = local.ldap_config["query_time_limit"]
-    db_max_size           = local.ldap_config["db_max_size"]
-    efs_dns_name          = aws_efs_file_system.efs.dns_name
+    ldap_port          = local.ldap_config["port"]
+    bind_user          = local.ldap_config["bind_user"]
+    base_root          = local.ldap_config["base_root"]
+    base_users         = local.ldap_config["base_users"]
+    base_service_users = local.ldap_config["base_service_users"]
+    base_roles         = local.ldap_config["base_roles"]
+    base_role_groups   = local.ldap_config["base_role_groups"]
+    base_groups        = local.ldap_config["base_groups"]
+    log_level          = local.ldap_config["log_level"]
+    cldwatch_log_group = "${var.environment_name}/ldap"
+    s3_backups_bucket  = data.terraform_remote_state.s3-ldap-backups.outputs.s3_ldap_backups["name"]
+    backup_frequency   = local.ldap_config["backup_frequency"]
+    query_time_limit   = local.ldap_config["query_time_limit"]
+    db_max_size        = local.ldap_config["db_max_size"]
+    efs_dns_name       = aws_efs_file_system.efs.dns_name
   }
 }
 
@@ -49,12 +49,12 @@ resource "aws_launch_configuration" "launch_cfg" {
   associate_public_ip_address = false
   user_data                   = data.template_file.user_data.rendered
   enable_monitoring           = true
-  ebs_optimized               = true
 
   root_block_device {
+    encrypted   = true
     volume_type = local.ldap_config["disk_volume_type"]
     volume_size = local.ldap_config["disk_volume_size"]
-    iops        = local.ldap_config["disk_iops"]
+    iops        = lookup(local.ldap_config, "disk_iops", null) # only required for provisioned io volume_types
   }
 
   lifecycle {
@@ -91,9 +91,9 @@ resource "aws_autoscaling_group" "asg" {
 
   tags = [
     for key, value in merge(var.tags, {
-      "Name" = "${var.environment_name}-ldap-asg"
+      "Name"         = "${var.environment_name}-ldap-asg"
       "rbac_version" = "None deployed"
-    }) : {
+      }) : {
       key                 = key
       value               = value
       propagate_at_launch = true
