@@ -115,7 +115,7 @@
           [ ".", "TotalSessions", ".", ".", { "label": "Total (today)", "stat": "Sum" } ]
         ],
         "view": "singleValue",
-        "region": "eu-west-2",
+        "region": "${region}",
         "title": "Sessions",
         "period": 60
       }
