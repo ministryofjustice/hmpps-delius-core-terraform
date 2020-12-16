@@ -1,7 +1,9 @@
 resource "aws_efs_file_system" "efs" {
-  creation_token = "${var.environment_name}-ldap-efs"
-  encrypted      = true
-  tags           = merge(var.tags, { "Name" = "${var.environment_name}-ldap-efs" })
+  creation_token                  = "${var.environment_name}-ldap-efs"
+  encrypted                       = true
+  throughput_mode                 = lookup(local.ldap_config, "efs_throughput_mode", null)
+  provisioned_throughput_in_mibps = lookup(local.ldap_config, "efs_provisioned_throughput", null)
+  tags                            = merge(var.tags, { "Name" = "${var.environment_name}-ldap-efs" })
 }
 
 resource "aws_efs_mount_target" "efs_az1" {
