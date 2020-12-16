@@ -68,6 +68,11 @@ data "template_file" "delius_service_health_dashboard_file" {
     asg_spg                      = data.terraform_remote_state.spg.outputs.asg["name"]
     asg_ldap                     = data.terraform_remote_state.ldap.outputs.asg["name"]
     instance_delius_db_1         = data.terraform_remote_state.db.outputs.ami_delius_db_1
+    alarm_activemq               = aws_cloudwatch_metric_alarm.activemq_healthy_hosts_fatal_alarm.arn
+    alarm_ldap                   = aws_cloudwatch_metric_alarm.ldap_healthy_hosts_fatal_alarm.arn
+    alarm_weblogic_interface     = module.interface_weblogic_alarms.healthy_hosts_warning_alarm
+    alarm_weblogic_ndelius       = module.ndelius_weblogic_alarms.healthy_hosts_warning_alarm
+    alarm_weblogic_spg           = module.spg_weblogic_alarms.healthy_hosts_warning_alarm
   }
 }
 

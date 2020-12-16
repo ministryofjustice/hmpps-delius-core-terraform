@@ -4,7 +4,7 @@
     {
       "type": "log",
       "x": 9,
-      "y": 0,
+      "y": 14,
       "width": 15,
       "height": 6,
       "properties": {
@@ -17,8 +17,8 @@
     },
     {
       "type": "log",
-      "x": 18,
-      "y": 6,
+      "x": 9,
+      "y": 8,
       "width": 6,
       "height": 6,
       "properties": {
@@ -32,7 +32,7 @@
     {
       "type": "metric",
       "x": 3,
-      "y": 0,
+      "y": 1,
       "width": 6,
       "height": 3,
       "properties": {
@@ -50,7 +50,7 @@
     {
       "type": "metric",
       "x": 3,
-      "y": 3,
+      "y": 4,
       "width": 6,
       "height": 3,
       "properties": {
@@ -68,9 +68,9 @@
     },
     {
       "type": "metric",
-      "x": 0,
-      "y": 12,
-      "width": 12,
+      "x": 15,
+      "y": 1,
+      "width": 9,
       "height": 3,
       "properties": {
         "metrics": [
@@ -91,22 +91,22 @@
     },
     {
       "type": "log",
-      "x": 9,
-      "y": 6,
+      "x": 15,
+      "y": 8,
       "width": 9,
       "height": 6,
       "properties": {
         "query": "SOURCE '${log_group_weblogic_ndelius}' | SOURCE '${log_group_weblogic_interface}' | SOURCE '${log_group_weblogic_spg}' | parse 'FATAL * * * - * Error Code: *' as date, timestamp, exception, user, ErrorCode\n| filter @logStream like /NDeliusLog_log/ and ErrorCode like /.*/ and @message not like /at .*\\(.*:.*\\)/ and @message not like /Caused by: /\n| stats count(*)/5 as Count by bin(5m)",
         "region": "${region}",
         "stacked": false,
-        "title": "Errors",
+        "title": "Error Rate",
         "view": "timeSeries"
       }
     },
     {
       "type": "metric",
       "x": 0,
-      "y": 0,
+      "y": 1,
       "width": 3,
       "height": 6,
       "properties": {
@@ -123,7 +123,7 @@
     {
       "type": "metric",
       "x": 0,
-      "y": 6,
+      "y": 8,
       "width": 3,
       "height": 6,
       "properties": {
@@ -133,14 +133,14 @@
         ],
         "view": "singleValue",
         "region": "${region}",
-        "title": "SPG Queue Size",
+        "title": "Queue Size",
         "period": 60
       }
     },
     {
       "type": "metric",
       "x": 3,
-      "y": 6,
+      "y": 8,
       "width": 6,
       "height": 6,
       "properties": {
@@ -153,7 +153,7 @@
         "stacked": true,
         "region": "${region}",
         "period": 60,
-        "title": "SPG Messages",
+        "title": "Message Rate",
         "legend": {
           "position": "bottom"
         },
@@ -169,9 +169,9 @@
     },
     {
       "type": "metric",
-      "x": 12,
-      "y": 12,
-      "width": 12,
+      "x": 15,
+      "y": 4,
+      "width": 9,
       "height": 3,
       "properties": {
         "metrics": [
@@ -193,6 +193,63 @@
           }
         },
         "stat": "Sum"
+      }
+    },
+    {
+      "type": "alarm",
+      "x": 9,
+      "y": 1,
+      "width": 6,
+      "height": 6,
+      "properties": {
+        "title": "Instance Status",
+        "alarms": [
+          "${alarm_ldap}",
+          "${alarm_activemq}",
+          "${alarm_weblogic_interface}",
+          "${alarm_weblogic_ndelius}",
+          "${alarm_weblogic_spg}"
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "x": 9,
+      "y": 0,
+      "width": 15,
+      "height": 1,
+      "properties": {
+        "markdown": "\n# Instance Health\n"
+      }
+    },
+    {
+      "type": "text",
+      "x": 9,
+      "y": 7,
+      "width": 15,
+      "height": 1,
+      "properties": {
+        "markdown": "\n# Application Health\n"
+      }
+    },
+    {
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 9,
+      "height": 1,
+      "properties": {
+        "markdown": "\n# User Activity\n"
+      }
+    },
+    {
+      "type": "text",
+      "x": 0,
+      "y": 7,
+      "width": 9,
+      "height": 1,
+      "properties": {
+        "markdown": "\n# SPG Activity\n"
       }
     }
   ]
