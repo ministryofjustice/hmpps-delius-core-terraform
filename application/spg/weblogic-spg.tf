@@ -40,30 +40,22 @@ module "spg" {
   tags                         = var.tags
   environment_name             = data.terraform_remote_state.vpc.outputs.environment_name
   bastion_inventory            = data.terraform_remote_state.vpc.outputs.bastion_inventory
-  project_name                 = var.project_name
   environment_identifier       = var.environment_identifier
   short_environment_identifier = var.short_environment_identifier
   short_environment_name       = var.short_environment_name
-  environment_type             = var.environment_type
   region                       = var.region
   vpc_id                       = data.terraform_remote_state.vpc.outputs.vpc_id
   vpc_account_id               = data.terraform_remote_state.vpc.outputs.vpc_account_id
-  kms_key_id                   = data.terraform_remote_state.key_profile.outputs.kms_arn_app
   public_zone_id               = data.terraform_remote_state.vpc.outputs.public_zone_id
   private_zone_id              = data.terraform_remote_state.vpc.outputs.private_zone_id
   private_domain               = data.terraform_remote_state.vpc.outputs.private_zone_name
   certificate_arn              = data.aws_acm_certificate.cert.arn
   weblogic_health_check_path   = "NDelius-war/delius/JSP/healthcheck.jsp"
   weblogic_port                = var.weblogic_domain_ports["weblogic_port"]
-  weblogic_tls_port            = var.weblogic_domain_ports["weblogic_tls_port"]
-  activemq_port                = var.weblogic_domain_ports["activemq_port"]
-  activemq_enabled             = "true"
 
-  app_bootstrap_name           = "hmpps-delius-core-bootstrap"
-  app_bootstrap_src            = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
-  app_bootstrap_version        = "master"
-  app_bootstrap_initial_role   = "delius-core"
-  app_bootstrap_secondary_role = "delius-spg"
+  app_bootstrap_src     = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
+  app_bootstrap_version = "1.0.0"
+  app_bootstrap_roles   = ["delius-core", "delius-spg"]
 
   ansible_vars = {
     cldwatch_log_group = "${var.environment_identifier}/weblogic-spg"
@@ -121,9 +113,5 @@ module "spg" {
     # Approved Premises Tracker API
     aptracker_api_errors_url = local.ansible_vars["aptracker_api_errors_url"]
   }
-  ## the following are retrieved from SSM Parameter Store
-  ## weblogic_admin_password  = "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password"
-  ## database_password        = "/${environment_name}/${project}/delius-database/db/delius_pool_password"
-  ## ldap_admin_password      = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
 }
 
