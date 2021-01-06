@@ -238,6 +238,16 @@ resource "aws_security_group_rule" "spg_instances_egress_ldap" {
   description              = "LDAP ELB out"
 }
 
+resource "aws_security_group_rule" "spg_instances_egress_efs" {
+  security_group_id        = aws_security_group.weblogic_spg_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 2049
+  to_port                  = 2049
+  source_security_group_id = aws_security_group.activemq_efs.id
+  description              = "EFS out"
+}
+
 resource "aws_security_group_rule" "spg_external_elb_egress_newtechweb" {
   security_group_id        = aws_security_group.weblogic_spg_lb.id
   type                     = "egress"

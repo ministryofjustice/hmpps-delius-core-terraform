@@ -80,9 +80,6 @@ module "spg" {
     alfresco_port        = local.ansible_vars["alfresco_port"]
     alfresco_office_host = "${local.ansible_vars["alfresco_office_host"]}.${data.aws_route53_zone.public.name}"
     alfresco_office_port = local.ansible_vars["alfresco_office_port"]
-    # SPG
-    spg_jms_url          = "failover:(ssl://amazonmq-broker-1.${data.aws_route53_zone.private.name}:61617,ssl://amazonmq-broker-2.${data.aws_route53_zone.private.name}:61617)"
-    activemq_data_folder = local.ansible_vars["activemq_data_folder"]
     # LDAP
     ldap_host          = data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb
     ldap_readonly_host = data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb
@@ -112,6 +109,11 @@ module "spg" {
     password_reset_url = data.terraform_remote_state.pwm.outputs.url
     # Approved Premises Tracker API
     aptracker_api_errors_url = local.ansible_vars["aptracker_api_errors_url"]
+
+    # SPG
+    spg_jms_url           = "failover:(ssl://amazonmq-broker-1.${data.aws_route53_zone.private.name}:61617,ssl://amazonmq-broker-2.${data.aws_route53_zone.private.name}:61617)"
+    activemq_data_folder  = local.ansible_vars["activemq_data_folder"]
+    activemq_efs_dns_name = aws_efs_file_system.efs.dns_name
   }
 }
 
