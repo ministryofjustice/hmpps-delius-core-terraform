@@ -102,13 +102,17 @@ data "terraform_remote_state" "pwm" {
   }
 }
 
+data "aws_ssm_parameter" "ami_version" {
+  name = "/versions/delius-core/ami/weblogic/${var.environment_name}"
+}
+
 data "aws_ami" "centos_wls" {
   owners      = ["895523100917"]
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["HMPPS Delius-Core Weblogic-Admin master *"]
+    values = [data.aws_ssm_parameter.ami_version.value]
   }
 
   filter {
