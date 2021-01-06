@@ -39,11 +39,9 @@ module "ndelius" {
   tags                         = var.tags
   environment_name             = data.terraform_remote_state.vpc.outputs.environment_name
   bastion_inventory            = data.terraform_remote_state.vpc.outputs.bastion_inventory
-  project_name                 = var.project_name
   environment_identifier       = var.environment_identifier
   short_environment_identifier = var.short_environment_identifier
   short_environment_name       = var.short_environment_name
-  environment_type             = var.environment_type
   region                       = var.region
   vpc_id                       = data.terraform_remote_state.vpc.outputs.vpc_id
   vpc_account_id               = data.terraform_remote_state.vpc.outputs.vpc_account_id
