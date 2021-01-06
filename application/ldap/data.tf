@@ -48,13 +48,17 @@ data "terraform_remote_state" "s3-ldap-backups" {
   }
 }
 
+data "aws_ssm_parameter" "ami_version" {
+  name = "/versions/delius-core/ami/ldap/${var.environment_name}"
+}
+
 data "aws_ami" "centos" {
   owners      = ["895523100917"]
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["HMPPS Base CentOS master *"]
+    values = [data.aws_ssm_parameter.ami_version.value]
   }
 
   filter {
