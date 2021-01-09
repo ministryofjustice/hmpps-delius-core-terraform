@@ -1,21 +1,17 @@
-var https = require("https");
-var util = require("util");
+let https = require("https");
+let util = require("util");
 
 exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, 2));
 
-    const enabled = "${enabled}";
-    const quietStart = +"${quiet_period_start_hour}", quietEnd = +"${quiet_period_end_hour}";
-
     const now = new Date(new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})).getHours();
+    const quietStart = +process.env.QUIET_PERIOD_START_HOUR, quietEnd = +process.env.QUIET_PERIOD_END_HOUR;
     const inQuietPeriod =
         quietStart <= quietEnd && (now >= quietStart && now < quietEnd) ||
         quietStart >  quietEnd && (now >= quietStart || now < quietEnd); // account for overnight periods (eg. 23:00-06:00)
 
-    if (!enabled || inQuietPeriod) {
-        console.log("Alarms disabled, dismissing notification.");
-        return;
-    }
+    console.log("Alarms enabled:", process.env.ENABLED, ". Current hour:", now);
+    if (process.env.ENABLED !== "true" || inQuietPeriod) { console.log("Dismissing notification."); return }
 
     const eventMessage = JSON.parse(event.Records[0].Sns.Message);
     let sendSlackNotification, severity, icon_emoji;
@@ -39,7 +35,7 @@ exports.handler = function(event, context) {
     let textMessage = icon_emoji + " " + (severity === "ok"? "*SUCCEEDED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Status: " + eventMessage.detail.status
-        + "\n> Environment: ${environment_name}"
+        + "\n> Environment: " + process.env.ENVIRONMENT_NAME
         + "\n> Description: *" + eventMessage.detail.jobName + " " + eventMessage.detail.status.toLowerCase() + " with message '" + eventMessage.detail.statusReason + "'*"
         + "\n <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups/log-group/$252Faws$252Fbatch$252Fjob|Cloudwatch Logs>";
 
@@ -59,7 +55,7 @@ exports.handler = function(event, context) {
           return console.log("problem with request: " + e.message);
       });
       req.write(util.format("%j", {
-          "channel": "# ${channel}",
+          "channel": "# " + process.env.SLACK_CHANNEL,
           "username": "Delius-Core Batch Notification",
           "text": textMessage,
           "icon_emoji": ":amazon:",

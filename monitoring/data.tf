@@ -76,22 +76,11 @@ data "template_file" "delius_service_health_dashboard_file" {
   }
 }
 
-data "template_file" "notify_slack_alarm_lambda_file" {
-  template = file("${path.module}/templates/lambda/notify-slack-alarm.js")
-  vars = {
-    environment_name        = var.environment_name
-    channel                 = var.environment_name == "delius-prod" ? "delius-alerts-deliuscore-production" : "delius-alerts-deliuscore-nonprod"
-    enabled                 = var.delius_alarms_config.enabled
-    quiet_period_start_hour = var.delius_alarms_config.quiet_hours[0]
-    quiet_period_end_hour   = var.delius_alarms_config.quiet_hours[1]
-  }
-}
-
 data "archive_file" "alarm_lambda_handler_zip" {
   type        = "zip"
   output_path = "${path.module}/files/${local.lambda_name_alarm}.zip"
   source {
-    content  = data.template_file.notify_slack_alarm_lambda_file.rendered
+    content  = file("${path.module}/templates/lambda/notify-slack-alarm.js")
     filename = "notify-slack-alarm.js"
   }
 }
@@ -100,23 +89,11 @@ data "aws_iam_role" "lambda_exec_role" {
   name = "lambda_exec_role"
 }
 
-data "template_file" "notify_slack_batch_lambda_file" {
-  template = file("${path.module}/templates/lambda/notify-slack-batch.js")
-  vars = {
-    environment_name        = var.environment_name
-    channel                 = var.environment_name == "delius-prod" ? "delius-alerts-deliuscore-production" : "delius-alerts-deliuscore-nonprod"
-    enabled                 = var.delius_alarms_config.enabled
-    quiet_period_start_hour = var.delius_alarms_config.quiet_hours[0]
-    quiet_period_end_hour   = var.delius_alarms_config.quiet_hours[1]
-    lambda_name             = local.lambda_name_batch
-  }
-}
-
 data "archive_file" "batch_lambda_handler_zip" {
   type        = "zip"
   output_path = "${path.module}/files/${local.lambda_name_batch}.zip"
   source {
-    content  = data.template_file.notify_slack_batch_lambda_file.rendered
+    content  = file("${path.module}/templates/lambda/notify-slack-batch.js")
     filename = "notify-slack-batch.js"
   }
 }
