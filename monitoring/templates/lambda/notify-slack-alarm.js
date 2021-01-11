@@ -4,16 +4,14 @@ let util = require("util");
 exports.handler = function (event, context) {
     console.log(JSON.stringify(event, null, 2));
 
-    const enabled = "${enabled}";
-    const quietStart = +"${quiet_period_start_hour}", quietEnd = +"${quiet_period_end_hour}";
-
     const now = new Date(new Date().toLocaleString([], {timeZone: "Europe/London"})).getHours();
+    const quietStart = +process.env.QUIET_PERIOD_START_HOUR, quietEnd = +process.env.QUIET_PERIOD_END_HOUR;
     const inQuietPeriod =
         quietStart <= quietEnd && (now >= quietStart && now < quietEnd) ||
         quietStart >  quietEnd && (now >= quietStart || now < quietEnd); // account for overnight periods (eg. 23:00-06:00)
 
-    console.log("Alarms enabled:", enabled, ". Current hour:", now);
-    if (!enabled || inQuietPeriod) { console.log("Dismissing notification."); return }
+    console.log("Alarms enabled:", process.env.ENABLED, ". Current hour:", now);
+    if (process.env.ENABLED !== "true" || inQuietPeriod) { console.log("Dismissing notification."); return }
 
     const eventMessage = JSON.parse(event.Records[0].Sns.Message);
     let severity = eventMessage.AlarmName.split("--")[1];    // could we use tags for this??
@@ -33,7 +31,7 @@ exports.handler = function (event, context) {
 
     let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
-        + "\n> Environment: ${environment_name}"
+        + "\n> Environment: " + process.env.ENVIRONMENT_NAME
         + "\n> Description: *" + eventMessage.AlarmDescription + "*"
         + "\n<https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/" + eventMessage.AlarmName + "|View Details>";
     // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
@@ -51,7 +49,7 @@ exports.handler = function (event, context) {
         return console.log("problem with request: " + e.message);
     });
     req.write(util.format("%j", {
-        "channel": "# ${channel}",
+        "channel": "# " + process.env.SLACK_CHANNEL,
         "username": "Delius-Core Alarm Notification",
         "text": textMessage,
         "icon_emoji": ":amazon:",
