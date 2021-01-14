@@ -39,15 +39,12 @@ module "ndelius" {
   tags                         = var.tags
   environment_name             = data.terraform_remote_state.vpc.outputs.environment_name
   bastion_inventory            = data.terraform_remote_state.vpc.outputs.bastion_inventory
-  project_name                 = var.project_name
   environment_identifier       = var.environment_identifier
   short_environment_identifier = var.short_environment_identifier
   short_environment_name       = var.short_environment_name
-  environment_type             = var.environment_type
   region                       = var.region
   vpc_id                       = data.terraform_remote_state.vpc.outputs.vpc_id
   vpc_account_id               = data.terraform_remote_state.vpc.outputs.vpc_account_id
-  kms_key_id                   = data.terraform_remote_state.key_profile.outputs.kms_arn_app
   public_zone_id               = data.terraform_remote_state.vpc.outputs.public_zone_id
   private_zone_id              = data.terraform_remote_state.vpc.outputs.private_zone_id
   private_domain               = data.terraform_remote_state.vpc.outputs.private_zone_name
@@ -63,14 +60,10 @@ module "ndelius" {
 
   weblogic_health_check_path = "NDelius-war/delius/JSP/healthcheck.jsp"
   weblogic_port              = var.weblogic_domain_ports["weblogic_port"]
-  weblogic_tls_port          = var.weblogic_domain_ports["weblogic_tls_port"]
-  activemq_port              = var.weblogic_domain_ports["activemq_port"]
-  activemq_enabled           = "false"
 
-  app_bootstrap_name         = "hmpps-delius-core-bootstrap"
-  app_bootstrap_src          = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
-  app_bootstrap_version      = "1.0.0"
-  app_bootstrap_initial_role = "delius-core"
+  app_bootstrap_src     = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
+  app_bootstrap_version = "1.1.1"
+  app_bootstrap_roles   = ["delius-core"]
 
   ansible_vars = {
     cldwatch_log_group = "${var.environment_identifier}/weblogic-ndelius"
@@ -95,9 +88,6 @@ module "ndelius" {
     alfresco_port        = local.ansible_vars["alfresco_port"]
     alfresco_office_host = "${local.ansible_vars["alfresco_office_host"]}.${data.aws_route53_zone.public.name}"
     alfresco_office_port = local.ansible_vars["alfresco_office_port"]
-    # SPG
-    spg_jms_url          = "failover:(ssl://amazonmq-broker-1.${data.aws_route53_zone.private.name}:61617,ssl://amazonmq-broker-2.${data.aws_route53_zone.private.name}:61617)"
-    activemq_data_folder = local.ansible_vars["activemq_data_folder"]
     # LDAP
     ldap_host          = data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb
     ldap_readonly_host = data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb
@@ -128,9 +118,5 @@ module "ndelius" {
     # Approved Premises Tracker API
     aptracker_api_errors_url = local.ansible_vars["aptracker_api_errors_url"]
   }
-  ## the following are retrieved from SSM Parameter Store
-  ## weblogic_admin_password  = "/${environment_name}/delius-core/weblogic/${app_name}-domain/weblogic_admin_password"
-  ## database_password        = "/${environment_name}/${project}/delius-database/db/delius_pool_password"
-  ## ldap_admin_password      = "/${environment_name}/delius-core/apacheds/apacheds/ldap_admin_password"
 }
 

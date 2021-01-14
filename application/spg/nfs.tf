@@ -1,4 +1,8 @@
 # Shared NFS for the ActiveMQ persistence store
+#
+# *DEPRECATED* - See efs.tf.
+# Note: This NFS module is still in use until the data has been migrated to EFS in all environments.
+#
 
 #Overide autostop tag
 locals {

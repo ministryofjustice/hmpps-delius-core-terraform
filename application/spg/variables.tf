@@ -57,6 +57,16 @@ variable "ansible_vars" {
   type        = map(string)
 }
 
+variable "default_activemq_config" {
+  description = "Default ActiveMQ configuration"
+  type        = map(string)
+}
+
+variable "activemq_config" {
+  description = "ActiveMQ configuration"
+  type        = map(string)
+}
+
 variable "ldap_ports" {
   type        = map(string)
   description = "Map of the ports that the ldap ports"
