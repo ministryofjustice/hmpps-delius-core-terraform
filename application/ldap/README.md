@@ -8,3 +8,7 @@ Delius LDAP service.
 * `efs.tf` - Shared EFS filesystem for storing data
 * `elb.tf` - Internal classic load balancer
 * `dns.tf` - Internal Route53 DNS entry for the load balancer
+
+## Architecture
+
+![LDAP](delius-core-ldap.svg)
