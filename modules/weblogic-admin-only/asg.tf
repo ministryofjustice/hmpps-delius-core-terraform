@@ -26,7 +26,7 @@ resource "aws_launch_configuration" "wls_launch_cfg" {
 
   root_block_device {
     volume_type = "gp2"
-    volume_size = 50
+    volume_size = 32
   }
 
   lifecycle {
