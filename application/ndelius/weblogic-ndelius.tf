@@ -62,7 +62,7 @@ module "ndelius" {
   weblogic_port              = var.weblogic_domain_ports["weblogic_port"]
 
   app_bootstrap_src     = "https://github.com/ministryofjustice/hmpps-delius-core-bootstrap"
-  app_bootstrap_version = "1.1.1"
+  app_bootstrap_version = "1.1.2"
   app_bootstrap_roles   = ["delius-core"]
 
   ansible_vars = {
