@@ -53,6 +53,16 @@ variable "security_groups" {
   type        = list(string)
 }
 
+variable "deployment_controller" {
+  description = "Type of deployment controller. Valid values are CODE_DEPLOY, ECS, EXTERNAL. Defaults to ECS."
+  default     = "ECS"
+}
+
+variable "target_group_count" {
+  description = "Number of target groups to create. Set to 2 to enable blue/green deployment. Defaults to 1."
+  default     = 1
+}
+
 variable "lb_listener_arn" {
   description = "ARN of the listener to attach service tasks to for load balancing"
   default     = ""

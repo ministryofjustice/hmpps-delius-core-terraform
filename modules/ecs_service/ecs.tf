@@ -7,7 +7,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   memory                   = var.required_memory
   cpu                      = var.required_cpu
   requires_compatibilities = ["EC2"]
-  tags = merge(var.tags, {"Name" = "${local.name}-task-definition"})
+  tags                     = merge(var.tags, { "Name" = "${local.name}-task-definition" })
 }
 
 resource "aws_ecs_service" "service" {
@@ -15,10 +15,15 @@ resource "aws_ecs_service" "service" {
   cluster         = var.ecs_cluster["cluster_id"]
   task_definition = aws_ecs_task_definition.task_definition.arn
 
+  deployment_controller {
+    type = var.deployment_controller
+  }
+
   health_check_grace_period_seconds = var.health_check_grace_period_seconds
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.target_group.arn
+    # Register this ECS service with the main load balancer
+    target_group_arn = aws_lb_target_group.target_group.0.arn
     container_name   = var.service_name
     container_port   = var.service_port
   }

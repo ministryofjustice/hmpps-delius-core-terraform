@@ -20,7 +20,7 @@ resource "aws_lb_listener" "https_listener" {
   certificate_arn   = data.aws_acm_certificate.govuk_cert.arn
 
   default_action {
-    target_group_arn = module.ecs.target_group["arn"]
+    target_group_arn = module.ecs.primary_target_group["arn"]
     type             = "forward"
   }
 }
