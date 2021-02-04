@@ -25,7 +25,7 @@ module "ecs" {
   container_definition = jsonencode([{
     essential    = true
     name         = local.app_name
-    image        = "${local.app_config["image_url"]}:${local.app_config["image_version"]}"
+    image        = "${local.app_config["image_url"]}:${aws_ssm_parameter.image_version.value}"
     cpu          = tonumber(local.app_config["cpu"])
     memory       = tonumber(local.app_config["memory"])
     portMappings = [{ hostPort = 8080, containerPort = 8080 }]
