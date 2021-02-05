@@ -1,5 +1,6 @@
 resource "aws_lb_target_group" "target_group" {
-  name     = "${local.short_name}-tg"
+  count    = var.target_group_count
+  name     = "${local.short_name}-tg${var.target_group_count == 1 ? "" : count.index + 1}"
   vpc_id   = var.vpc_id
   protocol = "HTTP"
   port     = var.service_port
@@ -7,7 +8,7 @@ resource "aws_lb_target_group" "target_group" {
   # Targets will be ECS tasks running in awsvpc mode so target_type needs to be ip
   target_type          = "ip"
   deregistration_delay = var.deregistration_delay
-  tags = merge(var.tags, { "Name" = "${local.name}-tg" })
+  tags                 = merge(var.tags, { "Name" = "${local.name}-tg${var.target_group_count == 1 ? "" : count.index + 1}" })
 
   health_check {
     protocol            = "HTTP"
@@ -41,7 +42,7 @@ resource "aws_lb_listener_rule" "forward_rule" {
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.target_group.arn
+    target_group_arn = aws_lb_target_group.target_group[0].arn
   }
 }
 

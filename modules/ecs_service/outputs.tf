@@ -5,12 +5,20 @@ output "service" {
   }
 }
 
-output "target_group" {
+output "primary_target_group" {
   value = {
-    id   = aws_lb_target_group.target_group.id
-    arn  = aws_lb_target_group.target_group.arn
-    name = aws_lb_target_group.target_group.name
+    id   = aws_lb_target_group.target_group.0.id
+    arn  = aws_lb_target_group.target_group.0.arn
+    name = aws_lb_target_group.target_group.0.name
   }
+}
+
+output "target_groups" {
+  value = [for target_group in aws_lb_target_group.target_group : {
+    id   = target_group.id
+    arn  = target_group.arn
+    name = target_group.name
+  }]
 }
 
 output "task_role" {
