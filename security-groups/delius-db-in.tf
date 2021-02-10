@@ -176,6 +176,17 @@ resource "aws_security_group_rule" "gdpr_api_db_in" {
   description              = "Delius GDPR API In"
 }
 
+# Allow Delius API in
+resource "aws_security_group_rule" "delius_api_db_in" {
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = aws_security_group.delius_api_instances.id
+  description              = "Delius API In"
+}
+
 # Allow CI (Jenkins/AWS CodePipeline) access to DB
 resource "aws_security_group_rule" "eng_ci_db_in_1521" {
   count                    = var.ci_db_ingress_1521 ? 1 : 0
