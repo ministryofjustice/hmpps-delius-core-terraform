@@ -127,6 +127,11 @@ variable "deregistration_delay" {
   default     = 60
 }
 
+variable "ignore_task_definition_changes" {
+  description = "Whether to ignore changes to the registered task definition for the service. Useful for externally-managed deployments."
+  default     = false
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)

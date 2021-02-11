@@ -22,10 +22,11 @@ module "ecs" {
   target_cpu_usage  = local.app_config["target_cpu"]
   health_check_path = "/health"
 
+  ignore_task_definition_changes = true # Managed by Circle CI
   container_definition = jsonencode([{
     essential    = true
     name         = local.app_name
-    image        = "${local.app_config["image_url"]}:${aws_ssm_parameter.image_version.value}"
+    image        = "${local.app_config["image_url"]}:latest"
     cpu          = tonumber(local.app_config["cpu"])
     memory       = tonumber(local.app_config["memory"])
     portMappings = [{ hostPort = 8080, containerPort = 8080 }]

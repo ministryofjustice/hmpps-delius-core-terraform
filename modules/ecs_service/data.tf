@@ -40,3 +40,8 @@ data "template_file" "ecs_exec_policy_template" {
   }
 }
 
+data "external" "current_task_definition" {
+  # Fetch the currently assigned task definition, this is used when var.ignore_task_definition_changes is true.
+  # We use an external data source (instead of ignore_changes) for this, as a workaround for: https://github.com/hashicorp/terraform/issues/24188
+  program = ["sh", "-c", "aws ecs describe-services --cluster '${var.ecs_cluster["name"]}' --services '${local.name}-service' --region '${var.region}' --query '{arn: services[0].taskDefinition}' || echo {\"arn\":\"\"}"]
+}
