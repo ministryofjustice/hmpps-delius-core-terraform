@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "task_definition" {
 resource "aws_ecs_service" "service" {
   name            = "${local.name}-service"
   cluster         = var.ecs_cluster["cluster_id"]
-  task_definition = var.ignore_task_definition_changes ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
+  task_definition = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
 
   deployment_controller {
     type = var.deployment_controller
