@@ -17,8 +17,8 @@ module "ecs" {
 
   required_cpu      = local.app_config["cpu"]
   required_memory   = local.app_config["memory"]
-  min_capacity      = local.app_config["min_capacity"]
-  max_capacity      = local.app_config["max_capacity"]
+  min_capacity      = length(keys(var.delius_api_environment)) == 0 ? 0 : local.app_config["min_capacity"]
+  max_capacity      = length(keys(var.delius_api_environment)) == 0 ? 0 : local.app_config["max_capacity"]
   target_cpu_usage  = local.app_config["target_cpu"]
   health_check_path = "/health"
 
