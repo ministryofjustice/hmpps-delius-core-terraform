@@ -18,6 +18,17 @@ variable "project_name" {
   description = "Project name to be used when looking up SSM parameters - eg. delius-core"
 }
 
+variable "delius_core_public_zone" {
+  description = "Whether to use the 'strategic' domain (Terraform-managed), or the 'legacy' domain (Ansible-managed) for user-facing services in this environment eg. NDelius, PWM"
+  default     = "strategic"
+  # NOTE:
+  # This is only in place to support transition from the old public zone (dsd.io) to the strategic public zone (gov.uk).
+  # It allows us to configure which zone to use for public-facing services (eg. NDelius, PWM) on a per-environment
+  # basis. Currently only Prod and Pre-Prod should use the old public zone, once they are transitioned over we should
+  # remove this. Additionally, there are a few services that have DNS records in the public zone that should be moved
+  # over into the private zone before we complete the transition eg. delius-db-1, management.
+}
+
 variable "default_delius_api_config" {
   description = "Application-specific configuration items"
   type        = map(string)
