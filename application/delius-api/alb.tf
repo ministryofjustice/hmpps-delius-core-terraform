@@ -17,7 +17,7 @@ resource "aws_lb_listener" "https_listener" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = data.aws_acm_certificate.govuk_cert.arn
+  certificate_arn   = var.delius_core_public_zone == "strategic" ? data.aws_acm_certificate.strategic_cert.arn : data.aws_acm_certificate.legacy_cert.arn
 
   default_action {
     target_group_arn = module.ecs.primary_target_group["arn"]
@@ -42,7 +42,7 @@ resource "aws_lb_listener" "http_listener" {
 
 # DNS
 resource "aws_route53_record" "public_dns" {
-  zone_id = data.terraform_remote_state.vpc.outputs.strategic_public_zone_id
+  zone_id = var.delius_core_public_zone == "strategic" ? data.terraform_remote_state.vpc.outputs.strategic_public_zone_id : data.terraform_remote_state.vpc.outputs.public_zone_id
   name    = local.app_name
   type    = "CNAME"
   ttl     = 300
