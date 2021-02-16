@@ -22,7 +22,7 @@ resource "aws_security_group_rule" "access_to_delius_api_lb" {
   protocol          = "tcp"
   from_port         = each.value
   to_port           = each.value
-  cidr_blocks       = local.user_access_cidr_blocks
+  cidr_blocks       = concat(local.bastion_public_ip, var.internal_moj_access_cidr_blocks)
   description       = "In from allowed IP ranges on port ${each.value}"
 }
 

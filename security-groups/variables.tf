@@ -43,6 +43,11 @@ variable "vpc_supernet" {
   description = "VPC CIDR"
 }
 
+variable "internal_moj_access_cidr_blocks" {
+  description = "CIDRs for access via internal MOJ networks / VPNs"
+  type        = list(string)
+}
+
 variable "user_access_cidr_blocks" {
   description = "CIDRS for access via public/user network"
   type        = list(string)
