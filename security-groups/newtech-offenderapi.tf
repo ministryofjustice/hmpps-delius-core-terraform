@@ -16,6 +16,16 @@ resource "aws_security_group" "newtech_offenderapi_out" {
   }
 }
 
+resource "aws_security_group_rule" "newtech_offenderapi_delius_api" {
+  security_group_id        = aws_security_group.newtech_offenderapi_out.id
+  source_security_group_id = aws_security_group.delius_api_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  description              = "New Tech Offender API Egress to Delius API"
+}
+
 resource "aws_security_group_rule" "newtech_offenderapi_db" {
   security_group_id        = aws_security_group.newtech_offenderapi_out.id
   source_security_group_id = aws_security_group.delius_db_in.id

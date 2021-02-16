@@ -22,7 +22,7 @@ resource "aws_security_group_rule" "access_to_delius_api_lb" {
   protocol          = "tcp"
   from_port         = each.value
   to_port           = each.value
-  cidr_blocks       = local.user_access_cidr_blocks
+  cidr_blocks       = concat(local.bastion_public_ip, var.internal_moj_access_cidr_blocks)
   description       = "In from allowed IP ranges on port ${each.value}"
 }
 
@@ -61,6 +61,16 @@ resource "aws_security_group_rule" "delius_api_instances_from_lb" {
   to_port                  = 8080
   source_security_group_id = aws_security_group.delius_api_lb.id
   description              = "In from Delius API Load Balancer"
+}
+
+resource "aws_security_group_rule" "delius_api_instances_from_community_api" {
+  security_group_id        = aws_security_group.delius_api_instances.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.newtech_offenderapi_out.id
+  description              = "In from Community API"
 }
 
 resource "aws_security_group_rule" "delius_api_instances_to_db" {
