@@ -6,7 +6,7 @@ output "service" {
 }
 
 output "primary_target_group" {
-  value = {
+  value = length(aws_lb_target_group.target_group) == 0 ? {} : {
     id   = aws_lb_target_group.target_group.0.id
     arn  = aws_lb_target_group.target_group.0.arn
     name = aws_lb_target_group.target_group.0.name

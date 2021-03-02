@@ -19,13 +19,16 @@ resource "aws_ecs_service" "service" {
     type = var.deployment_controller
   }
 
-  health_check_grace_period_seconds = var.health_check_grace_period_seconds
+  health_check_grace_period_seconds = var.target_group_count > 0 ? var.health_check_grace_period_seconds : null
 
-  load_balancer {
-    # Register this ECS service with the main load balancer
-    target_group_arn = aws_lb_target_group.target_group.0.arn
-    container_name   = var.service_name
-    container_port   = var.service_port
+  dynamic "load_balancer" {
+    for_each = toset(var.target_group_count > 0 ? [aws_lb_target_group.target_group.0.arn] : [])
+    content {
+      # Register this ECS service with the primary load balancer
+      target_group_arn = load_balancer.value
+      container_name   = var.service_name
+      container_port   = var.service_port
+    }
   }
 
   service_registries {
