@@ -23,8 +23,8 @@ module "ecs" {
 
   required_cpu     = local.app_config["cpu"]
   required_memory  = local.app_config["memory"]
-  min_capacity     = local.app_config["enabled"] ? local.app_config["min_capacity"] : 0
-  max_capacity     = local.app_config["enabled"] ? local.app_config["max_capacity"] : 0
+  min_capacity     = local.app_config["min_capacity"]
+  max_capacity     = local.app_config["max_capacity"]
   target_cpu_usage = local.app_config["target_cpu"]
 
   ignore_task_definition_changes = true # Deployment managed by CircleCI
@@ -39,7 +39,7 @@ module "ecs" {
     portMappings = [{ hostPort = 8080, containerPort = 8080 }]
     environment  = [for key, value in local.environment : { name = key, value = value }]
     healthCheck = {
-      command = ["CMD", "curl --fail http://localhost:8080/healthcheck || exit 1"]
+      command = ["CMD-SHELL", "curl --fail http://localhost:8080/healthcheck || exit 1"]
     },
     logConfiguration = {
       logDriver = "awslogs"
