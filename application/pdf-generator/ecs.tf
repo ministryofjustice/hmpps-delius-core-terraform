@@ -39,7 +39,7 @@ module "ecs" {
     portMappings = [{ hostPort = 8080, containerPort = 8080 }]
     environment  = [for key, value in local.environment : { name = key, value = value }]
     healthCheck = {
-      command = ["CMD", "curl -s http://localhost:8080/healthcheck || exit 1"]
+      command = ["CMD", "curl --fail http://localhost:8080/healthcheck || exit 1"]
     },
     logConfiguration = {
       logDriver = "awslogs"
