@@ -15,14 +15,14 @@ output "sg_delius_api_lb_id" {
   value = aws_security_group.delius_api_lb.id
 }
 
-resource "aws_security_group_rule" "access_to_delius_api_lb" {
+resource "aws_security_group_rule" "delius_api_lb_from_internal_users" {
   for_each          = toset(["80", "443"])
   security_group_id = aws_security_group.delius_api_lb.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = each.value
   to_port           = each.value
-  cidr_blocks       = concat(local.bastion_public_ip, var.internal_moj_access_cidr_blocks)
+  cidr_blocks       = concat(local.bastion_public_ip, var.internal_moj_access_cidr_blocks, local.natgateway_public_ips_cidr_blocks)
   description       = "In from allowed IP ranges on port ${each.value}"
 }
 
