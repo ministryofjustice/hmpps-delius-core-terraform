@@ -38,7 +38,3 @@ output "ami_spg_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "newtech_webfrontend_target_group_arn" {
-  value = module.spg.newtech_webfrontend_targetgroup_arn
-}
-

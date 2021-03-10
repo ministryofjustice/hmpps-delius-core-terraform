@@ -30,10 +30,6 @@ output "ami_ndelius_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "newtech_webfrontend_target_group_arn" {
-  value = module.ndelius.newtech_webfrontend_targetgroup_arn
-}
-
 output "lb_listener_arn" {
   value = module.ndelius.lb_listener_arn
 }
