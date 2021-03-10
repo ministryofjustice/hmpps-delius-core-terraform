@@ -13,11 +13,11 @@ output "sg_pdf_generator_instances_id" {
 }
 
 resource "aws_security_group_rule" "pdf_generator_instances_from_new_tech" {
-  security_group_id        = aws_security_group.delius_api_instances.id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 8080
   to_port                  = 8080
-  source_security_group_id = aws_security_group.newtech_web.id
-  description              = "In from New Tech UI"
+  security_group_id        = aws_security_group.pdf_generator_instances.id
+  source_security_group_id = aws_security_group.new_tech_instances.id
+  description              = "In from New Tech Web Service"
 }
