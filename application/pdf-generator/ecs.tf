@@ -36,10 +36,10 @@ module "ecs" {
     image        = local.app_config["image_url"]
     cpu          = tonumber(local.app_config["cpu"])
     memory       = tonumber(local.app_config["memory"])
-    portMappings = [{ hostPort = 8080, containerPort = 8080 }]
+    portMappings = [{ containerPort = 8080 }]
     environment  = [for key, value in local.environment : { name = key, value = value }]
     healthCheck = {
-      command = ["CMD-SHELL", "curl --fail http://localhost:8080/healthcheck || exit 1"]
+      command = ["CMD", "health=$(curl -sf http://localhost:8080/healthcheck || exit 1) && echo $health | jq -e '.status == \"OK\"'"]
     },
     logConfiguration = {
       logDriver = "awslogs"
