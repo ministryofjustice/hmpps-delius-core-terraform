@@ -1,10 +1,10 @@
 # Load balancer
 resource "aws_lb" "alb" {
-  name            = "${var.short_environment_name}-${local.short_name}-alb"
+  name            = "${var.short_environment_name}-${local.app_name}-alb"
   internal        = false
   security_groups = local.security_groups.load_balancer
   subnets         = local.subnets.public
-  tags            = merge(var.tags, { "Name" = "${var.short_environment_name}-${local.short_name}-alb" })
+  tags            = merge(var.tags, { "Name" = "${var.short_environment_name}-${local.app_name}-alb" })
 
   lifecycle {
     create_before_destroy = true

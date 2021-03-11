@@ -1,6 +1,5 @@
 locals {
   app_name   = "delius-api"
-  short_name = "api"
   app_config = merge(var.default_delius_api_config, var.delius_api_config)
   environment = merge(var.delius_api_environment, {
     SPRING_DATASOURCE_URL = data.terraform_remote_state.database.outputs.jdbc_failover_url
