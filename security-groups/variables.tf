@@ -91,3 +91,13 @@ variable "ci_db_ingress_1521" {
   default     = false
 }
 
+variable "default_community_api_ingress" {
+  description = "Common IP ranges to add to the Community API ingress rule"
+  default     = []
+}
+
+variable "community_api_ingress" {
+  description = "Environment-specific IP ranges to add to the Community API ingress rule"
+  default     = []
+}
+

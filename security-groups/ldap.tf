@@ -131,8 +131,8 @@ resource "aws_security_group_rule" "ldap_lb_newtech_ingress" {
   protocol                 = "tcp"
   from_port                = var.ldap_ports["ldap"]
   to_port                  = var.ldap_ports["ldap"]
-  source_security_group_id = aws_security_group.newtech_offenderapi_out.id
-  description              = "New Tech Offender API In"
+  source_security_group_id = aws_security_group.community_api_instances.id
+  description              = "Community API In"
 }
 
 ################################################################################

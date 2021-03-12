@@ -161,8 +161,8 @@ resource "aws_security_group_rule" "newtech_offender_api_in" {
   protocol                 = "tcp"
   from_port                = "1521"
   to_port                  = "1521"
-  source_security_group_id = aws_security_group.newtech_offenderapi_out.id
-  description              = "New Tech Offender API In"
+  source_security_group_id = aws_security_group.community_api_instances.id
+  description              = "Community API In"
 }
 
 # Allow Delius GDPR API in
