@@ -29,20 +29,6 @@ variable "ldap_ports" {
   description = "Map of the ports that the ldap ports"
 }
 
-variable "egress_80" {
-  description = "Enable sg rule for egress to port 80"
-  default     = false
-}
-
-variable "egress_443" {
-  description = "Enable sg rule for egress to port 433"
-  default     = false
-}
-
-variable "vpc_supernet" {
-  description = "VPC CIDR"
-}
-
 variable "internal_moj_access_cidr_blocks" {
   description = "CIDRs for access via internal MOJ networks / VPNs"
   type        = list(string)
