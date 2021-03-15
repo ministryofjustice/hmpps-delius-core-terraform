@@ -12,8 +12,8 @@ locals {
 resource "aws_lb" "alb" {
   name            = "${var.short_environment_name}-${local.short_name}-alb"
   internal        = false
-  security_groups = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_lb_id]
   subnets         = local.subnets.public
+  security_groups = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_lb_id]
   tags            = merge(var.tags, { Name = "${var.short_environment_name}-${local.short_name}-alb" })
 
   lifecycle {
@@ -22,11 +22,15 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb" "public_alb" {
-  name            = "${var.short_environment_name}-${local.short_name}-pub-alb"
-  internal        = false
-  security_groups = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_public_lb_id]
-  subnets         = local.subnets.public
-  tags            = merge(var.tags, { Name = "${var.short_environment_name}-${local.short_name}-pub-alb" })
+  name     = "${var.short_environment_name}-${local.short_name}-pub-alb"
+  internal = false
+  subnets  = local.subnets.public
+  security_groups = [ # Only attach the public security group if "enable_public_lb" is set to true
+    local.app_config["enable_public_lb"] ?
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_public_lb_id : # Open to the world
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_lb_id          # Restricted by IP
+  ]
+  tags = merge(var.tags, { Name = "${var.short_environment_name}-${local.short_name}-pub-alb" })
 
   lifecycle {
     create_before_destroy = true
