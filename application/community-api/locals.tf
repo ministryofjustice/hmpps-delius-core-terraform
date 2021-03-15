@@ -16,7 +16,7 @@ locals {
     SPRING_LDAP_USERNAME   = data.terraform_remote_state.ldap.outputs.ldap_bind_user
     DELIUS_LDAP_USERS_BASE = data.terraform_remote_state.ldap.outputs.ldap_base_users
     ALFRESCO_BASEURL       = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}/alfresco/s/noms-spg"
-    DELIUS_BASEURL         = "https://${data.terraform_remote_state.interface.outputs.private_fqdn_interface_wls_external}/api"
+    DELIUS_BASEURL         = "https://${data.terraform_remote_state.interface.outputs.private_fqdn_interface_wls_internal_alb}/api"
     # ... Add any other environment variables here that should be pulled from Terraform data sources
   })
   certificate_arn = var.delius_core_public_zone == "strategic" ? data.aws_acm_certificate.strategic_cert.arn : data.aws_acm_certificate.legacy_cert.arn
