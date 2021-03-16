@@ -21,7 +21,7 @@ variable "project_name" {
 variable "gdpr_config" {
   description = "Application-specific configuration items"
   type        = map(string)
-  default     = {
+  default = {
     # Defaults are below. Keeping these as separate variables allows us to override specific config keys
     # without having to rewrite the entire map, by using the merge() function. See locals.tf.
   }
@@ -30,22 +30,10 @@ variable "gdpr_config" {
 variable "default_gdpr_config" {
   description = "Default values to be overridden by gdpr_config. This should match the intended config for production."
   type        = map(string)
-  default     = {
+  default = {
     # See https://github.com/ministryofjustice/hmpps-env-configs/blob/master/common/common.tfvars
     #     https://github.com/ministryofjustice/hmpps-env-configs/blob/master/common/common-prod.tfvars
   }
-}
-
-variable "ansible_vars" {
-  description = "Ansible config - used for pulling the Alfresco host"
-  type        = map(string)
-  default     = {}
-}
-
-variable "default_ansible_vars" {
-  description = "Default values to be overridden by ansible_vars."
-  type        = map(string)
-  default     = {}
 }
 
 variable "tags" {

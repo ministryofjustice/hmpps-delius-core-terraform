@@ -25,9 +25,9 @@ resource "aws_db_instance" "primary" {
   identifier     = "${var.environment_name}-${local.app_name}-primary-db"
   engine         = "postgres"
   engine_version = "11.5"
-  instance_class = local.gdpr_config["db_instance_class"]
+  instance_class = local.app_config["db_instance_class"]
 
-  allocated_storage = local.gdpr_config["db_storage"]
+  allocated_storage = local.app_config["db_storage"]
   storage_encrypted = true
 
   name     = "gdpr"
@@ -47,9 +47,9 @@ resource "aws_db_instance" "primary" {
   auto_minor_version_upgrade  = true
   apply_immediately           = var.environment_name != "delius-prod"
 
-  maintenance_window        = local.gdpr_config["db_maintenance_window"]
-  backup_retention_period   = local.gdpr_config["db_backup_retention_period"]
-  backup_window             = local.gdpr_config["db_backup_window"]
+  maintenance_window        = local.app_config["db_maintenance_window"]
+  backup_retention_period   = local.app_config["db_backup_retention_period"]
+  backup_window             = local.app_config["db_backup_window"]
   final_snapshot_identifier = "${var.environment_name}-final-snapshot"
 
   tags = merge(var.tags, { Name = "${local.app_name}-primary-db" })
