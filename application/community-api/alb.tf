@@ -10,9 +10,13 @@ locals {
 
 # Load balancers
 resource "aws_lb" "alb" {
-  name            = "${var.short_environment_name}-${local.short_name}-alb"
-  internal        = false
-  subnets         = local.subnets.public
+  name     = "${var.short_environment_name}-${local.short_name}-alb"
+  internal = false
+  subnets = [
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3
+  ]
   security_groups = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_lb_id]
   tags            = merge(var.tags, { Name = "${var.short_environment_name}-${local.short_name}-alb" })
 
@@ -24,7 +28,11 @@ resource "aws_lb" "alb" {
 resource "aws_lb" "public_alb" {
   name     = "${var.short_environment_name}-${local.short_name}-pub-alb"
   internal = false
-  subnets  = local.subnets.public
+  subnets = [
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3
+  ]
   security_groups = [ # Only attach the public security group if "enable_public_lb" is set to true
     local.app_config["enable_public_lb"] ?
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_public_lb_id : # Open to the world
