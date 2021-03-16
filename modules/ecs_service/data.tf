@@ -1,47 +1,25 @@
-data "aws_caller_identity" "current" {
-}
+data "aws_caller_identity" "current" {}
 
-data "template_file" "ecs_assume_role_policy_template" {
-  template = file(
-    "${path.module}/templates/iam/ecs_assume_role_policy.json.tpl",
-  )
-  vars = {}
-}
-
-data "template_file" "ssm_policy_statement_template" {
-  template = <<EOF
-    {
-      "Effect": "Allow",
-      "Action": ["ssm:GetParameter","ssm:GetParameters"],
-      "Resource": $${allowed_ssm_parameters}
-    },
-    {
-      "Effect": "Allow",
-      "Action": ["kms:Decrypt"],
-      "Resource": ["arn:aws:kms:$${region}:$${aws_account_id}:alias/aws/ssm"]
-    },
-EOF
-
-
-  vars = {
-    aws_account_id         = data.aws_caller_identity.current.account_id
-    region                 = var.region
-    allowed_ssm_parameters = jsonencode(var.allowed_ssm_parameters)
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "vpc/terraform.tfstate"
+    region = var.region
   }
 }
 
-data "template_file" "ecs_exec_policy_template" {
-  template = file("${path.module}/templates/iam/ecs_exec_policy.json.tpl")
-
-  vars = {
-    aws_account_id = data.aws_caller_identity.current.account_id
-    region         = var.region
-    ssm_statement  = length(var.allowed_ssm_parameters) == 0 ? "" : data.template_file.ssm_policy_statement_template.rendered
+data "terraform_remote_state" "ecs_cluster" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "ecs-cluster/terraform.tfstate"
+    region = var.region
   }
 }
 
 data "external" "current_task_definition" {
   # Fetch the currently assigned task definition, this is used when var.ignore_task_definition_changes is true.
   # We use an external data source (instead of ignore_changes) for this, as a workaround for: https://github.com/hashicorp/terraform/issues/24188
-  program = ["sh", "-c", "aws ecs describe-services --cluster '${var.ecs_cluster["name"]}' --services '${local.name}-service' --region '${var.region}' --query '{arn: services[0].taskDefinition}' || echo {\"arn\":\"\"}"]
+  program = ["sh", "-c", "aws ecs describe-services --cluster '${data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_name}' --services '${local.name}-service' --region '${var.region}' --query '{arn: services[0].taskDefinition}' || echo {\"arn\":\"\"}"]
 }

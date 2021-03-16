@@ -1,18 +1,39 @@
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = "${local.name}-task-definition"
-  container_definitions    = var.container_definition
   task_role_arn            = aws_iam_role.task.arn
   execution_role_arn       = aws_iam_role.exec.arn
   network_mode             = "awsvpc"
-  memory                   = var.required_memory
-  cpu                      = var.required_cpu
   requires_compatibilities = ["EC2"]
-  tags                     = merge(var.tags, { "Name" = "${local.name}-task-definition" })
+  cpu                      = var.cpu
+  memory                   = var.memory
+  tags                     = merge(var.tags, { Name = "${local.name}-task-definition" })
+
+  # If a single container definition is provided, we instrument it with sensible defaults (e.g. logging to CloudWatch, port mapping)
+  container_definitions = length(var.container_definitions) == 1 ? jsonencode([merge({
+    name = var.service_name
+    # Add CPU + Memory limits
+    cpu    = tonumber(var.cpu)
+    memory = tonumber(var.memory)
+    # Add environment variables and secrets
+    environment = [for key, value in var.environment : { name = key, value = value }]
+    secrets     = [for key, value in var.secrets : { name = key, valueFrom = format(local.secrets_format, value) }]
+    # Add default port mapping for service_port
+    portMappings = [{ containerPort = var.service_port }]
+    # Add default log configuration when none is provided
+    logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.log_group.0.name
+        awslogs-region        = var.region
+        awslogs-stream-prefix = var.service_name
+      }
+    } : null
+  }, var.container_definitions[0])]) : jsonencode(var.container_definitions)
 }
 
 resource "aws_ecs_service" "service" {
   name            = "${local.name}-service"
-  cluster         = var.ecs_cluster["cluster_id"]
+  cluster         = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
   task_definition = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
 
   deployment_controller {
@@ -37,7 +58,11 @@ resource "aws_ecs_service" "service" {
   }
 
   network_configuration {
-    subnets         = var.subnets
+    subnets = [
+      data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az1,
+      data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az2,
+      data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az3
+    ]
     security_groups = var.security_groups
   }
 
@@ -53,7 +78,7 @@ resource "aws_service_discovery_service" "web_svc_record" {
   name = var.service_name
 
   dns_config {
-    namespace_id = var.ecs_cluster["namespace_id"]
+    namespace_id = data.terraform_remote_state.ecs_cluster.outputs.private_cluster_namespace["id"]
 
     dns_records {
       ttl  = 10
