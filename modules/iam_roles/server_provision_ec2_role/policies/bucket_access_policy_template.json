@@ -36,6 +36,18 @@
       ]
     },
     {
+      "Sid": "allowAccessToOracleDBBackupInventoryBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Resource": [
+        "${s3_oracledb_backups_inventory_s3bucket_arn}",
+        "${s3_oracledb_backups_inventory_s3bucket_arn}/*"
+      ]
+    },
+    {
       "Sid": "allowAccessToLDAPBackupBucket",
       "Effect": "Allow",
       "Action": [
