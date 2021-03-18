@@ -17,6 +17,7 @@ data "template_file" "bucket_access_policy" {
   vars = {
     dependencies_bucket_arn = var.dependencies_bucket_arn
     s3_oracledb_backups_arn = var.s3_oracledb_backups_arn
+    s3_oracledb_backups_inventory_s3bucket_arn = var.s3_oracledb_backups_inventory_s3bucket_arn
     s3_ldap_backups_arn     = var.s3_ldap_backups_arn
     s3_test_results_arn     = var.s3_test_results_arn
     s3_ssm_ansible_arn      = var.s3_ssm_ansible_arn
