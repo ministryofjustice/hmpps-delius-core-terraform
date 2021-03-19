@@ -41,6 +41,7 @@ module "delius_db" {
     database_type                 = "standalone" # required for the DB module. This file is where the property is set.
     dependencies_bucket_arn       = var.dependencies_bucket_arn
     s3_oracledb_backups_arn       = data.terraform_remote_state.s3-oracledb-backups.outputs.s3_oracledb_backups.arn
+    s3_oracledb_backups_inventory_s3bucket_arn       = data.terraform_remote_state.s3-oracledb-backups.outputs.s3_oracledb_backups_inventory_s3bucket.arn
     database_bootstrap_restore    = var.ansible_vars_oracle_db["database_bootstrap_restore"]
     database_backup               = var.ansible_vars_oracle_db["database_backup"]
     database_backup_sys_passwd    = var.ansible_vars_oracle_db["database_backup_sys_passwd"]
