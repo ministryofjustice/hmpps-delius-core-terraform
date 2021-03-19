@@ -6,7 +6,7 @@ module "server_provision_ec2_role" {
   environment_name        = var.short_environment_name
   dependencies_bucket_arn = var.dependencies_bucket_arn
   s3_oracledb_backups_arn = data.terraform_remote_state.s3-oracledb-backups.outputs.s3_oracledb_backups.arn
-  s3_oracledb_backups_inventory_s3bucket_arn       = data.terraform_remote_state.s3-oracledb-backups.outputs.s3_oracledb_backups_inventory_s3bucket.arn
+    s3_oracledb_backups_inventory_arn       = data.terraform_remote_state.s3-oracledb-backups.outputs.s3_oracledb_backups_inventory.arn
   s3_ldap_backups_arn     = data.terraform_remote_state.s3-ldap-backups.outputs.s3_ldap_backups.arn
   s3_test_results_arn     = data.terraform_remote_state.s3-test-results.outputs.s3_test_results.arn
   s3_ssm_ansible_arn      = data.terraform_remote_state.ci_common.outputs.ssm_ansible_bucket.arn

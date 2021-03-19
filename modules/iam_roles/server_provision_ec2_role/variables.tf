@@ -13,7 +13,7 @@ variable "dependencies_bucket_arn" {
 variable "s3_oracledb_backups_arn" {
   description = "The S3 bucket arn for oracle db data backups"
 }
-variable "s3_oracledb_backups_inventory_s3bucket_arn" {
+variable "s3_oracledb_backups_inventory_arn" {
   description = "The S3 bucket arn for oracle db data backups inventory file"
 }
 variable "s3_ldap_backups_arn" {
