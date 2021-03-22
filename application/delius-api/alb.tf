@@ -2,9 +2,13 @@
 resource "aws_lb" "alb" {
   name            = "${var.short_environment_name}-${local.app_name}-alb"
   internal        = false
-  security_groups = local.security_groups.load_balancer
-  subnets         = local.subnets.public
-  tags            = merge(var.tags, { "Name" = "${var.short_environment_name}-${local.app_name}-alb" })
+  security_groups = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_delius_api_lb_id]
+  subnets = [
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3,
+  ]
+  tags = merge(var.tags, { "Name" = "${var.short_environment_name}-${local.app_name}-alb" })
 
   lifecycle {
     create_before_destroy = true
