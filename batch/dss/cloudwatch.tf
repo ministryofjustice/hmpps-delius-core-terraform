@@ -5,19 +5,15 @@ resource "aws_cloudwatch_event_rule" "dss_failure_event_rule" {
   name        = "${var.environment_name}-dss-batch-job-failure"
   description = "${var.environment_name}-dss-batch-job-failure"
 
-  event_pattern = data.template_file.dss_failure_event_rule_template.rendered
+  event_pattern = jsonencode({
+    source = ["aws.batch"]
+    detail = {
+      jobQueue = [module.dss_batch_environment.job_queue_arn]
+    }
+  })
 }
 
-resource "aws_cloudwatch_event_target" "sns" {
+resource "aws_cloudwatch_event_target" "notify_slack_via_sns" {
   rule = aws_cloudwatch_event_rule.dss_failure_event_rule.name
-  arn  = aws_sns_topic.batch_notification.arn
+  arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_batch_status_notification_arn
 }
-
-data "template_file" "dss_failure_event_rule_template" {
-  template = file("./templates/cloudwatch/dss_failure_event_rule.tpl")
-
-  vars = {
-    job_queue_arn = data.terraform_remote_state.batch.outputs.job_queue_arn
-  }
-}
-

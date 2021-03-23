@@ -42,3 +42,7 @@ output "lb_listener_arn" {
   value = aws_lb_listener.internal_lb_https_listener.arn
 }
 
+output "healthy_hosts_warning_alarm_arn" {
+  value = aws_cloudwatch_metric_alarm.healthy_hosts_warning_alarm.arn
+}
+

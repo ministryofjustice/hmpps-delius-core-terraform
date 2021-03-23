@@ -50,6 +50,7 @@ module "spg" {
   private_zone_id              = data.terraform_remote_state.vpc.outputs.private_zone_id
   private_domain               = data.terraform_remote_state.vpc.outputs.private_zone_name
   certificate_arn              = data.aws_acm_certificate.cert.arn
+  alarm_sns_topic_arn          = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
   weblogic_health_check_path   = "NDelius-war/delius/JSP/healthcheck.jsp"
   weblogic_port                = var.weblogic_domain_ports["weblogic_port"]
 

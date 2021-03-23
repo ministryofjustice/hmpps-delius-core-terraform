@@ -12,7 +12,7 @@ variable "environment_name" {
 
 variable "delius_alarms_config" {
   type = object({
-    enabled = bool
+    enabled     = bool
     quiet_hours = tuple([number, number])
   })
 }

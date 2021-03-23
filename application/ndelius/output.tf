@@ -38,3 +38,7 @@ output "lb_listener_arn" {
   value = module.ndelius.lb_listener_arn
 }
 
+output "weblogic_healthy_hosts_alarm_arn" {
+  value = module.ndelius.healthy_hosts_warning_alarm_arn
+}
+
