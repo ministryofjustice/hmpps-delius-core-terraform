@@ -1,5 +1,7 @@
 let https = require("https");
 let util = require("util");
+let AWS = require('aws-sdk');
+let ssm = new AWS.SSM({ region: process.env.REGION });
 
 exports.handler = function (event, context) {
     console.log(JSON.stringify(event, null, 2));
@@ -29,31 +31,46 @@ exports.handler = function (event, context) {
     if (severity === "critical") icon_emoji = ":siren:";
     if (severity === "fatal")    icon_emoji = ":alert:";
 
-    let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
+    let textMessage = icon_emoji + " " + (severity === "ok" ? "*RESOLVED*" : "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Environment: " + process.env.ENVIRONMENT_NAME
         + "\n> Description: *" + eventMessage.AlarmDescription + "*"
-        + "\n<https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/" + eventMessage.AlarmName + "|View Details>";
+        + "\n<https://" + process.env.REGION + ".console.aws.amazon.com/cloudwatch/home?region=" + process.env.REGION + "#alarmsV2:alarm/" + eventMessage.AlarmName + "|View Details>";
     // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
 
-    const req = https.request({
-        method: "POST",
-        hostname: "hooks.slack.com",
-        port: 443,
-        path: "/services/T02DYEB3A/BGJ1P95C3/f1MBtQ0GoI6kbGUztiSpkOut"
-    }, function (res) {
-        res.setEncoding("utf8");
-        res.on("data", function (chunk) { return context.done(null) });
+    ssm.getParameter({ Name: process.env.SLACK_TOKEN, WithDecryption: true }, function(err, data) {
+        if (err) {
+            console.log("Unable to get access token for Slack", process.env.SLACK_TOKEN, err);
+            return context.fail("Unable to get access token for Slack");
+        }
+
+        const req = https.request({
+            method: "POST",
+            hostname: "slack.com",
+            port: 443,
+            path: "/api/chat.postMessage",
+            headers: {
+                "Authorization": "Bearer " + data.Parameter.Value,
+                "Content-Type": "application/json"
+            }
+        }, function (res) {
+            res.setEncoding("utf8");
+            res.on("data", function (chunk) {
+                console.log("Response received", chunk)
+                return context.done(null)
+            });
+        });
+        req.on("error", function (e) {
+            console.log("Unable to post message to Slack", e);
+            return context.fail("Unable to post message to Slack");
+        });
+        req.write(util.format("%j", {
+            "channel": "# " + process.env.SLACK_CHANNEL,
+            "username": "Delius-Core Alarm Notification",
+            "text": textMessage,
+            "icon_emoji": ":amazon:",
+            "link_names": "1"
+        }));
+        req.end();
     });
-    req.on("error", function (e) {
-        return console.log("problem with request: " + e.message);
-    });
-    req.write(util.format("%j", {
-        "channel": "# " + process.env.SLACK_CHANNEL,
-        "username": "Delius-Core Alarm Notification",
-        "text": textMessage,
-        "icon_emoji": ":amazon:",
-        "link_names": "1"
-    }));
-    req.end();
 };

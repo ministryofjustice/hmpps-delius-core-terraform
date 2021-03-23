@@ -10,10 +10,6 @@ data "archive_file" "alarm_lambda_handler_zip" {
   }
 }
 
-data "aws_iam_role" "lambda_exec_role" {
-  name = "lambda_exec_role"
-}
-
 data "archive_file" "batch_lambda_handler_zip" {
   type        = "zip"
   output_path = "${path.module}/files/${local.lambda_name_batch}.zip"
