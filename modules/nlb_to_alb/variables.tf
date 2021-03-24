@@ -119,3 +119,8 @@ variable "haproxy_security_groups" {
   type        = list(string)
 }
 
+variable "access_logs_bucket_name" {
+  description = "Name of the S3 bucket used for storing Load Balancer access logs"
+  type        = string
+}
+

@@ -58,6 +58,16 @@ data "terraform_remote_state" "ldap" {
   }
 }
 
+data "terraform_remote_state" "access_logs" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/access-logs/terraform.tfstate"
+    region = var.region
+  }
+}
+
 data "aws_acm_certificate" "cert" {
   domain = data.terraform_remote_state.vpc.outputs.public_ssl_domain
 

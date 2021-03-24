@@ -16,6 +16,12 @@ resource "aws_lb" "external_nlb" {
     subnet_id     = var.public_subnets[2]
     allocation_id = var.eip_allocation_ids[2]
   }
+
+  access_logs {
+    enabled = true
+    bucket  = var.access_logs_bucket_name
+    prefix  = "${var.short_environment_name}-${var.tier_name}-ext"
+  }
 }
 
 resource "aws_lb_target_group" "external_nlb_https_target_group" {

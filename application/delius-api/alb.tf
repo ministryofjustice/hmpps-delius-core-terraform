@@ -10,6 +10,12 @@ resource "aws_lb" "alb" {
   ]
   tags = merge(var.tags, { "Name" = "${var.short_environment_name}-${local.app_name}-alb" })
 
+  access_logs {
+    enabled = true
+    bucket  = data.terraform_remote_state.access_logs.outputs.bucket_name
+    prefix  = local.app_name
+  }
+
   lifecycle {
     create_before_destroy = true
   }

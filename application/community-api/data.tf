@@ -79,3 +79,12 @@ data "terraform_remote_state" "interface" {
   }
 }
 
+data "terraform_remote_state" "access_logs" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/access-logs/terraform.tfstate"
+    region = var.region
+  }
+}
+
