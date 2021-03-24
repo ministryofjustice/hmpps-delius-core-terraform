@@ -38,3 +38,11 @@ output "ami_spg_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
+output "activemq_healthy_hosts_alarm_arn" {
+  value = aws_cloudwatch_metric_alarm.activemq_healthy_hosts_fatal_alarm.arn
+}
+
+output "weblogic_healthy_hosts_alarm_arn" {
+  value = module.spg.healthy_hosts_warning_alarm_arn
+}
+
