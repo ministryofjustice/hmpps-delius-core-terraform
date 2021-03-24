@@ -8,10 +8,10 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_warning_alarm" {
   threshold           = "75"
   evaluation_periods  = "5"
   period              = "60"
-  alarm_actions       = [aws_sns_topic.alarm_notification.arn]
-  ok_actions          = [aws_sns_topic.alarm_notification.arn]
+  alarm_actions       = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
+  ok_actions          = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
   dimensions = {
-    AutoScalingGroupName = data.terraform_remote_state.ldap.outputs.asg["name"]
+    AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
 }
 
@@ -25,10 +25,10 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_critical_alarm" {
   threshold           = "90"
   evaluation_periods  = "5"
   period              = "60"
-  alarm_actions       = [aws_sns_topic.alarm_notification.arn]
-  ok_actions          = [aws_sns_topic.alarm_notification.arn]
+  alarm_actions       = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
+  ok_actions          = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
   dimensions = {
-    AutoScalingGroupName = data.terraform_remote_state.ldap.outputs.asg["name"]
+    AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
 }
 
@@ -42,10 +42,10 @@ resource "aws_cloudwatch_metric_alarm" "ldap_healthy_hosts_fatal_alarm" {
   threshold           = "1"
   evaluation_periods  = "5"
   period              = "60"
-  alarm_actions       = [aws_sns_topic.alarm_notification.arn]
-  ok_actions          = [aws_sns_topic.alarm_notification.arn]
+  alarm_actions       = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
+  ok_actions          = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
   dimensions = {
-    LoadBalancerName = data.terraform_remote_state.ldap.outputs.lb["name"]
+    LoadBalancerName = aws_elb.lb.name
   }
 }
 

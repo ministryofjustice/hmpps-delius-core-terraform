@@ -140,3 +140,8 @@ variable "ansible_vars" {
   type        = map(string)
 }
 
+variable "alarm_sns_topic_arn" {
+  description = "ARN of the SNS topic that should receive CloudWatch alarm notifications"
+  type        = string
+}
+
