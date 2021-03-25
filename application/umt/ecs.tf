@@ -50,10 +50,10 @@ module "ecs" {
   security_groups                   = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_instances_id]
 
   # Auto-Scaling
-  cpu              = local.app_config["cpu"]
-  memory           = local.app_config["memory"]
-  min_capacity     = local.app_config["min_capacity"]
-  max_capacity     = local.app_config["max_capacity"]
-  target_cpu_usage = local.app_config["target_cpu"]
+  cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])
+  memory           = lookup(local.app_config, "memory", var.common_ecs_scaling_config["memory"])
+  min_capacity     = lookup(local.app_config, "min_capacity", var.common_ecs_scaling_config["min_capacity"])
+  max_capacity     = lookup(local.app_config, "min_capacity", var.common_ecs_scaling_config["max_capacity"])
+  target_cpu_usage = lookup(local.app_config, "target_cpu", var.common_ecs_scaling_config["target_cpu"])
 }
 
