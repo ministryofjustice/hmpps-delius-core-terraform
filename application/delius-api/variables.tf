@@ -29,6 +29,11 @@ variable "delius_core_public_zone" {
   # over into the private zone before we complete the transition eg. delius-db-1, management.
 }
 
+variable "common_ecs_scaling_config" {
+  description = "Default scaling configuration for ECS services. Can be overridden per-application or per-environment in the environment configuration repository (hmpps-env-configs)."
+  type        = map(string)
+}
+
 variable "default_delius_api_config" {
   description = "Application-specific configuration items"
   type        = map(string)

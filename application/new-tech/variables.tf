@@ -18,6 +18,11 @@ variable "project_name" {
   description = "Project name to be used when looking up SSM parameters - eg. delius-core"
 }
 
+variable "common_ecs_scaling_config" {
+  description = "Default scaling configuration for ECS services. Can be overridden per-application or per-environment in the environment configuration repository (hmpps-env-configs)."
+  type        = map(string)
+}
+
 variable "default_new_tech_config" {
   description = "Application-specific configuration items"
   type        = map(string)

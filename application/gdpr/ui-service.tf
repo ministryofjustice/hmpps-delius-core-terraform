@@ -29,11 +29,11 @@ module "ui" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_gdpr_ui_id,
   ]
 
-  # Scaling
-  cpu              = local.app_config["ui_cpu"]
-  memory           = local.app_config["ui_memory"]
-  min_capacity     = local.app_config["ui_scaling_min_capacity"]
-  max_capacity     = local.app_config["ui_scaling_max_capacity"]
-  target_cpu_usage = local.app_config["ui_target_cpu"]
+  # Auto-Scaling
+  cpu              = lookup(local.app_config, "ui_cpu", var.common_ecs_scaling_config["cpu"])
+  memory           = lookup(local.app_config, "ui_memory", var.common_ecs_scaling_config["memory"])
+  min_capacity     = lookup(local.app_config, "ui_min_capacity", var.common_ecs_scaling_config["min_capacity"])
+  max_capacity     = lookup(local.app_config, "ui_min_capacity", var.common_ecs_scaling_config["max_capacity"])
+  target_cpu_usage = lookup(local.app_config, "ui_target_cpu", var.common_ecs_scaling_config["target_cpu"])
 }
 
