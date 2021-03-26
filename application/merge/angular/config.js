@@ -1,21 +1,21 @@
 window['app_config'] = {
   api: {
-    baseurl: '/gdpr/api'
+    baseurl: '/merge/api'
   },
   authConfig: {
-    clientId: 'GDPR-UI',
+    clientId: 'MERGE-UI',
     dummyClientSecret: '',
-    scope: 'gdpr-retention:view gdpr-retention:review gdpr-retention:manage ' +
-           'gdpr-deletions:manage gdpr-deletions:resolve gdpr-deletions:review gdpr-deletions:view ' +
-           'gdpr-duplicates:manage gdpr-duplicates:review gdpr-duplicates:view ' +
-           'gdpr-destruction:manage',
-    resource: 'NDelius',
+    scope: 'merge-batch_job:manage merge-offender:view merge-app_settings:view merge-request:manage '+
+        'merge-batch_job:view merge-unmerge:manage merge-app_settings:manage merge-request:view merge-errors:view '+
+        'merge-app_admin:manage merge-batch_configuration:manage merge-merge:manage merge-errors:manage '+
+        'merge-batch_configuration:view merge-merge:view merge-unmerge:view',
+    resource: 'Merge',
     responseType: 'code',
     useHttpBasicAuth: true,
     oidc: false,
     requireHttps: false,
     loginUrl: '/umt/oauth/authorize',
     tokenEndpoint: '/umt/oauth/token',
-    redirectUri: '/gdpr/ui/homepage'
+    redirectUri: '/merge/ui/homepage'
   }
 };

@@ -1,5 +1,6 @@
 locals {
   app_name     = "merge"
+  db_name      = "mergedb"
   api_name     = "merge-api"
   ui_name      = "merge-ui"
   app_config   = merge(var.default_merge_config, var.merge_config)

@@ -4,7 +4,7 @@ resource "random_password" "db_password" {
 }
 
 resource "aws_ssm_parameter" "db_password_parameter" {
-  name  = "/${var.environment_name}/${var.project_name}/delius-merge-database/db/admin_password"
+  name  = "/${var.environment_name}/${var.project_name}/merge/db/admin_password"
   value = random_password.db_password.result
   type  = "SecureString"
 }
@@ -30,7 +30,7 @@ resource "aws_db_instance" "primary" {
   allocated_storage = local.app_config["db_storage"]
   storage_encrypted = true
 
-  name     = local.app_name
+  name     = local.db_name
   username = "postgres"
   password = aws_ssm_parameter.db_password_parameter.value
 

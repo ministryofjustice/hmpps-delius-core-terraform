@@ -68,17 +68,11 @@ data "template_file" "api_container_definition" {
     log_level      = local.app_config["log_level"]
     # application config
     alfresco_host                = "${local.ansible_vars["alfresco_host"]}.${replace(data.aws_route53_zone.public.name, "/\\.$/", "")}" # Trim trailing period if present
-    cron_identifyduplicates      = local.app_config["cron_identifyduplicates"]
-    cron_retainedoffenders       = local.app_config["cron_retainedoffenders"]
-    cron_retainedoffendersiicsa  = local.app_config["cron_retainedoffendersiicsa"]
-    cron_eligiblefordeletion     = local.app_config["cron_eligiblefordeletion"]
-    cron_deleteoffenders         = local.app_config["cron_deleteoffenders"]
-    cron_destructionlogclearing  = local.app_config["cron_destructionlogclearing"]
     delius_database_url          = data.terraform_remote_state.database.outputs.jdbc_failover_url
-    delius_database_username     = "gdpr_pool"
-    delius_database_password_key = "delius-database/db/gdpr_pool_password"
-    gdpr_database_url            = "jdbc:postgresql://${aws_db_instance.primary.endpoint}/${aws_db_instance.primary.name}"
-    gdpr_database_username       = aws_db_instance.primary.username
+    delius_database_username     = "delius_pool"
+    delius_database_password_key = "delius-database/db/delius_pool_password"
+    merge_database_url            = "jdbc:postgresql://${aws_db_instance.primary.endpoint}/${aws_db_instance.primary.name}"
+    merge_database_username       = aws_db_instance.primary.username
     oauth_token_uri              = "https://${data.terraform_remote_state.ndelius.outputs.public_fqdn_ndelius_wls_external}/umt/oauth/check_token"
   }
 }
