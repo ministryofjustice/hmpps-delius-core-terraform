@@ -29,7 +29,17 @@ resource "aws_security_group_rule" "umt_auth_egress_delius_lb" {
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = local.external_delius_lb_cidr_blocks
-  description       = "Delius load-balancers out (to access UMT auth server)"
+  description       = "Delius load-balancers out"
+}
+
+resource "aws_security_group_rule" "umt_auth_egress_umt_instances" {
+  security_group_id        = aws_security_group.umt_auth.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = aws_security_group.umt_instances.id
+  description              = "UMT instances out"
 }
 
 ################################################################################
@@ -54,6 +64,16 @@ resource "aws_security_group" "umt_instances" {
 
 output "sg_umt_instances_id" {
   value = aws_security_group.umt_instances.id
+}
+
+resource "aws_security_group_rule" "umt_instances_ingress_auth" {
+  security_group_id        = aws_security_group.umt_instances.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = aws_security_group.umt_auth.id
+  description              = "OAuth access in"
 }
 
 resource "aws_security_group_rule" "umt_instances_ingress_ndelius_lb" {

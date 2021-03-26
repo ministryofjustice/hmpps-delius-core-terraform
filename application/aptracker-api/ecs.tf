@@ -19,7 +19,7 @@ module "ecs_service" {
     SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT = "org.hibernate.dialect.Oracle10gDialect"
     SPRING_JPA_HIBERNATE_DDL-AUTO           = "none"
     SECURITY_OAUTH2_RESOURCE_ID             = "NDelius"
-    SECURITY_OAUTH2_RESOURCE_TOKEN-INFO-URI = "https://${data.terraform_remote_state.ndelius.outputs.public_fqdn_ndelius_wls_external}/umt/oauth/check_token"
+    SECURITY_OAUTH2_RESOURCE_TOKEN-INFO-URI = "http://user-management.ecs.cluster:8080/umt/oauth/check_token"
     LOGGING_LEVEL_UK_GOV_JUSTICE            = local.app_config["log_level"]
   }
   secrets = {
