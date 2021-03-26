@@ -7,28 +7,66 @@ resource "aws_ecs_task_definition" "task_definition" {
   cpu                      = var.cpu
   memory                   = var.memory
   tags                     = merge(var.tags, { Name = "${local.name}-task-definition" })
+  volume {
+    name      = "xray-agent"
+    host_path = "/xray-agent"
+  }
 
   # If a single container definition is provided, we instrument it with sensible defaults (e.g. logging to CloudWatch, port mapping)
-  container_definitions = length(var.container_definitions) == 1 ? jsonencode([merge({
-    name = var.service_name
-    # Add CPU + Memory limits
-    cpu    = tonumber(var.cpu)
-    memory = tonumber(var.memory)
-    # Add environment variables and secrets
-    environment = [for key, value in var.environment : { name = key, value = value }]
-    secrets     = [for key, value in var.secrets : { name = key, valueFrom = format(local.secrets_format, value) }]
-    # Add default port mapping for service_port
-    portMappings = [{ containerPort = var.service_port }]
-    # Add default log configuration when none is provided
-    logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = aws_cloudwatch_log_group.log_group.0.name
-        awslogs-region        = var.region
-        awslogs-stream-prefix = var.service_name
-      }
-    } : null
-  }, var.container_definitions[0])]) : jsonencode(var.container_definitions)
+  container_definitions = length(var.container_definitions) == 1 ? jsonencode(concat(
+    [
+      merge({
+        name = var.service_name
+        # Add environment variables and secrets
+        environment = concat(
+          [for key, value in var.environment : { name = key, value = value }],
+          var.enable_telemetry ? concat([
+            { name = "AWS_XRAY_TRACING_NAME", value = var.service_name },
+            { name = "OTEL_RESOURCE_ATTRIBUTES", value = "service.name=${var.service_name},service.namespace=${var.environment_name}" },
+            ], var.telemetry_use_java_tool_opts ? [
+            { name = "JAVA_TOOL_OPTIONS", value = "-javaagent:/xray-agent/aws-opentelemetry-agent.jar" }
+          ] : []) : []
+        )
+        secrets = [for key, value in var.secrets : { name = key, valueFrom = format(local.secrets_format, value) }]
+        # Add default port mapping for service_port
+        portMappings = [{ containerPort = var.service_port }]
+        # Mount X-Ray agent volume
+        mountPoints = var.enable_telemetry ? [{
+          containerPath = "/xray-agent"
+          sourceVolume  = "xray-agent"
+          readOnly      = true
+        }] : null
+        # Add default log configuration when none is provided
+        logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
+          logDriver = "awslogs"
+          options = {
+            awslogs-group         = aws_cloudwatch_log_group.log_group.0.name
+            awslogs-region        = var.region
+            awslogs-stream-prefix = "ecs"
+          }
+        } : null
+      }, var.container_definitions[0])
+    ],
+    var.enable_telemetry ? [{
+      name        = "aws-otel-collector"
+      image       = "amazon/aws-otel-collector",
+      environment = [{ name = "AWS_REGION", value = var.region }]
+      portMappings = [
+        { containerPort = 2000, hostPort = 2000, protocol = "udp" },   # AWS X-ray
+        { containerPort = 4317, hostPort = 4317, protocol = "tcp" },   # AWS Open Telemetry collector
+        { containerPort = 55680, hostPort = 55680, protocol = "tcp" }, # AWS Open Telemetry collector
+        { containerPort = 8125, hostPort = 8125, protocol = "udp" },   # StatsD
+      ]
+      logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.log_group.0.name
+          awslogs-region        = var.region
+          awslogs-stream-prefix = "ecs"
+        }
+      } : null
+    }] : [])
+  ) : jsonencode(var.container_definitions)
 }
 
 resource "aws_ecs_service" "service" {

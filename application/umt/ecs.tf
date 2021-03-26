@@ -39,15 +39,19 @@ module "ecs" {
     DELIUS_SECRET              = "/${var.environment_name}/${var.project_name}/umt/umt/delius_secret"
     SPRING_DATASOURCE_PASSWORD = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_app_schema_password"
     SPRING_LDAP_PASSWORD       = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
-    OID_PASSWORD               = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
   }
 
   # Security/Networking
-  lb_listener_arn                   = data.terraform_remote_state.ndelius.outputs.lb_listener_arn # Attach to NDelius load balancer
-  lb_path_patterns                  = ["/umt", "/umt/*"]
-  health_check_path                 = "/umt/actuator/health"
-  health_check_grace_period_seconds = 180
-  security_groups                   = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_instances_id]
+  lb_listener_arn   = data.terraform_remote_state.ndelius.outputs.lb_listener_arn # Attach to NDelius load balancer
+  lb_path_patterns  = ["/umt", "/umt/*"]
+  health_check_path = "/umt/actuator/health"
+  security_groups = [
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_instances_id
+  ]
+
+  # Monitoring
+  enable_telemetry = true
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])

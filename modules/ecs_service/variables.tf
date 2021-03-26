@@ -112,7 +112,7 @@ variable "health_check_unhealthy_threshold" {
 
 variable "health_check_grace_period_seconds" {
   description = "Health check grace period. Increase this if tasks are stopped before they have time to start up."
-  default     = 60
+  default     = 300
 }
 
 variable "min_capacity" {
@@ -143,6 +143,16 @@ variable "ignore_task_definition_changes" {
 variable "log_retention_in_days" {
   description = "Specifies the number of days you want to retain CloudWatch log events for the service. Only used when no 'logConfiguration' block is provided in var.container_definitions. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653, and 0. If you select 0, the events in the log group are always retained and never expire."
   default     = 365
+}
+
+variable "enable_telemetry" {
+  description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
+  default     = false
+}
+
+variable "telemetry_use_java_tool_opts" {
+  description = "Whether to use the the JAVA_TOOL_OPTS environment variable for auto-instrumenting Java services with the AWS OpenTelemetry Agent. This is only used when Telemetry is enabled (`var.enable_telemetry`)."
+  default     = true
 }
 
 variable "tags" {

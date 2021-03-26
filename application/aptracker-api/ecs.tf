@@ -29,15 +29,17 @@ module "ecs_service" {
   }
 
   # Security & Networking
-  lb_listener_arn                   = data.terraform_remote_state.ndelius.outputs.lb_listener_arn # Attach to NDelius load balancer
-  lb_path_patterns                  = ["/aptracker-api", "/aptracker-api/*"]
-  health_check_path                 = "/aptracker-api/actuator/health"
-  health_check_grace_period_seconds = 180
+  lb_listener_arn   = data.terraform_remote_state.ndelius.outputs.lb_listener_arn # Attach to NDelius load balancer
+  lb_path_patterns  = ["/aptracker-api", "/aptracker-api/*"]
+  health_check_path = "/aptracker-api/actuator/health"
   security_groups = [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_aptracker_api_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id,
   ]
+
+  # Monitoring
+  enable_telemetry = true
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])

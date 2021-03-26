@@ -7,11 +7,10 @@ module "ecs" {
   tags                     = var.tags
 
   # Application Container
-  service_name                      = local.app_name
-  container_definitions             = [{ image = local.app_config["image_url"] }]
-  ignore_task_definition_changes    = true # Deployment is managed by Circle CI
-  health_check_path                 = "/health/ping"
-  health_check_grace_period_seconds = 120
+  service_name                   = local.app_name
+  container_definitions          = [{ image = local.app_config["image_url"] }]
+  ignore_task_definition_changes = true # Deployment is managed by Circle CI
+  health_check_path              = "/health/ping"
   environment = merge(local.environment, {
     SPRING_DATASOURCE_URL  = data.terraform_remote_state.database.outputs.jdbc_failover_url
     DELIUS_LDAP_USERS_BASE = data.terraform_remote_state.ldap.outputs.ldap_base_users
@@ -36,6 +35,9 @@ module "ecs" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_instances_id
   ]
   target_group_count = 2 # to support both the default and the public load balancer
+
+  # Monitoring
+  enable_telemetry = true
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])

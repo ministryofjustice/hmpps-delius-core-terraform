@@ -79,3 +79,34 @@ resource "aws_iam_role" "task" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
+data "aws_iam_policy_document" "xray_logs_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:PutLogEvents",
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:DescribeLogStreams",
+      "logs:DescribeLogGroups",
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "xray_logs_policy" {
+  count  = var.enable_telemetry ? 1 : 0
+  name   = "${local.name}-ecs-xray-logs-policy"
+  policy = data.aws_iam_policy_document.xray_logs_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "xray_logs_policy_attachment" {
+  count      = var.enable_telemetry ? 1 : 0
+  role       = aws_iam_role.task.name
+  policy_arn = aws_iam_policy.xray_logs_policy.0.arn
+}
+
+resource "aws_iam_role_policy_attachment" "xray_policy_attachment" {
+  count      = var.enable_telemetry ? 1 : 0
+  role       = aws_iam_role.task.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}

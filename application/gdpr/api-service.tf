@@ -52,6 +52,9 @@ module "api" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id,
   ]
 
+  # Monitoring
+  enable_telemetry = true
+
   # Scaling
   cpu          = lookup(local.app_config, "api_cpu", var.common_ecs_scaling_config["cpu"])
   memory       = lookup(local.app_config, "api_memory", var.common_ecs_scaling_config["memory"])

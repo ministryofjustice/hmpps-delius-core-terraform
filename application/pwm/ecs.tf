@@ -36,6 +36,9 @@ module "service" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
   ]
 
+  # Monitoring
+  enable_telemetry = true
+
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])
   memory           = lookup(local.app_config, "memory", var.common_ecs_scaling_config["memory"])
