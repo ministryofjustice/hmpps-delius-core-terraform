@@ -14,5 +14,5 @@
             "awslogs-stream-prefix": "ecs-${container_name}"
         }
     },
-    "command": ["sh", "-c", "echo '${nginx_config}' > /etc/nginx/conf.d/default.conf && echo \"${angular_config}\" > /usr/share/nginx/html/assets/config/config.js && exec nginx -g 'daemon off;'"]
+    "command": ["sh", "-c", "echo '${nginx_config}' > /etc/nginx/conf.d/default.conf && echo \"${angular_config}\" > /usr/share/nginx/html/assets/config/config.js && chmod +r -R /usr/share/nginx/html && exec nginx -g 'daemon off;'"]
 }]
