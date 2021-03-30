@@ -12,7 +12,6 @@ Any keys prefixed with `env_` or `secret_` will be passed to the container as en
 
 ## Security
 Security Groups grant inbound access to the load balancer from known sources only.
-! TODO add more details here
 
 See [security-groups/community-api.tf](/security-groups/community-api.tf).
 
