@@ -3,7 +3,7 @@ window['app_config'] = {
     baseurl: '/merge/api'
   },
   authConfig: {
-    clientId: 'MERGE-UI',
+    clientId: 'Merge-UI',
     dummyClientSecret: '',
     scope: 'merge-batch_job:manage merge-offender:view merge-app_settings:view merge-request:manage '+
         'merge-batch_job:view merge-unmerge:manage merge-app_settings:manage merge-request:view merge-errors:view '+
@@ -16,6 +16,6 @@ window['app_config'] = {
     requireHttps: false,
     loginUrl: '/umt/oauth/authorize',
     tokenEndpoint: '/umt/oauth/token',
-    redirectUri: '/merge/ui/homepage'
+    redirectUri: '/merge/ui/merge-request'
   }
 };
