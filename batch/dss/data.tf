@@ -49,6 +49,18 @@ data "terraform_remote_state" "key_profile" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the notification resources for Slack alerts
+#-------------------------------------------------------------
+data "terraform_remote_state" "alerts" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/alerts/terraform.tfstate"
+    region = var.region
+  }
+}
 
 #-------------------------------------------------------------
 ### test instance AMI

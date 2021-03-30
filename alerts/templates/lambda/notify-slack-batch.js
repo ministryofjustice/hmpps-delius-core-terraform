@@ -1,5 +1,7 @@
 let https = require("https");
 let util = require("util");
+let AWS = require('aws-sdk');
+let ssm = new AWS.SSM({ region: process.env.REGION });
 
 exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, 2));
@@ -41,27 +43,43 @@ exports.handler = function(event, context) {
 
    //Only send for specific events (SUCCEEDED, FAILED)
    if (sendSlackNotification) {
-      console.log("Sending slack Notification..");
-      const req = https.request({
-          method: "POST",
-          hostname: "hooks.slack.com",
-          port: 443,
-          path: "/services/T02DYEB3A/BGJ1P95C3/f1MBtQ0GoI6kbGUztiSpkOut"
-      }, function (res) {
-          res.setEncoding("utf8");
-          res.on("data", function (chunk) { return context.done(null) });
-      });
-      req.on("error", function (e) {
-          return console.log("problem with request: " + e.message);
-      });
-      req.write(util.format("%j", {
-          "channel": "# " + process.env.SLACK_CHANNEL,
-          "username": "Delius-Core Batch Notification",
-          "text": textMessage,
-          "icon_emoji": ":amazon:",
-          "link_names": "1"
-      }));
-      req.end();
+       console.log("Sending slack Notification..");
+
+       ssm.getParameter({ Name: process.env.SLACK_TOKEN, WithDecryption: true }, function(err, data) {
+           if (err) {
+               console.log("Unable to get access token for Slack", process.env.SLACK_TOKEN, err);
+               return context.fail("Unable to get access token for Slack");
+           }
+
+           const req = https.request({
+               method: "POST",
+               hostname: "slack.com",
+               port: 443,
+               path: "/api/chat.postMessage",
+               headers: {
+                   "Authorization": "Bearer " + data.Parameter.Value,
+                   "Content-Type": "application/json"
+               }
+           }, function (res) {
+               res.setEncoding("utf8");
+               res.on("data", function (chunk) {
+                   console.log("Response received", chunk)
+                   return context.done(null)
+               });
+           });
+           req.on("error", function (e) {
+               console.log("Unable to post message to Slack", e);
+               return context.fail("Unable to post message to Slack");
+           });
+           req.write(util.format("%j", {
+               "channel": "# " + process.env.SLACK_CHANNEL,
+               "username": "Delius-Core Batch Notification",
+               "text": textMessage,
+               "icon_emoji": ":amazon:",
+               "link_names": "1"
+           }));
+           req.end();
+       });
    }
    else {
        console.log("Skipping sending slack notification as this is for an event we don't notify on (RUNNABLE, STARTING,etc)..")

@@ -47,3 +47,7 @@ output "efs" {
   }
 }
 
+output "healthy_hosts_alarm_arn" {
+  value = aws_cloudwatch_metric_alarm.ldap_healthy_hosts_fatal_alarm.arn
+}
+

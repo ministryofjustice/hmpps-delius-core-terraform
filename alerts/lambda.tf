@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "notify_slack_alarm" {
   runtime          = "nodejs12.x"
-  role             = data.aws_iam_role.lambda_exec_role.arn
+  role             = aws_iam_role.lambda_role.arn
   filename         = data.archive_file.alarm_lambda_handler_zip.output_path
   function_name    = local.lambda_name_alarm
   handler          = "notify-slack-alarm.handler"
@@ -8,10 +8,12 @@ resource "aws_lambda_function" "notify_slack_alarm" {
   environment {
     variables = {
       ENABLED                 = tostring(var.delius_alarms_config.enabled)
+      REGION                  = var.region
       ENVIRONMENT_NAME        = var.environment_name
       QUIET_PERIOD_START_HOUR = tostring(var.delius_alarms_config.quiet_hours[0])
       QUIET_PERIOD_END_HOUR   = tostring(var.delius_alarms_config.quiet_hours[1])
       SLACK_CHANNEL           = var.environment_name == "delius-prod" ? "delius-alerts-deliuscore-production" : "delius-alerts-deliuscore-nonprod"
+      SLACK_TOKEN             = "/alfresco/slack/token"
     }
   }
 }
@@ -26,7 +28,7 @@ resource "aws_lambda_permission" "sns_alarm" {
 
 resource "aws_lambda_function" "notify_slack_batch" {
   runtime          = "nodejs12.x"
-  role             = data.aws_iam_role.lambda_exec_role.arn
+  role             = aws_iam_role.lambda_role.arn
   filename         = data.archive_file.batch_lambda_handler_zip.output_path
   function_name    = local.lambda_name_batch
   handler          = "notify-slack-batch.handler"
@@ -34,10 +36,12 @@ resource "aws_lambda_function" "notify_slack_batch" {
   environment {
     variables = {
       ENABLED                 = tostring(var.delius_alarms_config.enabled)
+      REGION                  = var.region
       ENVIRONMENT_NAME        = var.environment_name
       QUIET_PERIOD_START_HOUR = tostring(var.delius_alarms_config.quiet_hours[0])
       QUIET_PERIOD_END_HOUR   = tostring(var.delius_alarms_config.quiet_hours[1])
       SLACK_CHANNEL           = var.environment_name == "delius-prod" ? "delius-alerts-deliuscore-production" : "delius-alerts-deliuscore-nonprod"
+      SLACK_TOKEN             = "/alfresco/slack/token"
     }
   }
 }
