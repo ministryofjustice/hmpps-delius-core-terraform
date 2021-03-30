@@ -3,6 +3,9 @@
   <localeBundle bundle="password.pwm.i18n.Display" key="Title_Application">
     <value><![CDATA[National Delius - Account Self Service]]></value>
   </localeBundle>
+  <localeBundle bundle="password.pwm.i18n.Display" key="Display_RecoverTokenSendOneChoice">
+    <value><![CDATA[To verify your identity, press the Continue button to send a security code to %1%.]]></value>
+  </localeBundle>
   <properties type="config">
     <!-- Set saveConfigOnStart=true to encrypt plaintext passwords on startup -->
     <property key="saveConfigOnStart">true</property>
