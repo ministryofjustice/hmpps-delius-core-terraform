@@ -1,5 +1,10 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_lb" "monitoring_lb" {
+  count = var.monitoring_lb_arn != "" ? 1 : 0
+  arn   = var.monitoring_lb_arn
+}
+
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {

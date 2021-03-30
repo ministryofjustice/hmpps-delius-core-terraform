@@ -145,6 +145,21 @@ variable "log_retention_in_days" {
   default     = 365
 }
 
+variable "log_error_pattern" {
+  description = "Pattern to search for in the logs to indicate service errors. By default, no log filtering is performed."
+  default     = ""
+}
+
+variable "notification_arn" {
+  description = "ARN of an SNS topic to send alarm notifications to. By default, no alarms are created."
+  default     = ""
+}
+
+variable "monitoring_lb_arn" {
+  description = "ARN of the service's load balancer, if there is one. This is used for alerting on response times and error counts. By default, no response-based alarms are created."
+  default     = ""
+}
+
 variable "enable_telemetry" {
   description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
   default     = false

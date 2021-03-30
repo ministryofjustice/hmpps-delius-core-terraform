@@ -26,3 +26,13 @@ data "terraform_remote_state" "ndelius" {
     region = var.region
   }
 }
+
+data "terraform_remote_state" "alerts" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/alerts/terraform.tfstate"
+    region = var.region
+  }
+}
+

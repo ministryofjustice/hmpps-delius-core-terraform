@@ -53,7 +53,10 @@ module "api" {
   ]
 
   # Monitoring
-  enable_telemetry = true
+  enable_telemetry  = true
+  log_error_pattern = "ERROR"
+  monitoring_lb_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
+  notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Scaling
   cpu          = lookup(local.app_config, "api_cpu", var.common_ecs_scaling_config["cpu"])

@@ -29,6 +29,10 @@ module "ui" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_gdpr_ui_id,
   ]
 
+  # Monitoring
+  monitoring_lb_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
+  notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
+
   # Auto-Scaling
   cpu              = lookup(local.app_config, "ui_cpu", var.common_ecs_scaling_config["cpu"])
   memory           = lookup(local.app_config, "ui_memory", var.common_ecs_scaling_config["memory"])

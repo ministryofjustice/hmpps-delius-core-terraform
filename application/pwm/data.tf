@@ -1,6 +1,5 @@
 data "terraform_remote_state" "vpc" {
   backend = "s3"
-
   config = {
     bucket = var.remote_state_bucket_name
     key    = "vpc/terraform.tfstate"
@@ -10,7 +9,6 @@ data "terraform_remote_state" "vpc" {
 
 data "terraform_remote_state" "vpc_security_groups" {
   backend = "s3"
-
   config = {
     bucket = var.remote_state_bucket_name
     key    = "security-groups/terraform.tfstate"
@@ -20,7 +18,6 @@ data "terraform_remote_state" "vpc_security_groups" {
 
 data "terraform_remote_state" "delius_core_security_groups" {
   backend = "s3"
-
   config = {
     bucket = var.remote_state_bucket_name
     key    = "delius-core/security-groups/terraform.tfstate"
@@ -30,7 +27,6 @@ data "terraform_remote_state" "delius_core_security_groups" {
 
 data "terraform_remote_state" "key_profile" {
   backend = "s3"
-
   config = {
     bucket = var.remote_state_bucket_name
     key    = "delius-core/key_profile/terraform.tfstate"
@@ -40,7 +36,6 @@ data "terraform_remote_state" "key_profile" {
 
 data "terraform_remote_state" "persistent-eip" {
   backend = "s3"
-
   config = {
     bucket = var.remote_state_bucket_name
     key    = "persistent-eip/terraform.tfstate"
@@ -50,7 +45,6 @@ data "terraform_remote_state" "persistent-eip" {
 
 data "terraform_remote_state" "ldap" {
   backend = "s3"
-
   config = {
     bucket = var.remote_state_bucket_name
     key    = "delius-core/application/ldap/terraform.tfstate"
@@ -60,10 +54,18 @@ data "terraform_remote_state" "ldap" {
 
 data "terraform_remote_state" "access_logs" {
   backend = "s3"
-
   config = {
     bucket = var.remote_state_bucket_name
     key    = "delius-core/access-logs/terraform.tfstate"
+    region = var.region
+  }
+}
+
+data "terraform_remote_state" "alerts" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/alerts/terraform.tfstate"
     region = var.region
   }
 }

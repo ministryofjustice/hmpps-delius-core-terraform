@@ -37,7 +37,10 @@ module "ecs" {
   target_group_count = 2 # to support both the default and the public load balancer
 
   # Monitoring
-  enable_telemetry = true
+  enable_telemetry  = true
+  log_error_pattern = "ERROR"
+  monitoring_lb_arn = aws_lb.alb.arn
+  notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])
