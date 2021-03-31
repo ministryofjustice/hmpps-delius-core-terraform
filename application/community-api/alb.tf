@@ -189,16 +189,15 @@ resource "aws_route53_record" "alb" {
   records = [aws_lb.alb.dns_name]
 }
 
-// TODO disabled for testing, the old record needs to be destroyed (from hmpps-delius-new-tech-terraform)
-//resource "aws_route53_record" "secure_alb" {
-//  # This record is enabled for backward-compatibility only.
-//  # Clients should instead use the `community-api.*` URL (without the `-secure` suffix)
-//  zone_id = data.terraform_remote_state.vpc.outputs.public_zone_id
-//  name    = "${local.app_name}-secure"
-//  type    = "CNAME"
-//  ttl     = 300
-//  records = [aws_lb.alb.dns_name]
-//}
+resource "aws_route53_record" "secure_alb" {
+  # This record is enabled for backward-compatibility only.
+  # Clients should instead use the `community-api.*` URL (without the `-secure` suffix)
+  zone_id = data.terraform_remote_state.vpc.outputs.public_zone_id
+  name    = "${local.app_name}-secure"
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_lb.alb.dns_name]
+}
 
 resource "aws_route53_record" "public_alb" {
   zone_id = local.route53_zone_id
