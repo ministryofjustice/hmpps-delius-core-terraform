@@ -8,7 +8,8 @@ module "api" {
   container_definition = data.template_file.api_container_definition.rendered
   required_cpu         = local.app_config["api_cpu"]
   required_memory      = local.app_config["api_memory"]
-  max_capacity         = "1" # Fix to a single instance, as currently the batch processes cannot be scaled horizontally
+  min_capacity         = local.app_config["api_min_capacity"]
+  max_capacity         = local.app_config["api_max_capacity"]
   vpc_id               = data.terraform_remote_state.vpc.outputs.vpc_id
   lb_listener_arn      = data.terraform_remote_state.ndelius.outputs.lb_listener_arn
   lb_path_patterns     = ["/merge/api", "/merge/api/*"]

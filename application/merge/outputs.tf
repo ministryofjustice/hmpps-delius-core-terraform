@@ -1,11 +1,10 @@
-// TODO:
-//output "api_service" {
-//  value = module.api.service
-//}
-//
-//output "ui_service" {
-//  value = module.ui.service
-//}
+output "api_service" {
+  value = module.api.service
+}
+
+output "ui_service" {
+  value = module.ui.service
+}
 
 output "primary_db" {
   value = {
