@@ -166,6 +166,26 @@ resource "aws_security_group_rule" "ndelius_external_elb_egress_gdpr_ui" {
   description              = "Out to GDPR UI instances"
 }
 
+resource "aws_security_group_rule" "ndelius_external_elb_egress_merge_api" {
+  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "8080"
+  to_port                  = "8080"
+  source_security_group_id = aws_security_group.merge_api.id
+  description              = "Out to Merge API instances"
+}
+
+resource "aws_security_group_rule" "ndelius_external_elb_egress_merge_ui" {
+  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "80"
+  to_port                  = "80"
+  source_security_group_id = aws_security_group.merge_ui.id
+  description              = "Out to Merge UI instances"
+}
+
 ################################################################################
 ## Instances
 ################################################################################
