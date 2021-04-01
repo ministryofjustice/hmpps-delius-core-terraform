@@ -30,7 +30,8 @@ module "ui" {
   ]
 
   # Monitoring
-  monitoring_lb_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
+  create_lb_alarms  = true
+  load_balancer_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
   notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Auto-Scaling

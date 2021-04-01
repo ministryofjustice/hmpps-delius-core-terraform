@@ -6,7 +6,5 @@ locals {
 
   # If a single container definition is provided with no log configuration, auto-create a log group:
   create_log_group = length(var.container_definitions) == 1 && ! contains(keys(var.container_definitions[0]), "logConfiguration")
-  # If load balancer details have been provided, and there is a target group for this service, auto-create CloudWatch alarms:
-  create_lb_alarms = var.notification_arn != "" && var.monitoring_lb_arn != "" && var.target_group_count > 0
 }
 

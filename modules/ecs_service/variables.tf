@@ -155,8 +155,13 @@ variable "notification_arn" {
   default     = ""
 }
 
-variable "monitoring_lb_arn" {
-  description = "ARN of the service's load balancer, if there is one. This is used for alerting on response times and error counts. By default, no response-based alarms are created."
+variable "create_lb_alarms" {
+  description = "Whether to create alarms for response times and error counts."
+  default     = false
+}
+
+variable "load_balancer_arn" {
+  description = "ARN of the service's load balancer, if there is one. Required for alerting on response times and error counts."
   default     = ""
 }
 

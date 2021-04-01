@@ -37,10 +37,11 @@ module "service" {
   ]
 
   # Monitoring
-  enable_telemetry  = true
-  log_error_pattern = "ERROR"
-  monitoring_lb_arn = aws_lb.alb.arn
   notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
+  enable_telemetry  = true
+  create_lb_alarms  = true
+  load_balancer_arn = aws_lb.alb.arn
+  log_error_pattern = "ERROR"
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])

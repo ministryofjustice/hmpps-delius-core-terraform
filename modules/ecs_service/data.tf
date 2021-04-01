@@ -1,8 +1,8 @@
 data "aws_caller_identity" "current" {}
 
-data "aws_lb" "monitoring_lb" {
-  count = var.monitoring_lb_arn != "" ? 1 : 0
-  arn   = var.monitoring_lb_arn
+data "aws_lb" "lb" {
+  count = var.create_lb_alarms ? 1 : 0
+  arn   = var.load_balancer_arn
 }
 
 data "terraform_remote_state" "vpc" {
