@@ -203,16 +203,6 @@ resource "aws_security_group_rule" "interface_instances_egress_ldap" {
   description              = "LDAP ELB out"
 }
 
-resource "aws_security_group_rule" "interface_external_elb_egress_newtechweb" {
-  security_group_id        = aws_security_group.weblogic_interface_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "9000"
-  to_port                  = "9000"
-  source_security_group_id = aws_security_group.newtech_web.id
-  description              = "Out to New Tech Web ECS Service"
-}
-
 resource "aws_security_group_rule" "interface_external_elb_egress_aptracker_api" {
   security_group_id        = aws_security_group.weblogic_interface_lb.id
   type                     = "egress"
