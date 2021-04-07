@@ -12,7 +12,6 @@ module "api" {
     image      = "${local.app_config["api_image_url"]}:${local.app_config["api_version"]}"
     entryPoint = ["java", "-Duser.timezone=Europe/London", "-jar", "/app.jar"]
   }]
-
   environment = {
     SERVER_SERVLET_CONTEXT_PATH                                          = "/merge/api/"
     SPRING_DATASOURCE_JDBC-URL                                           = "jdbc:postgresql://${aws_db_instance.primary.endpoint}/${aws_db_instance.primary.name}"
@@ -29,13 +28,13 @@ module "api" {
     ALFRESCO_DMS-HOST                                                    = "alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}"
     SECURITY_OAUTH2_RESOURCE_ID                                          = "NDelius"
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUE-TOKEN_CLIENT-ID         = "Merge-API"
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUE-TOKEN_INTROSPECTION-URI = "http://user-management.ecs.cluster:8080/umt/oauth/check_token"
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUE-TOKEN_INTROSPECTION-URI = "http://usermanagement.ecs.cluster:8080/umt/oauth/check_token"
     LOGGING_LEVEL_UK_GOV_JUSTICE                                         = local.app_config["log_level"]
   }
   secrets = {
-    SECURITY_OAUTH2_CLIENT_CLIENT-SECRET = "/${var.environment_name}/${var.project_name}/merge/api/client_secret"
-    SPRING_DATASOURCE_PASSWORD           = "/${var.environment_name}/${var.project_name}/merge/db/admin_password"
-    SPRING_SECOND-DATASOURCE_PASSWORD    = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_pool_password"
+    SPRING_SECOND-DATASOURCE_PASSWORD                                = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_pool_password"
+    SPRING_DATASOURCE_PASSWORD                                       = "/${var.environment_name}/${var.project_name}/merge/db/admin_password"
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUE-TOKEN_CLIENT-SECRET = "/${var.environment_name}/${var.project_name}/merge/api/client_secret"
   }
 
   # Security & Networking
@@ -50,8 +49,9 @@ module "api" {
 
   # Monitoring
   enable_telemetry  = true
+  create_lb_alarms  = true
+  load_balancer_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
   log_error_pattern = "ERROR"
-  monitoring_lb_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
   notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Scaling
