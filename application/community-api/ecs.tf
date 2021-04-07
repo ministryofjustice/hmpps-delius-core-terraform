@@ -12,12 +12,14 @@ module "ecs" {
   ignore_task_definition_changes = true # Deployment is managed by Circle CI
   health_check_path              = "/health/ping"
   environment = merge(local.environment, {
-    SPRING_DATASOURCE_URL  = data.terraform_remote_state.database.outputs.jdbc_failover_url
-    DELIUS_LDAP_USERS_BASE = data.terraform_remote_state.ldap.outputs.ldap_base_users
-    SPRING_LDAP_USERNAME   = data.terraform_remote_state.ldap.outputs.ldap_bind_user
-    SPRING_LDAP_URLS       = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
-    ALFRESCO_BASEURL       = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}/alfresco/s/noms-spg"
-    DELIUS_BASEURL         = "https://${data.terraform_remote_state.interface.outputs.private_fqdn_interface_wls_internal_alb}/api"
+    SPRING_PROFILES_ACTIVE     = "oracle"
+    SPRING_DATASOURCE_USERNAME = "delius_pool"
+    SPRING_DATASOURCE_URL      = data.terraform_remote_state.database.outputs.jdbc_failover_url
+    DELIUS_LDAP_USERS_BASE     = data.terraform_remote_state.ldap.outputs.ldap_base_users
+    SPRING_LDAP_USERNAME       = data.terraform_remote_state.ldap.outputs.ldap_bind_user
+    SPRING_LDAP_URLS           = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
+    ALFRESCO_BASEURL           = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}/alfresco/s/noms-spg"
+    DELIUS_BASEURL             = "https://${data.terraform_remote_state.interface.outputs.private_fqdn_interface_wls_internal_alb}/api"
     # ... Add any environment variables here that should be pulled from Terraform data sources.
     #     Other environment variables are managed by CircleCI. See https://github.com/ministryofjustice/community-api/blob/main/.circleci/config.yml
   })
