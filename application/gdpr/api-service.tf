@@ -33,7 +33,7 @@ module "api" {
     SCHEDULE_DESTRUCTIONLOGCLEARING         = local.app_config["cron_destructionlogclearing"]
     SECURITY_OAUTH2_RESOURCE_ID             = "NDelius"
     SECURITY_OAUTH2_CLIENT_CLIENT-ID        = "GDPR-API"
-    SECURITY_OAUTH2_RESOURCE_TOKEN-INFO-URI = "http://user-management.ecs.cluster:8080/umt/oauth/check_token"
+    SECURITY_OAUTH2_RESOURCE_TOKEN-INFO-URI = "http://usermanagement.ecs.cluster:8080/umt/oauth/check_token"
     LOGGING_LEVEL_UK_GOV_JUSTICE            = local.app_config["log_level"]
   }
   secrets = {
