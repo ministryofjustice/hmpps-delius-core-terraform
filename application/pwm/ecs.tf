@@ -41,7 +41,7 @@ module "service" {
   enable_telemetry  = true
   create_lb_alarms  = true
   load_balancer_arn = aws_lb.alb.arn
-  log_error_pattern = "ERROR"
+  log_error_pattern = "FATAL"
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])
