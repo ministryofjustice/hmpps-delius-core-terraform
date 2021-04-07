@@ -36,7 +36,7 @@ module "ecs" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_community_api_instances_id
   ]
-  target_group_count = 2 # to support both the default and the public load balancer
+  target_group_count = 3 # Currently there are 3 load balancers - default (community-api), public (community-api-public), and legacy/secure (community-api-secure)
 
   # Monitoring
   notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn

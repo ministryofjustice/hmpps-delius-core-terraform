@@ -119,8 +119,6 @@ resource "aws_lb_listener" "public_alb_listener" {
   default_action {
     type = "redirect"
     redirect {
-      port        = 443
-      protocol    = "HTTPS"
       status_code = "HTTP_302"
       path        = "/swagger-ui/index.html"
     }
@@ -181,6 +179,7 @@ resource "aws_lb_listener" "public_http_listener" {
 
 
 # DNS
+# community-api.<env>.probation.service.justice.gov.uk (except in Pre-Prod which still uses dsd.io - see ALS-2849)
 resource "aws_route53_record" "alb" {
   zone_id = local.route53_zone_id
   name    = local.app_name
@@ -189,16 +188,7 @@ resource "aws_route53_record" "alb" {
   records = [aws_lb.alb.dns_name]
 }
 
-resource "aws_route53_record" "secure_alb" {
-  # This record is enabled for backward-compatibility only.
-  # Clients should instead use the `community-api.*` URL (without the `-secure` suffix)
-  zone_id = data.terraform_remote_state.vpc.outputs.public_zone_id
-  name    = "${local.app_name}-secure"
-  type    = "CNAME"
-  ttl     = 300
-  records = [aws_lb.alb.dns_name]
-}
-
+# community-api-public.<env>.probation.service.justice.gov.uk (except in Pre-Prod which still uses dsd.io - see ALS-2849)
 resource "aws_route53_record" "public_alb" {
   zone_id = local.route53_zone_id
   name    = "${local.app_name}-public"
@@ -206,4 +196,3 @@ resource "aws_route53_record" "public_alb" {
   ttl     = 300
   records = [aws_lb.public_alb.dns_name]
 }
-
