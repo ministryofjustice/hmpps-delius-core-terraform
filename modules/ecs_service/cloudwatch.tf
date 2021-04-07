@@ -12,9 +12,10 @@ resource "aws_cloudwatch_log_metric_filter" "log_error_filter" {
   name           = "${var.environment_name}-${var.service_name}-logged-errors"
   pattern        = var.log_error_pattern
   metric_transformation {
-    name      = "LoggedErrors"
-    namespace = "${var.environment_name}/${var.service_name}"
-    value     = "1"
+    name          = "LoggedErrors"
+    namespace     = "${var.environment_name}/${var.service_name}"
+    value         = 1
+    default_value = 0
   }
 }
 
@@ -22,15 +23,30 @@ resource "aws_cloudwatch_metric_alarm" "log_error_warning_alarm" {
   count               = var.log_error_pattern != "" && local.create_log_group && var.notification_arn != "" ? 1 : 0
   alarm_name          = "${var.environment_name}-${var.service_name}-logged-errors-cwa--warning"
   alarm_description   = "Error messages were detected in the `${var.service_name}` logs."
-  namespace           = "${var.environment_name}/${var.service_name}"
-  statistic           = "Sum"
-  metric_name         = "ErrorCount"
-  comparison_operator = "GreaterThanThreshold"
-  threshold           = "1"
-  evaluation_periods  = "1"
-  period              = "60"
+  comparison_operator = "GreaterThanUpperThreshold"
+  threshold_metric_id = "ad1"
+  evaluation_periods  = 2
   alarm_actions       = [var.notification_arn]
   ok_actions          = [var.notification_arn]
+
+  metric_query {
+    id          = "ad1"
+    expression  = "ANOMALY_DETECTION_BAND(m1)"
+    label       = "${aws_cloudwatch_log_metric_filter.log_error_filter.0.metric_transformation.0.name} (expected)"
+    return_data = true
+  }
+
+  metric_query {
+    id          = "m1"
+    label       = aws_cloudwatch_log_metric_filter.log_error_filter.0.metric_transformation.0.name
+    return_data = true
+    metric {
+      namespace   = aws_cloudwatch_log_metric_filter.log_error_filter.0.metric_transformation.0.namespace
+      metric_name = aws_cloudwatch_log_metric_filter.log_error_filter.0.metric_transformation.0.name
+      period      = 300
+      stat        = "Sum"
+    }
+  }
 }
 
 # Healthy host count alarms
