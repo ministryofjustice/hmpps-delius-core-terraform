@@ -112,7 +112,7 @@ resource "aws_cloudwatch_metric_alarm" "response_time_warning_alarm" {
 resource "aws_cloudwatch_metric_alarm" "response_time_critical_alarm" {
   count               = var.create_lb_alarms ? 1 : 0
   alarm_name          = "${var.environment_name}-${var.service_name}-response-time-cwa--critical"
-  alarm_description   = "Average response time for the `${var.service_name}` service exceeded 1 second for an extended period."
+  alarm_description   = "Average response time for the `${var.service_name}` service exceeded 5 seconds."
   namespace           = "AWS/ApplicationELB"
   statistic           = "Average"
   metric_name         = "TargetResponseTime"
