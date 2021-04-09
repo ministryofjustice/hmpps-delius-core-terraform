@@ -176,6 +176,17 @@ resource "aws_security_group_rule" "gdpr_api_db_in" {
   description              = "Delius GDPR API In"
 }
 
+# Allow Merge API in
+resource "aws_security_group_rule" "merge_api_db_in" {
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = aws_security_group.merge_api.id
+  description              = "Merge API In"
+}
+
 # Allow Delius API in
 resource "aws_security_group_rule" "delius_api_db_in" {
   security_group_id        = aws_security_group.delius_db_in.id
