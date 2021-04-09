@@ -28,6 +28,7 @@ resource "aws_cloudwatch_metric_alarm" "log_error_warning_alarm" {
   evaluation_periods  = 2
   alarm_actions       = [var.notification_arn]
   ok_actions          = [var.notification_arn]
+  actions_enabled     = false # Disabled initially, while anomaly detection models are trained
 
   metric_query {
     id          = "ad1"
