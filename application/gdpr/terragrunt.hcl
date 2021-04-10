@@ -3,5 +3,10 @@ include {
 }
 
 dependencies {
-  paths = ["../../security-groups", "../../database-failover", "../ndelius"]
+  paths = [
+    "../../alerts", "../../access-logs",
+    "../../security-groups",
+    "../../database_failover",
+    "../ndelius"
+  ]
 }

@@ -3,5 +3,5 @@ include {
 }
 
 dependencies {
-  paths = ["../../security-groups", "../../key_profile", "../pwm", "../ldap", "../../database-failover"]
+  paths = ["../../security-groups", "../../key_profile", "../../alerts"]
 }

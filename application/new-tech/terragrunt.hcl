@@ -3,5 +3,8 @@ include {
 }
 
 dependencies {
-  paths = ["../../security-groups"]
+  paths = [
+    "../../alerts", "../../access-logs",
+    "../../security-groups"
+  ]
 }

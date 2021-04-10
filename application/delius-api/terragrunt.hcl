@@ -1,7 +1,10 @@
 include {
   path = find_in_parent_folders()
 }
-
 dependencies {
-  paths = ["../../database_failover", "../../security-groups"]
+  paths = [
+    "../../alerts", "../../access-logs",
+    "../../security-groups",
+    "../../database_failover"
+  ]
 }
