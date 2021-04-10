@@ -1,134 +1,105 @@
-# hmpps-delius-core-terraform
-Infrastructure and provisioning of Delius Core Applications into Delius environments.
-This project has a dependecy on:
-https://github.com/ministryofjustice/hmpps-env-configs
-https://github.com/ministryofjustice/hmpps-delius-network-terraform
+# Delius-Core Terraform
 
+Infrastructure and provisioning of the National Delius probation case management system, and its core supporting 
+services, into the Delius AWS environments.
 
-### Purpose
-This repo contains terraform code to create Delius Core testing environments.
+## Dependencies
+* [Environment config files](https://github.com/ministryofjustice/hmpps-env-configs) (see [#configuration](#configuration)).
+* [Common resources (e.g. VPC)](https://github.com/ministryofjustice/hmpps-delius-network-terraform) should already exist in the target environment.
+* IAM Credentials, with permissions to assume the `terraform` role.
 
-### Structure
-The repo contains top level directories,
-each of which (except for the env_configs directory) corresponds to an architectural component.
-These directories contain a single terraform configuration, allowing the components to be created separately, subject to the dependencies between them.
+## Usage
+### Local Development
+The [run.sh](run.sh) script, located in the root of the project, can be used to test and apply Terraform changes from 
+your local environment. This is used to run Terragrunt commands in the [HMPPS Terraform Builder](https://github.com/ministryofjustice/hmpps-engineering-tools/tree/master/terraform-builder-0-12) 
+Docker container, with the environment configuration mounted in the right place.
 
-The configurations are decoupled from each other by the use of terraform data blocks bringing in name/tag values from the other components.
-You should not be referencing IDs or other data directly emitted as outputs from other components.
-
-Each configuration constructs any local identifiers from a short list of variables (region, project, environment type, vpc CIDR, account ID) passed in.
-You should not leak derived values into the env_configs directory (see below)
-
-## Environment configurations
-
-The environment configurations are to be copied into a directory named `env_configs` with the following example structure:
-
-```
-env_configs
-├── common
-│   ├── common.properties
-│   └── common.tfvars
-└── delius-core-dev
-    ├── delius-core-dev.credentials.yml
-    ├── delius-core-dev.properties
-    └── delius-core-dev.tfvars
+We recommend creating an alias for the run.sh script, so it can be used for applying other HMPPS Terraform projects:
+```shell
+alias tg='AWS_PROFILE=hmpps_token /path/to/run.sh'
 ```
 
-An example method of obtaining the configs would be:
+#### Examples:
+* Fetch configuration repository:
+```shell
+git clone https://github.com/ministryofjustice/hmpps-env-configs ../hmpps-env-configs
 ```
-CONFIG_BRANCH=master
-ENVIRONMENT_NAME=delius-core-dev
-
-mkdir -p env_configs/common
-
-wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/common/common.properties" --output-document="env_configs/common/common.properties"
-wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/common/common.tfvars" --output-document="env_configs/common/common.tfvars"
-wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.properties" --output-document="env_configs/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.properties"
-wget "https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/${CONFIG_BRANCH}/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.tfvars" --output-document="env_configs/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.tfvars"
-
-source env_configs/${ENVIRONMENT_NAME}/${ENVIRONMENT_NAME}.properties
+* Plan changes to the Delius Database in the Dev environment:
+```shell
+ENVIRONMENT=delius-core-dev COMPONENT=database_failover tg plan
 ```
-
-or
+* Plan and apply changes to the Community-API service in the Test account:
+```shell
+ENVIRONMENT=delius-test COMPONENT=application/community-api tg plan
+ENVIRONMENT=delius-test COMPONENT=application/community-api tg apply
 ```
-CONFIG_BRANCH=master
-TARGET_DIR=env_configs
-
-git clone --depth 1 -b "${CONFIG_BRANCH}" git@github.com:ministryofjustice/hmpps-env-configs.git "${TARGET_DIR}"
+* Apply _everything_:
+```shell
+ENVIRONMENT=delius-core-dev tg apply-all
 ```
 
-## Run order
+### Continuous Integration
+Any Pull Request created in this repository will trigger a CodePipeline execution to deploy your changes to the 
+`delius-core-dev` environment. This allows quick verification that the proposed changes work as intended, and adds a 
+status check in GitHub to indicate whether the deployment was successful.
 
-Start with security-groups
-then
-```
-└── security-groups
-    └── application
-```
+Once a Pull Request has been approved and merged, the repository will be tagged automatically by a GitHub Action defined
+here: [tag-master-branch-on-merge.yaml](.github/workflows/tag-master-branch-on-merge.yaml).
 
-The configurations are run with terragrunt, and all terragrunt related code should remain in the env_configs file and 2 files in the top-level folder of each configuration (main.tf, terraform.tfvars).
-You should not leak terragrunt related code into other files or modules within the configuration.
+The [delius-core-terraform](https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/delius-core-terraform/view?region=eu-west-2) 
+CodePipeline (in the Engineering-Dev account) will then roll the changes out to all environments, from development to
+production, requesting approval for significant changes in the [#delius-alerts-deliuscore-nonprod](https://mojdt.slack.com/archives/CRMJZ0PGB) 
+and [#delius-alerts-deliuscore-production](https://mojdt.slack.com/archives/CRMK94R8B) Slack channels.
 
-### Usage
+* Terraform CodePipeline: [deploy-infrastructure.tf](https://github.com/ministryofjustice/hmpps-delius-pipelines/blob/master/components/delius-core/deploy-infrastructure.tf)
+* Cross-Account CodePipeline: [delius-core-terraform.tf](https://github.com/ministryofjustice/hmpps-delius-pipelines/blob/master/engineering/deployments/delius-core-terraform-pipeline.tf)
 
-To run a single configuration locally, with terragrunt installed:
+The [delius-versions](https://github.com/ministryofjustice/delius-versions) repository will be updated with the tagged 
+version after deployment, and the current version for each environment will appear on the [Delius Versions Dashboard](https://ministryofjustice.github.io/delius-versions-dashboard) 
+in the `Infrastructure` column.
 
-1. Run one of the <env_type>/<env_type>.properties.sh files, to select which environment you are working with.
-2. Navigate to the directory corresponding to the component you want to update
-3. terragrunt init
-4. terragrunt plan
-5. terragrunt apply
+## Configuration
+Environment configuration files can be found in the [hmpps-env-configs](https://github.com/ministryofjustice/hmpps-env-configs)
+repository. These files should be made available in the `env_configs` directory, before running any Terragrunt commands.
 
-It is also possible to run all configurations with the terragrunt *-all commands, from the top-level directory.
+```shell
+# 1. Fetch environment configuration
+git clone https://github.com/ministryofjustice/hmpps-env-configs ../hmpps-env-configs
 
-It is recommended to use the containerised teraform/terragrunt tooling, to ensure consistency with the automated CI build.
-
-It is even more recommended to use the automated CI build directly.
-
-### Bastion
-
-To access an environment you will need to use the bastion host.
-
-## GitHub Actions
-
-An action to delete the branch after merge has been added.
-Also an action that will tag when branch is merged to master
-See https://github.com/anothrNick/github-tag-action
-
-```
-Bumping
-
-Manual Bumping: Any commit message that includes #major, #minor, or #patch will trigger the respective version bump. If two or more are present, the highest-ranking one will take precedence.
-
-Automatic Bumping: If no #major, #minor or #patch tag is contained in the commit messages, it will bump whichever DEFAULT_BUMP is set to (which is minor by default).
-
-Note: This action will not bump the tag if the HEAD commit has already been tagged.
+# 2. Create a symbolic link (this part is handled automatically in the run.sh script)
+ln -s -f ../hmpps-env-configs env_configs
 ```
 
-## Release / Deployments
+## Components
+### Applications
+#### WebLogic Domains
+* [application/ndelius](application/ndelius) - National Delius application
+* [application/interface](application/interface) - National Delius API endpoints
+* [application/spg](application/spg) - Strategic Partner Gateway message broker - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2768438337/ActiveMQ)
+#### ECS Services - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/3107979730/ECS+Cluster)
+* [application/pwm](application/pwm) - Password Reset Tool - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2116092086/PWM+-+Password+Reset)
+* [application/umt](application/umt) - User Management Tool
+* [application/community-api](application/community-api)
+* [application/delius-api](application/delius-api)
+* [application/pdf-generator](application/pdf-generator)
+* [application/gdpr](application/gdpr)
+* [application/merge](application/merge)
+* [application/aptracker-api](application/aptracker-api)
+### Batch
+* [batch/dss](batch/dss) - NOMIS/OFFLOC Data Share System - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/1488486513/Data+Share+System+DSS)
+### Data
+* [database_failover](database_failover) - Delius Primary OracleDB
+* [database_standbydb1](database_standbydb1) - Delius Standby OracleDB 
+* [database_standbydb2](database_standbydb2) - Delius Standby OracleDB
+* [application/ldap](application/ldap) - LDAP User Data Store - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2032271398/LDAP)
+### Monitoring
+* [access-logs](access-logs) - Bucket for storing LB access logs
+* [alerts](alerts) - Common Slack alerting lambdas
+* [dashboards](dashboards) - CloudWatch dashboards - [Example](https://cloudwatch.amazonaws.com/dashboard.html?dashboard=delius-test-ServiceHealth&context=eyJSIjoidXMtZWFzdC0xIiwiRCI6ImN3LWRiLTcyODc2NTU1MzQ4OCIsIlUiOiJ1cy1lYXN0LTFfaXpGMk9Xb3RwIiwiQyI6IjIzbnM2c2RicWtkNmZyZDdmYXBldXFrbWllIiwiSSI6InVzLWVhc3QtMTpjZjBmOWFkMS01MzY0LTRjOTMtYjRlMy1kY2ZlYjAzOTA2N2MiLCJNIjoiUHVibGljIn0%3D)
+### Security
+* [key_profile](key_profile) - KMS Keys and Instance Profiles
+* [security-groups](security-groups) - Security Groups and Rules
 
-The new process will include the addition of deploying a known version of this code using a tag from the git repo.
-After the code is tested, code reviewed the merge of the feature branch to master will trigger the GitHub action resulting in git tag creation.
-These tags can be progressed through the environments towards Production by specifying the tag to deploy.
-
-The tag value is retrieved from AWS SSM Parameter Store. See https://github.com/ministryofjustice/delius-versions
-The version retrieved from the AWS SSM Parameter Store is set by updating the tag value in the map `hmpps-delius-core-terraform` in `config/020-delius-core.tfvars` for the environment.
-
-### Jenkins file
-
-This jenkinsfile has two parameters (not to be confused with AWS SSM Parameters)
-- CONFIG_BRANCH
-- DCORE_BRANCH
-
-This has been used to specify the branch to use in place of the default `master` branch. Going forward the default will be the Git tag or branch specified in the AWS SSM Parameter Store. However the option to override will still be available for development, debugging and hotfix situations.
-
-*psuedo code*
-
-```
-if ("aws ssm parameter version" not empty and "DCORE_BRANCH" not defaultValue)
-  set "delius core version" to "aws ssm parameter version"
-else
-  set "delius core version" to "DCORE_BRANCH"
-else
-  error
-```
+## Contact
+For any issues, please contact the Delius Infrastructure Support team via the [#delius_infra_support](https://mojdt.slack.com/archives/CNXK9893K) Slack channel.
+Or feel free to create a [new issue](https://github.com/ministryofjustice/hmpps-delius-core-terraform/issues/new) in this repository.
