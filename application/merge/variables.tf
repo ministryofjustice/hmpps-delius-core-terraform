@@ -18,6 +18,11 @@ variable "project_name" {
   description = "Project name to be used when looking up SSM parameters - eg. delius-core"
 }
 
+variable "common_ecs_scaling_config" {
+  description = "Default scaling configuration for ECS services. Can be overridden per-application or per-environment in the environment configuration repository (hmpps-env-configs)."
+  type        = map(string)
+}
+
 variable "merge_config" {
   description = "Application-specific configuration items"
   type        = map(string)
@@ -34,18 +39,6 @@ variable "default_merge_config" {
     # See https://github.com/ministryofjustice/hmpps-env-configs/blob/master/common/common.tfvars
     #     https://github.com/ministryofjustice/hmpps-env-configs/blob/master/common/common-prod.tfvars
   }
-}
-
-variable "ansible_vars" {
-  description = "Ansible config - used for pulling the Alfresco host"
-  type        = map(string)
-  default     = {}
-}
-
-variable "default_ansible_vars" {
-  description = "Default values to be overridden by ansible_vars."
-  type        = map(string)
-  default     = {}
 }
 
 variable "tags" {

@@ -26,20 +26,20 @@ resource "aws_elasticache_parameter_group" "redis_parameter_group" {
 resource "aws_elasticache_replication_group" "token_store_replication_group" {
   replication_group_id          = "${var.environment_name}-${local.app_name}-rg"
   replication_group_description = "${var.environment_name}-${local.app_name} - Token store replication group"
-  security_group_ids         = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_tokenstore_id]
-  subnet_group_name          = aws_elasticache_subnet_group.subnet_group.name
-  engine                     = "redis"
-  engine_version             = "5.0.6"
-  parameter_group_name       = aws_elasticache_parameter_group.redis_parameter_group.name
-  port                       = 6379
-  automatic_failover_enabled = true
-  at_rest_encryption_enabled = true
-  apply_immediately          = var.environment_name != "delius-prod"
-  tags                       = var.tags
-  node_type                  = local.umt_config["redis_node_type"]
+  security_group_ids            = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_tokenstore_id]
+  subnet_group_name             = aws_elasticache_subnet_group.subnet_group.name
+  engine                        = "redis"
+  engine_version                = "5.0.6"
+  parameter_group_name          = aws_elasticache_parameter_group.redis_parameter_group.name
+  port                          = 6379
+  automatic_failover_enabled    = true
+  at_rest_encryption_enabled    = true
+  apply_immediately             = var.environment_name != "delius-prod"
+  tags                          = var.tags
+  node_type                     = local.app_config["redis_node_type"]
   cluster_mode {
-    num_node_groups         = local.umt_config["redis_node_groups"]
-    replicas_per_node_group = local.umt_config["redis_replicas_per_node_group"]
+    num_node_groups         = local.app_config["redis_node_groups"]
+    replicas_per_node_group = local.app_config["redis_replicas_per_node_group"]
   }
 }
 

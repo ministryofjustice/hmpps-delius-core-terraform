@@ -18,10 +18,15 @@ variable "project_name" {
   description = "Project name to be used when looking up SSM parameters - eg. delius-core"
 }
 
+variable "common_ecs_scaling_config" {
+  description = "Default scaling configuration for ECS services. Can be overridden per-application or per-environment in the environment configuration repository (hmpps-env-configs)."
+  type        = map(string)
+}
+
 variable "gdpr_config" {
   description = "Application-specific configuration items"
   type        = map(string)
-  default     = {
+  default = {
     # Defaults are below. Keeping these as separate variables allows us to override specific config keys
     # without having to rewrite the entire map, by using the merge() function. See locals.tf.
   }
@@ -30,22 +35,10 @@ variable "gdpr_config" {
 variable "default_gdpr_config" {
   description = "Default values to be overridden by gdpr_config. This should match the intended config for production."
   type        = map(string)
-  default     = {
+  default = {
     # See https://github.com/ministryofjustice/hmpps-env-configs/blob/master/common/common.tfvars
     #     https://github.com/ministryofjustice/hmpps-env-configs/blob/master/common/common-prod.tfvars
   }
-}
-
-variable "ansible_vars" {
-  description = "Ansible config - used for pulling the Alfresco host"
-  type        = map(string)
-  default     = {}
-}
-
-variable "default_ansible_vars" {
-  description = "Default values to be overridden by ansible_vars."
-  type        = map(string)
-  default     = {}
 }
 
 variable "tags" {

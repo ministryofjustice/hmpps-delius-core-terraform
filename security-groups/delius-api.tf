@@ -69,7 +69,7 @@ resource "aws_security_group_rule" "delius_api_instances_from_community_api" {
   protocol                 = "tcp"
   from_port                = 8080
   to_port                  = 8080
-  source_security_group_id = aws_security_group.newtech_offenderapi_out.id
+  source_security_group_id = aws_security_group.community_api_instances.id
   description              = "In from Community API"
 }
 

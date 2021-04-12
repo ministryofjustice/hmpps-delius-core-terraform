@@ -1,7 +1,7 @@
 resource "aws_appautoscaling_target" "scaling_target" {
   min_capacity       = var.min_capacity
   max_capacity       = var.max_capacity
-  resource_id        = "service/${var.ecs_cluster["name"]}/${aws_ecs_service.service.name}"
+  resource_id        = "service/${data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_name}/${aws_ecs_service.service.name}"
   role_arn           = aws_iam_role.exec.arn
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"

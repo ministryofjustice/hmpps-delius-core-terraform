@@ -38,10 +38,6 @@ output "ami_spg_wls" {
   value = "${data.aws_ami.centos_wls.id} - ${data.aws_ami.centos_wls.name}"
 }
 
-output "newtech_webfrontend_target_group_arn" {
-  value = module.spg.newtech_webfrontend_targetgroup_arn
-}
-
 output "activemq_healthy_hosts_alarm_arn" {
   value = aws_cloudwatch_metric_alarm.activemq_healthy_hosts_fatal_alarm.arn
 }

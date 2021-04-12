@@ -115,6 +115,20 @@ data "terraform_remote_state" "alerts" {
   }
 }
 
+#-------------------------------------------------------------
+### Getting the bucket for storing access logs
+#-------------------------------------------------------------
+data "terraform_remote_state" "access_logs" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/access-logs/terraform.tfstate"
+    region = var.region
+  }
+}
+
+
 data "aws_ssm_parameter" "ami_version" {
   name = "/versions/delius-core/ami/weblogic/${var.environment_name}"
 }

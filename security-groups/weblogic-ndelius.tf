@@ -132,8 +132,8 @@ resource "aws_security_group_rule" "ndelius_external_elb_egress_newtechweb" {
   protocol                 = "tcp"
   from_port                = "9000"
   to_port                  = "9000"
-  source_security_group_id = aws_security_group.newtech_web.id
-  description              = "Out to New Tech Web ECS Service"
+  source_security_group_id = aws_security_group.new_tech_instances.id
+  description              = "Out to New Tech Web ECS Service instances"
 }
 
 resource "aws_security_group_rule" "ndelius_external_elb_egress_aptracker_api" {
