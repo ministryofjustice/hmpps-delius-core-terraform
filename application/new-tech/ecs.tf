@@ -35,11 +35,12 @@ module "ecs" {
   ]
 
   # Monitoring
-  enable_telemetry  = true
-  create_lb_alarms  = true
-  load_balancer_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
-  log_error_pattern = "error"
-  notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
+  notification_arn            = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
+  load_balancer_arn           = data.terraform_remote_state.ndelius.outputs.alb["arn"]
+  enable_telemetry            = true
+  create_lb_alarms            = true
+  enable_response_code_alarms = false # Temporarily disabled until 500 errors are resolved by developers
+  log_error_pattern           = "error"
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])
