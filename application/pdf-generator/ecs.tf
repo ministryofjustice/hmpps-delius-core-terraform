@@ -12,7 +12,10 @@ module "ecs" {
   container_definitions = [{
     image = local.app_config["image_url"]
     healthCheck = {
-      command = ["CMD-SHELL", "health=$(curl -sf http://localhost:8080/healthcheck || exit 1) && echo $health | jq -e '.status == \"OK\"'"]
+      command  = ["CMD-SHELL", "health=$(curl -sf http://localhost:8080/healthcheck || exit 1) && echo $health | jq -e '.status == \"OK\"'"]
+      interval = 30
+      retries  = 3
+      timeout  = 5
     }
   }]
   environment = { for key, value in local.app_config : replace(key, "env_", "") => value if length(regexall("^env_", key)) > 0 }
