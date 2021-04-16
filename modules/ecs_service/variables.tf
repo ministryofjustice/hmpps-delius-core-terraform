@@ -165,6 +165,21 @@ variable "load_balancer_arn" {
   default     = ""
 }
 
+variable "enable_response_code_alarms" {
+  description = "Enable or disable standard alarms for 5xx responses. Only used when load-balancer alarms are created (`var.create_lb_alarms`)."
+  default     = true
+}
+
+variable "enable_response_time_alarms" {
+  description = "Enable or disable standard alarms for response times. Only used when load-balancer alarms are created (`var.create_lb_alarms`)."
+  default     = true
+}
+
+variable "enable_healthy_host_alarms" {
+  description = "Enable or disable standard alarms for the number of healthy instances. Only used when load-balancer alarms are created (`var.create_lb_alarms`)."
+  default     = true
+}
+
 variable "enable_telemetry" {
   description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
   default     = false
