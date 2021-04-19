@@ -27,8 +27,9 @@ module "service" {
   }
 
   # Security & Networking
-  health_check_matcher  = "200-399"
-  lb_stickiness_enabled = true
+  lb_stickiness_enabled             = true
+  health_check_matcher              = "200-399"
+  health_check_grace_period_seconds = 60 # Reduced grace period, to speed up container replacement as PWM intermittently fails on initial startup due to https://github.com/pwm-project/pwm/issues/557
   security_groups = [
     data.terraform_remote_state.vpc_security_groups.outputs.sg_ssh_bastion_in_id,
     data.terraform_remote_state.vpc_security_groups.outputs.sg_smtp_ses,
