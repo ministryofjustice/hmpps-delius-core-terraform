@@ -161,8 +161,8 @@ resource "aws_security_group_rule" "newtech_offender_api_in" {
   protocol                 = "tcp"
   from_port                = "1521"
   to_port                  = "1521"
-  source_security_group_id = aws_security_group.newtech_offenderapi_out.id
-  description              = "New Tech Offender API In"
+  source_security_group_id = aws_security_group.community_api_instances.id
+  description              = "Community API In"
 }
 
 # Allow Delius GDPR API in
@@ -196,6 +196,17 @@ resource "aws_security_group_rule" "delius_api_db_in" {
   to_port                  = "1521"
   source_security_group_id = aws_security_group.delius_api_instances.id
   description              = "Delius API In"
+}
+
+# Allow Merge API in
+resource "aws_security_group_rule" "merge_api_db_in" {
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = aws_security_group.merge_api.id
+  description              = "Merge API In"
 }
 
 # Allow CI (Jenkins/AWS CodePipeline) access to DB
@@ -263,4 +274,15 @@ resource "aws_security_group_rule" "delius_int_smoke_test_ci_db_in_1521" {
   to_port                  = 1521
   source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.int_smoke_tests["security_group"]["id"]
   description              = "CI - Delius Integration Smoke Tests in 1521"
+}
+
+resource "aws_security_group_rule" "delius_api_test_ci_db_in_1521" {
+  count                    = var.ci_db_ingress_1521 ? 1 : 0
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.test_delius_api["security_group"]["id"]
+  description              = "CI - Delius API Tests in 1521"
 }

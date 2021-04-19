@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 ## HMPPS Terragrunt wrapper script.
 ## Runs Terragrunt commands in the HMPPS container, with sensible defaults and mounted config.
@@ -28,36 +28,43 @@ set -e
 # Print usage if ENVIRONMENT not set:
 if [ "${ENVIRONMENT}" == "" ]; then grep '^##' "${0}" && exit; fi
 
-# Print heading items. Note CodeBuild doesn't support color/formatting
-heading() { [ -n "${CODEBUILD_CI}" ] && echo -e "\n* ${*}" || echo -e "\n\033[1m${*}\033[0m"; }
+heading() { if [ -n "${CODEBUILD_CI}" ]; then echo -e "\n* ${*}"; else echo -e "\n\033[1m${*}\033[0m"; fi }
+load_config() { if [ -f "$1" ]; then echo "$1"; source "$1"; fi }
+config_is_local() { git config remote.origin.url | grep 'hmpps-engineering-platform-terraform\|hmpps-security-access-terraform\|hmpps-vcms-terraform\|hmpps-delius-bastion'; }
+engineering_env() { [[ "${ENVIRONMENT}" == eng-* ]]; }
+vcms_env() { [[ "${ENVIRONMENT}" == vcms-* ]]; }
+sec_env() { [[ "${ENVIRONMENT}" == sec-* ]]; }
 
 # Start container with mounted config:
 if [ -z "${TF_IN_AUTOMATION}" ]; then
 
   if [ -z "${CONFIG_LOCATION}" ]; then
     heading No config provided. Using defaults...
-    if [ "${ENVIRONMENT}" == "dev" ]; then CONFIG_LOCATION="$(pwd)/../hmpps-engineering-platform-terraform"
-                                      else CONFIG_LOCATION="$(pwd)/../hmpps-env-configs"; fi
-    if [ -d "${CONFIG_LOCATION}" ];   then echo "Mounting config from ${CONFIG_LOCATION}";
-                                      else (echo "Couldn't find config at ${CONFIG_LOCATION}" && exit 1); fi
+    CONFIG_LOCATION="$(pwd)/../hmpps-env-configs"
+    if   config_is_local; then CONFIG_LOCATION="$(pwd)";
+    elif engineering_env; then CONFIG_LOCATION="$(pwd)/../hmpps-engineering-platform-terraform";
+    elif vcms_env;        then CONFIG_LOCATION="$(pwd)/../hmpps-vcms-terraform";
+    elif sec_env;         then CONFIG_LOCATION="$(pwd)/../hmpps-security-access-terraform"; fi
+    if [ -d "${CONFIG_LOCATION}" ]; then echo "Mounting config from ${CONFIG_LOCATION}";
+                                    else (echo "Couldn't find config at ${CONFIG_LOCATION}" && exit 1); fi
   fi
 
   heading Starting container...
   CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
   echo "${CONTAINER}"
-  docker run -e "COMPONENT=${COMPONENT}" -e "ENVIRONMENT=${ENVIRONMENT}" -e "CMD=${CMD}" \
-    $(test -t 0 && echo '-it')                                `# Allocate an interactive terminal if one is available` \
-    --env-file <(env | grep '^AWS_')                          `# Pass any environment variables prefixed with 'AWS_'` \
-    --env-file <(env | grep '^TF_')                           `# Pass any environment variables prefixed with 'TF_'` \
-    -e "GITHUB_TOKEN=${GITHUB_TOKEN}"                         `# Pass GitHub token, in case we need to create CodeBuild resources` \
-    -e "TF_IN_AUTOMATION=True"                                `# This flag is used by Terraform to indicate a script run` \
-    ${TF_PLUGIN_CACHE_DIR:+-e TF_PLUGIN_CACHE_DIR=/plugins}   `# Enable caching of Terraform plugins on host, if TF_PLUGIN_CACHE_DIR is set` \
-    ${TF_PLUGIN_CACHE_DIR:+-v ${TF_PLUGIN_CACHE_DIR}:/plugins} \
-    -v "${HOME}/.aws:/home/tools/.aws:ro"                     `# Mount the hosts AWS config files` \
-    -v "$(pwd):/home/tools/data"                              `# Mount the Terraform code` \
-    -v "${CONFIG_LOCATION}:/home/tools/data/env_configs:ro"   `# Mount the Terraform config` \
-    -v "$(cd "${0%/*}" && pwd):/home/tools/util:ro"           `# Mount the current script` \
-  "${CONTAINER}" bash -c "/home/tools/util/${0##*/} ${*}"      # Re-run the current script in the container
+  docker run -e COMPONENT -e ENVIRONMENT -e CMD -e SOURCE_REPO_URL \
+    $(test -t 0 && echo '-it')                               `# Allocate an interactive terminal if one is available` \
+    --env-file <(env | grep -E '^(TF_|TG_|AWS_)')            `# Pass any environment variables prefixed with TF_, TG_ or AWS_` \
+    -e GITHUB_TOKEN -e "TF_VAR_github_token=${GITHUB_TOKEN}" `# Pass GitHub token, in case we need to create CodeBuild resources` \
+    -e "TF_IN_AUTOMATION=True"                               `# This flag is used by Terraform to indicate a script run` \
+    -e "TF_PLUGIN_CACHE_DIR=/tmp/plugin-cache"               `# Enable caching of Terraform plugins on host` \
+    $(test -n "${TF_PLUGIN_CACHE_DIR}" && echo "-v ${TF_PLUGIN_CACHE_DIR}:/tmp/plugin-cache") \
+    -e "CONFIG_LOCATION=/home/tools/config"                  `# Pass the Terraform config location`\
+    -v "${CONFIG_LOCATION}:/home/tools/config:ro"            `# Mount the Terraform config` \
+    -v "$(pwd):/home/tools/data"                             `# Mount the Terraform code` \
+    -v "${HOME}/.aws:/home/tools/.aws:ro"                    `# Mount the hosts AWS config files` \
+    -v "$(cd "${0%/*}" && pwd):/home/tools/util:ro"          `# Mount the current script` \
+  "${CONTAINER}" bash -c "/home/tools/util/${0##*/} ${*}"     # Re-run the current script in the container
   exit $?
 fi
 
@@ -75,11 +82,16 @@ echo "Environment: ${ENVIRONMENT:--}"
 echo "Component:   ${COMPONENT:--}"
 echo "Command:     ${action} ${options}"
 
-heading Loading configuration...
-test -f "env_configs/${ENVIRONMENT}/${ENVIRONMENT}.properties" && source "env_configs/${ENVIRONMENT}/${ENVIRONMENT}.properties"
-test -f "env_configs/env_configs/${ENVIRONMENT}.properties" && source "env_configs/env_configs/${ENVIRONMENT}.properties"
+heading Loading configuration from ${CONFIG_LOCATION:-$(pwd)}...
+[ ! -d env_configs ] && [ ! -h env_configs ] && ln -s -f "${CONFIG_LOCATION}" env_configs
+load_config "${CONFIG_LOCATION:-.}/${ENVIRONMENT}/${ENVIRONMENT}.properties"        # hmpps-env-configs
+load_config "${CONFIG_LOCATION:-.}/env_configs/${ENVIRONMENT}.properties"           # hmpps-security-access-terraform
+load_config "${CONFIG_LOCATION:-.}/env_configs/${ENVIRONMENT/eng-/}.properties"     # hmpps-engineering-platform-terraform
+load_config "${CONFIG_LOCATION:-.}/env_configs/${ENVIRONMENT/vcms-/}.properties.sh" # hmpps-vcms-terraform
+load_config "${CONFIG_LOCATION:-.}/env_configs/common.properties.sh"                # hmpps-vcms-terraform/common
 export TERRAGRUNT_IAM_ROLE="${TERRAGRUNT_IAM_ROLE/admin/terraform}"
-echo "Loaded $(env | grep -Ec '^(TF|TG)') properties"
+[ -n "${SOURCE_REPO_URL}" ] && export TF_VAR_tags=$(echo "${TF_VAR_tags}" | sed -E "s|(source-code = )\"[^\"]*\"|\1\"${SOURCE_REPO_URL}\"|")
+echo "Loaded $(env | grep -Ec '^(TF_|TG_)') properties"
 
 heading Setting up workspace...
 cd "${COMPONENT}"

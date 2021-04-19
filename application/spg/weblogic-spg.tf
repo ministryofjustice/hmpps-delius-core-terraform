@@ -10,7 +10,7 @@ module "spg" {
   source               = "../../modules/weblogic-admin-only"
   tier_name            = "spg"
   ami_id               = data.aws_ami.centos_wls.id
-  instance_type        = var.instance_type_weblogic
+  instance_type        = var.instance_type_activemq
   instance_count       = var.instance_count_weblogic_spg
   key_name             = data.terraform_remote_state.vpc.outputs.ssh_deployer_key
   iam_instance_profile = data.terraform_remote_state.key_profile.outputs.instance_profile_ec2_id

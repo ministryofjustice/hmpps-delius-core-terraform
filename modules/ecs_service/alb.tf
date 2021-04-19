@@ -1,7 +1,7 @@
 resource "aws_lb_target_group" "target_group" {
   count    = var.target_group_count
   name     = "${local.short_name}-tg${var.target_group_count == 1 ? "" : count.index + 1}"
-  vpc_id   = var.vpc_id
+  vpc_id   = data.terraform_remote_state.vpc.outputs.vpc_id
   protocol = "HTTP"
   port     = var.service_port
 

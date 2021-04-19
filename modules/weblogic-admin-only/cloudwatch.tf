@@ -41,9 +41,9 @@ resource "aws_cloudwatch_metric_alarm" "healthy_hosts_fatal_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_util_warning_alarm" {
   alarm_name          = "${var.environment_name}-${var.tier_name}-weblogic-cpu-cwa--warning"
-  alarm_description   = "WebLogic average CPU utilization exceeded 75% for the `${var.tier_name}` domain."
+  alarm_description   = "WebLogic CPU utilization exceeded 75% for the `${var.tier_name}` domain."
   namespace           = "AWS/EC2"
-  statistic           = "Average"
+  statistic           = "Maximum"
   metric_name         = "CPUUtilization"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = "75"
@@ -58,9 +58,9 @@ resource "aws_cloudwatch_metric_alarm" "cpu_util_warning_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_util_critical_alarm" {
   alarm_name          = "${var.environment_name}-${var.tier_name}-weblogic-cpu-cwa--critical"
-  alarm_description   = "WebLogic average CPU utilization exceeded 90% for the `${var.tier_name}` domain."
+  alarm_description   = "WebLogic CPU utilization exceeded 90% for the `${var.tier_name}` domain."
   namespace           = "AWS/EC2"
-  statistic           = "Average"
+  statistic           = "Maximum"
   metric_name         = "CPUUtilization"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = "90"

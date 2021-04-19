@@ -24,29 +24,33 @@ output "sg_common_out_id" {
   value = aws_security_group.common_out.id
 }
 
-# This is a temp solution to enable quick access to yum repos from dev env
-# during discovery.
 resource "aws_security_group_rule" "common_out_80" {
-  count             = var.egress_80 ? 1 : 0
   security_group_id = aws_security_group.common_out.id
   type              = "egress"
   protocol          = "tcp"
   from_port         = 80
   to_port           = 80
   cidr_blocks       = ["0.0.0.0/0"]
-  description       = "tmp yum repos"
+  description       = "HTTP Out"
 }
 
-# This is a temp solution to enable quick access to S3 bucket from dev env
-# during discovery.
 resource "aws_security_group_rule" "common_out_443" {
-  count             = var.egress_443 ? 1 : 0
   security_group_id = aws_security_group.common_out.id
   type              = "egress"
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
   cidr_blocks       = ["0.0.0.0/0"]
-  description       = "tmp s3"
+  description       = "HTTPS Out"
+}
+
+resource "aws_security_group_rule" "common_out_53" {
+  security_group_id = aws_security_group.common_out.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 53
+  to_port           = 53
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "DNS Out"
 }
 

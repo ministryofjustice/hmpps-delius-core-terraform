@@ -40,6 +40,11 @@ variable "delius_core_haproxy_instance_count" {
   description = "Instance count to use for the proxy servers sitting between the external and internal load-balancers"
 }
 
+variable "common_ecs_scaling_config" {
+  description = "Default scaling configuration for ECS services. Can be overridden per-application or per-environment in the environment configuration repository (hmpps-env-configs)."
+  type        = map(string)
+}
+
 variable "default_pwm_config" {
   description = "Application-specific configuration items"
   type        = map(string)

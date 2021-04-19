@@ -1,8 +1,8 @@
 resource "aws_cloudwatch_metric_alarm" "ldap_cpu_warning_alarm" {
   alarm_name          = "${var.environment_name}-ldap-cpu-cwa--warning"
-  alarm_description   = "LDAP average CPU utilization exceeded 75%."
+  alarm_description   = "LDAP CPU utilization exceeded 75%."
   namespace           = "AWS/EC2"
-  statistic           = "Average"
+  statistic           = "Maximum"
   metric_name         = "CPUUtilization"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = "75"
@@ -17,9 +17,9 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_warning_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "ldap_cpu_critical_alarm" {
   alarm_name          = "${var.environment_name}-ldap-cpu-cwa--critical"
-  alarm_description   = "LDAP average CPU utilization exceeded 90%."
+  alarm_description   = "LDAP CPU utilization exceeded 90%."
   namespace           = "AWS/EC2"
-  statistic           = "Average"
+  statistic           = "Maximum"
   metric_name         = "CPUUtilization"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = "90"

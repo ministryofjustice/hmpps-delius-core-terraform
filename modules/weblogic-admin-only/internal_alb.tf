@@ -34,20 +34,6 @@ resource "aws_lb_target_group" "internal_alb_target_group" {
   }
 }
 
-resource "aws_lb_target_group" "newtechweb_target_group" {
-  name        = "${var.short_environment_name}-${var.tier_name}-ntw"
-  vpc_id      = var.vpc_id
-  protocol    = "HTTP"
-  port        = "9000"
-  target_type = "ip" # Targets will be ECS tasks running in awsvpc mode so type needs to be ip
-  tags        = merge(var.tags, { "Name" = "${var.short_environment_name}-${var.tier_name}-ntw" })
-  health_check {
-    protocol = "HTTP"
-    path     = "/newTech/healthcheck"
-    matcher  = "200-399"
-  }
-}
-
 # Listeners
 resource "aws_lb_listener" "internal_lb_http_listener" {
   load_balancer_arn = aws_lb.internal_alb.arn
@@ -111,19 +97,6 @@ resource "aws_lb_listener_rule" "internal_lb_ndelius_rule" {
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.internal_alb_target_group.arn
-  }
-}
-
-resource "aws_lb_listener_rule" "internal_lb_newtechweb_rule" {
-  listener_arn = aws_lb_listener.internal_lb_https_listener.arn
-  condition {
-    path_pattern {
-      values = ["/newTech", "/newTech/*"]
-    }
-  }
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.newtechweb_target_group.arn
   }
 }
 

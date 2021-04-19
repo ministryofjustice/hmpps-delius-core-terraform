@@ -1,51 +1,59 @@
 variable "region" {
   description = "The AWS region"
+  type        = string
+}
+
+variable "environment_name" {
+  description = "Environment name - e.g. delius-core-dev"
+  type        = string
 }
 
 variable "short_environment_name" {
-  description = "Shortened environment name to be used as a unique identifier for resources with a limit on resource name length - eg. dlc-dev"
+  description = "Shortened environment name to be used as a unique identifier for resources with a limit on resource name length - e.g. dlc-dev"
+  type        = string
+}
+
+variable "remote_state_bucket_name" {
+  description = "Terraform remote state bucket name"
+  type        = string
 }
 
 variable "service_name" {
   description = "Name to use for this ECS service"
-}
-
-variable "ecs_cluster" {
-  description = "ECS cluster details. Sould be a map with the keys 'name', 'cluster_id', 'namespace_id'."
-  type        = map(string)
-}
-
-variable "container_definition" {
-  description = "Container definition JSON string"
   type        = string
 }
 
-variable "required_memory" {
+variable "container_definitions" {
+  description = "List of containers to run in ECS tasks. When a single container is defined, sensible configuration defaults are added to the definition - for example, logging (see ecs.tf)."
+  type        = list(any)
+}
+
+variable "memory" {
   description = "Memory to assign to the container (in MB)"
+  default     = 2048
 }
 
-variable "required_cpu" {
+variable "cpu" {
   description = "CPU units to assign to the container (1 vcpu = 1024 units)"
+  default     = 1024
 }
 
-variable "allowed_ssm_parameters" {
-  description = "List of ARNs for SSM parameters that the service is allowed to access."
-  type        = list(string)
-  default     = []
+variable "environment" {
+  description = "Map of environment variables to be set in the service container."
+  type        = map(string)
+  default     = {}
+}
+
+variable "secrets" {
+  description = "Map of environment variables that should be pulled from SSM parameter store, as parameter paths."
+  type        = map(string)
+  default     = {}
 }
 
 variable "service_port" {
   description = "Port to expose via the load balancer"
-  default     = "8080"
-}
-
-variable "vpc_id" {
-  description = "VPC ID"
-}
-
-variable "subnets" {
-  description = "List of network subnets to assign to the tasks"
-  type        = list(string)
+  type        = number
+  default     = 8080
 }
 
 variable "security_groups" {
@@ -103,8 +111,8 @@ variable "health_check_unhealthy_threshold" {
 }
 
 variable "health_check_grace_period_seconds" {
-  description = "Health check grace period. Increaase this if tasks are stopped before they have time to start up."
-  default     = 60
+  description = "Health check grace period. Increase this if tasks are stopped before they have time to start up."
+  default     = 300
 }
 
 variable "min_capacity" {
@@ -130,6 +138,56 @@ variable "deregistration_delay" {
 variable "ignore_task_definition_changes" {
   description = "Whether to ignore changes to the registered task definition for the service. Useful for externally-managed deployments."
   default     = false
+}
+
+variable "log_retention_in_days" {
+  description = "Specifies the number of days you want to retain CloudWatch log events for the service. Only used when no 'logConfiguration' block is provided in var.container_definitions. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653, and 0. If you select 0, the events in the log group are always retained and never expire."
+  default     = 365
+}
+
+variable "log_error_pattern" {
+  description = "Pattern to search for in the logs to indicate service errors. By default, no log filtering is performed."
+  default     = ""
+}
+
+variable "notification_arn" {
+  description = "ARN of an SNS topic to send alarm notifications to. By default, no alarms are created."
+  default     = ""
+}
+
+variable "create_lb_alarms" {
+  description = "Whether to create alarms for response times and error counts."
+  default     = false
+}
+
+variable "load_balancer_arn" {
+  description = "ARN of the service's load balancer, if there is one. Required for alerting on response times and error counts."
+  default     = ""
+}
+
+variable "enable_response_code_alarms" {
+  description = "Enable or disable standard alarms for 5xx responses. Only used when load-balancer alarms are created (`var.create_lb_alarms`)."
+  default     = true
+}
+
+variable "enable_response_time_alarms" {
+  description = "Enable or disable standard alarms for response times. Only used when load-balancer alarms are created (`var.create_lb_alarms`)."
+  default     = true
+}
+
+variable "enable_healthy_host_alarms" {
+  description = "Enable or disable standard alarms for the number of healthy instances. Only used when load-balancer alarms are created (`var.create_lb_alarms`)."
+  default     = true
+}
+
+variable "enable_telemetry" {
+  description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
+  default     = false
+}
+
+variable "telemetry_use_java_tool_opts" {
+  description = "Whether to use the the JAVA_TOOL_OPTS environment variable for auto-instrumenting Java services with the AWS OpenTelemetry Agent. This is only used when Telemetry is enabled (`var.enable_telemetry`)."
+  default     = true
 }
 
 variable "tags" {

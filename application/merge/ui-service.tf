@@ -1,37 +1,45 @@
 module "ui" {
-  source                 = "../../modules/ecs_service"
-  region                 = var.region
-  short_environment_name = var.short_environment_name
-  tags                   = var.tags
+  source                   = "../../modules/ecs_service"
+  region                   = var.region
+  environment_name         = var.environment_name
+  short_environment_name   = var.short_environment_name
+  remote_state_bucket_name = var.remote_state_bucket_name
+  tags                     = var.tags
 
-  service_name         = local.ui_name
-  service_port         = 80
-  container_definition = data.template_file.ui_container_definition.rendered
-  required_cpu         = local.app_config["ui_cpu"]
-  required_memory      = local.app_config["ui_memory"]
-  min_capacity         = local.app_config["ui_scaling_min_capacity"]
-  max_capacity         = local.app_config["ui_scaling_max_capacity"]
-  target_cpu_usage     = local.app_config["ui_target_cpu"]
-  vpc_id               = data.terraform_remote_state.vpc.outputs.vpc_id
-  lb_listener_arn      = data.terraform_remote_state.ndelius.outputs.lb_listener_arn
-  lb_path_patterns     = ["/merge/ui", "/merge/ui/*"]
-  health_check_path    = "/merge/ui/homepage"
+  # Application Container
+  service_name = local.ui_name
+  service_port = 80
+  container_definitions = [{
+    image = "${local.app_config["ui_image_url"]}:${local.app_config["ui_version"]}"
+    # Overriding the command variable allows us to inject config files into the container:
+    command = ["sh", "-c", <<-EOT
+      echo '${replace(file("nginx/default.conf"), "\n", "")}' > /etc/nginx/conf.d/default.conf && \
+      echo "${replace(file("angular/config.js"), "\n", "")}" > /usr/share/nginx/html/assets/config/config.js && \
+      chmod +r -R /usr/share/nginx/html && \
+      exec nginx -g 'daemon off;'
+      EOT
+    ]
+  }]
 
-  ecs_cluster = {
-    name         = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_name
-    cluster_id   = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
-    namespace_id = data.terraform_remote_state.ecs_cluster.outputs.private_cluster_namespace["id"]
-  }
-
-  subnets = [
-    data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az1,
-    data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az2,
-    data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az3,
-  ]
-
+  # Security & Networking
+  lb_listener_arn   = data.terraform_remote_state.ndelius.outputs.lb_listener_arn # Attach to NDelius load balancer
+  lb_path_patterns  = ["/merge/ui", "/merge/ui/*"]
+  health_check_path = "/merge/ui/"
   security_groups = [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_ui_id,
   ]
+
+  # Monitoring
+  create_lb_alarms  = true
+  load_balancer_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
+  notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
+
+  # Auto-Scaling
+  cpu              = lookup(local.app_config, "ui_cpu", var.common_ecs_scaling_config["cpu"])
+  memory           = lookup(local.app_config, "ui_memory", var.common_ecs_scaling_config["memory"])
+  min_capacity     = lookup(local.app_config, "ui_min_capacity", var.common_ecs_scaling_config["min_capacity"])
+  max_capacity     = lookup(local.app_config, "ui_min_capacity", var.common_ecs_scaling_config["max_capacity"])
+  target_cpu_usage = lookup(local.app_config, "ui_target_cpu", var.common_ecs_scaling_config["target_cpu"])
 }
 
