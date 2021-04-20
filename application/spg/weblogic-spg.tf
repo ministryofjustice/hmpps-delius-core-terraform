@@ -18,8 +18,7 @@ module "spg" {
   instance_security_groups = [
     data.terraform_remote_state.vpc_security_groups.outputs.sg_ssh_bastion_in_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_spg_instances_id,
-    data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
-    module.activemq-nfs.nfs_client_sg_id,
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id
   ]
   lb_security_groups = [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_spg_lb_id,
