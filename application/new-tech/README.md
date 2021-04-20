@@ -11,4 +11,4 @@ This module defines an internal ECS service that is accessible from the National
 Configured using the `new_tech_config` map in the [hmpps-env-configs](https://github.com/ministryofjustice/hmpps-env-configs) repository.
 Any keys prefixed with `env_` or `secret_` will be passed to the container as environment variables.
 
-Any environment variables that should be pulled from Terraform data (e.g. remote state, vpc details) are defined in [locals.tf#environment](locals.tf).
+Any environment variables that should be pulled from Terraform data (e.g. remote state, vpc details) are defined in [ecs.tf#environment](ecs.tf).

@@ -81,6 +81,7 @@ ln -s -f ../hmpps-env-configs env_configs
 * [application/umt](application/umt) - User Management Tool
 * [application/community-api](application/community-api)
 * [application/delius-api](application/delius-api)
+* [application/new-tech](application/new-tech)
 * [application/pdf-generator](application/pdf-generator)
 * [application/gdpr](application/gdpr)
 * [application/merge](application/merge)
