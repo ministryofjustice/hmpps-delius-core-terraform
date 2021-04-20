@@ -24,28 +24,6 @@ output "sg_weblogic_interface_lb_id" {
   value = aws_security_group.weblogic_interface_lb.id
 }
 
-# Allow EIS users into the external ELB
-#TODO: Do we build a list of allowed source in or?
-#resource "aws_security_group_rule" "interface_external_elb_ingress" {
-#  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-#  type              = "ingress"
-#  protocol          = "tcp"
-#  from_port         = "80"
-#  to_port           = "80"
-#  cidr_blocks       = ["0.0.0.0/0"]
-#  description       = "Interface users in"
-#}
-#
-#resource "aws_security_group_rule" "interface_external_elb_ingress_tls" {
-#  security_group_id = "${aws_security_group.weblogic_interface_lb.id}"
-#  type              = "ingress"
-#  protocol          = "tcp"
-#  from_port         = "443"
-#  to_port           = "443"
-#  cidr_blocks       = ["0.0.0.0/0"]
-#  description       = "Interface users in (TLS)"
-#}
-
 resource "aws_security_group_rule" "interface_public_subnet_ingress" {
   security_group_id = aws_security_group.weblogic_interface_lb.id
   type              = "ingress"
@@ -74,36 +52,6 @@ resource "aws_security_group_rule" "interface_external_elb_egress_wls" {
   to_port                  = var.weblogic_domain_ports["weblogic_port"]
   source_security_group_id = aws_security_group.weblogic_interface_instances.id
   description              = "Out to instances"
-}
-
-resource "aws_security_group_rule" "interface_external_elb_egress_umt" {
-  security_group_id        = aws_security_group.weblogic_interface_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = aws_security_group.umt_instances.id
-  description              = "Out to UMT instances"
-}
-
-resource "aws_security_group_rule" "interface_external_elb_egress_gdpr_api" {
-  security_group_id        = aws_security_group.weblogic_interface_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = aws_security_group.gdpr_api.id
-  description              = "Out to GDPR API instances"
-}
-
-resource "aws_security_group_rule" "interface_external_elb_egress_gdpr_ui" {
-  security_group_id        = aws_security_group.weblogic_interface_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "80"
-  to_port                  = "80"
-  source_security_group_id = aws_security_group.gdpr_ui.id
-  description              = "Out to GDPR UI instances"
 }
 
 resource "aws_security_group_rule" "interface_lb_self_ingress" {
@@ -201,16 +149,6 @@ resource "aws_security_group_rule" "interface_instances_egress_ldap" {
   to_port                  = var.ldap_ports["ldap"]
   source_security_group_id = aws_security_group.apacheds_ldap_private_elb.id
   description              = "LDAP ELB out"
-}
-
-resource "aws_security_group_rule" "interface_external_elb_egress_aptracker_api" {
-  security_group_id        = aws_security_group.weblogic_interface_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = aws_security_group.aptracker_api.id
-  description              = "Out to Approved Premises Tracker API instances"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_offenderapi" {
