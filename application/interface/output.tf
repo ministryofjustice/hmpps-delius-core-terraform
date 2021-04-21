@@ -10,6 +10,10 @@ output "private_fqdn_interface_wls_internal_alb" {
   value = module.interface.private_fqdn_internal_alb
 }
 
+output "public_fqdn_interface_wls_internal_alb" {
+  value = module.interface.public_fqdn_internal_alb
+}
+
 output "cloudwatch_log_group" {
   value = module.interface.cloudwatch_log_group
 }
