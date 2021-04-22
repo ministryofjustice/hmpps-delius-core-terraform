@@ -17,6 +17,8 @@ resource "aws_ecs_task_definition" "task_definition" {
     [
       merge({
         name = var.service_name
+        # Set hard limit on memory
+        memory = tonumber(var.memory)
         # Add environment variables and secrets
         environment = concat(
           [for key, value in var.environment : { name = key, value = value }],
