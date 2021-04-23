@@ -30,6 +30,8 @@ module "api" {
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUE-TOKEN_CLIENT-ID         = "Merge-API"
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUE-TOKEN_INTROSPECTION-URI = "http://usermanagement.ecs.cluster:8080/umt/oauth/check_token"
     LOGGING_LEVEL_UK_GOV_JUSTICE                                         = local.app_config["log_level"]
+    SPRING_FLYWAY_ENABLED                                                = "true"
+    SPRING_FLYWAY_LOCATIONS                                              = "classpath:/db"
   }
   secrets = {
     SPRING_SECOND-DATASOURCE_PASSWORD                                = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_pool_password"
