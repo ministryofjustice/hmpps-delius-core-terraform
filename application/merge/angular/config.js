@@ -15,6 +15,7 @@ window['app_config'] = {
     oidc: false,
     requireHttps: false,
     loginUrl: '/umt/oauth/authorize',
+    tokenEndpoint: '/umt/oauth/token',
     redirectUri: '/merge/ui/merge-request'
   }
 };
