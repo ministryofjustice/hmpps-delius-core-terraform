@@ -10,6 +10,7 @@ module "ecs" {
   service_name          = local.app_name
   container_definitions = [{ image = "${local.app_config["image_url"]}:${local.app_config["version"]}" }]
   environment = {
+    JAVA_OPTS                               = "-XX:MaxMetaspaceSize=512M" # Override metaspace allocation calculated by https://github.com/cloudfoundry/java-buildpack-memory-calculator
     TZ                                      = "Europe/London"
     SERVER_USE-FORWARD-HEADERS              = "true"
     SERVER_FORWARD-HEADERS-STRATEGY         = "native"
