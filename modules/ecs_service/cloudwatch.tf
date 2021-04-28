@@ -50,26 +50,6 @@ resource "aws_cloudwatch_metric_alarm" "log_error_warning_alarm" {
   }
 }
 
-# Healthy host count alarms
-resource "aws_cloudwatch_metric_alarm" "healthy_hosts_warning_alarm" {
-  count               = var.create_lb_alarms && var.enable_healthy_host_alarms ? 1 : 0
-  alarm_name          = "${var.environment_name}-${var.service_name}-healthy-hosts-cwa--warning"
-  alarm_description   = "One or more `${var.service_name}` instances stopped responding."
-  namespace           = "AWS/ApplicationELB"
-  statistic           = "Minimum"
-  metric_name         = "UnHealthyHostCount"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 1
-  evaluation_periods  = 2
-  period              = 60
-  alarm_actions       = [var.notification_arn]
-  ok_actions          = [var.notification_arn]
-  dimensions = {
-    LoadBalancer = data.aws_lb.lb.0.arn_suffix
-    TargetGroup  = aws_lb_target_group.target_group.0.arn_suffix
-  }
-}
-
 resource "aws_cloudwatch_metric_alarm" "healthy_hosts_fatal_alarm" {
   count               = var.create_lb_alarms && var.enable_healthy_host_alarms ? 1 : 0
   alarm_name          = "${var.environment_name}-${var.service_name}-healthy-hosts-cwa--fatal"
