@@ -18,7 +18,7 @@ module "api" {
     SPRING_DATASOURCE_USERNAME                                           = aws_db_instance.primary.username
     SPRING_DATASOURCE_DRIVER-CLASS-NAME                                  = "org.postgresql.Driver"
     SPRING_SECOND-DATASOURCE_JDBC-URL                                    = data.terraform_remote_state.database.outputs.jdbc_failover_url
-    SPRING_SECOND-DATASOURCE_USERNAME                                    = "delius_pool"
+    SPRING_SECOND-DATASOURCE_USERNAME                                    = "mms_pool"
     SPRING_SECOND-DATASOURCE_TYPE                                        = "oracle.jdbc.pool.OracleDataSource"
     SCHEDULE_MERGEUNMERGE                                                = "-"
     SPRING_JPA_HIBERNATE_DDL-AUTO                                        = "update"
@@ -34,7 +34,7 @@ module "api" {
     SPRING_FLYWAY_LOCATIONS                                              = "classpath:/db"
   }
   secrets = {
-    SPRING_SECOND-DATASOURCE_PASSWORD                                = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_pool_password"
+    SPRING_SECOND-DATASOURCE_PASSWORD                                = "/${var.environment_name}/${var.project_name}/delius-database/db/mms_pool_password"
     SPRING_DATASOURCE_PASSWORD                                       = "/${var.environment_name}/${var.project_name}/merge/db/admin_password"
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUE-TOKEN_CLIENT-SECRET = "/${var.environment_name}/${var.project_name}/merge/api/client_secret"
   }
