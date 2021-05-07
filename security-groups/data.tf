@@ -186,9 +186,6 @@ locals {
     "${data.terraform_remote_state.persistent_eip.outputs.delius_spg_az2_lb_eip.public_ip}/32",
     "${data.terraform_remote_state.persistent_eip.outputs.delius_spg_az3_lb_eip.public_ip}/32",
   ]
-
-  azure_community_proxy_source = var.azure_community_proxy_source
-  azure_oasys_proxy_source     = var.azure_oasys_proxy_source
 }
 
 output "user_access_cidr_blocks_concatenated" {
