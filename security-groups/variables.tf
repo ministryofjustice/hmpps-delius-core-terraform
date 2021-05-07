@@ -74,14 +74,8 @@ variable "oracle_db_operation" {
   description = "Engineering remote state and arn for Oracle OPs security groups"
 }
 
-variable "azure_community_proxy_source" {
-  description = "Allowed ingress CIDRs from Azure community Proxy"
-  type        = list(string)
-  default     = []
-}
-
-variable "azure_oasys_proxy_source" {
-  description = "Allowed ingress CIDRs from Azure OASys Proxy"
+variable "interface_access_cidr_blocks" {
+  description = "Allowed ingress CIDRs for accessing the WebLogic interface domain (e.g. from OASys in Azure)"
   type        = list(string)
   default     = []
 }
