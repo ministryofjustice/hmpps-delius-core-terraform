@@ -2,39 +2,11 @@
   "start": "-PT6H",
   "widgets": [
     {
-      "type": "log",
-      "x": 9,
-      "y": 14,
-      "width": 15,
-      "height": 6,
-      "properties": {
-        "query": "SOURCE '${log_group_weblogic_ndelius}' | parse '* - * [*] \"* * *\" * *' as host, identity, dateTimeString, httpVerb, URL, protocol, statusCode, bytes\n| filter httpVerb='GET' and URL like /(?i)\\.jsp$/\n| stats count(*) as Requests by URL\n| sort Requests desc\n| limit 10",
-        "region": "${region}",
-        "stacked": false,
-        "title": "Top Pages",
-        "view": "table"
-      }
-    },
-    {
-      "type": "log",
-      "x": 9,
-      "y": 8,
-      "width": 6,
-      "height": 6,
-      "properties": {
-        "query": "SOURCE '${log_group_weblogic_ndelius}' | SOURCE '${log_group_weblogic_interface}' | SOURCE '${log_group_weblogic_spg}' | parse 'FATAL * * * - * Error Code: *' as date, timestamp, exception, user, ErrorCode\n| filter @logStream like /NDeliusLog_log/ and ErrorCode like /.*/ and @message not like /at .*\\(.*:.*\\)/ and @message not like /Caused by: /\n| stats count(*) as Count by ErrorCode\n| sort by Count desc\n| limit 10",
-        "region": "${region}",
-        "stacked": false,
-        "title": "Top Errors",
-        "view": "table"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 3,
-      "y": 1,
-      "width": 6,
       "height": 3,
+      "width": 9,
+      "y": 1,
+      "x": 3,
+      "type": "metric",
       "properties": {
         "metrics": [
           [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${alb_ndelius}", { "id": "m1", "stat": "Sum", "label": "NDelius", "yAxis": "left" } ]
@@ -48,11 +20,11 @@
       }
     },
     {
-      "type": "metric",
-      "x": 3,
-      "y": 4,
-      "width": 6,
       "height": 3,
+      "width": 9,
+      "y": 4,
+      "x": 3,
+      "type": "metric",
       "properties": {
         "metrics": [
           [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${alb_ndelius}", { "id": "m2", "label": "NDelius", "stat": "Average" } ],
@@ -67,11 +39,11 @@
       }
     },
     {
-      "type": "metric",
-      "x": 15,
-      "y": 1,
-      "width": 9,
       "height": 3,
+      "width": 9,
+      "y": 8,
+      "x": 6,
+      "type": "metric",
       "properties": {
         "metrics": [
           [ "AWS/EC2", "CPUUtilization", "InstanceId", "${instance_delius_db_1}", { "label": "Database" } ],
@@ -90,11 +62,11 @@
       }
     },
     {
-      "type": "log",
-      "x": 15,
-      "y": 8,
-      "width": 9,
       "height": 6,
+      "width": 9,
+      "y": 8,
+      "x": 15,
+      "type": "log",
       "properties": {
         "query": "SOURCE '${log_group_weblogic_ndelius}' | SOURCE '${log_group_weblogic_interface}' | SOURCE '${log_group_weblogic_spg}' | parse 'FATAL * * * - * Error Code: *' as date, timestamp, exception, user, ErrorCode\n| filter @logStream like /NDeliusLog_log/ and ErrorCode like /.*/ and @message not like /at .*\\(.*:.*\\)/ and @message not like /Caused by: /\n| stats count(*)/5 as Count by bin(5m)",
         "region": "${region}",
@@ -104,11 +76,11 @@
       }
     },
     {
-      "type": "metric",
-      "x": 0,
-      "y": 1,
-      "width": 3,
       "height": 6,
+      "width": 3,
+      "y": 1,
+      "x": 0,
+      "type": "metric",
       "properties": {
         "metrics": [
           [ "WebLogic", "OpenSessions", "AutoScalingGroupName", "${asg_ndelius}", { "label": "Current", "stat": "Sum" } ],
@@ -121,11 +93,11 @@
       }
     },
     {
-      "type": "metric",
-      "x": 0,
-      "y": 8,
-      "width": 3,
       "height": 6,
+      "width": 3,
+      "y": 1,
+      "x": 12,
+      "type": "metric",
       "properties": {
         "metrics": [
           [ "WebLogic", "InboundQueueSize", "AutoScalingGroupName", "${asg_spg}", { "stat": "Sum", "label": "Inbound" } ],
@@ -138,11 +110,11 @@
       }
     },
     {
-      "type": "metric",
-      "x": 3,
-      "y": 8,
-      "width": 6,
       "height": 6,
+      "width": 9,
+      "y": 1,
+      "x": 15,
+      "type": "metric",
       "properties": {
         "metrics": [
           [ { "expression": "RATE(METRICS())", "label": "" } ],
@@ -168,11 +140,11 @@
       }
     },
     {
-      "type": "metric",
-      "x": 15,
-      "y": 4,
-      "width": 9,
       "height": 3,
+      "width": 9,
+      "y": 11,
+      "x": 6,
+      "type": "metric",
       "properties": {
         "metrics": [
           [ { "expression": "m1-m2", "label": "Used", "id": "e1", "region": "${region}", "yAxis": "left" } ],
@@ -196,11 +168,11 @@
       }
     },
     {
-      "type": "alarm",
-      "x": 9,
-      "y": 1,
-      "width": 6,
       "height": 6,
+      "width": 6,
+      "y": 8,
+      "x": 0,
+      "type": "alarm",
       "properties": {
         "title": "Instance Status",
         "alarms": [
@@ -213,41 +185,41 @@
       }
     },
     {
-      "type": "text",
-      "x": 9,
-      "y": 0,
-      "width": 15,
       "height": 1,
+      "width": 15,
+      "y": 7,
+      "x": 0,
+      "type": "text",
       "properties": {
         "markdown": "\n# Instance Health\n"
       }
     },
     {
-      "type": "text",
-      "x": 9,
-      "y": 7,
-      "width": 15,
       "height": 1,
+      "width": 9,
+      "y": 7,
+      "x": 15,
+      "type": "text",
       "properties": {
         "markdown": "\n# Application Health\n"
       }
     },
     {
-      "type": "text",
-      "x": 0,
-      "y": 0,
-      "width": 9,
       "height": 1,
+      "width": 12,
+      "y": 0,
+      "x": 0,
+      "type": "text",
       "properties": {
         "markdown": "\n# User Activity\n"
       }
     },
     {
-      "type": "text",
-      "x": 0,
-      "y": 7,
-      "width": 9,
       "height": 1,
+      "width": 12,
+      "y": 0,
+      "x": 12,
+      "type": "text",
       "properties": {
         "markdown": "\n# SPG Activity\n"
       }
