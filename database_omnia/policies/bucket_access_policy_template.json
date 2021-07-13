@@ -1,0 +1,40 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "listAllBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::*"
+      ]
+    },
+    {
+      "Sid": "allowAccessToDependenciesBucket",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${dependencies_bucket_arn}",
+        "${dependencies_bucket_arn}/*"
+      ]
+    },
+    {
+      "Sid": "allowAccessToOmniaDataBucket",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${s3_omnia_data_arn}",
+        "${s3_omnia_data_arn}/*"
+      ]
+    }
+  ]
+}
