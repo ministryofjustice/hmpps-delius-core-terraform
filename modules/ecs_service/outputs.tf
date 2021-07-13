@@ -38,3 +38,10 @@ output "log_group" {
   }
 }
 
+output "autoscaling" {
+  value = {
+    resource_id        = aws_appautoscaling_target.scaling_target.resource_id
+    scalable_dimension = aws_appautoscaling_target.scaling_target.scalable_dimension
+    service_namespace  = aws_appautoscaling_target.scaling_target.service_namespace
+  }
+}

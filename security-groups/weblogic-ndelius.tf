@@ -110,8 +110,8 @@ resource "aws_security_group_rule" "ndelius_external_elb_egress_wls" {
   security_group_id        = aws_security_group.weblogic_ndelius_lb.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = var.weblogic_domain_ports["weblogic_port"]
-  to_port                  = var.weblogic_domain_ports["weblogic_port"]
+  from_port                = 8080
+  to_port                  = 8080
   source_security_group_id = aws_security_group.weblogic_ndelius_instances.id
   description              = "Out to instances"
 }
@@ -215,8 +215,8 @@ resource "aws_security_group_rule" "ndelius_instances_external_elb_ingress" {
   security_group_id        = aws_security_group.weblogic_ndelius_instances.id
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = var.weblogic_domain_ports["weblogic_port"]
-  to_port                  = var.weblogic_domain_ports["weblogic_port"]
+  from_port                = 8080
+  to_port                  = 8080
   source_security_group_id = aws_security_group.weblogic_ndelius_lb.id
   description              = "Load balancer in"
 }

@@ -43,18 +43,17 @@ variable "default_ldap_config" {
   type        = map(string)
 }
 
+variable "default_delius_app_config" {
+  description = "Default Delius application configuration items, to be overridden by delius_app_config"
+  type        = map(string)
+}
+
+variable "delius_app_config" {
+  description = "Delius application configuration items"
+  type        = map(string)
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
 }
-
-variable "default_ansible_vars" {
-  description = "Default ansible vars for user_data script, will be overriden by values in ansible_vars"
-  type        = map(string)
-}
-
-variable "ansible_vars" {
-  description = "Ansible vars for user_data script"
-  type        = map(string)
-}
-
