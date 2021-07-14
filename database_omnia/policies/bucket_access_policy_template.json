@@ -35,6 +35,14 @@
         "${s3_omnia_data_arn}",
         "${s3_omnia_data_arn}/*"
       ]
+    },
+    {
+      "Sid": "AllowEc2InstanceRoleToAssumeTheseRoles",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:iam::172219029581:role/CRJiraServiceManagementUploads"
+      ],
+      "Action": "sts:AssumeRole"
     }
   ]
 }

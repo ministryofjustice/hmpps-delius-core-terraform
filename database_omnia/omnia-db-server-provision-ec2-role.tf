@@ -91,17 +91,3 @@ resource "aws_iam_role_policy_attachment" "delius_core_ssm_update" {
   role       = aws_iam_role.ec2.name
   policy_arn = aws_iam_policy.delius_core_ssm_update.arn
 }
-
-data "template_file" "omnia_s3_bucket_access" {
-  template = file("${path.module}/policies/assume_role_CRJiraServiceManagementUploads_policy.json")
-}
-
-resource "aws_iam_policy" "omnia_s3_bucket_access" {
-  name   = "${var.environment_name}-omnia-s3-bucket-access"
-  policy = data.template_file.omnia_s3_bucket_access.rendered
-}
-
-resource "aws_iam_role_policy_attachment" "omnia_s3_bucket_access" {
-  role       = aws_iam_role.ec2.name
-  policy_arn = aws_iam_policy.omnia_s3_bucket_access.arn
-}
