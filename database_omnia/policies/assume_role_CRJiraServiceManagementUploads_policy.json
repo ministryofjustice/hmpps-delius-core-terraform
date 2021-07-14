@@ -1,0 +1,13 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowEc2InstanceRoleToAssumeTheseRoles",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:iam::172219029581:role/CRJiraServiceManagementUploads"
+      ],
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
