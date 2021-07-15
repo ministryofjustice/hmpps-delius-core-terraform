@@ -28,8 +28,8 @@ resource "aws_security_group_rule" "db_to_db_in" {
   security_group_id = aws_security_group.omnia_db_in.id
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "5432"
-  to_port           = "5432"
+  from_port         = "5444"
+  to_port           = "5444"
   self              = true
   description       = "Inter db comms"
 }
