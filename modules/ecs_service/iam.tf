@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "exec_policy" {
         "logs:PutLogEvents",
         "logs:DescribeLogStreams"
       ]
-      resources = [statement.value, "${statement.value}:log-stream:*"]
+      resources = ["${statement.value}:*", "${statement.value}:log-stream:*"]
     }
   }
   dynamic "statement" {
@@ -109,4 +109,27 @@ resource "aws_iam_role_policy_attachment" "xray_policy_attachment" {
   count      = var.enable_telemetry ? 1 : 0
   role       = aws_iam_role.task.name
   policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}
+
+data "aws_iam_policy_document" "ssm_exec_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ssmmessages:CreateControlChannel",
+      "ssmmessages:CreateDataChannel",
+      "ssmmessages:OpenControlChannel",
+      "ssmmessages:OpenDataChannel"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "ssm_exec_policy" {
+  name   = "${local.name}-ecs-ssm-exec-policy"
+  policy = data.aws_iam_policy_document.ssm_exec_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_exec_policy_attachment" {
+  role       = aws_iam_role.task.name
+  policy_arn = aws_iam_policy.ssm_exec_policy.arn
 }

@@ -72,15 +72,15 @@ resource "aws_ecs_task_definition" "task_definition" {
 }
 
 resource "aws_ecs_service" "service" {
-  name            = "${local.name}-service"
-  cluster         = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
-  task_definition = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
+  name                              = "${local.name}-service"
+  cluster                           = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
+  enable_execute_command            = true
+  health_check_grace_period_seconds = var.target_group_count > 0 ? var.health_check_grace_period_seconds : null
+  task_definition                   = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
 
   deployment_controller {
     type = var.deployment_controller
   }
-
-  health_check_grace_period_seconds = var.target_group_count > 0 ? var.health_check_grace_period_seconds : null
 
   dynamic "load_balancer" {
     for_each = toset(var.target_group_count > 0 ? aws_lb_target_group.target_group.*.arn : [])
