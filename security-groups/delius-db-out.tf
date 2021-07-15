@@ -24,16 +24,6 @@ output "sg_delius_db_out_id" {
   value = aws_security_group.delius_db_out.id
 }
 
-resource "aws_security_group_rule" "delius_db_out_spg_message" {
-  security_group_id        = aws_security_group.delius_db_out.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = var.weblogic_domain_ports["activemq_port"]
-  to_port                  = var.weblogic_domain_ports["activemq_port"]
-  source_security_group_id = aws_security_group.weblogic_spg_lb.id
-  description              = "Delius DB out to ActiveMQ"
-}
-
 resource "aws_security_group_rule" "db_to_db_out" {
   security_group_id = aws_security_group.delius_db_out.id
   type              = "egress"
