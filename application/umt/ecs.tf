@@ -21,7 +21,7 @@ module "ecs" {
     SPRING_JPA_HIBERNATE_DDL-AUTO           = "none"
     SPRING_LDAP_URLS                        = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
     SPRING_LDAP_EXPORT_USERNAME             = "cn=root,${local.ldap_config["base_root"]}"
-    SPRING_LDAP_USERNAME                    = local.ldap_config["bind_user"]
+    SPRING_LDAP_USERNAME                    = "cn=root,${local.ldap_config["base_root"]}"
     SPRING_LDAP_BASE                        = local.ldap_config["base_root"]
     SPRING_LDAP_USEORACLEATTRIBUTES         = "false"
     SPRING_REDIS_HOST                       = aws_route53_record.token_store_private_dns.fqdn
@@ -53,11 +53,12 @@ module "ecs" {
   ]
 
   # Monitoring
-  enable_telemetry  = true
-  create_lb_alarms  = true
-  load_balancer_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
-  log_error_pattern = "ERROR"
-  notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
+  enable_telemetry            = true
+  create_lb_alarms            = true
+  enable_response_time_alarms = false # Response times can exceed 1s during normal use (e.g. Exports and Role Searches)
+  load_balancer_arn           = data.terraform_remote_state.ndelius.outputs.alb["arn"]
+  log_error_pattern           = "ERROR"
+  notification_arn            = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])
