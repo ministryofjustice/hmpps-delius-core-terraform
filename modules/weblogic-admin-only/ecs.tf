@@ -10,6 +10,7 @@ module "ecs" {
   service_name          = var.app_name
   container_definitions = [{ image = "${var.app_config["image_url"]}:${var.app_config["version"]}" }]
   environment = merge({
+    TZ                  = "Europe/London"
     JDBC_URL            = data.terraform_remote_state.database.outputs.jdbc_failover_url
     JDBC_USERNAME       = "delius_pool"
     LDAP_HOST           = data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb
