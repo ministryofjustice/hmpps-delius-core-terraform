@@ -34,13 +34,13 @@ variable "common_ecs_scaling_config" {
   type        = map(string)
 }
 
-variable "default_delius_app_config" {
+variable "default_delius_eis_config" {
   description = "Application-specific configuration items"
   type        = map(string)
   default     = {}
 }
 
-variable "delius_app_config" {
+variable "delius_eis_config" {
   description = "Application-specific configuration items"
   type        = map(string)
 }

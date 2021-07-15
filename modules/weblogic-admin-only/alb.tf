@@ -1,19 +1,19 @@
 # Load balancer
 resource "aws_lb" "alb" {
-  name            = "${var.short_environment_name}-${local.app_name}-alb"
+  name            = "${var.short_environment_name}-${var.app_name}-alb"
   internal        = false
-  security_groups = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_ndelius_lb_id]
+  security_groups = var.security_groups_lb
   subnets = [
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3,
   ]
-  tags = merge(var.tags, { "Name" = "${var.short_environment_name}-${local.app_name}-alb" })
+  tags = merge(var.tags, { "Name" = "${var.short_environment_name}-${var.app_name}-alb" })
 
   access_logs {
     enabled = true
     bucket  = data.terraform_remote_state.access_logs.outputs.bucket_name
-    prefix  = local.app_name
+    prefix  = var.app_name
   }
 
   lifecycle {

@@ -1,8 +1,5 @@
 locals {
-  # Workaround to ensure target_group.name_prefix is shorter than 6 chars.
-  # Note we have to manually differentiate the name in the sandpit environment.
-  tier_name_sub  = substr(var.tier_name, 0, 3)
-  sandpit_prefix = "san"
-  tg_name_prefix = "${var.environment_name == "delius-core-sandpit" ? local.sandpit_prefix : ""}${local.tier_name_sub}"
+  secrets     = { for key, value in var.app_config : replace(key, "secret_", "") => value if length(regexall("^secret_", key)) > 0 }
+  environment = { for key, value in var.app_config : replace(key, "env_", "") => value if length(regexall("^env_", key)) > 0 }
 }
 

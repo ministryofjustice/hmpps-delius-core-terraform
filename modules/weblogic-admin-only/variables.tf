@@ -1,147 +1,48 @@
-variable "tier_name" {
-  description = "Name of the Weblogic tier"
+variable "region" {}
+variable "environment_name" {}
+variable "short_environment_name" {}
+variable "project_name" {}
+variable "remote_state_bucket_name" {}
+
+variable "delius_core_public_zone" {
+  description = "Whether to use the 'strategic' domain (Terraform-managed), or the 'legacy' domain (Ansible-managed) for user-facing services in this environment eg. NDelius, PWM"
+  default     = "strategic"
+  # NOTE:
+  # This is only in place to support transition from the old public zone (dsd.io) to the strategic public zone (gov.uk).
+  # It allows us to configure which zone to use for public-facing services (eg. NDelius, PWM) on a per-environment
+  # basis. Currently only Prod and Pre-Prod should use the old public zone, once they are transitioned over we should
+  # remove this. Additionally, there are a few services that have DNS records in the public zone that should be moved
+  # over into the private zone before we complete the transition eg. delius-db-1, management.
+}
+
+variable "app_name" {
+  description = "Service name"
   type        = string
 }
 
-variable "ami_id" {
-  description = "AWS AMI ID"
+variable "dns_name" {
+  description = "The first part of the DNS name to create in Route53 e.g. ndelius"
   type        = string
 }
 
-variable "instance_type" {
-  description = "Instance type for the weblogic server"
-  type        = string
+variable "app_config" {
+  description = "Application-specific configuration items"
+  type        = map(string)
 }
 
-variable "instance_count" {
-  description = "Instance count for the weblogic auto-scaling group"
-  type        = string
-}
-
-variable "key_name" {
-  description = "Deployer key name"
-  type        = string
-}
-
-variable "iam_instance_profile" {
-  description = "iam instance profile id"
-  type        = string
-}
-
-variable "instance_security_groups" {
-  description = "Security groups for the WebLogic instances"
+variable "security_groups_lb" {
+  description = "Security Groups to apply to the Application Load Balancer"
   type        = list(string)
+  default     = []
 }
 
-variable "lb_security_groups" {
-  description = "Security groups for the application load balancer"
+variable "security_groups_instances" {
+  description = "Security Groups to apply to the ECS instances"
   type        = list(string)
-}
-
-variable "public_subnets" {
-  description = "Subnet for Managed load balancers"
-  type        = list(string)
-}
-
-variable "private_subnets" {
-  description = "Subnet for Admin load balancers"
-  type        = list(string)
+  default     = []
 }
 
 variable "tags" {
-  description = "Tags to match tagging standard"
+  description = "Tags to be applied to resources"
   type        = map(string)
 }
-
-variable "environment_name" {
-  description = "Name of the environment"
-  type        = string
-}
-
-variable "short_environment_name" {
-  description = "Shortend name of the environment"
-  type        = string
-}
-
-variable "bastion_inventory" {
-  description = "Bastion environment inventory"
-  type        = string
-}
-
-variable "environment_identifier" {
-  description = "resource label or name"
-}
-
-variable "short_environment_identifier" {
-  description = "shortend resource label or name"
-}
-
-variable "region" {
-  description = "The AWS region."
-}
-
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
-}
-
-variable "vpc_account_id" {
-  description = "VPC Account ID"
-  type        = string
-}
-
-variable "public_zone_id" {
-  description = "Public zone id"
-  type        = string
-}
-
-variable "private_zone_id" {
-  description = "Private internal zone id"
-  type        = string
-}
-
-variable "private_domain" {
-  description = "Private internal zone name"
-  type        = string
-}
-
-variable "certificate_arn" {
-  description = "SSL certificate to be used for the external LB"
-  type        = string
-}
-
-variable "weblogic_port" {
-  description = "Port for the weblogic admin server"
-  type        = string
-}
-
-variable "weblogic_health_check_path" {
-  description = "parameters for the LB health check"
-  type        = string
-}
-
-variable "app_bootstrap_src" {
-  description = "app bootstrap src"
-  type        = string
-}
-
-variable "app_bootstrap_version" {
-  description = "app bootstrap version"
-  type        = string
-}
-
-variable "app_bootstrap_roles" {
-  description = "list of names of the Ansible Galaxy roles to apply during bootstrap"
-  type        = list(string)
-}
-
-variable "ansible_vars" {
-  description = "Ansible vars for user_data script"
-  type        = map(string)
-}
-
-variable "alarm_sns_topic_arn" {
-  description = "ARN of the SNS topic that should receive CloudWatch alarm notifications"
-  type        = string
-}
-
