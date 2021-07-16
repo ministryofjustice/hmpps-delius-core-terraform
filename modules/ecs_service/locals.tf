@@ -6,5 +6,8 @@ locals {
 
   # If a single container definition is provided with no log configuration, auto-create a log group:
   create_log_group = length(var.container_definitions) == 1 && ! contains(keys(var.container_definitions[0]), "logConfiguration")
+
+  # Get directory name for each additional log file
+  additional_log_directories = { for name, path in var.additional_log_files : dirname(path) => name }
 }
 

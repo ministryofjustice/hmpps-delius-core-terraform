@@ -7,8 +7,14 @@ module "ecs" {
   tags                     = var.tags
 
   # Application Container
-  service_name          = var.app_name
-  container_definitions = [{ image = "${var.app_config["image_url"]}:${var.app_config["version"]}" }]
+  service_name = var.app_name
+  container_definitions = [{
+    image = "${var.app_config["image_url"]}:${var.app_config["version"]}"
+    user  = "root"
+  }]
+  additional_log_files = {
+    access_log = "/u01/domains/NDelius/servers/AdminServer/logs/access.log"
+  }
   environment = merge({
     TZ                  = "Europe/London"
     JDBC_URL            = data.terraform_remote_state.database.outputs.jdbc_failover_url

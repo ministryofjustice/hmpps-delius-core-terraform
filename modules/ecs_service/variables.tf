@@ -28,6 +28,12 @@ variable "container_definitions" {
   type        = list(any)
 }
 
+variable "additional_log_files" {
+  description = "Additional log files inside the container to be pushed to CloudWatch Logs, using the sidecar logging pattern."
+  type        = map(string)
+  default     = {}
+}
+
 variable "memory" {
   description = "Memory to assign to the container (in MB)"
   default     = 2048
