@@ -7,9 +7,10 @@ module "ecs" {
   tags                     = var.tags
 
   # Application Container
-  service_name = var.app_name
+  service_name                   = var.app_name
+  ignore_task_definition_changes = true # Deployment is managed by Ansible
   container_definitions = [{
-    image = "${var.app_config["image_url"]}:${var.app_config["version"]}"
+    image = var.app_config["image_url"]
     user  = "root"
   }]
   additional_log_files = {
