@@ -4,50 +4,12 @@
     {
       "height": 3,
       "width": 9,
-      "y": 1,
-      "x": 3,
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${alb_ndelius}", { "id": "m1", "stat": "Sum", "label": "NDelius", "yAxis": "left" } ]
-        ],
-        "view": "timeSeries",
-        "stacked": true,
-        "region": "${region}",
-        "title": "Requests",
-        "period": 60,
-        "liveData": false
-      }
-    },
-    {
-      "height": 3,
-      "width": 9,
-      "y": 4,
-      "x": 3,
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${alb_ndelius}", { "id": "m2", "label": "NDelius", "stat": "Average" } ],
-          [ { "expression": "ANOMALY_DETECTION_BAND(m2, 2)", "label": "NDelius (expected)", "id": "ad1", "color": "#666666", "region": "${region}" } ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "${region}",
-        "title": "Response Time (seconds)",
-        "period": 60,
-        "liveData": false
-      }
-    },
-    {
-      "height": 3,
-      "width": 9,
       "y": 8,
       "x": 6,
       "type": "metric",
       "properties": {
         "metrics": [
           [ "AWS/EC2", "CPUUtilization", "InstanceId", "${instance_delius_db_1}", { "label": "Database" } ],
-          [ "...", "AutoScalingGroupName", "${asg_ndelius}", { "label": "WebLogic" } ],
           [ "...", "${asg_ldap}", { "label": "LDAP", "stat": "Maximum" } ]
         ],
         "view": "timeSeries",
@@ -63,112 +25,6 @@
     },
     {
       "height": 6,
-      "width": 9,
-      "y": 8,
-      "x": 15,
-      "type": "log",
-      "properties": {
-        "query": "SOURCE '${log_group_weblogic_ndelius}' | SOURCE '${log_group_weblogic_interface}' | SOURCE '${log_group_weblogic_spg}' | parse 'FATAL * * * - * Error Code: *' as date, timestamp, exception, user, ErrorCode\n| filter @logStream like /NDeliusLog_log/ and ErrorCode like /.*/ and @message not like /at .*\\(.*:.*\\)/ and @message not like /Caused by: /\n| stats count(*)/5 as Count by bin(5m)",
-        "region": "${region}",
-        "stacked": false,
-        "title": "Error Rate",
-        "view": "timeSeries"
-      }
-    },
-    {
-      "height": 6,
-      "width": 3,
-      "y": 1,
-      "x": 0,
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          [ "WebLogic", "OpenSessions", "AutoScalingGroupName", "${asg_ndelius}", { "label": "Current", "stat": "Sum" } ],
-          [ ".", "TotalSessions", ".", ".", { "label": "Total (today)", "stat": "Sum" } ]
-        ],
-        "view": "singleValue",
-        "region": "${region}",
-        "title": "Sessions",
-        "period": 60
-      }
-    },
-    {
-      "height": 6,
-      "width": 3,
-      "y": 1,
-      "x": 12,
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          [ "WebLogic", "InboundQueueSize", "AutoScalingGroupName", "${asg_spg}", { "stat": "Sum", "label": "Inbound" } ],
-          [ ".", "OutboundQueueSize", ".", ".", { "stat": "Sum", "label": "Outbound" } ]
-        ],
-        "view": "singleValue",
-        "region": "${region}",
-        "title": "Queue Size",
-        "period": 60
-      }
-    },
-    {
-      "height": 6,
-      "width": 9,
-      "y": 1,
-      "x": 15,
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          [ { "expression": "RATE(METRICS())", "label": "" } ],
-          [ "WebLogic", "InboundQueueDispatchCount", "AutoScalingGroupName", "${asg_spg}", { "label": "Inbound", "visible": false } ],
-          [ ".", "OutboundQueueDispatchCount", ".", ".", { "label": "Outbound", "visible": false } ]
-        ],
-        "view": "timeSeries",
-        "stacked": true,
-        "region": "${region}",
-        "period": 60,
-        "title": "Message Rate",
-        "legend": {
-          "position": "bottom"
-        },
-        "liveData": false,
-        "yAxis": {
-          "left": {
-            "showUnits": false,
-            "min": 0
-          }
-        },
-        "stat": "Sum"
-      }
-    },
-    {
-      "height": 3,
-      "width": 9,
-      "y": 11,
-      "x": 6,
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          [ { "expression": "m1-m2", "label": "Used", "id": "e1", "region": "${region}", "yAxis": "left" } ],
-          [ "WebLogic", "HeapSizeCurrent", "AutoScalingGroupName", "${asg_ndelius}", { "id": "m1", "label": "Max", "color": "#d62728" } ],
-          [ ".", "HeapFreeCurrent", ".", ".", { "id": "m2", "visible": false, "label": "Free" } ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "${region}",
-        "title": "WebLogic Memory Usage",
-        "period": 60,
-        "legend": {
-          "position": "right"
-        },
-        "yAxis": {
-          "left": {
-            "min": 0
-          }
-        },
-        "stat": "Sum"
-      }
-    },
-    {
-      "height": 6,
       "width": 6,
       "y": 8,
       "x": 0,
@@ -176,11 +32,7 @@
       "properties": {
         "title": "Instance Status",
         "alarms": [
-          "${alarm_ldap}",
-          "${alarm_activemq}",
-          "${alarm_weblogic_interface}",
-          "${alarm_weblogic_ndelius}",
-          "${alarm_weblogic_spg}"
+          "${alarm_ldap}"
         ]
       }
     },
