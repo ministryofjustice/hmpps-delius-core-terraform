@@ -104,10 +104,6 @@ data "aws_ami" "amazon_ami" {
   }
 }
 
-locals {
-  ansible_vars = merge(var.default_ansible_vars, var.ansible_vars)
-}
-
 data "template_file" "user_data" {
   template = file("user_data/user_data.sh")
 
@@ -123,7 +119,7 @@ data "template_file" "user_data" {
     public_zone_id       = data.terraform_remote_state.vpc.outputs.public_zone_id
     private_zone_id      = data.terraform_remote_state.vpc.outputs.public_zone_id
     database_host        = data.terraform_remote_state.database_failover.outputs.public_fqdn_delius_db_1
-    database_sid         = local.ansible_vars["database_sid"]
+    database_sid         = var.ansible_vars_oracle_db["database_sid"]
     ldap_host            = data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb
     ldap_port            = var.ldap_ports["ldap"]
   }
