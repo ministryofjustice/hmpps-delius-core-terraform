@@ -10,7 +10,7 @@
       "properties": {
         "metrics": [
           [ "AWS/EC2", "CPUUtilization", "InstanceId", "${instance_delius_db_1}", { "label": "Database" } ],
-          [ "...", "${asg_ldap}", { "label": "LDAP", "stat": "Maximum" } ]
+          [ "...", "AutoScalingGroupName", "${asg_ldap}", { "label": "LDAP", "stat": "Maximum" } ]
         ],
         "view": "timeSeries",
         "stacked": false,
@@ -32,7 +32,11 @@
       "properties": {
         "title": "Instance Status",
         "alarms": [
-          "${alarm_ldap}"
+          "${alarm_ldap}",
+          "${alarm_activemq}",
+          "${alarm_weblogic_interface}",
+          "${alarm_weblogic_ndelius}",
+          "${alarm_weblogic_spg}"
         ]
       }
     },
