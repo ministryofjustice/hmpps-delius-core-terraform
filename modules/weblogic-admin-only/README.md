@@ -1,4 +1,9 @@
-# Weblogic Admin Only
+# WebLogic
 
-This module creates an auto-scaling group of EC2 instances, each configured to be a WebLogic AdminServer.
-An internal application load balancer is created with restricted paths, to only allow traffic in to the NDelius application - this restriction is required to block access to the WebLogic console and to protect ourselves from any CVEs present in administrative WebLogic endpoints. 
+Defines a load-balanced ECS service, running the NDelius application on WebLogic 14c.
+
+## Resources
+* `ecs.tf` - Module defining the ECS service.
+* `alb.tf` - External application load-balancer.
+* `dns.tf` - External and internal Route53 records.
+* `lambda.tf` - Scheduled function to trigger a nightly restart.

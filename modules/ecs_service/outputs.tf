@@ -5,6 +5,13 @@ output "service" {
   }
 }
 
+output "cluster" {
+  value = {
+    id   = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
+    name = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_name
+  }
+}
+
 output "primary_target_group" {
   value = length(aws_lb_target_group.target_group) == 0 ? {} : {
     id         = aws_lb_target_group.target_group.0.id
@@ -38,3 +45,10 @@ output "log_group" {
   }
 }
 
+output "autoscaling" {
+  value = {
+    resource_id        = aws_appautoscaling_target.scaling_target.resource_id
+    scalable_dimension = aws_appautoscaling_target.scaling_target.scalable_dimension
+    service_namespace  = aws_appautoscaling_target.scaling_target.service_namespace
+  }
+}

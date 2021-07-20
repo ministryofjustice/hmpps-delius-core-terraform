@@ -74,16 +74,6 @@ resource "aws_security_group_rule" "ldap_lb_weblogic_ndelius_ingress" {
   description              = "WebLogic (ndelius) in"
 }
 
-resource "aws_security_group_rule" "ldap_lb_weblogic_spg_ingress" {
-  security_group_id        = aws_security_group.apacheds_ldap_private_elb.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = var.ldap_ports["ldap"]
-  to_port                  = var.ldap_ports["ldap"]
-  source_security_group_id = aws_security_group.weblogic_spg_instances.id
-  description              = "WebLogic (spg) in"
-}
-
 resource "aws_security_group_rule" "management_ldap_out" {
   security_group_id        = data.terraform_remote_state.network_security_groups.outputs.sg_management_server_id
   type                     = "egress"

@@ -1,5 +1,7 @@
 # National Delius - WebLogic SPG domain
 
+> :memo: DEPRECATED. As of 26/06/2021 the SPG has been disabled as part of the migration of CRCs back into the Probation Service.
+
 Supports the connectivity between National Delius and the external Community Rehabilitation Companies (CRCs), via JMS messaging through the Service Provider Gateway (SPG).
 
 This terraform module defines a load-balanced WebLogic auto-scaling group with the NDelius and NDeliusSPG applications deployed, 

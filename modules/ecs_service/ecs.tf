@@ -11,6 +11,12 @@ resource "aws_ecs_task_definition" "task_definition" {
     name      = "xray-agent"
     host_path = "/xray-agent"
   }
+  dynamic "volume" {
+    for_each = local.additional_log_directories
+    content {
+      name = volume.value
+    }
+  }
 
   # If a single container definition is provided, we instrument it with sensible defaults (e.g. logging to CloudWatch, port mapping)
   container_definitions = length(var.container_definitions) == 1 ? jsonencode(concat(
@@ -33,11 +39,17 @@ resource "aws_ecs_task_definition" "task_definition" {
         # Add default port mapping for service_port
         portMappings = [{ containerPort = var.service_port }]
         # Mount X-Ray agent volume
-        mountPoints = var.enable_telemetry ? [{
-          containerPath = "/xray-agent"
-          sourceVolume  = "xray-agent"
-          readOnly      = true
-        }] : null
+        mountPoints = concat(
+          [for directory, name in local.additional_log_directories : {
+            sourceVolume  = name
+            containerPath = directory
+          }],
+          var.enable_telemetry ? [{
+            sourceVolume  = "xray-agent"
+            containerPath = "/xray-agent"
+            readOnly      = true
+          }] : []
+        )
         # Add default log configuration when none is provided
         logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
           logDriver = "awslogs"
@@ -67,20 +79,43 @@ resource "aws_ecs_task_definition" "task_definition" {
           awslogs-stream-prefix = "ecs"
         }
       } : null
-    }] : [])
+    }] : [],
+    [for name, path in var.additional_log_files : {
+      name    = name
+      image   = "public.ecr.aws/amazonlinux/amazonlinux:2"
+      user    = "root"
+      command = ["/bin/sh", "-c", "while [ ! -f '${path}' ]; do sleep 1; done && tail -n+1 -f '${path}'"]
+      mountPoints = [{
+        sourceVolume  = name
+        containerPath = dirname(path)
+        readOnly      = true
+      }]
+      dependsOn = [{
+        containerName = var.service_name,
+        condition     = "START"
+      }]
+      logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.log_group.0.name
+          awslogs-region        = var.region
+          awslogs-stream-prefix = "ecs"
+        }
+      } : null
+    }])
   ) : jsonencode(var.container_definitions)
 }
 
 resource "aws_ecs_service" "service" {
-  name            = "${local.name}-service"
-  cluster         = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
-  task_definition = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
+  name                              = "${local.name}-service"
+  cluster                           = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
+  enable_execute_command            = true
+  health_check_grace_period_seconds = var.target_group_count > 0 ? var.health_check_grace_period_seconds : null
+  task_definition                   = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
 
   deployment_controller {
     type = var.deployment_controller
   }
-
-  health_check_grace_period_seconds = var.target_group_count > 0 ? var.health_check_grace_period_seconds : null
 
   dynamic "load_balancer" {
     for_each = toset(var.target_group_count > 0 ? aws_lb_target_group.target_group.*.arn : [])

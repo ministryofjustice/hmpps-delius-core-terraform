@@ -1,5 +1,7 @@
 # National Delius - WebLogic NDelius domain
 
+> :memo: DEPRECATED. WebLogic servers have moved to ECS. See [/application/weblogic-app](/application/weblogic-app).
+
 Supports the front-end application for National Delius.
 
 This terraform module defines a load-balanced WebLogic auto-scaling group with the NDelius application deployed.

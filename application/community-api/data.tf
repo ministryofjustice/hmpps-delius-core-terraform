@@ -74,7 +74,7 @@ data "terraform_remote_state" "interface" {
   backend = "s3"
   config = {
     bucket = var.remote_state_bucket_name
-    key    = "delius-core/application/interface/terraform.tfstate"
+    key    = "delius-core/application/weblogic-eis/terraform.tfstate"
     region = var.region
   }
 }

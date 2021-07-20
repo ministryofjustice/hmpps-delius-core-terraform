@@ -1,12 +1,12 @@
 include {
   path = find_in_parent_folders()
 }
-
 dependencies {
   paths = [
     "../../alerts", "../../access-logs",
     "../../security-groups",
-    "../../database_failover", "../../application/ldap",
-    "../weblogic-eis"
+    "../../database_failover",
+    "../ldap",
+    "../pwm"
   ]
 }

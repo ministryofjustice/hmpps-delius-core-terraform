@@ -3,5 +3,5 @@ include {
 }
 
 dependencies {
-  paths = ["../application/ndelius", "../application/interface", "../application/spg", "../application/ldap", "../database_failover"]
+  paths = ["../application/ldap", "../database_failover"]
 }

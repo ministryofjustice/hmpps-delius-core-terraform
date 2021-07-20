@@ -22,6 +22,7 @@ module "ecs" {
     CUSTODY_API_USERNAME = "/${var.environment_name}/${var.project_name}/newtech/web/custody_api_username"
     CUSTODY_API_PASSWORD = "/${var.environment_name}/${var.project_name}/newtech/web/custody_api_password"
     GOOGLE_ANALYTICS_ID  = "/${var.environment_name}/${var.project_name}/monitoring/analytics/google_id"
+    PARAMS_SECRET_KEY    = "/${var.environment_name}/${var.project_name}/newtech/web/params_secret_key"
     # ... Add any other secrets here that should be pulled from AWS Systems Manager Parameter Store
   })
 

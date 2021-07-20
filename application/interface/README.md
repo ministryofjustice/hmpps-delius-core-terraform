@@ -1,5 +1,7 @@
 # National Delius - WebLogic Interface domain
 
+> :memo: DEPRECATED. WebLogic servers have moved to ECS. See [/application/weblogic-eis](/application/weblogic-eis).
+
 Supports the application interfaces for National Delius including connectivity to NOMIS, OFFLOC/DSS and IAPS.
 
 This terraform module defines a load-balanced WebLogic auto-scaling group with the NDelius application and the NDelius APIs deployed.

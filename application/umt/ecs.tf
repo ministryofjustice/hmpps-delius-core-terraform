@@ -34,7 +34,7 @@ module "ecs" {
     DELIUS_LDAP_BASE_ROLES                  = replace(local.ldap_config["base_roles"], ",${local.ldap_config["base_root"]}", "")
     DELIUS_LDAP_BASE_ROLE-GROUPS            = replace(local.ldap_config["base_role_groups"], ",${local.ldap_config["base_root"]}", "")
     DELIUS_LDAP_BASE_GROUPS                 = replace(local.ldap_config["base_groups"], ",${local.ldap_config["base_root"]}", "")
-    LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS    = local.ansible_vars["ndelius_log_level"]
+    LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS    = local.delius_app_config["env_LOG_LEVEL_NDELIUS"]
   }
   secrets = {
     JWT_SECRET                 = "/${var.environment_name}/${var.project_name}/umt/umt/jwt_secret"

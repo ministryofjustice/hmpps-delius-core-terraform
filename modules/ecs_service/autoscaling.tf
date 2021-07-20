@@ -25,7 +25,8 @@ resource "aws_appautoscaling_policy" "scaling_policy" {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
 
-    target_value = var.target_cpu_usage
+    target_value     = var.target_cpu_usage
+    disable_scale_in = var.disable_scale_in
   }
 }
 

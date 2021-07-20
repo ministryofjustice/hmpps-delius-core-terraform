@@ -28,6 +28,12 @@ variable "container_definitions" {
   type        = list(any)
 }
 
+variable "additional_log_files" {
+  description = "Additional log files inside the container to be pushed to CloudWatch Logs, using the sidecar logging pattern."
+  type        = map(string)
+  default     = {}
+}
+
 variable "memory" {
   description = "Memory to assign to the container (in MB)"
   default     = 2048
@@ -107,7 +113,7 @@ variable "health_check_healthy_threshold" {
 }
 
 variable "health_check_unhealthy_threshold" {
-  default = "2"
+  default = 2
 }
 
 variable "health_check_grace_period_seconds" {
@@ -128,6 +134,11 @@ variable "max_capacity" {
 variable "target_cpu_usage" {
   description = "Target CPU usage (percentage). If the average CPU Utilization is above this value, the service will scale up. Otherwise it will scale down."
   default     = 60
+}
+
+variable "disable_scale_in" {
+  description = "Indicates whether scale in by the target tracking policy is disabled. Useful for stateful services where scale in needs to be carefully controlled. Defaults to false."
+  default     = false
 }
 
 variable "deregistration_delay" {

@@ -7,6 +7,6 @@ dependencies {
     "../../alerts", "../../access-logs",
     "../../security-groups",
     "../../database_failover",
-    "../ndelius"
+    "../weblogic-app"
   ]
 }
