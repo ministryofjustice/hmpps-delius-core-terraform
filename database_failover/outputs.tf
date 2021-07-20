@@ -1,8 +1,6 @@
 ## For ease of maintenance outputs are close to resource creation.
 locals {
-  # data.aws_route53_zone.public.name returns with trailing period, so need to remove that.
-  public_fqdn_length = length(data.aws_route53_zone.public.name) - 1
-  public_fqdn = substr(data.aws_route53_zone.public.name, 0, local.public_fqdn_length)
+  public_fqdn = data.aws_route53_zone.public.name
 
   # db_size_delius_core attribute may not be set in all envs, if not we default to two
   high_availability_count = var.database_high_availability_count["delius"]
