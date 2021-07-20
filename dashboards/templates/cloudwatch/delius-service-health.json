@@ -32,11 +32,7 @@
       "properties": {
         "title": "Instance Status",
         "alarms": [
-          "${alarm_ldap}",
-          "${alarm_activemq}",
-          "${alarm_weblogic_interface}",
-          "${alarm_weblogic_ndelius}",
-          "${alarm_weblogic_spg}"
+          "${alarm_ldap}"
         ]
       }
     },
