@@ -140,13 +140,13 @@ resource "aws_security_group_rule" "interface_instances_egress_ldap" {
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_offenderapi" {
-  security_group_id        = aws_security_group.weblogic_interface_lb.id
+  security_group_id        = aws_security_group.weblogic_interface_instances.id
   source_security_group_id = aws_security_group.community_api_instances.id
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "443"
-  to_port                  = "443"
-  description              = "New Tech Offender API Ingress to interface LB"
+  from_port                = 7001
+  to_port                  = 7001
+  description              = "Community API in to Case Notes API"
 }
 
 resource "aws_security_group_rule" "interface_external_elb_ingress_dss" {

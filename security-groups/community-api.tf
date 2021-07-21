@@ -154,10 +154,10 @@ resource "aws_security_group_rule" "community_api_instances_out_to_delius_ldap" 
 resource "aws_security_group_rule" "community_api_instances_out_to_delius_interface" {
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = 443
-  to_port                  = 443
+  from_port                = 7001
+  to_port                  = 7001
   security_group_id        = aws_security_group.community_api_instances.id
-  source_security_group_id = aws_security_group.weblogic_interface_lb.id
+  source_security_group_id = aws_security_group.weblogic_interface_instances.id
   description              = "Out to Delius WebLogic interface domain (Case Notes API)"
 }
 
