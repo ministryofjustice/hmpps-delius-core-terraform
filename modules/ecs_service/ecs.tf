@@ -113,6 +113,11 @@ resource "aws_ecs_service" "service" {
   health_check_grace_period_seconds = var.target_group_count > 0 ? var.health_check_grace_period_seconds : null
   task_definition                   = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
 
+  capacity_provider_strategy {
+    capacity_provider = data.terraform_remote_state.ecs_cluster.outputs.capacity_provider["name"]
+    weight            = 1
+  }
+
   deployment_controller {
     type = var.deployment_controller
   }
