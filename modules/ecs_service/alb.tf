@@ -6,9 +6,11 @@ resource "aws_lb_target_group" "target_group" {
   port     = var.service_port
 
   # Targets will be ECS tasks running in awsvpc mode so target_type needs to be ip
-  target_type          = "ip"
-  deregistration_delay = var.deregistration_delay
-  tags                 = merge(var.tags, { "Name" = "${local.name}-tg${var.target_group_count == 1 ? "" : count.index + 1}" })
+  target_type                   = "ip"
+  deregistration_delay          = var.deregistration_delay
+  load_balancing_algorithm_type = var.lb_algorithm_type
+
+  tags = merge(var.tags, { "Name" = "${local.name}-tg${var.target_group_count == 1 ? "" : count.index + 1}" })
 
   health_check {
     protocol            = "HTTP"
