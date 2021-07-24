@@ -53,10 +53,10 @@ module "ecs" {
   }, local.secrets)
 
   # Security & Networking
-  lb_stickiness_enabled            = true
-  health_check_path                = "/NDelius-war/delius/JSP/homepage.jsp"
-  health_check_matcher             = "200-399"
-  health_check_unhealthy_threshold = 10 # increased unhealthy threshold to allow longer for recovery, due to instances being stateful
+  lb_stickiness_enabled = true
+  lb_algorithm_type     = "least_outstanding_requests" # to send new sessions to fresh hosts after a scale-out
+  health_check_path     = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+  health_check_timeout  = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
   security_groups = concat(var.security_groups_instances, [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id
   ])
