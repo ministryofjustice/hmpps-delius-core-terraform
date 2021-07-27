@@ -92,24 +92,29 @@ variable "lb_stickiness_enabled" {
   default     = false
 }
 
+variable "lb_algorithm_type" {
+  description = "Corresponds to the load_balancing_algorithm_type setting on the automatically-created target groups. Determines the how the load balancer selects targets when routing requests. The value is round_robin or least_outstanding_requests."
+  default     = "round_robin"
+}
+
 variable "health_check_path" {
   default = "/"
 }
 
 variable "health_check_matcher" {
-  default = "200"
+  default = 200
 }
 
 variable "health_check_timeout" {
-  default = "5"
+  default = 5
 }
 
 variable "health_check_interval" {
-  default = "30"
+  default = 30
 }
 
 variable "health_check_healthy_threshold" {
-  default = "5"
+  default = 5
 }
 
 variable "health_check_unhealthy_threshold" {
@@ -131,8 +136,23 @@ variable "max_capacity" {
   default     = 10
 }
 
+variable "enable_cpu_scaling" {
+  description = "Whether to scale the service based on CPU usage."
+  default     = true
+}
+
 variable "target_cpu_usage" {
   description = "Target CPU usage (percentage). If the average CPU Utilization is above this value, the service will scale up. Otherwise it will scale down."
+  default     = 60
+}
+
+variable "enable_mem_scaling" {
+  description = "Whether to scale the service based on Memory usage."
+  default     = false
+}
+
+variable "target_mem_usage" {
+  description = "Target memory usage (percentage). If the average Memory Utilization is above this value, the service will scale up. Otherwise it will scale down."
   default     = 60
 }
 
@@ -191,8 +211,13 @@ variable "enable_healthy_host_alarms" {
   default     = true
 }
 
+variable "enable_jmx_metrics" {
+  description = "Enable the JMX Exporter for Java/JVM-based applications, to push internal metrics to Prometheus/CloudWatch. Set to true to mount the /jmx-exporter volume onto the container and to update the JAVA_TOOL_OPTIONS environment variable to enable instrumentation."
+  default     = false
+}
+
 variable "enable_telemetry" {
-  description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
+  description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTIONS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
   default     = false
 }
 
