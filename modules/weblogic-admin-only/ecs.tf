@@ -53,20 +53,22 @@ module "ecs" {
   }, local.secrets)
 
   # Security & Networking
-  lb_stickiness_enabled = true
-  lb_algorithm_type     = "least_outstanding_requests" # to send new sessions to fresh hosts after a scale-out
-  health_check_path     = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
-  health_check_timeout  = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
+  lb_stickiness_enabled            = true
+  lb_algorithm_type                = "least_outstanding_requests" # to send new sessions to fresh hosts after a scale-out
+  health_check_path                = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+  health_check_timeout             = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
+  health_check_unhealthy_threshold = 10 # Increased unhealthy threshold to allow longer for recovery, due to instances being stateful
   security_groups = concat(var.security_groups_instances, [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id
   ])
 
   # Monitoring
-  enable_telemetry  = true
-  create_lb_alarms  = true
-  load_balancer_arn = aws_lb.alb.arn
-  notification_arn  = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
-  log_error_pattern = "ERROR"
+  enable_jmx_metrics = true
+  enable_telemetry   = true
+  create_lb_alarms   = true
+  load_balancer_arn  = aws_lb.alb.arn
+  log_error_pattern  = "ERROR"
+  notification_arn   = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Auto-Scaling
   disable_scale_in = true

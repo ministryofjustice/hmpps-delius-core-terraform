@@ -7,9 +7,20 @@ resource "aws_ecs_task_definition" "task_definition" {
   cpu                      = var.cpu
   memory                   = var.memory
   tags                     = merge(var.tags, { Name = "${local.name}-task-definition" })
-  volume {
-    name      = "xray-agent"
-    host_path = "/xray-agent"
+
+  dynamic "volume" {
+    for_each = var.enable_telemetry ? ["xray-agent"] : []
+    content {
+      name      = volume.value
+      host_path = "/${volume.value}"
+    }
+  }
+  dynamic "volume" {
+    for_each = var.enable_jmx_metrics ? ["jmx-exporter"] : []
+    content {
+      name      = volume.value
+      host_path = "/${volume.value}"
+    }
   }
   dynamic "volume" {
     for_each = local.additional_log_directories
@@ -28,27 +39,38 @@ resource "aws_ecs_task_definition" "task_definition" {
         # Add environment variables and secrets
         environment = concat(
           [for key, value in var.environment : { name = key, value = value }],
-          var.enable_telemetry ? concat([
+          var.enable_telemetry ? [
             { name = "AWS_XRAY_TRACING_NAME", value = var.service_name },
             { name = "OTEL_RESOURCE_ATTRIBUTES", value = "service.name=${var.service_name},service.namespace=${var.environment_name}" },
-            ], var.telemetry_use_java_tool_opts ? [
-            { name = "JAVA_TOOL_OPTIONS", value = "-javaagent:/xray-agent/aws-opentelemetry-agent.jar" }
-          ] : []) : []
+          ] : [],
+          local.java_tool_options != "" ? [
+            { name = "JAVA_TOOL_OPTIONS", value = local.java_tool_options }
+          ] : [],
         )
         secrets = [for key, value in var.secrets : { name = key, valueFrom = format(local.secrets_format, value) }]
         # Add default port mapping for service_port
-        portMappings = [{ containerPort = var.service_port }]
-        # Mount X-Ray agent volume
+        portMappings = concat(
+          [{ containerPort = var.service_port }],
+          var.enable_jmx_metrics ? [{ containerPort = local.jmx_exporter_port }] : []
+        )
         mountPoints = concat(
+          # Mount volumes to push additional log files via sidecar containers
           [for directory, name in local.additional_log_directories : {
             sourceVolume  = name
             containerPath = directory
           }],
+          # Mount volume to access the AWS OpenTelemetry Agent
           var.enable_telemetry ? [{
             sourceVolume  = "xray-agent"
             containerPath = "/xray-agent"
             readOnly      = true
-          }] : []
+          }] : [],
+          # Mount volume to access the Prometheus JMX Exporter
+          var.enable_jmx_metrics ? [{
+            sourceVolume  = "jmx-exporter"
+            containerPath = "/jmx-exporter"
+            readOnly      = true
+          }] : [],
         )
         # Add default log configuration when none is provided
         logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
@@ -61,15 +83,22 @@ resource "aws_ecs_task_definition" "task_definition" {
         } : null
       }, var.container_definitions[0])
     ],
-    var.enable_telemetry ? [{
-      name        = "aws-otel-collector"
-      image       = "amazon/aws-otel-collector",
-      environment = [{ name = "AWS_REGION", value = var.region }]
+    # Sidecar container for the AWS OpenTelemetry Collector, used for collecting metrics and/or traces
+    var.enable_telemetry || var.enable_jmx_metrics ? [{
+      name  = "aws-otel-collector"
+      image = "public.ecr.aws/aws-observability/aws-otel-collector",
+      environment = [
+        { name = "AWS_REGION", value = var.region },
+        { name = "AOT_CONFIG_CONTENT", value = templatefile("${path.module}/adot-config.yml", {
+          cluster_name           = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_name
+          service_name           = "${local.name}-service"
+          task_definition_family = "${local.name}-task-definition"
+        }) }
+      ]
       portMappings = [
         { containerPort = 2000, hostPort = 2000, protocol = "udp" },   # AWS X-ray
-        { containerPort = 4317, hostPort = 4317, protocol = "tcp" },   # AWS Open Telemetry collector
-        { containerPort = 55680, hostPort = 55680, protocol = "tcp" }, # AWS Open Telemetry collector
-        { containerPort = 8125, hostPort = 8125, protocol = "udp" },   # StatsD
+        { containerPort = 4317, hostPort = 4317, protocol = "tcp" },   # AWS Open Telemetry collector (gRPC)
+        { containerPort = 55681, hostPort = 55681, protocol = "tcp" }, # AWS Open Telemetry collector (HTTP)
       ]
       logConfiguration = length(aws_cloudwatch_log_group.log_group) > 0 ? {
         logDriver = "awslogs"
@@ -80,6 +109,7 @@ resource "aws_ecs_task_definition" "task_definition" {
         }
       } : null
     }] : [],
+    # Sidecar containers for pushing additional log files to CloudWatch:
     [for name, path in var.additional_log_files : {
       name    = name
       image   = "public.ecr.aws/amazonlinux/amazonlinux:2"

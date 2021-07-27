@@ -1,0 +1,75 @@
+extensions:
+  health_check:
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:55681
+  awsxray:
+    endpoint: 0.0.0.0:2000
+    transport: udp
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "ECS/ContainerInsights/Prometheus"
+          static_configs:
+            - targets: ["127.0.0.1:9404"]
+              labels:
+                ClusterName: "${cluster_name}"
+                ServiceName: "${service_name}"
+                TaskDefinitionFamily: "${task_definition_family}"
+
+processors:
+  batch/traces:
+    timeout: 1s
+    send_batch_size: 50
+  batch/metrics:
+    timeout: 60s
+  resource:
+    attributes:
+      - key: receiver # Insert receiver: prometheus for CloudWatch EMF Exporter to add prom_metric_type
+        value: "prometheus"
+        action: insert
+
+exporters:
+  awsxray:
+  awsemf/default:
+  awsemf/prometheus:
+    namespace: ECS/ContainerInsights/Prometheus # Use the exact namespace for builtin dashboard to work
+    log_group_name: "/aws/ecs/containerinsights/${cluster_name}/prometheus" # Log group name format is fixed as well, the only variable is cluster name
+    dimension_rollup_option: NoDimensionRollup
+    metric_declarations:
+      - dimensions: [ [ ClusterName, TaskDefinitionFamily, area ] ]
+        metric_name_selectors:
+          - "^jvm_memory_bytes_(committed|init|max|used)$"
+      - dimensions: [ [ ClusterName, TaskDefinitionFamily, pool ] ]
+        metric_name_selectors:
+          - "^jvm_memory_pool_bytes_(committed|init|max|used)$"
+      - dimensions: [ [ ClusterName, TaskDefinitionFamily ] ]
+        metric_name_selectors:
+          - "^jvm_threads_(current|daemon)$"
+          - "^jvm_classes_loaded$"
+          - "^java_lang_operatingsystem_(freephysicalmemorysize|totalphysicalmemorysize|freeswapspacesize|totalswapspacesize|systemcpuload|processcpuload|availableprocessors|openfiledescriptorcount)$"
+          - "^catalina_manager_(rejectedsessions|activesessions)$"
+          - "^jvm_gc_collection_seconds_(count|sum)$"
+          - "^catalina_globalrequestprocessor_(bytesreceived|bytessent|requestcount|errorcount|processingtime)$"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp,awsxray]
+      processors: [batch/traces]
+      exporters: [awsxray]
+    metrics/otlp:
+      receivers: [otlp]
+      processors: [batch/metrics]
+      exporters: [awsemf/default]
+    metrics/prometheus:
+      receivers: [prometheus]
+      processors: [resource]
+      exporters: [awsemf/prometheus]
+
+  extensions: [health_check]

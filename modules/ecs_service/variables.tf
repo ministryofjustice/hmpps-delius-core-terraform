@@ -211,8 +211,13 @@ variable "enable_healthy_host_alarms" {
   default     = true
 }
 
+variable "enable_jmx_metrics" {
+  description = "Enable the JMX Exporter for Java/JVM-based applications, to push internal metrics to Prometheus/CloudWatch. Set to true to mount the /jmx-exporter volume onto the container and to update the JAVA_TOOL_OPTIONS environment variable to enable instrumentation."
+  default     = false
+}
+
 variable "enable_telemetry" {
-  description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
+  description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTIONS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
   default     = false
 }
 
