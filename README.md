@@ -73,9 +73,8 @@ ln -s -f ../hmpps-env-configs env_configs
 ## Components
 ### Applications
 #### WebLogic Domains
-* [application/ndelius](application/ndelius) - National Delius application
-* [application/interface](application/interface) - National Delius API endpoints
-* [application/spg](application/spg) - Strategic Partner Gateway message broker - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2768438337/ActiveMQ)
+* [application/weblogic-app](application/weblogic-app) - National Delius application front-end
+* [application/weblogic-eis](application/weblogic-eis) - National Delius external interface services - API endpoints for IAPS, OASys, DSS etc.
 #### ECS Services - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/3107979730/ECS+Cluster)
 * [application/pwm](application/pwm) - Password Reset Tool - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2116092086/PWM+-+Password+Reset)
 * [application/umt](application/umt) - User Management Tool
