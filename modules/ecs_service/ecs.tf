@@ -162,6 +162,14 @@ resource "aws_ecs_service" "service" {
     }
   }
 
+  dynamic "ordered_placement_strategy" {
+    for_each = var.placement_strategy
+    content {
+      field = ordered_placement_strategy.value.field
+      type  = ordered_placement_strategy.value.type
+    }
+  }
+
   service_registries {
     registry_arn   = aws_service_discovery_service.web_svc_record.arn
     container_name = var.service_name
