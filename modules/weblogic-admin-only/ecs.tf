@@ -53,11 +53,12 @@ module "ecs" {
   }, local.secrets)
 
   # Security & Networking
-  lb_stickiness_enabled            = true
-  lb_algorithm_type                = "least_outstanding_requests" # to send new sessions to fresh hosts after a scale-out
-  health_check_path                = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
-  health_check_timeout             = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
-  health_check_unhealthy_threshold = 10 # Increased unhealthy threshold to allow longer for recovery, due to instances being stateful
+  lb_stickiness_enabled             = true
+  lb_algorithm_type                 = "least_outstanding_requests" # to send new sessions to fresh hosts after a scale-out
+  health_check_path                 = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+  health_check_timeout              = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
+  health_check_unhealthy_threshold  = 10 # Increased unhealthy threshold to allow longer for recovery, due to instances being stateful
+  health_check_grace_period_seconds = 480
   security_groups = concat(var.security_groups_instances, [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id
   ])
@@ -71,11 +72,11 @@ module "ecs" {
   notification_arn   = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Auto-Scaling
-  disable_scale_in = true
-  cpu              = var.app_config["cpu"]
-  memory           = var.app_config["memory"]
-  min_capacity     = var.app_config["min_capacity"]
-  max_capacity     = var.app_config["max_capacity"]
-  target_cpu_usage = var.app_config["target_cpu"]
+  disable_scale_in   = true  # Sessions are stored in-memory - see lambda.tf for nightly scheduled scale-in function
+  enable_cpu_scaling = false # Application is memory-bound - see autoscaling.tf for scaling rule based on JVM heap usage
+  cpu                = var.app_config["cpu"]
+  memory             = var.app_config["memory"]
+  min_capacity       = var.app_config["min_capacity"]
+  max_capacity       = var.app_config["max_capacity"]
 }
 
