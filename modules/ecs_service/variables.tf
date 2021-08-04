@@ -161,6 +161,24 @@ variable "disable_scale_in" {
   default     = false
 }
 
+variable "placement_strategy" {
+  description = "Service level strategy rules that are taken into consideration during task placement. List from top to bottom in order of precedence. Defaults to AZ-balanced binpack. See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-placement-strategies.html"
+  type = list(object({
+    field = string
+    type  = string
+  }))
+  default = [
+    {
+      type  = "spread"
+      field = "attribute:ecs.availability-zone"
+    },
+    {
+      type  = "binpack"
+      field = "memory"
+    }
+  ]
+}
+
 variable "deregistration_delay" {
   description = "Number of seconds to spend draining tasks"
   default     = 60
