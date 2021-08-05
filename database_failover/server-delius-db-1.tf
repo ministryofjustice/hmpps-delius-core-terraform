@@ -3,7 +3,7 @@ locals {
   tags = merge(
     var.tags,
     {
-      "autostop-${var.environment_type}" = "Phase1"
+      "autostop-${var.environment_type}" = var.delius_overide_autostop_tags
     },
   )
 }
@@ -97,4 +97,3 @@ output "delius_db_1" {
     delius_db_1   = "ssh ${module.delius_db_1.public_fqdn}"
   }
 }
-

@@ -61,3 +61,6 @@ variable "database_high_availability_count" {
   type        = map(number)
 }
 
+variable "delius_overide_autostop_tags" {
+  default = "Phase1"
+}
