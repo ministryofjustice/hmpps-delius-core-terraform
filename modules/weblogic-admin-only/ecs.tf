@@ -64,12 +64,13 @@ module "ecs" {
   ])
 
   # Monitoring
-  enable_jmx_metrics = true
-  enable_telemetry   = true
-  create_lb_alarms   = true
-  load_balancer_arn  = aws_lb.alb.arn
-  log_error_pattern  = "ERROR"
-  notification_arn   = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
+  enable_jmx_metrics  = true
+  jmx_exporter_config = "/home/oracle/.jmx-exporter/jmx-exporter.yml"
+  enable_telemetry    = true
+  create_lb_alarms    = true
+  load_balancer_arn   = aws_lb.alb.arn
+  log_error_pattern   = "ERROR"
+  notification_arn    = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Auto-Scaling
   disable_scale_in   = true  # Sessions are stored in-memory - see lambda.tf for nightly scheduled scale-in function
