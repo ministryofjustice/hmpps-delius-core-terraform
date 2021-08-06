@@ -18,3 +18,26 @@ output "service" {
   value = module.ecs.service
 }
 
+output "alb" {
+  value = {
+    "name"       = aws_lb.alb.name
+    "arn"        = aws_lb.alb.arn
+    "arn_suffix" = aws_lb.alb.arn_suffix
+  }
+}
+
+output "public_alb" {
+  value = {
+    "name"       = aws_lb.public_alb.name
+    "arn"        = aws_lb.public_alb.arn
+    "arn_suffix" = aws_lb.public_alb.arn_suffix
+  }
+}
+
+output "legacy_alb" {
+  value = {
+    "name"       = aws_lb.legacy_alb.name
+    "arn"        = aws_lb.legacy_alb.arn
+    "arn_suffix" = aws_lb.legacy_alb.arn_suffix
+  }
+}

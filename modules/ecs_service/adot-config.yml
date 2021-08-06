@@ -56,6 +56,13 @@ exporters:
           - "^catalina_manager_(rejectedsessions|activesessions)$"
           - "^jvm_gc_collection_seconds_(count|sum)$"
           - "^catalina_globalrequestprocessor_(bytesreceived|bytessent|requestcount|errorcount|processingtime)$"
+      - dimensions: [ [ ClusterName, TaskDefinitionFamily, runtime, name, application ] ]
+        metric_name_selectors:
+          - "^weblogic_application_webappcomponent_"
+          - "^weblogic_application_workmanager_"
+      - dimensions: [ [ ClusterName, TaskDefinitionFamily, runtime, name ] ]
+        metric_name_selectors:
+          - "^weblogic_"
 
 service:
   pipelines:

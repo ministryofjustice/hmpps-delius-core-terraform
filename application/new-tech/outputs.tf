@@ -6,3 +6,6 @@ output "service" {
   value = module.ecs.service
 }
 
+output "target_group" {
+  value = module.ecs.primary_target_group
+}

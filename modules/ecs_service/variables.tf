@@ -234,6 +234,11 @@ variable "enable_jmx_metrics" {
   default     = false
 }
 
+variable "jmx_exporter_config" {
+  description = "Location of the jmx-exporter config file inside the container. By default, a standard config file will be mounted into the container and used."
+  default     = "/jmx-exporter/config.yaml"
+}
+
 variable "enable_telemetry" {
   description = "Enable AWS Open Telemetry Collector. Set to true to run the Telemetry daemon as a sidecar container, and to mount the /xray-agent volume onto the container. The JAVA_TOOL_OPTIONS environment variable is then used to instrument the Java application with the mounted agent library - use `var.telemetry_use_java_tool_opts` to change this behaviour."
   default     = false
