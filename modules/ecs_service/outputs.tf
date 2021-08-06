@@ -1,7 +1,8 @@
 output "service" {
   value = {
-    id   = aws_ecs_service.service.id
-    name = aws_ecs_service.service.name
+    id                     = aws_ecs_service.service.id
+    name                   = aws_ecs_service.service.name
+    task_definition_family = aws_ecs_task_definition.task_definition.family
   }
 }
 

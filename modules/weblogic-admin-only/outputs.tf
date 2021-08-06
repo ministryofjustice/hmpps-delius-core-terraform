@@ -24,8 +24,12 @@ output "lb_listener_arn" {
 
 output "alb" {
   value = {
-    "id"   = aws_lb.alb.id
-    "arn"  = aws_lb.alb.arn
-    "name" = aws_lb.alb.name
+    "name"       = aws_lb.alb.name
+    "arn"        = aws_lb.alb.arn
+    "arn_suffix" = aws_lb.alb.arn_suffix
   }
+}
+
+output "target_group" {
+  value = module.ecs.primary_target_group
 }

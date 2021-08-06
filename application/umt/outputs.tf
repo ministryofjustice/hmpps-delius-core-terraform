@@ -2,6 +2,10 @@ output "service" {
   value = module.ecs.service
 }
 
+output "target_group" {
+  value = module.ecs.primary_target_group
+}
+
 output "token_store" {
   value = {
     host                 = aws_route53_record.token_store_private_dns.fqdn
