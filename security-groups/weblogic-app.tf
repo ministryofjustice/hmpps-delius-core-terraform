@@ -1,5 +1,3 @@
-# weblogic-ndelius.tf
-
 ################################################################################
 ## Load balancer
 ################################################################################
@@ -7,13 +5,10 @@ resource "aws_security_group" "weblogic_ndelius_lb" {
   name        = "${var.environment_name}-weblogic-ndelius-lb"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
   description = "Weblogic ndelius LB"
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.environment_name}-weblogic-ndelius-lb"
-      "Type" = "Private"
-    },
-  )
+  tags = merge(var.tags, {
+    "Name" = "${var.environment_name}-weblogic-ndelius-lb"
+    "Type" = "Private"
+  })
 
   lifecycle {
     create_before_destroy = true
@@ -24,166 +19,45 @@ output "sg_weblogic_ndelius_lb_id" {
   value = aws_security_group.weblogic_ndelius_lb.id
 }
 
-# Allow NPS+CRC users into the external ELB
-#TODO: Do we build a list of allowed source in or?
-resource "aws_security_group_rule" "ndelius_external_elb_ingress" {
+# Allow Probation users and MOJ internal users into the external LB
+resource "aws_security_group_rule" "ndelius_lb_ingress_from_users" {
+  for_each          = toset(["80", "443"])
   security_group_id = aws_security_group.weblogic_ndelius_lb.id
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = "80"
-  to_port           = "80"
-  cidr_blocks       = local.user_access_cidr_blocks
-  description       = "Front-end users in"
+  from_port         = each.value
+  to_port           = each.value
+  cidr_blocks       = distinct(concat(local.user_access_cidr_blocks, local.bastion_public_ip, var.internal_moj_access_cidr_blocks, local.natgateway_public_ips_cidr_blocks))
+  description       = "User access"
 }
 
-resource "aws_security_group_rule" "ndelius_external_elb_ingress_tls" {
-  security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  cidr_blocks       = local.user_access_cidr_blocks
-  description       = "Front-end users in (TLS)"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_ingress_nat" {
-  security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "80"
-  to_port           = "80"
-  cidr_blocks       = local.natgateway_public_ips_cidr_blocks
-  description       = "NAT gateway in"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_ingress_nat_tls" {
-  security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  cidr_blocks       = local.natgateway_public_ips_cidr_blocks
-  description       = "NAT gateway in (TLS)"
-}
-
-resource "aws_security_group_rule" "ndelius_public_subnet_ingress" {
-  security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "80"
-  to_port           = "80"
-  cidr_blocks       = local.public_cidr_block
-  description       = "Public subnet in"
-}
-
-resource "aws_security_group_rule" "ndelius_public_subnet_ingress_tls" {
-  security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  cidr_blocks       = local.public_cidr_block
-  description       = "Public subnet in (TLS)"
-}
-
-resource "aws_security_group_rule" "ndelius_lb_self_ingress" {
-  security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "80"
-  to_port           = "80"
-  self              = true
-  description       = "LB-to-LB comms"
-}
-
-resource "aws_security_group_rule" "ndelius_lb_self_ingress_tls" {
-  security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  self              = true
-  description       = "LB-to-LB comms (TLS)"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_egress_wls" {
+resource "aws_security_group_rule" "ndelius_lb_egress_to_instances" {
   security_group_id        = aws_security_group.weblogic_ndelius_lb.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = 8080
   to_port                  = 8080
   source_security_group_id = aws_security_group.weblogic_ndelius_instances.id
-  description              = "Out to instances"
+  description              = "Out to WebLogic instances"
 }
 
-resource "aws_security_group_rule" "ndelius_external_elb_egress_umt" {
+resource "aws_security_group_rule" "ndelius_lb_egress_to_services" {
+  for_each = {
+    "User Management"               = [aws_security_group.umt_instances.id, 8080]
+    "New Tech Web"                  = [aws_security_group.new_tech_instances.id, 9000]
+    "Approved Premises Tracker API" = [aws_security_group.aptracker_api.id, 8080]
+    "GDPR API"                      = [aws_security_group.gdpr_api.id, 8080]
+    "GDPR UI"                       = [aws_security_group.gdpr_ui.id, 80]
+    "Merge API"                     = [aws_security_group.merge_api.id, 8080]
+    "Merge UI"                      = [aws_security_group.merge_ui.id, 80]
+  }
   security_group_id        = aws_security_group.weblogic_ndelius_lb.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = aws_security_group.umt_instances.id
-  description              = "Out to UMT instances"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_egress_newtechweb" {
-  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "9000"
-  to_port                  = "9000"
-  source_security_group_id = aws_security_group.new_tech_instances.id
-  description              = "Out to New Tech Web ECS Service instances"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_egress_aptracker_api" {
-  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = aws_security_group.aptracker_api.id
-  description              = "Out to Approved Premises Tracker API instances"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_egress_gdpr_api" {
-  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = aws_security_group.gdpr_api.id
-  description              = "Out to GDPR API instances"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_egress_gdpr_ui" {
-  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "80"
-  to_port                  = "80"
-  source_security_group_id = aws_security_group.gdpr_ui.id
-  description              = "Out to GDPR UI instances"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_egress_merge_api" {
-  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
-  source_security_group_id = aws_security_group.merge_api.id
-  description              = "Out to Merge API instances"
-}
-
-resource "aws_security_group_rule" "ndelius_external_elb_egress_merge_ui" {
-  security_group_id        = aws_security_group.weblogic_ndelius_lb.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "80"
-  to_port                  = "80"
-  source_security_group_id = aws_security_group.merge_ui.id
-  description              = "Out to Merge UI instances"
+  from_port                = each.value[1]
+  to_port                  = each.value[1]
+  source_security_group_id = each.value[0]
+  description              = "Out to ${each.key}"
 }
 
 ################################################################################
@@ -193,13 +67,10 @@ resource "aws_security_group" "weblogic_ndelius_instances" {
   name        = "${var.environment_name}-weblogic-ndelius-instances"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
   description = "Weblogic ndelius instances"
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.environment_name}-weblogic-ndelius-instances"
-      "Type" = "Private"
-    },
-  )
+  tags = merge(var.tags, {
+    "Name" = "${var.environment_name}-weblogic-ndelius-instances"
+    "Type" = "Private"
+  })
 
   lifecycle {
     create_before_destroy = true
@@ -210,8 +81,7 @@ output "sg_weblogic_ndelius_instances_id" {
   value = aws_security_group.weblogic_ndelius_instances.id
 }
 
-#Allow the ELB into the Admin port
-resource "aws_security_group_rule" "ndelius_instances_external_elb_ingress" {
+resource "aws_security_group_rule" "ndelius_instances_lb_ingress" {
   security_group_id        = aws_security_group.weblogic_ndelius_instances.id
   type                     = "ingress"
   protocol                 = "tcp"
@@ -221,7 +91,7 @@ resource "aws_security_group_rule" "ndelius_instances_external_elb_ingress" {
   description              = "Load balancer in"
 }
 
-resource "aws_security_group_rule" "ndelius_instances_egress_1521" {
+resource "aws_security_group_rule" "ndelius_instances_egress_ti_database" {
   security_group_id        = aws_security_group.weblogic_ndelius_instances.id
   type                     = "egress"
   protocol                 = "tcp"
@@ -231,7 +101,7 @@ resource "aws_security_group_rule" "ndelius_instances_egress_1521" {
   description              = "Delius DB out"
 }
 
-resource "aws_security_group_rule" "ndelius_instances_egress_ldap" {
+resource "aws_security_group_rule" "ndelius_instances_egress_to_ldap" {
   security_group_id        = aws_security_group.weblogic_ndelius_instances.id
   type                     = "egress"
   protocol                 = "tcp"
@@ -240,4 +110,3 @@ resource "aws_security_group_rule" "ndelius_instances_egress_ldap" {
   source_security_group_id = aws_security_group.apacheds_ldap_private_elb.id
   description              = "LDAP ELB out"
 }
-
