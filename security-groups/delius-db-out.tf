@@ -74,3 +74,13 @@ resource "aws_security_group_rule" "db_to_nextcloud_https_out" {
   description              = "Nextcloud out 443"
 }
 
+resource "aws_security_group_rule" "db_to_elasticsearch_https_out" {
+  security_group_id        = aws_security_group.delius_db_out.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "443"
+  to_port                  = "443"
+  source_security_group_id = aws_security_group.contact_search_domain.id
+  description              = "Elasticseach out 443"
+}
+
