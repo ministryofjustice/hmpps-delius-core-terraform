@@ -1,7 +1,8 @@
 # Elasticsearch
 An Elasticsearch domain used for indexing and searching contact records within the Delius system.
 
-The index will be populated by a procedure in the Delius database. The Delius API provides a search endpoint for surfacing the indexed data to authorised systems.
+The index will be populated by a procedure in the Delius database, 
+and a search endpoint is provided by Delius API for surfacing the indexed data to authorised systems.
 
 ## Configuration
 Configure the AWS resources using the `default_contact_search_config` and `contact_search_config` variables in the [hmpps-env-configs](https://github.com/ministryofjustice/hmpps-env-configs) repository.
@@ -16,6 +17,10 @@ The domain will be spread across up to 3 availability zones, depending on the `i
 
 ## Backups
 An automated snapshot of the data is taken at the hour specified in the `automated_snapshot_start_hour` variable.
+
+## Monitoring
+Elasticsearch pushes application logs and metrics to CloudWatch. 
+Various alarms are defined in [cloudwatch.tf](cloudwatch.tf), based on the [AWS best practices](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html).
 
 ## Kibana Access
 The Terraform outputs will contain the Kibana endpoint URL, see [outputs.tf](outputs.tf).

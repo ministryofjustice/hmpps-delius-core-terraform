@@ -91,6 +91,7 @@ The following applications run as containerized services on the shared [ECS clus
 * [database_standbydb1](database_standbydb1) - Delius Standby OracleDB 
 * [database_standbydb2](database_standbydb2) - Delius Standby OracleDB
 * [application/ldap](application/ldap) - LDAP User Data Store - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2032271398/LDAP)
+* [elasticsearch](elasticsearch) - Elasticsearch index, populated from the Delius databases
 ### Monitoring
 * [access-logs](access-logs) - Bucket for storing LB access logs
 * [alerts](alerts) - Common Slack alerting lambdas
