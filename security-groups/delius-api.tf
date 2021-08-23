@@ -83,3 +83,12 @@ resource "aws_security_group_rule" "delius_api_instances_to_db" {
   description              = "Out to Delius Database"
 }
 
+resource "aws_security_group_rule" "delius_api_instances_to_elasticsearch" {
+  security_group_id        = aws_security_group.delius_api_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 443
+  to_port                  = 443
+  source_security_group_id = aws_security_group.contact_search_domain.id
+  description              = "Out to Elasticsearch"
+}
