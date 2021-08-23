@@ -5,6 +5,7 @@ resource "aws_cloudwatch_log_group" "log_group" {
 }
 
 data "aws_iam_policy_document" "log_policy_document" {
+  version = "2012-10-17"
   statement {
     effect = "Allow"
     principals {
@@ -13,9 +14,10 @@ data "aws_iam_policy_document" "log_policy_document" {
     }
     actions = [
       "logs:PutLogEvents",
+      "logs:PutLogEventsBatch",
       "logs:CreateLogStream"
     ]
-    resources = [aws_cloudwatch_log_group.log_group.arn]
+    resources = ["arn:aws:logs:*"]
   }
 }
 
