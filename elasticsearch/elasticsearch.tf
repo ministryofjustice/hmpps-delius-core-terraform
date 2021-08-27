@@ -1,12 +1,3 @@
-resource "random_password" "master_password" {
-  length = 32
-  # Requirements enforced by Elasticsearch:
-  min_upper   = 1
-  min_lower   = 1
-  min_numeric = 1
-  min_special = 1
-}
-
 resource "random_shuffle" "subnets" {
   # If there are fewer than 3 instances configured, then select a subset of AZs at random
   result_count = min(local.contact_search_config["instance_count"], 3)
@@ -15,18 +6,6 @@ resource "random_shuffle" "subnets" {
     data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az2,
     data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az3
   ]
-}
-
-resource "aws_ssm_parameter" "master_username_parameter" {
-  name  = "/${var.environment_name}/${var.project_name}/elasticsearch/${local.contact_search_name}/master_user_name"
-  value = "master"
-  type  = "String"
-}
-
-resource "aws_ssm_parameter" "master_password_parameter" {
-  name  = "/${var.environment_name}/${var.project_name}/elasticsearch/${local.contact_search_name}/master_user_password"
-  value = random_password.master_password.result
-  type  = "SecureString"
 }
 
 resource "aws_elasticsearch_domain" "contact_search" {
@@ -76,8 +55,8 @@ resource "aws_elasticsearch_domain" "contact_search" {
     enabled                        = true
     internal_user_database_enabled = true
     master_user_options {
-      master_user_name     = aws_ssm_parameter.master_username_parameter.value
-      master_user_password = aws_ssm_parameter.master_password_parameter.value
+      master_user_name     = aws_ssm_parameter.username.value
+      master_user_password = aws_ssm_parameter.password.value
     }
   }
 
