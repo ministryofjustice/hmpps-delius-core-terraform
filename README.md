@@ -3,10 +3,44 @@
 Infrastructure and provisioning of the National Delius probation case management system, and its core supporting 
 services, into the Delius AWS environments.
 
+![Architecture diagram for the core Delius components](architecture-diagram.png "Delius-Core AWS Infrastructure Diagram")
+
+For more information on the Delius infrastructure components, browse the [Confluence pages](https://dsdmoj.atlassian.net/wiki/spaces/DAM). 
+
 ## Dependencies
 * [Environment config files](https://github.com/ministryofjustice/hmpps-env-configs) (see [#configuration](#configuration)).
 * [Common resources (e.g. VPC)](https://github.com/ministryofjustice/hmpps-delius-network-terraform) should already exist in the target environment.
 * IAM Credentials, with permissions to assume the `terraform` role.
+
+## Components
+### Applications
+The following applications run as containerized services on the shared [ECS cluster](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/3107979730/ECS+Cluster).
+* [application/weblogic-app](application/weblogic-app) - Delius application front-end
+* [application/weblogic-eis](application/weblogic-eis) - Delius external interface services i.e. API endpoints for IAPS, OASys, DSS, and CaseNotes.
+* [application/pwm](application/pwm) - Password Reset Tool - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2116092086/PWM+-+Password+Reset)
+* [application/umt](application/umt) - User Management Tool
+* [application/community-api](application/community-api)
+* [application/delius-api](application/delius-api)
+* [application/new-tech](application/new-tech)
+* [application/pdf-generator](application/pdf-generator)
+* [application/gdpr](application/gdpr)
+* [application/merge](application/merge)
+* [application/aptracker-api](application/aptracker-api)
+### Batch
+* [batch/dss](batch/dss) - NOMIS/OFFLOC Data Share System - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/1488486513/Data+Share+System+DSS)
+### Data
+* [database_failover](database_failover) - Delius Primary OracleDB
+* [database_standbydb1](database_standbydb1) - Delius Standby OracleDB
+* [database_standbydb2](database_standbydb2) - Delius Standby OracleDB
+* [application/ldap](application/ldap) - LDAP User Data Store - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2032271398/LDAP)
+* [elasticsearch](elasticsearch) - Elasticsearch index, populated from the Delius databases
+### Monitoring
+* [access-logs](access-logs) - Bucket for storing LB access logs
+* [alerts](alerts) - Common Slack alerting lambdas
+* [dashboards](dashboards) - CloudWatch dashboards
+### Security
+* [key_profile](key_profile) - KMS Keys and Instance Profiles
+* [security-groups](security-groups) - Security Groups and Rules
 
 ## Usage
 ### Local Development
@@ -69,36 +103,6 @@ git clone https://github.com/ministryofjustice/hmpps-env-configs ../hmpps-env-co
 # 2. Create a symbolic link (this part is handled automatically in the run.sh script)
 ln -s -f ../hmpps-env-configs env_configs
 ```
-
-## Components
-### Applications
-The following applications run as containerized services on the shared [ECS cluster](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/3107979730/ECS+Cluster).
-* [application/weblogic-app](application/weblogic-app) - Delius application front-end
-* [application/weblogic-eis](application/weblogic-eis) - Delius external interface services i.e. API endpoints for IAPS, OASys, DSS, and CaseNotes.
-* [application/pwm](application/pwm) - Password Reset Tool - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2116092086/PWM+-+Password+Reset)
-* [application/umt](application/umt) - User Management Tool
-* [application/community-api](application/community-api)
-* [application/delius-api](application/delius-api)
-* [application/new-tech](application/new-tech)
-* [application/pdf-generator](application/pdf-generator)
-* [application/gdpr](application/gdpr)
-* [application/merge](application/merge)
-* [application/aptracker-api](application/aptracker-api)
-### Batch
-* [batch/dss](batch/dss) - NOMIS/OFFLOC Data Share System - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/1488486513/Data+Share+System+DSS)
-### Data
-* [database_failover](database_failover) - Delius Primary OracleDB
-* [database_standbydb1](database_standbydb1) - Delius Standby OracleDB 
-* [database_standbydb2](database_standbydb2) - Delius Standby OracleDB
-* [application/ldap](application/ldap) - LDAP User Data Store - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2032271398/LDAP)
-* [elasticsearch](elasticsearch) - Elasticsearch index, populated from the Delius databases
-### Monitoring
-* [access-logs](access-logs) - Bucket for storing LB access logs
-* [alerts](alerts) - Common Slack alerting lambdas
-* [dashboards](dashboards) - CloudWatch dashboards - [Example](https://cloudwatch.amazonaws.com/dashboard.html?dashboard=delius-test-ServiceHealth&context=eyJSIjoidXMtZWFzdC0xIiwiRCI6ImN3LWRiLTcyODc2NTU1MzQ4OCIsIlUiOiJ1cy1lYXN0LTFfaXpGMk9Xb3RwIiwiQyI6IjIzbnM2c2RicWtkNmZyZDdmYXBldXFrbWllIiwiSSI6InVzLWVhc3QtMTpjZjBmOWFkMS01MzY0LTRjOTMtYjRlMy1kY2ZlYjAzOTA2N2MiLCJNIjoiUHVibGljIn0%3D)
-### Security
-* [key_profile](key_profile) - KMS Keys and Instance Profiles
-* [security-groups](security-groups) - Security Groups and Rules
 
 ## Contact
 For any issues, please contact the Delius Infrastructure Support team via the [#delius_infra_support](https://mojdt.slack.com/archives/CNXK9893K) Slack channel.
