@@ -47,7 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "cluster_status_red" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cluster_status_yellow" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-cluster-status--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-cluster-status--warning"
   alarm_description   = "The `${local.contact_search_name}` Elasticsearch cluster status is yellow. At least one replica shard is not allocated to a node. See <https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/aes-handling-errors.html#aes-handling-errors-yellow-cluster-status|Yellow cluster status>."
   namespace           = "AWS/ES"
   statistic           = "Maximum"
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_metric_alarm" "cluster_status_yellow" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "free_storage_space" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-free-storage--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-free-storage--warning"
   alarm_description   = "A node in the `${local.contact_search_name}` Elasticsearch cluster is down to ${ceil(local.contact_search_config["volume_size"] * 0.25)} GiB of free storage space. See <https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/aes-handling-errors.html#aes-handling-errors-watermark|Lack of available storage space>."
   namespace           = "AWS/ES"
   statistic           = "Minimum"
@@ -101,7 +101,7 @@ resource "aws_cloudwatch_metric_alarm" "writes_blocked" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "unreachable_nodes" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-unreachable-nodes--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-unreachable-nodes--warning"
   alarm_description   = "At least one node in the `${local.contact_search_name}` Elasticsearch cluster has been unreachable for one day. See <https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/aes-handling-errors.html#aes-handling-errors-failed-cluster-nodes|Failed cluster nodes>."
   namespace           = "AWS/ES"
   statistic           = "Minimum"
@@ -119,7 +119,7 @@ resource "aws_cloudwatch_metric_alarm" "unreachable_nodes" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "snapshot_failure" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-snapshot-failure--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-snapshot-failure--warning"
   alarm_description   = "An automated snapshot of the `${local.contact_search_name}` Elasticsearch cluster failed. This failure is often the result of a red cluster health status. See <Red cluster status|https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/aes-handling-errors.html#aes-handling-errors-red-cluster-status>."
   namespace           = "AWS/ES"
   statistic           = "Maximum"
@@ -137,7 +137,7 @@ resource "aws_cloudwatch_metric_alarm" "snapshot_failure" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_usage" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-cpu-usage--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-cpu-usage--warning"
   alarm_description   = "CPU utilization exceeded 80% for the `${local.contact_search_name}` Elasticsearch cluster. Consider using larger instance types or adding instances."
   namespace           = "AWS/ES"
   statistic           = "Maximum"
@@ -155,7 +155,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_usage" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "memory_pressure" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-memory-pressure--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-memory-pressure--warning"
   alarm_description   = "JVM memory pressure exceeded 80% for the `${local.contact_search_name}` Elasticsearch cluster. The cluster could encounter out of memory errors if usage increases. Consider scaling vertically."
   namespace           = "AWS/ES"
   statistic           = "Maximum"
@@ -173,7 +173,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_pressure" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "master_cpu_usage" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-master-cpu-usage--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-master-cpu-usage--warning"
   alarm_description   = "CPU utilization exceeded 50% for the `${local.contact_search_name}` Elasticsearch cluster dedicated master nodes."
   namespace           = "AWS/ES"
   statistic           = "Maximum"
@@ -191,7 +191,7 @@ resource "aws_cloudwatch_metric_alarm" "master_cpu_usage" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "master_memory_pressure" {
-  alarm_name          = "${var.environment_name}-${local.contact_search_name}-master-memory-pressure--warn"
+  alarm_name          = "${var.environment_name}-${local.contact_search_name}-master-memory-pressure--warning"
   alarm_description   = "JVM memory pressure exceeded 80% for the `${local.contact_search_name}` Elasticsearch cluster dedicated master nodes."
   namespace           = "AWS/ES"
   statistic           = "Maximum"
