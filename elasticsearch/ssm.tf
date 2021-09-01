@@ -1,10 +1,11 @@
 resource "random_password" "master_password" {
   length = 32
   # Requirements enforced by Elasticsearch:
-  min_upper   = 1
-  min_lower   = 1
-  min_numeric = 1
-  min_special = 1
+  min_upper        = 1
+  min_lower        = 1
+  min_numeric      = 1
+  min_special      = 1
+  override_special = "!%()-_=+[]{}<>:?"
 }
 
 resource "aws_ssm_parameter" "username" {
