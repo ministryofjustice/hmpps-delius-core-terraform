@@ -16,12 +16,12 @@ resource "aws_appautoscaling_policy" "heap_scaling_out_policy" {
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "heap_scaling_up_alarm" {
+resource "aws_cloudwatch_metric_alarm" "heap_scaling_out_alarm" {
   alarm_name          = "${var.short_environment_name}-${var.app_name}-heap-scale-out-alarm"
   alarm_description   = "WebLogic heap usage percentage above threshold"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "2"
-  threshold           = 80 # Scale up above 80% heap usage
+  evaluation_periods  = 2
+  threshold           = 55 # Scale out above 55% heap usage
   alarm_actions       = [aws_appautoscaling_policy.heap_scaling_out_policy.arn]
 
   metric_query {
