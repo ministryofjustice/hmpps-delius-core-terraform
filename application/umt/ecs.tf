@@ -10,7 +10,9 @@ module "ecs" {
   service_name          = local.app_name
   container_definitions = [{ image = "${local.app_config["image_url"]}:${local.app_config["version"]}" }]
   environment = {
-    JAVA_OPTS                               = "-XX:MaxMetaspaceSize=512M" # Override metaspace allocation calculated by https://github.com/cloudfoundry/java-buildpack-memory-calculator
+    JAVA_OPTS                               = "-XX:MaxMetaspaceSize=512M -XX:MaxDirectMemorySize=128M" /* Override non-heap allocations calculated by https://github.com/cloudfoundry/java-buildpack-memory-calculator
+                                                                                                        * to prevent the following errors: "OutOfMemoryError: Metaspace" and "OutOfMemoryError: Direct buffer memory".
+                                                                                                        */
     TZ                                      = "Europe/London"
     SERVER_USE-FORWARD-HEADERS              = "true"
     SERVER_FORWARD-HEADERS-STRATEGY         = "native"
@@ -54,6 +56,7 @@ module "ecs" {
 
   # Monitoring
   enable_telemetry            = true
+  enable_jmx_metrics          = true
   create_lb_alarms            = true
   enable_response_time_alarms = false # Response times can exceed 1s during normal use (e.g. Exports and Role Searches)
   load_balancer_arn           = data.terraform_remote_state.ndelius.outputs.alb["arn"]
