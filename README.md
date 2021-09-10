@@ -3,7 +3,7 @@
 Infrastructure and provisioning of the National Delius probation case management system, and its core supporting 
 services, into the Delius AWS environments.
 
-![Architecture diagram for the core Delius components](architecture-diagram.png "Delius-Core AWS Infrastructure Diagram")
+![Architecture diagram for the core Delius components](architecture-diagram.svg "Delius-Core AWS Infrastructure Diagram")
 
 For more information on the Delius infrastructure components, browse the [Confluence pages](https://dsdmoj.atlassian.net/wiki/spaces/DAM). 
 
