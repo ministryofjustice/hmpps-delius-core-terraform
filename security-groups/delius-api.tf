@@ -63,6 +63,16 @@ resource "aws_security_group_rule" "delius_api_instances_from_lb" {
   description              = "In from Delius API Load Balancer"
 }
 
+resource "aws_security_group_rule" "delius_api_instances_from_delius_ui" {
+  security_group_id        = aws_security_group.delius_api_instances.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.weblogic_ndelius_instances.id
+  description              = "In from Delius UI"
+}
+
 resource "aws_security_group_rule" "delius_api_instances_from_community_api" {
   security_group_id        = aws_security_group.delius_api_instances.id
   type                     = "ingress"

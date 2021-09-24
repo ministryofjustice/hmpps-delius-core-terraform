@@ -91,7 +91,7 @@ resource "aws_security_group_rule" "ndelius_instances_lb_ingress" {
   description              = "Load balancer in"
 }
 
-resource "aws_security_group_rule" "ndelius_instances_egress_ti_database" {
+resource "aws_security_group_rule" "ndelius_instances_egress_to_database" {
   security_group_id        = aws_security_group.weblogic_ndelius_instances.id
   type                     = "egress"
   protocol                 = "tcp"
@@ -109,4 +109,14 @@ resource "aws_security_group_rule" "ndelius_instances_egress_to_ldap" {
   to_port                  = var.ldap_ports["ldap"]
   source_security_group_id = aws_security_group.apacheds_ldap_private_elb.id
   description              = "LDAP ELB out"
+}
+
+resource "aws_security_group_rule" "ndelius_instances_egress_to_delius_api" {
+  security_group_id        = aws_security_group.weblogic_ndelius_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.apacheds_ldap_private_elb.id
+  description              = "Delius API out"
 }

@@ -33,6 +33,7 @@ module "ecs" {
 
     APTRACKER_ERRORS_URL  = "/aptracker-api/errors"
     ELASTICSEARCH_URL     = "/newTech"
+    DELIUS_API_URL        = "http://delius-api.ecs.cluster:8080"
     GDPR_URL              = "/gdpr/ui/homepage"
     MERGE_URL             = "/merge/ui/"
     MERGE_API_URL         = "/merge/api/"
