@@ -5,5 +5,7 @@ output "contact_search" {
     endpoint           = aws_elasticsearch_domain.contact_search.endpoint
     kibana_endpoint    = aws_elasticsearch_domain.contact_search.kibana_endpoint
     availability_zones = aws_elasticsearch_domain.contact_search.vpc_options.0.availability_zones
+    username           = aws_ssm_parameter.username.value
+    password_key       = aws_ssm_parameter.password.name
   }
 }

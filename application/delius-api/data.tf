@@ -67,3 +67,12 @@ data "terraform_remote_state" "alerts" {
   }
 }
 
+data "terraform_remote_state" "elasticsearch" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/elasticsearch/terraform.tfstate"
+    region = var.region
+  }
+}
+
