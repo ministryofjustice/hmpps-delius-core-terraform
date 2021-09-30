@@ -11,10 +11,18 @@ module "ecs" {
   container_definitions          = [{ image = local.app_config["image_url"] }]
   ignore_task_definition_changes = true # Deployment is managed by Circle CI
   health_check_path              = "/health"
-  secrets                        = var.delius_api_secrets
   environment = merge(var.delius_api_environment, {
-    SPRING_DATASOURCE_URL = data.terraform_remote_state.database.outputs.jdbc_failover_url
+    SPRING_DATASOURCE_URL                               = data.terraform_remote_state.database.outputs.jdbc_failover_url
+    SPRING_ELASTICSEARCH_REST_URIS                      = "https://${data.terraform_remote_state.elasticsearch.outputs.contact_search["endpoint"]}:443"
+    SPRING_ELASTICSEARCH_REST_USERNAME                  = data.terraform_remote_state.elasticsearch.outputs.contact_search["username"]
+    SPRING_DATA_ELASTICSEARCH_CLIENT_REACTIVE_ENDPOINTS = "${data.terraform_remote_state.elasticsearch.outputs.contact_search["endpoint"]}:443"
+    SPRING_DATA_ELASTICSEARCH_CLIENT_REACTIVE_USERNAME  = data.terraform_remote_state.elasticsearch.outputs.contact_search["username"]
+    SPRING_DATA_ELASTICSEARCH_CLIENT_REACTIVE_USE_SSL   = true
     # ... Add any environment variables here that should be pulled from Terraform data sources.
+  })
+  secrets = merge(var.delius_api_secrets, {
+    SPRING_DATA_ELASTICSEARCH_CLIENT_REACTIVE_PASSWORD = data.terraform_remote_state.elasticsearch.outputs.contact_search["password_key"]
+    SPRING_ELASTICSEARCH_REST_PASSWORD                 = data.terraform_remote_state.elasticsearch.outputs.contact_search["password_key"]
   })
 
   # Security & Networking
