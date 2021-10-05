@@ -117,6 +117,6 @@ resource "aws_security_group_rule" "ndelius_instances_egress_to_delius_api" {
   protocol                 = "tcp"
   from_port                = 8080
   to_port                  = 8080
-  source_security_group_id = aws_security_group.apacheds_ldap_private_elb.id
+  source_security_group_id = aws_security_group.delius_api_instances.id
   description              = "Delius API out"
 }
