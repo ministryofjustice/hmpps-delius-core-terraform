@@ -1,6 +1,6 @@
 # Load balancer
 resource "aws_lb" "alb" {
-  name            = "${var.short_environment_name}-${var.app_name}-alb"
+  name            = substr("${var.short_environment_name}-${var.app_name}-alb", 0, 32)
   internal        = false
   security_groups = var.security_groups_lb
   subnets = [
@@ -8,7 +8,7 @@ resource "aws_lb" "alb" {
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3,
   ]
-  tags = merge(var.tags, { "Name" = "${var.short_environment_name}-${var.app_name}-alb" })
+  tags = merge(var.tags, { "Name" = substr("${var.short_environment_name}-${var.app_name}-alb", 0, 32) })
 
   access_logs {
     enabled = true
