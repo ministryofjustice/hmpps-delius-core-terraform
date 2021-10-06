@@ -45,3 +45,13 @@ resource "aws_security_group_rule" "contact_search_ingress_from_delius_api" {
   source_security_group_id = aws_security_group.delius_api_instances.id
   description              = "Delius API in, for searching"
 }
+
+resource "aws_security_group_rule" "contact_search_ingress_from_codebuild_ci" {
+  security_group_id        = aws_security_group.contact_search_domain.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 443
+  to_port                  = 443
+  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.test_delius_api["security_group"]["id"]
+  description              = "CodeBuild CI in, for testing"
+}
