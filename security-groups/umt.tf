@@ -36,8 +36,8 @@ resource "aws_security_group_rule" "umt_auth_egress_umt_instances" {
   security_group_id        = aws_security_group.umt_auth.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
+  from_port                = 8080
+  to_port                  = 8080
   source_security_group_id = aws_security_group.umt_instances.id
   description              = "UMT instances out"
 }
@@ -70,8 +70,8 @@ resource "aws_security_group_rule" "umt_instances_ingress_auth" {
   security_group_id        = aws_security_group.umt_instances.id
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
+  from_port                = 8080
+  to_port                  = 8080
   source_security_group_id = aws_security_group.umt_auth.id
   description              = "OAuth access in"
 }
@@ -80,8 +80,8 @@ resource "aws_security_group_rule" "umt_instances_ingress_ndelius_lb" {
   security_group_id        = aws_security_group.umt_instances.id
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "8080"
-  to_port                  = "8080"
+  from_port                = 8080
+  to_port                  = 8080
   source_security_group_id = aws_security_group.weblogic_ndelius_lb.id
   description              = "WebLogic (ndelius) load balancer in"
 }
@@ -100,8 +100,8 @@ resource "aws_security_group_rule" "umt_instances_egress_db" {
   security_group_id        = aws_security_group.umt_instances.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "1521"
-  to_port                  = "1521"
+  from_port                = 1521
+  to_port                  = 1521
   source_security_group_id = aws_security_group.delius_db_in.id
   description              = "Database out"
 }
@@ -110,8 +110,8 @@ resource "aws_security_group_rule" "umt_instances_egress_tokenstore" {
   security_group_id        = aws_security_group.umt_instances.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = "6379"
-  to_port                  = "6379"
+  from_port                = 6379
+  to_port                  = 6379
   source_security_group_id = aws_security_group.umt_tokenstore.id
   description              = "Token store out"
 }
@@ -144,9 +144,18 @@ resource "aws_security_group_rule" "umt_tokenstore_ingress_instances" {
   security_group_id        = aws_security_group.umt_tokenstore.id
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = "6379"
-  to_port                  = "6379"
+  from_port                = 6379
+  to_port                  = 6379
   source_security_group_id = aws_security_group.umt_instances.id
   description              = "In from UMT instances"
 }
 
+resource "aws_security_group_rule" "umt_tokenstore_ingress_bastion" {
+  security_group_id = aws_security_group.umt_tokenstore.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 6379
+  to_port           = 6379
+  cidr_blocks       = values(data.terraform_remote_state.bastion-vpc.outputs.bastion_public_cidr)
+  description       = "Bastion access"
+}
