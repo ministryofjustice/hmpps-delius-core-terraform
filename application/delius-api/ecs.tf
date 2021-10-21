@@ -18,6 +18,7 @@ module "ecs" {
     SPRING_DATA_ELASTICSEARCH_CLIENT_REACTIVE_ENDPOINTS = "${data.terraform_remote_state.elasticsearch.outputs.contact_search["endpoint"]}:443"
     SPRING_DATA_ELASTICSEARCH_CLIENT_REACTIVE_USERNAME  = data.terraform_remote_state.elasticsearch.outputs.contact_search["username"]
     SPRING_DATA_ELASTICSEARCH_CLIENT_REACTIVE_USE_SSL   = true
+    ALFRESCO_BASEURL                                    = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}"
     # ... Add any environment variables here that should be pulled from Terraform data sources.
   })
   secrets = merge(var.delius_api_secrets, {
