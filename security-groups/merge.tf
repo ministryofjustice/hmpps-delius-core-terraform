@@ -40,7 +40,17 @@ resource "aws_security_group_rule" "merge_api_in_from_ndelius_lb" {
   from_port                = 8080
   to_port                  = 8080
   source_security_group_id = aws_security_group.weblogic_ndelius_lb.id
-  description              = "In from NDelius LB"
+  description              = "In from NDelius LB (for healthcheck)"
+}
+
+resource "aws_security_group_rule" "merge_api_in_from_ndelius_instances" {
+  security_group_id        = aws_security_group.merge_api.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.weblogic_ndelius_instances.id
+  description              = "In from NDelius instances (for API calls)"
 }
 
 output "sg_merge_api_id" {
