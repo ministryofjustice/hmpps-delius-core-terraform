@@ -16,7 +16,10 @@ module "weblogic" {
   app_name   = "weblogic-app"
   app_config = local.app_config
 
-  security_groups_lb        = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_ndelius_lb_id]
-  security_groups_instances = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_ndelius_instances_id]
+  security_groups_lb = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_ndelius_lb_id]
+  security_groups_instances = [
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_ndelius_instances_id,
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id
+  ]
 }
 

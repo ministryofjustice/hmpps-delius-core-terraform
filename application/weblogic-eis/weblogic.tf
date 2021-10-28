@@ -18,7 +18,10 @@ module "weblogic" {
     secret_ADMIN_PASSWORD = "/${var.environment_name}/${var.project_name}/weblogic/interface-domain/weblogic_admin_password"
   })
 
-  security_groups_lb        = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_interface_lb_id]
-  security_groups_instances = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_interface_instances_id]
+  security_groups_lb = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_interface_lb_id]
+  security_groups_instances = [
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_interface_instances_id,
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id
+  ]
 }
 

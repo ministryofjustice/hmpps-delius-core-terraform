@@ -120,3 +120,13 @@ resource "aws_security_group_rule" "ndelius_instances_egress_to_delius_api" {
   source_security_group_id = aws_security_group.delius_api_instances.id
   description              = "Delius API out"
 }
+
+resource "aws_security_group_rule" "ndelius_instances_egress_to_merge_api" {
+  security_group_id        = aws_security_group.weblogic_ndelius_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.merge_api.id
+  description              = "Merge API out"
+}
