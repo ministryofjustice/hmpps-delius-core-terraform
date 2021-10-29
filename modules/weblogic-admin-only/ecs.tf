@@ -70,7 +70,7 @@ module "ecs" {
   enable_telemetry    = true
   create_lb_alarms    = true
   load_balancer_arn   = aws_lb.alb.arn
-  log_error_pattern   = "ERROR"
+  log_error_pattern   = "FATAL"
   notification_arn    = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Auto-Scaling
