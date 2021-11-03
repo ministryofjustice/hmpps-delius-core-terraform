@@ -20,7 +20,7 @@ module "api" {
     SPRING_SECOND-DATASOURCE_JDBC-URL                                    = data.terraform_remote_state.database.outputs.jdbc_failover_url
     SPRING_SECOND-DATASOURCE_USERNAME                                    = "mms_pool"
     SPRING_SECOND-DATASOURCE_TYPE                                        = "oracle.jdbc.pool.OracleDataSource"
-    SCHEDULE_MERGEUNMERGE                                                = "-"
+    SCHEDULE_MERGEUNMERGE                                                = local.app_config["schedule"]
     SPRING_JPA_HIBERNATE_DDL-AUTO                                        = "update"
     SPRING_BATCH_JOB_ENABLED                                             = "false"
     SPRING_BATCH_INITIALIZE-SCHEMA                                       = "always"
@@ -59,7 +59,7 @@ module "api" {
   # Scaling
   cpu          = lookup(local.app_config, "api_cpu", var.common_ecs_scaling_config["cpu"])
   memory       = lookup(local.app_config, "api_memory", var.common_ecs_scaling_config["memory"])
-  min_capacity = lookup(local.app_config, "api_min_capacity", var.common_ecs_scaling_config["min_capacity"])
-  max_capacity = lookup(local.app_config, "api_max_capacity", var.common_ecs_scaling_config["max_capacity"])
+  min_capacity = 1
+  max_capacity = 1 # Fix to a single instance, as currently the batch processes cannot be scaled horizontally
 }
 
