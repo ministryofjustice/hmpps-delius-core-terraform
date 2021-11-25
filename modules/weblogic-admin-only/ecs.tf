@@ -71,6 +71,7 @@ module "ecs" {
   create_lb_alarms            = true
   load_balancer_arn           = aws_lb.alb.arn
   enable_response_code_alarms = false # 500 responses are sometimes returned for normal operations e.g. OASys offender not found
+  enable_response_time_alarms = var.enable_response_time_alarms
   log_error_pattern           = "FATAL"
   notification_arn            = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 

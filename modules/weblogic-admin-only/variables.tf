@@ -42,6 +42,11 @@ variable "security_groups_instances" {
   default     = []
 }
 
+variable "enable_response_time_alarms" {
+  description = "Enable or disable standard alarms for response times."
+  default     = true
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
