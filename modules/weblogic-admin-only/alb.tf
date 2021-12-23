@@ -54,7 +54,7 @@ resource "aws_lb_listener" "http_listener" {
 }
 
 # Listener rules
-resource "aws_lb_listener_rule" "homepage_redirect_rule" {
+resource "aws_lb_listener_rule" "homepage_listener_rule" {
   listener_arn = aws_lb_listener.https_listener.arn
   condition {
     path_pattern {
@@ -70,10 +70,10 @@ resource "aws_lb_listener_rule" "homepage_redirect_rule" {
       path        = "/NDelius-war/delius/JSP/homepage.jsp"
     }
   }
+  depends_on = [aws_lb_listener_rule.blocked_paths_listener_rule]
 }
 
-
-resource "aws_lb_listener_rule" "ndelius_allowed_paths_rule" {
+resource "aws_lb_listener_rule" "allowed_paths_listener_rule" {
   listener_arn = aws_lb_listener.https_listener.arn
   condition {
     path_pattern {
@@ -87,5 +87,25 @@ resource "aws_lb_listener_rule" "ndelius_allowed_paths_rule" {
   action {
     type             = "forward"
     target_group_arn = module.ecs.primary_target_group["arn"]
+  }
+  depends_on = [aws_lb_listener_rule.blocked_paths_listener_rule]
+}
+
+resource "aws_lb_listener_rule" "blocked_paths_listener_rule" {
+  listener_arn = aws_lb_listener.https_listener.arn
+  priority     = 1 # must be before ndelius_allowed_paths_rule
+  condition {
+    path_pattern {
+      values = [
+        "/NDelius*/delius/a4j/g/3_3_3.Final*DATA*", # mitigates CVE-2018-12533
+      ]
+    }
+  }
+  action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      status_code  = "404"
+    }
   }
 }
