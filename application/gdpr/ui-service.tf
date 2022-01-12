@@ -38,7 +38,7 @@ module "ui" {
   cpu              = lookup(local.app_config, "ui_cpu", var.common_ecs_scaling_config["cpu"])
   memory           = lookup(local.app_config, "ui_memory", var.common_ecs_scaling_config["memory"])
   min_capacity     = lookup(local.app_config, "ui_min_capacity", var.common_ecs_scaling_config["min_capacity"])
-  max_capacity     = lookup(local.app_config, "ui_min_capacity", var.common_ecs_scaling_config["max_capacity"])
+  max_capacity     = lookup(local.app_config, "ui_max_capacity", var.common_ecs_scaling_config["max_capacity"])
   target_cpu_usage = lookup(local.app_config, "ui_target_cpu", var.common_ecs_scaling_config["target_cpu"])
 }
 
