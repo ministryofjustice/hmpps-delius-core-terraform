@@ -59,7 +59,7 @@ module "api" {
   # Scaling
   cpu          = lookup(local.app_config, "api_cpu", var.common_ecs_scaling_config["cpu"])
   memory       = lookup(local.app_config, "api_memory", var.common_ecs_scaling_config["memory"])
-  min_capacity = 1
-  max_capacity = 1 # Fix to a single instance, as currently the batch processes cannot be scaled horizontally
+  min_capacity = lookup(local.app_config, "api_min_capacity", var.common_ecs_scaling_config["min_capacity"])
+  max_capacity = lookup(local.app_config, "api_max_capacity", var.common_ecs_scaling_config["max_capacity"])
 }
 
