@@ -73,7 +73,6 @@
       "properties": {
         "metrics": [
           [ "AWS/ApplicationELB", "TargetResponseTime", "TargetGroup", "${target_groups["weblogic-app"]}", "LoadBalancer", "${load_balancers["weblogic-app"]}", { "label": "Delius UI", "id": "m1" } ],
-          [ { "expression": "ANOMALY_DETECTION_BAND(m1, 2)", "label": "Delius UI (expected)", "id": "ad1", "color": "#95A5A6", "region": "${region}" } ],
           [ "AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${load_balancers["weblogic-eis"]}", { "label": "Delius Interfaces", "id": "m2", "color": "#ff7f0e" } ],
           [ { "expression": "m6+m7+m8", "label": "Community API", "id": "e2", "color": "#92a500" } ],
           [ "AWS/ApplicationELB", "TargetResponseTime", "TargetGroup", "${target_groups["new-tech"]}", "LoadBalancer", "${load_balancers["weblogic-app"]}", { "label": "New Tech", "id": "m3", "color": "#8c564b" } ],
@@ -211,7 +210,6 @@
       "properties": {
         "metrics": [
           [ "${environment_name}/weblogic-app", "LoggedErrors", { "id": "m2", "label": "Delius UI" } ],
-          [ { "expression": "ANOMALY_DETECTION_BAND(m2, 2)", "label": "Delius UI (expected)", "id": "ad2", "color": "#95A5A6", "stat": "Sum", "region": "${region}", "period": 60 } ],
           [ "${environment_name}/weblogic-eis", "LoggedErrors", { "id": "m1", "label": "Delius Interfaces", "color": "#ff7f0e" } ],
           [ "${environment_name}/delius-api", "LoggedErrors", { "id": "m4", "color": "#2ca02c", "label": "Delius API" } ],
           [ "${environment_name}/community-api", "LoggedErrors", { "id": "m3", "color": "#92a500", "label": "Community API" } ],
