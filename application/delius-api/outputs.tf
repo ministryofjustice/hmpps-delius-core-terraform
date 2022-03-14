@@ -1,5 +1,9 @@
 output "url" {
-  value = "https://${aws_route53_record.public_dns.fqdn}"
+  value = "https://${aws_route53_record.alb.fqdn}"
+}
+
+output "public_url" {
+  value = "https://${aws_route53_record.public_alb.fqdn}"
 }
 
 output "service_discovery_url" {
