@@ -37,6 +37,43 @@ resource "aws_security_group_rule" "delius_api_lb_to_instances" {
 }
 
 ################################################################################
+## Public / unrestricted Load balancer (for exposing documentation)
+################################################################################
+resource "aws_security_group" "delius_api_public_lb" {
+  name        = "${var.environment_name}-delius-api-public-lb"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
+  description = "Delius API public / unrestricted access"
+  tags        = merge(var.tags, { Name = "${var.environment_name}-delius-api-public-lb" })
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+output "sg_delius_api_public_lb_id" {
+  value = aws_security_group.delius_api_public_lb.id
+}
+
+resource "aws_security_group_rule" "delius_api_public_lb_from_everywhere" {
+  security_group_id = aws_security_group.delius_api_public_lb.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "In from everywhere"
+}
+
+resource "aws_security_group_rule" "delius_api_public_lb_to_instances" {
+  security_group_id        = aws_security_group.delius_api_public_lb.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.delius_api_instances.id
+  description              = "Out to Delius API instances"
+}
+
+################################################################################
 ## Instances
 ################################################################################
 resource "aws_security_group" "delius_api_instances" {
@@ -60,7 +97,17 @@ resource "aws_security_group_rule" "delius_api_instances_from_lb" {
   from_port                = 8080
   to_port                  = 8080
   source_security_group_id = aws_security_group.delius_api_lb.id
-  description              = "In from Delius API Load Balancer"
+  description              = "In from Delius API load balancer"
+}
+
+resource "aws_security_group_rule" "delius_api_instances_from_public_lb" {
+  security_group_id        = aws_security_group.delius_api_instances.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.delius_api_public_lb.id
+  description              = "In from public Delius API load balancer"
 }
 
 resource "aws_security_group_rule" "delius_api_instances_from_delius_ui" {
