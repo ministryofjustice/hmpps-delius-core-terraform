@@ -11,6 +11,8 @@ module "server_provision_ec2_role" {
   s3_test_results_arn     = data.terraform_remote_state.s3-test-results.outputs.s3_test_results.arn
   s3_ssm_ansible_arn      = data.terraform_remote_state.ci_common.outputs.ssm_ansible_bucket.arn
   migration_bucket_arn    = var.migration_bucket_arn
+  aws_account_ids         = var.aws_account_ids
+  aws_engineering_account_ids = var.aws_engineering_account_ids
 }
 
 output "instance_profile_ec2_id" {
