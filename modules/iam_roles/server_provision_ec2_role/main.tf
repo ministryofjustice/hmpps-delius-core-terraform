@@ -100,5 +100,5 @@ resource "aws_iam_role_policy_attachment" "delius_core_ssm_update" {
 resource "aws_iam_role_policy" "oracle_release_update_oem" {
   name = "${var.environment_name}-oracle-release-update-oem"
   role = aws_iam_role.ec2.name
-  policy = data.template_file.oracle_release_update_oem.rendered
+  policy = data.template_file.oracle_release_update_oem_template.rendered
 }
