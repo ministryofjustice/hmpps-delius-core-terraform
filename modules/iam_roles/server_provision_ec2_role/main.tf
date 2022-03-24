@@ -101,7 +101,7 @@ data "template_file" "oracle_release_update_oem" {
   template = file("${path.module}/policies/oracle_release_update_oem_template.json")
   vars = {
     engineering_account_id     = local.engineering_account_id
-    engineering_account_prefix = local.s3_oracledb_backups_arn
+    engineering_account_prefix = local.engineering_account_prefix
   }
 }
 resource "aws_iam_role_policy" "oracle_release_update_oem" {
