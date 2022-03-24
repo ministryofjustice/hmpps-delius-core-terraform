@@ -26,3 +26,9 @@ variable "tags" {
   type = map(string)
 }
 
+variable "aws_account_ids" {
+  type = map(string)
+}
+variable "aws_engineering_account_ids" {
+  type = map(string)
+}
