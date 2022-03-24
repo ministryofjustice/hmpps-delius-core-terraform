@@ -97,6 +97,13 @@ resource "aws_iam_role_policy_attachment" "delius_core_ssm_update" {
   policy_arn = aws_iam_policy.delius_core_ssm_update.arn
 }
 
+data "template_file" "oracle_release_update_oem" {
+  template = file("${path.module}/policies/oracle_release_update_oem_template.json")
+  vars = {
+    engineering_account_id     = local.engineering_account_id
+    engineering_account_prefix = local.s3_oracledb_backups_arn
+  }
+}
 resource "aws_iam_role_policy" "oracle_release_update_oem" {
   name = "${var.environment_name}-oracle-release-update-oem"
   role = aws_iam_role.ec2.name
