@@ -31,4 +31,9 @@ variable "s3_ssm_ansible_arn" {
 variable "migration_bucket_arn" {
   description = "The S3 bucket arn for temporarily holding migrated data"
 }
-
+variable "aws_account_ids" {
+  type = map(string)
+}
+variable "aws_engineering_account_ids" {
+  type = map(string)
+}
