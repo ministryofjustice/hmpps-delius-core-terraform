@@ -26,6 +26,16 @@ resource "aws_security_group_rule" "delius_api_lb_from_internal_users" {
   description       = "In from allowed IP ranges on port ${each.value}"
 }
 
+resource "aws_security_group_rule" "delius_api_lb_from_pre_sentence_report_handler" {
+  security_group_id        = aws_security_group.delius_api_lb.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 443
+  to_port                  = 443
+  source_security_group_id = aws_security_group.pre_sentence_report_lambda.id
+  description              = "In from pre-sentence report lambda"
+}
+
 resource "aws_security_group_rule" "delius_api_lb_to_instances" {
   security_group_id        = aws_security_group.delius_api_lb.id
   type                     = "egress"
