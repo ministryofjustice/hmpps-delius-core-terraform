@@ -15,3 +15,17 @@ data "terraform_remote_state" "vpc" {
     region = var.region
   }
 }
+
+# This is a placeholder zip file to allow the Lambda functions to be created. It will be replaced by the real zip file
+# as part of the Lambda deployment process.
+data "archive_file" "placeholder_zip_file" {
+  type        = "zip"
+  output_path = "${path.module}/files/placeholder.zip"
+  source {
+    filename = "main.py"
+    content  = <<-EOF
+    def handler(event, context):
+        return 0
+    EOF
+  }
+}

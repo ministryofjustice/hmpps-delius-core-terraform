@@ -14,24 +14,24 @@ data "aws_iam_policy" "AWSLambdaSQSQueueExecutionRole" {
   arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
 }
 
-# Provides permissions to run inside the VPC
+# Provides minimum permissions for a Lambda function to execute while accessing a resource within a VPC - create, describe, delete network interfaces and write permissions to CloudWatch Logs.
 data "aws_iam_policy" "AWSLambdaVPCAccessExecutionRole" {
   arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-resource "aws_iam_role" "cloud_platform_sqs_consumer" {
-  name               = "${var.environment_name}-cp-sqs-consumer"
+resource "aws_iam_role" "sqs_consumer" {
+  name               = "${var.environment_name}-sqs-consumer"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy_document.json
   managed_policy_arns = [
     data.aws_iam_policy.AWSLambdaSQSQueueExecutionRole.arn,
     data.aws_iam_policy.AWSLambdaVPCAccessExecutionRole.arn
   ]
-  tags = merge(var.tags, { Name = "${var.environment_name}-cp-sqs-consumer" })
+  tags = merge(var.tags, { Name = "${var.environment_name}-sqs-consumer" })
 }
 
-output "cloud_platform_sqs_consumer_lambda_exec_role" {
+output "sqs_consumer_lambda_exec_role" {
   value = {
-    arn  = aws_iam_role.cloud_platform_sqs_consumer.arn
-    name = aws_iam_role.cloud_platform_sqs_consumer.name
+    arn  = aws_iam_role.sqs_consumer.arn
+    name = aws_iam_role.sqs_consumer.name
   }
 }
