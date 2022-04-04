@@ -16,6 +16,15 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
+data "terraform_remote_state" "delius_api" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/application/delius-api/terraform.tfstate"
+    region = var.region
+  }
+}
+
 # This is a placeholder zip file to allow the Lambda functions to be created. It will be replaced by the real zip file
 # as part of the Lambda deployment process.
 data "archive_file" "placeholder_zip_file" {
