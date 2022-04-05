@@ -35,7 +35,8 @@ resource "aws_lambda_function" "pre_sentence_report_handler" {
 
 # Handle messages from the pre_sentence_report_hmpps_queue defined here: https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-domain-events-dev/resources/hmpps-pre-sentence-report-queue.tf
 resource "aws_lambda_event_source_mapping" "pre_sentence_report_handler" {
-  count            = local.cp_namespace != "" ? 1 : 0
+  count = local.cp_namespace == "dev" ? 1 : 0 # Remove this line once the queue has been promoted to pre-prod and prod
+  #count = local.cp_namespace != "" ? 1 : 0   # Un-comment this line ...
   function_name    = aws_lambda_function.pre_sentence_report_handler.function_name
   event_source_arn = "arn:aws:sqs:eu-west-2:754256621582:Digital-Prison-Services-${local.cp_namespace}-pre_sentence_report_hmpps_queue"
 }
