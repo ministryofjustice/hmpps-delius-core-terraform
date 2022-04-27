@@ -114,7 +114,7 @@ resource "aws_ecs_task_definition" "task_definition" {
       name    = name
       image   = "public.ecr.aws/amazonlinux/amazonlinux:2"
       user    = "root"
-      command = ["/bin/sh", "-c", "while [ ! -f '${path}' ]; do sleep 1; done && tail -n+1 -f '${path}'"]
+      command = ["/bin/sh", "-c", "while [ ! -f '${path}' ]; do sleep 1; done && tail -n+1 -F '${path}'"]
       mountPoints = [{
         sourceVolume  = name
         containerPath = dirname(path)
