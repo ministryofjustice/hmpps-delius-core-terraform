@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 data "terraform_remote_state" "delius_core_security_groups" {
   backend = "s3"
   config = {
