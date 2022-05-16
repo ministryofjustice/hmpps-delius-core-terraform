@@ -2,8 +2,8 @@ resource "aws_lambda_function" "pre_sentence_report_handler" {
   function_name    = "${var.environment_name}-pre-sentence-report-handler"
   role             = aws_iam_role.sqs_consumer.arn
   runtime          = local.python_runtime
-  filename         = data.archive_file.placeholder_zip_file.output_path
-  source_code_hash = data.archive_file.placeholder_zip_file.output_base64sha256
+  filename         = data.archive_file.placeholder_python_package.output_path
+  source_code_hash = data.archive_file.placeholder_python_package.output_base64sha256
   handler          = "main.handler"
   tags             = merge(var.tags, { Name = "${var.environment_name}-pre-sentence-report-handler" })
 
@@ -20,7 +20,7 @@ resource "aws_lambda_function" "pre_sentence_report_handler" {
   vpc_config {
     security_group_ids = [
       data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
-      data.terraform_remote_state.delius_core_security_groups.outputs.sg_pre_sentence_report_lambda_id
+      data.terraform_remote_state.delius_core_security_groups.outputs.sg_probation_integration_message_handler_id
     ]
     subnet_ids = [
       data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az1,
