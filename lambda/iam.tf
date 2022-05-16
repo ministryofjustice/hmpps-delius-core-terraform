@@ -19,12 +19,35 @@ data "aws_iam_policy" "AWSLambdaVPCAccessExecutionRole" {
   arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
+# Provides permissions to read and decrypt SSM parameters in the probation-integration namespace.
+data "aws_iam_policy_document" "ssm_parameter_access" {
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "ssm:GetParameter",
+      "ssm:GetParameters",
+      "kms:Decrypt"
+    ]
+    resources = [
+      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment_name}/${var.project_name}/probation-integration/*",
+      "arn:aws:kms:${var.region}:${data.aws_caller_identity.current.account_id}:alias/aws/ssm"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "ssm_parameter_access" {
+  name        = "${var.environment_name}-probation-integration-ssm-parameters"
+  description = "Provides permissions to read and decrypt SSM parameters in the probation-integration namespace."
+  policy      = data.aws_iam_policy_document.ssm_parameter_access.json
+}
+
 resource "aws_iam_role" "sqs_consumer" {
   name               = "${var.environment_name}-sqs-consumer"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy_document.json
   managed_policy_arns = [
     data.aws_iam_policy.AWSLambdaSQSQueueExecutionRole.arn,
-    data.aws_iam_policy.AWSLambdaVPCAccessExecutionRole.arn
+    data.aws_iam_policy.AWSLambdaVPCAccessExecutionRole.arn,
+    aws_iam_policy.ssm_parameter_access.arn
   ]
   tags = merge(var.tags, { Name = "${var.environment_name}-sqs-consumer" })
 }
