@@ -26,7 +26,8 @@ The following applications run as containerized services on the shared [ECS clus
 * [application/gdpr](application/gdpr)
 * [application/merge](application/merge)
 * [application/aptracker-api](application/aptracker-api)
-### Batch
+### Integrations
+* [lambda](lambda) - Lambda functions to handle HMPPS domain events
 * [batch/dss](batch/dss) - NOMIS/OFFLOC Data Share System - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/1488486513/Data+Share+System+DSS)
 ### Data
 * [database_failover](database_failover) - Delius Primary OracleDB
