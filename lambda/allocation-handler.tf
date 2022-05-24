@@ -9,11 +9,11 @@ resource "aws_lambda_function" "allocation_handler" {
 
   environment {
     variables = {
-      DELIUS_API_BASE_URL           = data.terraform_remote_state.delius_api.outputs.url
-      WORKLOAD_SERVICE_BASE_URL     = local.workload_service_base_url
-      OAUTH_BASE_URL                = local.oauth_base_url
-      OAUTH_CLIENT_ID_PARAMETER     = aws_ssm_parameter.allocation_client_id.name
-      OAUTH_CLIENT_SECRET_PARAMETER = aws_ssm_parameter.allocation_client_secret.name
+      DELIUS_API_URL                     = data.terraform_remote_state.delius_api.outputs.url
+      HMPPS_WORKLOAD_URL                 = local.hmpps_workload_url
+      HMPPS_AUTH_URL                     = local.oauth_base_url
+      HMPPS_AUTH_CLIENT_ID_PARAMETER     = aws_ssm_parameter.allocation_client_id.name
+      HMPPS_AUTH_CLIENT_SECRET_PARAMETER = aws_ssm_parameter.allocation_client_secret.name
     }
   }
 

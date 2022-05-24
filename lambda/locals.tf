@@ -17,14 +17,14 @@ locals {
   }, var.environment_name, "")
 
   # Pre-Sentence Service URLs
-  pre_sentence_service_base_url = lookup({
+  pre_sentence_service_url = lookup({
     delius-test     = "https://pre-sentence-service-dev.hmpps.service.justice.gov.uk"
     delius-pre-prod = "https://pre-sentence-service-preprod.hmpps.service.justice.gov.uk"
     delius-prod     = "https://pre-sentence-service.hmpps.service.justice.gov.uk"
   }, var.environment_name, "")
 
   # HMPPS Workload Service URLs
-  workload_service_base_url = lookup({
+  hmpps_workload_url = lookup({
     delius-test     = "https://hmpps-workload-dev.hmpps.service.justice.gov.uk"
     delius-pre-prod = "https://hmpps-workload-preprod.hmpps.service.justice.gov.uk"
     delius-prod     = "https://hmpps-workload.hmpps.service.justice.gov.uk"
