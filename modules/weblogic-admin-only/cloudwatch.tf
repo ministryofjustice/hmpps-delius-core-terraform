@@ -1,6 +1,7 @@
 locals {
   alert_on_errors = toset([
     "APIERR001", // Failure to communicate with Delius API
+    var.environment_name != "delius-prod" ? "OASYSERR006" : null  // Invalid character in OASYS message (disabled in prod)
   ])
 }
 
