@@ -9,7 +9,7 @@ locals {
 }
 
 module "delius_db_1" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.1.0"
+  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.6.0"
   server_name = "delius-db-1"
 
   ami_id               = data.aws_ami.centos_oracle_db.id
