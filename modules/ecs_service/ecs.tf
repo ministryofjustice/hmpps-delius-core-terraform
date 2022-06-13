@@ -1,6 +1,6 @@
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = "${local.name}-task-definition"
-  task_role_arn            = aws_iam_role.task.arn
+  task_role_arn            = var.task_role_arn != "" ? var.task_role_arn : aws_iam_role.task.arn
   execution_role_arn       = aws_iam_role.exec.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]

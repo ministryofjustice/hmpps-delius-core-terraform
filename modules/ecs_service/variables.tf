@@ -62,6 +62,12 @@ variable "service_port" {
   default     = 8080
 }
 
+variable "task_role_arn" {
+  description = "ARN of the IAM role to use for ECS tasks. Leave blank to auto-create a task role"
+  type        = string
+  default     = ""
+}
+
 variable "security_groups" {
   description = "Security groups to apply to the ECS tasks"
   type        = list(string)
