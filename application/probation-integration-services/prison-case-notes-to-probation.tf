@@ -26,7 +26,6 @@ module "prison-case-notes-to-probation" {
   notification_arn = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Scaling
-  # (this will be overridden by the project's task-definition.json)
-  min_capacity = 0
-  max_capacity = 0
+  min_capacity = local.min_capacity
+  max_capacity = local.max_capacity
 }
