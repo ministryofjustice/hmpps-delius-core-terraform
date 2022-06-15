@@ -181,10 +181,7 @@ resource "aws_ecs_service" "service" {
       data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az2,
       data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az3
     ]
-    security_groups = concat(
-      var.security_groups,
-      [ for sg in aws_security_group.scheduled_task_security_group : sg.id ]
-    )
+    security_groups = var.security_groups
   }
 
   depends_on = [aws_iam_role.task]
