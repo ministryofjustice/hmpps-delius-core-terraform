@@ -27,6 +27,6 @@ module "prison-case-notes-to-probation" {
 }
 
 resource "aws_iam_role_policy_attachment" "prison-case-notes-to-probation" {
-  role       = module.prison-case-notes-to-probation.exec_role.arn
+  role       = module.prison-case-notes-to-probation.exec_role.name
   policy_arn = aws_iam_policy.access_ssm_parameters.arn
 }

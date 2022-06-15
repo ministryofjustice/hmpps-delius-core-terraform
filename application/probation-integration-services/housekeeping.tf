@@ -28,6 +28,6 @@ module "housekeeping" {
 }
 
 resource "aws_iam_role_policy_attachment" "housekeeping" {
-  role       = module.housekeeping.exec_role.arn
+  role       = module.housekeeping.exec_role.name
   policy_arn = aws_iam_policy.access_ssm_parameters.arn
 }
