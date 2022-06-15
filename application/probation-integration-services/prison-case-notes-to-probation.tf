@@ -8,7 +8,6 @@ module "prison-case-notes-to-probation" {
 
   # Application Container
   service_name                   = "prison-case-notes-to-probation"
-  container_definitions          = [{ image = "quay.io/ministryofjustice/prison-case-notes-to-probation" }]
   ignore_task_definition_changes = true
 
   # Security & Networking

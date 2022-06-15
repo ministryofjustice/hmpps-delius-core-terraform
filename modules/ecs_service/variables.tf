@@ -26,6 +26,10 @@ variable "service_name" {
 variable "container_definitions" {
   description = "List of containers to run in ECS tasks. When a single container is defined, sensible configuration defaults are added to the definition - for example, logging (see ecs.tf)."
   type        = list(any)
+  default = [{
+    image   = "public.ecr.aws/docker/library/busybox", # Dummy configuration to run a simple "do-nothing" container
+    command = ["sleep", "infinity"]
+  }]
 }
 
 variable "additional_log_files" {

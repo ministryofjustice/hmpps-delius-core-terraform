@@ -8,7 +8,6 @@ module "housekeeping" {
 
   # Application Container
   service_name                   = "probation-integration-housekeeping"
-  container_definitions          = [{ image = "quay.io/ministryofjustice/probation-integration-housekeeping" }]
   ignore_task_definition_changes = true
 
   # Security & Networking
