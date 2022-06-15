@@ -7,7 +7,7 @@ module "housekeeping" {
   tags                     = var.tags
 
   # Application Container
-  service_name                   = "probation-integration-housekeeping"
+  service_name                   = "integration-housekeeping"
   ignore_task_definition_changes = true
 
   # Security & Networking
