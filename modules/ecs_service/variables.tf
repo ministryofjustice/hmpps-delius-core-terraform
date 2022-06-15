@@ -255,6 +255,14 @@ variable "telemetry_use_java_tool_opts" {
   default     = true
 }
 
+variable "scheduled_tasks" {
+  description = "A map of scheduled tasks to run. The key is the name of the task, and the value is a map of the task's parameters. Currently only the 'schedule' parameter is supported, the task definition and other parameters are managed externally."
+  default     = {}
+  type = map(object({
+    schedule_expression = string
+  }))
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)

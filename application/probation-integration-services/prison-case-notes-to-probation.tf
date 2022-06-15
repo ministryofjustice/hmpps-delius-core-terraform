@@ -14,6 +14,11 @@ module "prison-case-notes-to-probation" {
     SPRING_DATASOURCE_URL = data.terraform_remote_state.database.outputs.jdbc_failover_url
   }
 
+  # Scheduled tasks
+  scheduled_tasks = {
+    "dlq-retry" = { schedule_expression = "rate(10 minutes)" }
+  }
+
   # Security & Networking
   task_role_arn      = aws_iam_role.ecs_sqs_task.arn
   target_group_count = 0 # no load balancer required

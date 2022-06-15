@@ -1,10 +1,10 @@
 # Task execution role for pulling the image, fetching secrets, and pushing logs to cloudwatch
 resource "aws_iam_role" "exec" {
   name               = "${local.name}-ecs-exec-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
 }
 
-data "aws_iam_policy_document" "assume_role" {
+data "aws_iam_policy_document" "ecs_assume_role" {
   statement {
     effect = "Allow"
     principals {
@@ -76,7 +76,7 @@ resource "aws_iam_role_policy_attachment" "exec_policy_attachment" {
 # Task role for the task to interact with AWS services
 resource "aws_iam_role" "task" {
   name               = "${local.name}-ecs-task-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
 }
 
 data "aws_iam_policy_document" "xray_logs_policy" {
@@ -132,4 +132,29 @@ resource "aws_iam_policy" "ssm_exec_policy" {
 resource "aws_iam_role_policy_attachment" "ssm_exec_policy_attachment" {
   role       = aws_iam_role.task.name
   policy_arn = aws_iam_policy.ssm_exec_policy.arn
+}
+
+
+# Events role for EventBridge to schedule tasks
+resource "aws_iam_role" "events" {
+  count              = length(keys(var.scheduled_tasks)) > 0 ? 1 : 0
+  name               = "${local.name}-ecs-scheduled-task-role"
+  assume_role_policy = data.aws_iam_policy_document.events_assume_role.json
+}
+
+data "aws_iam_policy_document" "events_assume_role" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "events" {
+  count      = length(keys(var.scheduled_tasks)) > 0 ? 1 : 0
+  role       = aws_iam_role.events.0.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole"
 }
