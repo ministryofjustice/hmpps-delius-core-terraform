@@ -188,6 +188,17 @@ resource "aws_security_group_rule" "delius_api_db_in" {
   description              = "Delius API In"
 }
 
+# Allow access from the generic "delius_db_access" group
+resource "aws_security_group_rule" "delius_db_access_db_in" {
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "1521"
+  to_port                  = "1521"
+  source_security_group_id = aws_security_group.delius_db_access.id
+  description              = "Delius DB Access In"
+}
+
 # Allow CI (Jenkins/AWS CodePipeline) access to DB
 resource "aws_security_group_rule" "eng_ci_db_in_1521" {
   count                    = var.ci_db_ingress_1521 ? 1 : 0
