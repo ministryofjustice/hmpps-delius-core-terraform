@@ -34,10 +34,18 @@ output "target_groups" {
 output "task_role" {
   value = var.task_role_arn != "" ? {
     arn = var.task_role_arn
-  } : {
+    } : {
     id   = aws_iam_role.task.id
     arn  = aws_iam_role.task.arn
     name = aws_iam_role.task.name
+  }
+}
+
+output "exec_role" {
+  value = {
+    id   = aws_iam_role.exec.id
+    arn  = aws_iam_role.exec.arn
+    name = aws_iam_role.exec.name
   }
 }
 

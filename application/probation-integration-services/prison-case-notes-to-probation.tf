@@ -10,9 +10,6 @@ module "prison-case-notes-to-probation" {
   service_name                   = "prison-case-notes-to-probation"
   container_definitions          = [{ image = "quay.io/ministryofjustice/prison-case-notes-to-probation" }]
   ignore_task_definition_changes = true
-  environment = {
-    SPRING_DATASOURCE_URL = data.terraform_remote_state.database.outputs.jdbc_failover_url
-  }
 
   # Security & Networking
   task_role_arn      = aws_iam_role.ecs_sqs_task.arn
@@ -28,4 +25,9 @@ module "prison-case-notes-to-probation" {
   # Scaling
   min_capacity = local.min_capacity
   max_capacity = local.max_capacity
+}
+
+resource "aws_iam_role_policy_attachment" "prison-case-notes-to-probation" {
+  role       = module.prison-case-notes-to-probation.exec_role.arn
+  policy_arn = aws_iam_policy.access_ssm_parameters.arn
 }
