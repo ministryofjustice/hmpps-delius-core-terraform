@@ -22,6 +22,8 @@ data "aws_iam_policy_document" "sqs_policy" {
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
       "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "kms:Decrypt",
     ]
     resources = ["*"]
   }
