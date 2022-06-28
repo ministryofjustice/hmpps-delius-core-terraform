@@ -16,7 +16,7 @@ module "ecs" {
     ALFRESCO_BASEURL              = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}"
     SPRING_ELASTICSEARCH_URIS     = "https://${data.terraform_remote_state.elasticsearch.outputs.contact_search["endpoint"]}:443"
     SPRING_ELASTICSEARCH_USERNAME = data.terraform_remote_state.elasticsearch.outputs.contact_search["username"]
-    NEW-TECH-SERVICE_BASEURL      = "/newTech"
+    NEW-TECH-SERVICE_BASEURL      = "${data.terraform_remote_state.ndelius.outputs.public_url}/newTech"
   })
   secrets = merge(var.delius_api_secrets, {
     SPRING_ELASTICSEARCH_PASSWORD = data.terraform_remote_state.elasticsearch.outputs.contact_search["password_key"]
