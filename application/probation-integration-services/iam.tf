@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "sqs_policy" {
       "sqs:DeleteMessage",
       "sqs:GetQueueAttributes",
       "sqs:GetQueueUrl",
+      "sqs:ChangeMessageVisibility",
       "kms:Decrypt",
     ]
     resources = ["*"]
