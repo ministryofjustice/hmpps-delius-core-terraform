@@ -10,12 +10,12 @@
 #
 
 resource "aws_backup_vault" "oracle_backup_vault" {
-  name        = "${local.name_prefix}-oracle-backup-vault"
+  name        = "${var.short_environment_identifier}-oracle-backup-vault"
   kms_key_arn = data.terraform_remote_state.key_profile.outputs.kms_arn_app
   tags = merge(
     var.tags,
     {
-      "Name" = "${local.name_prefix}-oracle-backup-vault"
+      "Name" = "${var.short_environment_identifier}-oracle-backup-vault"
     },
   )
 }
