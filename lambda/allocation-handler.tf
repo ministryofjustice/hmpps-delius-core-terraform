@@ -5,6 +5,7 @@ resource "aws_lambda_function" "allocation_handler" {
   filename         = data.archive_file.placeholder_nodejs_package.output_path
   source_code_hash = data.archive_file.placeholder_nodejs_package.output_base64sha256
   handler          = "index.handler"
+  timeout          = 30 # seconds
   tags             = merge(var.tags, { Name = "${var.environment_name}-workload-allocation-handler" })
 
   environment {

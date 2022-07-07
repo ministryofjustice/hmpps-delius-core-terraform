@@ -5,6 +5,7 @@ resource "aws_lambda_function" "pre_sentence_report_handler" {
   filename         = data.archive_file.placeholder_python_package.output_path
   source_code_hash = data.archive_file.placeholder_python_package.output_base64sha256
   handler          = "main.handler"
+  timeout          = 30 # seconds
   tags             = merge(var.tags, { Name = "${var.environment_name}-pre-sentence-report-handler" })
 
   environment {
