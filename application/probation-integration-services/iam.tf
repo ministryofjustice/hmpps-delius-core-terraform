@@ -25,6 +25,7 @@ data "aws_iam_policy_document" "sqs_policy" {
       "sqs:GetQueueAttributes",
       "sqs:GetQueueUrl",
       "sqs:ChangeMessageVisibility",
+      "kms:Encrypt",
       "kms:Decrypt",
     ]
     resources = ["*"]
