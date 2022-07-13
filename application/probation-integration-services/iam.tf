@@ -27,6 +27,7 @@ data "aws_iam_policy_document" "sqs_policy" {
       "sqs:ChangeMessageVisibility",
       "kms:Encrypt",
       "kms:Decrypt",
+      "kms:GenerateDataKey*"
     ]
     resources = ["*"]
   }
