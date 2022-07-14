@@ -19,12 +19,15 @@ data "aws_iam_policy_document" "sqs_policy" {
   statement {
     effect = "Allow"
     actions = [
+      "sqs:SendMessage",
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
       "sqs:GetQueueAttributes",
       "sqs:GetQueueUrl",
       "sqs:ChangeMessageVisibility",
+      "kms:Encrypt",
       "kms:Decrypt",
+      "kms:GenerateDataKey*"
     ]
     resources = ["*"]
   }
