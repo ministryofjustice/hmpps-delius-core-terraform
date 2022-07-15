@@ -31,7 +31,7 @@ data "terraform_remote_state" "delius_api" {
 # as part of the Lambda deployment process.
 data "archive_file" "placeholder_python_package" {
   type        = "zip"
-  output_path = "${path.module}/files/placeholder.zip"
+  output_path = "${path.module}/files/placeholder-python.zip"
   source {
     filename = "main.py"
     content  = <<-EOF
@@ -43,7 +43,7 @@ data "archive_file" "placeholder_python_package" {
 
 data "archive_file" "placeholder_nodejs_package" {
   type        = "zip"
-  output_path = "${path.module}/files/placeholder.zip"
+  output_path = "${path.module}/files/placeholder-nodejs.zip"
   source {
     filename = "index.js"
     content  = <<-EOF
