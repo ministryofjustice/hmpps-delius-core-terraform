@@ -287,3 +287,14 @@ resource "aws_security_group_rule" "delius_api_test_ndelius_integration_ci_db_in
   source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.test_delius_api_ndelius_integration["security_group"]["id"]
   description              = "CI - Delius API Integration Tests in 1521"
 }
+
+resource "aws_security_group_rule" "delius_serenity_test_ci_db_in_1521" {
+  count                    = var.ci_db_ingress_1521 ? 1 : 0
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.serenity_tests["security_group"]["id"]
+  description              = "CI - Delius Serenity Tests in 1521"
+}
