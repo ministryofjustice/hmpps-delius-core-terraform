@@ -14,6 +14,10 @@ variable "short_environment_name" {
   description = "Shortened environment name to be used as a unique identifier for resources with a limit on resource name length - eg. dlc-dev"
 }
 
+variable "environment_type" {
+  description = "Environment type to be used as a unique identifier for resources - eg. dev or pre-prod"
+}
+
 variable "project_name" {
   description = "Project name to be used when looking up SSM parameters - eg. delius-core"
 }
