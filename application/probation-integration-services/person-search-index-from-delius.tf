@@ -22,8 +22,8 @@ module "person-search-index-from-delius" {
   notification_arn = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Scaling
-  min_capacity = local.min_capacity
-  max_capacity = local.max_capacity
+  min_capacity = 1
+  max_capacity = 1
 }
 
 resource "aws_iam_role_policy_attachment" "person-search-index-from-delius" {
