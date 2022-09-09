@@ -4,6 +4,11 @@ resource "aws_ssm_parameter" "jdbc_url_parameter" {
   type  = "SecureString"
 }
 
+resource "aws_ssm_parameter" "jdbc_standby_url_parameter" {
+  name  = "/${var.environment_name}/${var.project_name}/probation-integration/delius-database/jdbc-standby-url"
+  value = data.terraform_remote_state.database.outputs.jdbc_standby_url
+  type  = "SecureString"
+}
 
 # IAM policy to grant access to SSM parameters in the probation-integration namespace
 data "aws_iam_policy_document" "ssm_access" {
