@@ -4,6 +4,7 @@ include {
 
 dependencies {
   paths = [
+    "../../access-logs",
     "../../alerts",
     "../../security-groups",
     "../../database_failover"
