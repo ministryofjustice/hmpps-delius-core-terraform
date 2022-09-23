@@ -33,12 +33,7 @@ resource "aws_iam_role_policy_attachment" "pre-sentence-reports-to-delius" {
   policy_arn = aws_iam_policy.access_ssm_parameters.arn
 }
 
-resource "random_id" "pre-sentence-reports-to-delius" {
-  byte_length = 8
-}
-
 resource "aws_lb" "pre-sentence-reports-to-delius" {
-  name     = "${var.short_environment_name}-${random_id.pre-sentence-reports-to-delius.id}"
   internal = false
   subnets = [
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
@@ -46,7 +41,7 @@ resource "aws_lb" "pre-sentence-reports-to-delius" {
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3
   ]
   security_groups = [aws_security_group.pre-sentence-reports-to-delius-lb.id]
-  tags            = merge(var.tags, { Name = "${var.short_environment_name}-pre-sentence-reports-to-delius-alb" })
+  tags            = merge(var.tags, { Name = "${var.short_environment_name}-pre-sentence-reports-to-delius-lb" })
 
   access_logs {
     enabled = true
