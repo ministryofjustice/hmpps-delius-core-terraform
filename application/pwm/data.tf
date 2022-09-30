@@ -76,6 +76,7 @@ data "aws_acm_certificate" "cert" {
   types = [
     "AMAZON_ISSUED",
   ]
+  statuses = ["ISSUED", "EXPIRED"]
 
   most_recent = true
 }
@@ -86,6 +87,7 @@ data "aws_acm_certificate" "strategic_cert" {
   types = [
     "AMAZON_ISSUED",
   ]
+  statuses = ["ISSUED", "EXPIRED"]
 
   most_recent = true
 }

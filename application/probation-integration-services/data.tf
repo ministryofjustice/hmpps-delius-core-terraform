@@ -3,12 +3,14 @@ data "aws_caller_identity" "current" {}
 data "aws_acm_certificate" "strategic_cert" {
   domain      = "*.${data.terraform_remote_state.vpc.outputs.strategic_public_zone_name}"
   types       = ["AMAZON_ISSUED"]
+  statuses    = ["ISSUED", "EXPIRED"]
   most_recent = true
 }
 
 data "aws_acm_certificate" "legacy_cert" {
   domain      = data.terraform_remote_state.vpc.outputs.public_ssl_domain
   types       = ["AMAZON_ISSUED"]
+  statuses    = ["ISSUED", "EXPIRED"]
   most_recent = true
 }
 
