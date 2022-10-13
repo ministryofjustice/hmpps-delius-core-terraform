@@ -95,3 +95,7 @@ variable "community_api_ingress" {
   default     = []
 }
 
+variable "cloudplatform_data" {
+  description = "Data about cloud platform"
+  type        = map(string)
+}
