@@ -61,12 +61,8 @@ resource "aws_lb_listener" "pre-sentence-reports-to-delius" {
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
   certificate_arn   = local.certificate_arn
   default_action {
-    type = "forward"
-    forward {
-      target_group {
-        arn = module.pre-sentence-reports-to-delius.primary_target_group["arn"]
-      }
-    }
+    type             = "forward"
+    target_group_arn = module.pre-sentence-reports-to-delius.primary_target_group["arn"]
   }
 }
 
