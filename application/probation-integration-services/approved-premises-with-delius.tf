@@ -1,4 +1,4 @@
-module "approved-premises-with-delius" {
+module "approved-premises-and-delius" {
   source                   = "../../modules/ecs_service"
   region                   = var.region
   environment_name         = var.environment_name
@@ -7,7 +7,7 @@ module "approved-premises-with-delius" {
   tags                     = var.tags
 
   # Application Container
-  service_name                   = "approved-premises-with-delius"
+  service_name                   = "approved-premises-and-delius"
   health_check_path              = "/health"
   ignore_task_definition_changes = true
 
@@ -15,7 +15,7 @@ module "approved-premises-with-delius" {
   task_role_arn      = aws_iam_role.ecs_sqs_task.arn
   target_group_count = 1
   security_groups = [
-    aws_security_group.approved-premises-with-delius-instances.id,
+    aws_security_group.approved-premises-and-delius-instances.id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_delius_db_access_id,
   ]
@@ -28,25 +28,25 @@ module "approved-premises-with-delius" {
   max_capacity = local.max_capacity
 }
 
-resource "aws_iam_role_policy_attachment" "approved-premises-with-delius" {
-  role       = module.approved-premises-with-delius.exec_role.name
+resource "aws_iam_role_policy_attachment" "approved-premises-and-delius" {
+  role       = module.approved-premises-and-delius.exec_role.name
   policy_arn = aws_iam_policy.access_ssm_parameters.arn
 }
 
-resource "aws_lb" "approved-premises-with-delius" {
+resource "aws_lb" "approved-premises-and-delius" {
   internal = false
   subnets = [
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3
   ]
-  security_groups = [aws_security_group.approved-premises-with-delius-lb.id]
-  tags            = merge(var.tags, { Name = "${var.short_environment_name}-approved-premises-with-delius-lb" })
+  security_groups = [aws_security_group.approved-premises-and-delius-lb.id]
+  tags            = merge(var.tags, { Name = "${var.short_environment_name}-approved-premises-and-delius-lb" })
 
   access_logs {
     enabled = true
     bucket  = data.terraform_remote_state.access_logs.outputs.bucket_name
-    prefix  = "approved-premises-with-delius"
+    prefix  = "approved-premises-and-delius"
   }
 
   lifecycle {
@@ -54,31 +54,31 @@ resource "aws_lb" "approved-premises-with-delius" {
   }
 }
 
-resource "aws_lb_listener" "approved-premises-with-delius" {
-  load_balancer_arn = aws_lb.approved-premises-with-delius.arn
+resource "aws_lb_listener" "approved-premises-and-delius" {
+  load_balancer_arn = aws_lb.approved-premises-and-delius.arn
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
   certificate_arn   = local.certificate_arn
   default_action {
     type = "forward"
-    target_group_arn = module.approved-premises-with-delius.primary_target_group["arn"]
+    target_group_arn = module.approved-premises-and-delius.primary_target_group["arn"]
   }
 }
 
-resource "aws_route53_record" "approved-premises-with-delius" {
+resource "aws_route53_record" "approved-premises-and-delius" {
   zone_id = local.route53_zone_id
-  name    = "approved-premises-with-delius"
+  name    = "approved-premises-and-delius"
   type    = "CNAME"
   ttl     = 300
-  records = [aws_lb.approved-premises-with-delius.dns_name]
+  records = [aws_lb.approved-premises-and-delius.dns_name]
 }
 
-resource "aws_security_group" "approved-premises-with-delius-lb" {
-  name        = "${var.environment_name}-approved-premises-with-delius-lb"
+resource "aws_security_group" "approved-premises-and-delius-lb" {
+  name        = "${var.environment_name}-approved-premises-and-delius-lb"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
-  description = "approved-premises-with-delius load balancer"
-  tags        = merge(var.tags, { Name = "${var.environment_name}-approved-premises-with-delius-lb" })
+  description = "approved-premises-and-delius load balancer"
+  tags        = merge(var.tags, { Name = "${var.environment_name}-approved-premises-and-delius-lb" })
   lifecycle {
     create_before_destroy = true
   }
@@ -100,33 +100,33 @@ resource "aws_security_group" "approved-premises-with-delius-lb" {
     from_port       = 8080
     protocol        = "tcp"
     to_port         = 8080
-    security_groups = [aws_security_group.approved-premises-with-delius-instances.id]
+    security_groups = [aws_security_group.approved-premises-and-delius-instances.id]
     description     = "Egress to instances"
   }
 }
 
-resource "aws_security_group" "approved-premises-with-delius-instances" {
-  name        = "${var.environment_name}-approved-premises-with-delius-instances"
+resource "aws_security_group" "approved-premises-and-delius-instances" {
+  name        = "${var.environment_name}-approved-premises-and-delius-instances"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
-  description = "approved-premises-with-delius instances"
-  tags        = merge(var.tags, { Name = "${var.environment_name}-approved-premises-with-delius-instances" })
+  description = "approved-premises-and-delius instances"
+  tags        = merge(var.tags, { Name = "${var.environment_name}-approved-premises-and-delius-instances" })
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "aws_security_group_rule" "approved-premises-with-delius" {
-  security_group_id        = aws_security_group.approved-premises-with-delius-instances.id
+resource "aws_security_group_rule" "approved-premises-and-delius" {
+  security_group_id        = aws_security_group.approved-premises-and-delius-instances.id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 8080
   to_port                  = 8080
-  source_security_group_id = aws_security_group.approved-premises-with-delius-lb.id
+  source_security_group_id = aws_security_group.approved-premises-and-delius-lb.id
   description              = "Ingress from load balancer"
 }
 
-output "approved-premises-with-delius" {
+output "approved-premises-and-delius" {
   value = {
-    url = "https://${aws_route53_record.approved-premises-with-delius.fqdn}"
+    url = "https://${aws_route53_record.approved-premises-and-delius.fqdn}"
   }
 }
