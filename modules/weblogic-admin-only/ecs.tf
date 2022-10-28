@@ -17,6 +17,7 @@ module "ecs" {
     access_log = "/u01/domains/NDelius/servers/AdminServer/logs/access.log"
   }
   environment = merge({
+    AWS_REGION          = var.region
     TZ                  = "Europe/London"
     JDBC_URL            = data.terraform_remote_state.database.outputs.jdbc_failover_url
     JDBC_USERNAME       = "delius_pool"
@@ -51,6 +52,9 @@ module "ecs" {
     MERGE_SECRET          = "/${var.environment_name}/${var.project_name}/weblogic/ndelius-domain/umt_client_secret"
     PDFCREATION_SECRET    = "/${var.environment_name}/${var.project_name}/newtech/web/params_secret_key"
     ANALYTICS_TAG         = "/${var.environment_name}/${var.project_name}/monitoring/analytics/google_id"
+    TOPIC_ARN             = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/topic-arn"
+    AWS_ACCESS_KEY_ID     = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/aws-access-key-id"
+    AWS_SECRET_ACCESS_KEY = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/aws-secret-access-key"
   }, local.secrets)
 
   # Security & Networking
