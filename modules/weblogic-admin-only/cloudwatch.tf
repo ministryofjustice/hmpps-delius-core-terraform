@@ -35,7 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "log_error_alarm" {
 resource "aws_cloudwatch_metric_alarm" "cpu_max_util_warning_alarm" {
   alarm_name          = "${var.environment_name}-${var.app_name}-weblogic-max-cpu-cwa--critical"
   alarm_description   = "A WebLogic instance's CPU utilization reached 100%."
-  namespace           = "AWS/ECS/ContainerInsights"
+  namespace           = "ECS/ContainerInsights"
   statistic           = "Maximum"
   metric_name         = "CpuUtilized"
   comparison_operator = "GreaterThanOrEqualToThreshold"
