@@ -1,6 +1,5 @@
 locals {
   alert_on_errors = toset(compact([
-    "APIERR001", // Failure to communicate with Delius API
     var.environment_name != "delius-prod" ? "OASYSERR006" : null, // Invalid character in OASYS message (disabled in prod)
   ]))
 }
@@ -21,7 +20,7 @@ resource "aws_cloudwatch_log_metric_filter" "log_error_filter" {
 
 resource "aws_cloudwatch_metric_alarm" "log_error_alarm" {
   for_each            = local.alert_on_errors
-  alarm_name          = "${var.environment_name}-${var.app_name}-logged-errors-${each.value}-cwa--critical"
+  alarm_name          = "${var.environment_name}-${var.app_name}-logged-errors-${each.value}-cwa--warning"
   alarm_description   = "`${each.value}` errors were detected in the `${var.app_name}` logs."
   namespace           = aws_cloudwatch_log_metric_filter.log_error_filter[each.value].metric_transformation.0.namespace
   metric_name         = aws_cloudwatch_log_metric_filter.log_error_filter[each.value].metric_transformation.0.name
