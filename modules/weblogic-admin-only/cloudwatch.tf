@@ -31,3 +31,21 @@ resource "aws_cloudwatch_metric_alarm" "log_error_alarm" {
   period              = 300
   alarm_actions       = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
 }
+
+resource "aws_cloudwatch_metric_alarm" "cpu_max_util_warning_alarm" {
+  alarm_name          = "${var.environment_name}-${var.app_name}-weblogic-max-cpu-cwa--critical"
+  alarm_description   = "A WebLogic instance's CPU utilization reached 100%."
+  namespace           = "AWS/ECS/ContainerInsights"
+  statistic           = "Maximum"
+  metric_name         = "CpuUtilized"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 1000
+  evaluation_periods  = 3
+  period              = 300
+  alarm_actions       = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
+  ok_actions          = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
+  dimensions = {
+    ServiceName = module.ecs.service.name
+    ClusterName = module.ecs.cluster.name
+  }
+}
