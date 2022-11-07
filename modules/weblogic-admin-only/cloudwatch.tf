@@ -1,6 +1,6 @@
 locals {
   alert_on_errors = toset(compact([
-    var.environment_name != "delius-prod" ? "OASYSERR006" : null, // Invalid character in OASYS message (disabled in prod)
+    "OASYSERR006", // Invalid character in OASYS message
   ]))
 }
 
