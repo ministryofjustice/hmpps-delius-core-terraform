@@ -40,7 +40,7 @@ resource "random_string" "password_prefix" {
 resource "random_string" "password_remainder" {
   length           = 50
   special          = true
-  override_special = "!$%&*()-_=+[]{}<>:?"
+  override_special = "#_"
 }
 
 resource "aws_ssm_parameter" "database_username" {
