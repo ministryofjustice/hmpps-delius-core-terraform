@@ -53,4 +53,7 @@ resource "aws_ssm_parameter" "database_password" {
   name  = "/${var.environment_name}/${var.project_name}/elasticsearch/${local.contact_search_name}/database-password"
   value = "${random_string.password_prefix.result}${substr(bcrypt(random_string.password_remainder.result), 4, 11)}"
   type  = "SecureString"
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
