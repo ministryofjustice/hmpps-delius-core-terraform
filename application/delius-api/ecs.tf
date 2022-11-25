@@ -17,10 +17,12 @@ module "ecs" {
     SPRING_ELASTICSEARCH_URIS     = "https://${data.terraform_remote_state.elasticsearch.outputs.contact_search["endpoint"]}:443"
     SPRING_ELASTICSEARCH_USERNAME = data.terraform_remote_state.elasticsearch.outputs.contact_search["username"]
     NEW-TECH-SERVICE_BASEURL      = "${data.terraform_remote_state.ndelius.outputs.public_url}/newTech"
+    SENTRY_ENVIRONMENT            = var.environment_name
   })
   secrets = merge(var.delius_api_secrets, {
     SPRING_ELASTICSEARCH_PASSWORD = data.terraform_remote_state.elasticsearch.outputs.contact_search["password_key"]
     NEW-TECH-SERVICE_SECRET       = "/${var.environment_name}/${var.project_name}/newtech/web/params_secret_key"
+    SENTRY_DSN                    = "/${var.environment_name}/${var.project_name}/delius-api/sentry/dsn"
   })
 
   # Security & Networking
