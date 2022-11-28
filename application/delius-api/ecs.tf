@@ -12,13 +12,12 @@ module "ecs" {
   ignore_task_definition_changes = true # Deployment is managed by Circle CI
   health_check_path              = "/health"
   environment = merge(var.delius_api_environment, {
-    SPRING_DATASOURCE_URL           = data.terraform_remote_state.database.outputs.jdbc_failover_url
-    ALFRESCO_BASEURL                = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}"
-    SPRING_ELASTICSEARCH_URIS       = "https://${data.terraform_remote_state.elasticsearch.outputs.contact_search["endpoint"]}:443"
-    SPRING_ELASTICSEARCH_USERNAME   = data.terraform_remote_state.elasticsearch.outputs.contact_search["username"]
-    NEW-TECH-SERVICE_BASEURL        = "${data.terraform_remote_state.ndelius.outputs.public_url}/newTech"
-    SENTRY_ENVIRONMENT              = var.environment_name
-    SENTRY_EXCEPTION-RESOLVER-ORDER = "-2147483647"
+    SPRING_DATASOURCE_URL         = data.terraform_remote_state.database.outputs.jdbc_failover_url
+    ALFRESCO_BASEURL              = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}"
+    SPRING_ELASTICSEARCH_URIS     = "https://${data.terraform_remote_state.elasticsearch.outputs.contact_search["endpoint"]}:443"
+    SPRING_ELASTICSEARCH_USERNAME = data.terraform_remote_state.elasticsearch.outputs.contact_search["username"]
+    NEW-TECH-SERVICE_BASEURL      = "${data.terraform_remote_state.ndelius.outputs.public_url}/newTech"
+    SENTRY_ENVIRONMENT            = var.environment_name
   })
   secrets = merge(var.delius_api_secrets, {
     SPRING_ELASTICSEARCH_PASSWORD = data.terraform_remote_state.elasticsearch.outputs.contact_search["password_key"]
