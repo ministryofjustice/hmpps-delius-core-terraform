@@ -1,5 +1,6 @@
+## Lambda function <env>-notify-delius-core-slack-channel-alarm
 resource "aws_lambda_function" "notify_slack_alarm" {
-  runtime          = "nodejs12.x"
+  runtime          = "nodejs16.x"
   role             = aws_iam_role.lambda_role.arn
   filename         = data.archive_file.alarm_lambda_handler_zip.output_path
   function_name    = local.lambda_name_alarm
@@ -26,8 +27,9 @@ resource "aws_lambda_permission" "sns_alarm" {
   source_arn    = aws_sns_topic.alarm_notification.arn
 }
 
+## Lambda function <env>-notify-delius-core-slack-channel-batch
 resource "aws_lambda_function" "notify_slack_batch" {
-  runtime          = "nodejs12.x"
+  runtime          = "nodejs16.x"
   role             = aws_iam_role.lambda_role.arn
   filename         = data.archive_file.batch_lambda_handler_zip.output_path
   function_name    = local.lambda_name_batch
