@@ -20,6 +20,7 @@ module "ecs" {
     SPRING_LDAP_URLS           = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
     ALFRESCO_BASEURL           = "https://alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}/alfresco/s/noms-spg"
     DELIUS_BASEURL             = "http://${data.terraform_remote_state.interface.outputs.service_discovery_url}:7001/api"
+    SENTRY_ENVIRONMENT         = var.environment_name
     # ... Add any environment variables here that should be pulled from Terraform data sources.
     #     Other environment variables are managed by CircleCI. See https://github.com/ministryofjustice/community-api/blob/main/.circleci/config.yml
   })
@@ -29,6 +30,7 @@ module "ecs" {
     SPRING_LDAP_PASSWORD           = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
     DELIUS_USERNAME                = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/casenotes_user"
     DELIUS_PASSWORD                = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/casenotes_password"
+    SENTRY_DSN                     = "/${var.environment_name}/${var.project_name}/community-api/sentry/dsn"
   })
 
   # Security & Networking
