@@ -16,12 +16,14 @@ module "weblogic" {
   app_name   = "weblogic-testdata-api"
   app_config = local.app_config
 
-  security_groups_lb = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_testdata_api_lb_id]
+  security_groups_lb = [aws_security_group.weblogic_testdata_api_lb.id]
   security_groups_instances = [
-    data.terraform_remote_state.delius_core_security_groups.outputs.sg_weblogic_testdata_api_instances_id,
+    aws_security_group.weblogic_testdata_api_instances.id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id
   ]
 
   enable_response_time_alarms = false # Response times can exceed 1s during normal use, no need to alert
+  health_check_path = "/"
+  health_check_matcher = "200-499"
 }
 

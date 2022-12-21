@@ -50,3 +50,7 @@ variable "tags" {
   type        = map(string)
 }
 
+variable "internal_moj_access_cidr_blocks" {
+  description = "CIDRs for access via internal MOJ networks / VPNs"
+  type        = list(string)
+}

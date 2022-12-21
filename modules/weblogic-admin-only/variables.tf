@@ -51,3 +51,11 @@ variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
 }
+
+variable "health_check_path" {
+  default = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+}
+
+variable "health_check_matcher" {
+  default = 200
+}
