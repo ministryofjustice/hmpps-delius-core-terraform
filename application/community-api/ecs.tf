@@ -30,7 +30,7 @@ module "ecs" {
     SPRING_LDAP_PASSWORD           = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
     DELIUS_USERNAME                = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/casenotes_user"
     DELIUS_PASSWORD                = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/casenotes_password"
-    SENTRY_DSN                     = "/${var.environment_name}/${var.project_name}/probation-integration/community-api/sentry/dsn"
+    SENTRY_DSN                     = "/${var.environment_name}/${var.project_name}/probation-integration/community-api/sentry-dsn"
   })
 
   # Security & Networking
