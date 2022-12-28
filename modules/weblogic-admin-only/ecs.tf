@@ -32,7 +32,6 @@ module "ecs" {
     DMS_OFFICE_URI_PORT = 443
     PASSWORD_RESET_URL  = data.terraform_remote_state.pwm.outputs.url
 
-    APTRACKER_ERRORS_URL  = "/aptracker-api/errors"
     ELASTICSEARCH_URL     = "/newTech"
     DELIUS_API_URL        = "http://delius-api.ecs.cluster:8080"
     GDPR_URL              = "/gdpr/ui/homepage"

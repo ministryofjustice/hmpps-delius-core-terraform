@@ -94,16 +94,6 @@ resource "aws_security_group_rule" "umt_db_in" {
   description              = "User Management Tool in"
 }
 
-resource "aws_security_group_rule" "aptracker_api_db_in" {
-  security_group_id        = aws_security_group.delius_db_in.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "1521"
-  to_port                  = "1521"
-  source_security_group_id = aws_security_group.aptracker_api.id
-  description              = "Approved Premises Tracker API in"
-}
-
 resource "aws_security_group_rule" "eng_rman_catalog_db_in" {
   security_group_id        = aws_security_group.delius_db_in.id
   type                     = "ingress"
@@ -311,11 +301,11 @@ resource "aws_security_group_rule" "delius_performance_test_ci_db_in_1521" {
 }
 
 resource "aws_security_group_rule" "cloud_platform_db_in_1521" {
-  security_group_id        = aws_security_group.delius_db_in.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 1521
-  to_port                  = 1521
-  cidr_blocks              = [var.cloudplatform_data.cidr_range]
-  description              = "Ingress from Cloud Platform to Delius DB"
+  security_group_id = aws_security_group.delius_db_in.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 1521
+  to_port           = 1521
+  cidr_blocks       = [var.cloudplatform_data.cidr_range]
+  description       = "Ingress from Cloud Platform to Delius DB"
 }
