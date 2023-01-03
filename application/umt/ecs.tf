@@ -18,8 +18,8 @@ module "ecs" {
     SERVER_FORWARD-HEADERS-STRATEGY         = "native"
     SPRING_DATASOURCE_URL                   = data.terraform_remote_state.database.outputs.jdbc_failover_url
     SPRING_DATASOURCE_USERNAME              = "delius_app_schema"
-    SPRING_DATASOURCE_TYPE                  = "oracle.jdbc.pool.OracleDataSource"
-    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT = "org.hibernate.dialect.Oracle10gDialect"
+    SPRING_DATASOURCE_TYPE                  = "com.zaxxer.hikari.HikariDataSource"
+    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT = "org.hibernate.dialect.Oracle12cDialect"
     SPRING_JPA_HIBERNATE_DDL-AUTO           = "none"
     SPRING_LDAP_URLS                        = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
     SPRING_LDAP_EXPORT_USERNAME             = "cn=root,${local.ldap_config["base_root"]}"
