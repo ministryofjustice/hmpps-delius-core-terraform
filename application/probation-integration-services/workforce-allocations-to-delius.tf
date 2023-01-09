@@ -18,6 +18,7 @@ module "workforce-allocations-to-delius" {
     aws_security_group.workforce-allocations-to-delius-instances.id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_delius_db_access_id,
+    data.terraform_remote_state.delius_core_security_groups.outputs.sg_delius_ldap_access_id,
   ]
 
   # Monitoring
