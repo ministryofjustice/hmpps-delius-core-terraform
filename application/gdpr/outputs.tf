@@ -16,3 +16,6 @@ output "primary_db" {
   }
 }
 
+output "kms_key_id" {
+    value    = module.kms_custom_policy.key_id
+}
