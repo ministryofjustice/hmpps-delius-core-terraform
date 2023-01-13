@@ -56,7 +56,7 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     }
     actions = ["kms:CreateGrants","kms:ListGrants","kms:RevokeGrant"]
     resources = ["*"]
-    condition = {
+    condition {
          test = "Bool"
          variable = "kms:GrantIsForAWSResource"
          value = true
