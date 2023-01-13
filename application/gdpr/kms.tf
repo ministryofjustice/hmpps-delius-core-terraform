@@ -59,7 +59,7 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     condition {
          test = "Bool"
          variable = "kms:GrantIsForAWSResource"
-         value = true
+         values = [true]
     }
   } 
 
