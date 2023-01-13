@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:root"]
+      identifiers = ["arn:aws:ssm::${data.aws_caller_identity.current.account_id}:root"]
     }
     actions = ["kms:*"]
     resources = ["*"]
@@ -21,8 +21,8 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:root",
-                     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"]
+      identifiers = ["arn:aws:ssm::${data.aws_caller_identity.current.account_id}:root",
+                     "arn:aws:ssm::${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"]
     }
     actions = ["kms:Create*","kms:Describe*","kms:Enable*","kms:List*","kms:Put*","kms:Update*","kms:Revoke*",
                "kms:Disable*","kms:Get*","kms:Delete*","kms:TagResource","kms:UntagResource",
@@ -34,11 +34,11 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = concat(["arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:role/admin",
-                     "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"],
-                     var.environment_name == "delius-test" ? ["arn:aws:ssm:${var.region}:${var.aws_account_ids["delius-core-non-prod"]}:role/dlc-dev-server-provision-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:ssm:${var.region}:${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/del-pre-prod-server-provision-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:ssm:${var.region}:${var.aws_account_ids["hmpps-delius-stage"]}:role/del-stage-server-provision-ec2-role"]:[])
+      identifiers = concat(["arn:aws:ssm::${data.aws_caller_identity.current.account_id}:role/admin",
+                     "arn:aws:ssm::${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"],
+                     var.environment_name == "delius-test" ? ["arn:aws:ssm::${var.aws_account_ids["delius-core-non-prod"]}:role/dlc-dev-server-provision-ec2-role"]:[],
+                     var.environment_name == "delius-prod" ? ["arn:aws:ssm::${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/del-pre-prod-server-provision-ec2-role"]:[],
+                     var.environment_name == "delius-prod" ? ["arn:aws:ssm::${var.aws_account_ids["hmpps-delius-stage"]}:role/del-stage-server-provision-ec2-role"]:[])
     }
     actions = ["kms:Encrypt","kms:Decrypt","kms:ReEncrypt*","kms:GenerateDataKey*","kms:DescribeKey"]
     resources = ["*"]
@@ -48,11 +48,11 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = concat(["arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:role/admin",
+      identifiers = concat(["arn:aws:ssm::${data.aws_caller_identity.current.account_id}:role/admin",
                      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"],
-                     var.environment_name == "delius-test" ? ["arn:aws:ssm:${var.region}:${var.aws_account_ids["delius-core-non-prod"]}:role/dlc-dev-server-provision-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:ssm:${var.region}:${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/del-pre-prod-server-provision-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:ssm:${var.region}:${var.aws_account_ids["hmpps-delius-stage"]}:role/del-stage-server-provision-ec2-role"]:[])
+                     var.environment_name == "delius-test" ? ["arn:aws:ssm::${var.aws_account_ids["delius-core-non-prod"]}:role/dlc-dev-server-provision-ec2-role"]:[],
+                     var.environment_name == "delius-prod" ? ["arn:aws:ssm::${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/del-pre-prod-server-provision-ec2-role"]:[],
+                     var.environment_name == "delius-prod" ? ["arn:aws:ssm::${var.aws_account_ids["hmpps-delius-stage"]}:role/del-stage-server-provision-ec2-role"]:[])
     }
     actions = ["kms:CreateGrants","kms:ListGrants","kms:RevokeGrant"]
     resources = ["*"]
