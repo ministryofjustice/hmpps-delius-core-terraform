@@ -2,6 +2,7 @@ module "kms_custom_policy" {
   source                  = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms_custom_policy?ref=terraform-0.12"
   kms_key_name            = local.common_name
   policy                  = data.aws_iam_policy_document.gdpr_rds_kms_policy_document.json
+  tags                    = var.tags
 }
 
 data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
