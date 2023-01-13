@@ -15,7 +15,3 @@ output "primary_db" {
     endpoint = aws_db_instance.primary.endpoint
   }
 }
-
-output "kms_key_id" {
-    value    = module.kms_custom_policy.kms_key_id
-}
