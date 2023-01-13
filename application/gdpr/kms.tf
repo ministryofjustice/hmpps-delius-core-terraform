@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     principals {
       type        = "AWS"
       identifiers = concat(["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/admin",
-                     "arn:aws:iam:${var.region}:${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"],
+                     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"],
                      var.environment_name == "delius-test" ? ["arn:aws:iam::${var.aws_account_ids["delius-core-non-prod"]}:role/dlc-dev-server-provision-ec2-role"]:[],
                      var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/del-pre-prod-server-provision-ec2-role"]:[],
                      var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-stage"]}:role/del-stage-server-provision-ec2-role"]:[])
