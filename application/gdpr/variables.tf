@@ -56,3 +56,7 @@ variable "aws_account_ids" {
 variable "environment_identifier" {
   description = "resource label or name"
 }
+
+variable kms_key_id {
+  type = string
+}
