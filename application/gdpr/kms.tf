@@ -1,3 +1,6 @@
+# This encryption key is used for copying automatic snapshots so that they are available for copying to other environments
+# using a symmetric shared key.   The key is NOT currently used for the RDS instance itself, which defaults to using the aws/rds key.
+
 module "kms_custom_policy" {
   source                  = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms_custom_policy?ref=terraform-0.12"
   kms_key_name            = local.common_name

@@ -52,8 +52,6 @@ resource "aws_db_instance" "primary" {
   backup_window             = local.app_config["db_backup_window"]
   final_snapshot_identifier = "${var.environment_name}-final-snapshot"
 
-  kms_key_id                = module.kms_custom_policy.kms_arn
-
   tags = merge(var.tags, { Name = "${local.app_name}-primary-db", "autostop-${var.environment_type}" = "Phase1" })
 
   lifecycle {
