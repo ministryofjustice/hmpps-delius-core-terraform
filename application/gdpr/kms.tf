@@ -8,6 +8,7 @@ module "kms_custom_policy" {
   kms_key_name            = local.common_name
   policy                  = module.rds_kms_policy_document.aws_iam_policy_document_content.json
   tags                    = var.tags
+  environment_name        = var.environment_name
 }
 
 module "rds_kms_policy_document" {
