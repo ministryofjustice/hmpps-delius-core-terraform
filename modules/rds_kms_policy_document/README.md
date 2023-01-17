@@ -1,0 +1,1 @@
+Policy for Symetric KMS Key to Support Copy of RDS Snapshots between Environments
