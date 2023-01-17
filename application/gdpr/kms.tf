@@ -1,5 +1,7 @@
 # This encryption key is used for copying automatic snapshots so that they are available for copying to other environments
 # using a symmetric shared key.   The key is NOT currently used for the RDS instance itself, which defaults to using the aws/rds key.
+# Production Databases may be copied to Stage or Pre-Prod
+# Test Databases may be copied to Dev
 
 module "kms_custom_policy" {
   source                  = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms_custom_policy?ref=terraform-0.12"
@@ -33,39 +35,17 @@ data "aws_iam_policy_document" "gdpr_rds_kms_policy_document" {
     resources = ["*"]
   }
  statement {
-    sid = "Allow use of the key"
+    sid = "Allow access to Key in target environment"
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = concat(["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/admin",
-                     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"],
-                     var.environment_name == "delius-test" ? ["arn:aws:iam::${var.aws_account_ids["delius-core-non-prod"]}:role/dlc-dev-server-provison-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/del-pre-prod-server-provison-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-stage"]}:role/del-stage-server-provison-ec2-role"]:[])
+      identifiers = concat(["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/terraform"],
+                     var.environment_name == "delius-test" ? ["arn:aws:iam::${var.aws_account_ids["delius-core-non-prod"]}:role/terraform"]:[],
+                     var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/terraform"]:[],
+                     var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-stage"]}:role/terraform"]:[])
     }
-    actions = ["kms:Encrypt","kms:Decrypt","kms:ReEncrypt*","kms:GenerateDataKey*","kms:DescribeKey"]
+    actions = ["kms:CreateGrant","kms:DescribeKey"]
     resources = ["*"]
   }
-  statement {
-    sid = "Allow attachment of persistent resources"
-    effect = "Allow"
-    principals {
-      type        = "AWS"
-      identifiers = concat(["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/admin",
-                     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.short_environment_name}-server-provison-ec2-role"],
-                     var.environment_name == "delius-test" ? ["arn:aws:iam::${var.aws_account_ids["delius-core-non-prod"]}:role/dlc-dev-server-provison-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/del-pre-prod-server-provison-ec2-role"]:[],
-                     var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-stage"]}:role/del-stage-server-provison-ec2-role"]:[])
-    }
-    actions = ["kms:CreateGrants","kms:ListGrants","kms:RevokeGrant"]
-    resources = ["*"]
-    condition {
-         test = "Bool"
-         variable = "kms:GrantIsForAWSResource"
-         values = [true]
-    }
-  } 
-
-
 
 }
