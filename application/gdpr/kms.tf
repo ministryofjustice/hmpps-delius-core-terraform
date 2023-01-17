@@ -13,4 +13,6 @@ module "kms_custom_policy" {
 module "rds_kms_policy_document" {
   source = "../../modules/rds_kms_policy_document"
   environment_name        = var.environment_name
+  short_environment_name  = var.short_environment_name
+  aws_account_ids         = var.aws_account_ids
 }
