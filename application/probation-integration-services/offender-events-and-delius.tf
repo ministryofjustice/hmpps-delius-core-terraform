@@ -22,8 +22,8 @@ module "offender-events-and-delius" {
   notification_arn = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Scaling
-  min_capacity = contains(["delius-pre-prod", "delius-prod"], var.environment_name) ? 1 : 0
-  max_capacity = contains(["delius-pre-prod", "delius-prod"], var.environment_name) ? 1 : 0
+  min_capacity = contains(["delius-prod"], var.environment_name) ? 1 : 0
+  max_capacity = contains(["delius-prod"], var.environment_name) ? 1 : 0
 }
 
 resource "aws_iam_role_policy_attachment" "offender-events-and-delius" {
