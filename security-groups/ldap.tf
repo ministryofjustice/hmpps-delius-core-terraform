@@ -135,6 +135,17 @@ resource "aws_security_group_rule" "ldap_lb_access_ingress" {
   description              = "Delius LDAP Access In"
 }
 
+# Allow ingress from full Cloud Platform CIDR range
+resource "aws_security_group_rule" "ldap_lb_cloud_platform_ingress" {
+  security_group_id        = aws_security_group.apacheds_ldap_private_elb.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = var.ldap_ports["ldap"]
+  to_port                  = var.ldap_ports["ldap"]
+  cidr_blocks              = [var.cloudplatform_data.cidr_range]
+  description              = "Cloud Platform In"
+}
+
 ################################################################################
 ## Generic "delius_ldap_access" group
 ################################################################################
