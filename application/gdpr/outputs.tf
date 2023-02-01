@@ -15,4 +15,3 @@ output "primary_db" {
     endpoint = aws_db_instance.primary.endpoint
   }
 }
-
