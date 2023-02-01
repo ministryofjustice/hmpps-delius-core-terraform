@@ -22,8 +22,8 @@ module "prison-custody-status-to-delius" {
   notification_arn = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
 
   # Scaling
-  min_capacity = local.min_capacity
-  max_capacity = local.max_capacity
+  min_capacity = var.environment_name == "delius-prod" ? 2 : 0
+  max_capacity = var.environment_name == "delius-prod" ? 10 : 0
 }
 
 resource "aws_iam_role_policy_attachment" "prison-custody-status-to-delius" {
