@@ -98,6 +98,6 @@ output "delius_db_1" {
   }
 }
 
-output "delius_db_1_cpu_core_count" {
+output "core_count_delius_db_1" {
      value = module.delius_db_1.cpu_core_count
 }
