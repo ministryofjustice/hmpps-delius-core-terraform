@@ -97,3 +97,7 @@ output "delius_db_1" {
     delius_db_1   = "ssh ${module.delius_db_1.public_fqdn}"
   }
 }
+
+output "delius_db_1_cpu_core_count" {
+     value = mpodule.delius_db_1.cpu_core_count
+}
