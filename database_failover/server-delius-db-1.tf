@@ -9,7 +9,7 @@ locals {
 }
 
 module "delius_db_1" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.6.0"
+  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database"
   server_name = "delius-db-1"
 
   ami_id               = data.aws_ami.centos_oracle_db.id
@@ -96,4 +96,8 @@ output "delius_db_1" {
     db_disks      = module.delius_db_1.db_size_parameters
     delius_db_1   = "ssh ${module.delius_db_1.public_fqdn}"
   }
+}
+
+output "core_count_delius_db_1" {
+     value = module.delius_db_1.cpu_core_count
 }

@@ -26,4 +26,3 @@ output "jdbc_standby_url" {
           local.high_availability_count >= 1 ? "jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=${local.db2_add})(CONNECT_DATA=(SERVICE_NAME=${var.ansible_vars_oracle_db["database_sid"]}S1)))"
                                              : "jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=${local.db1_add})(CONNECT_DATA=(SERVICE_NAME=${var.ansible_vars_oracle_db["database_sid"]}_TAF)))")
 }
-
