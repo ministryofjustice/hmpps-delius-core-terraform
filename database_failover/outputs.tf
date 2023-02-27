@@ -27,3 +27,6 @@ output "jdbc_standby_url" {
                                              : "jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=${local.db1_add})(CONNECT_DATA=(SERVICE_NAME=${var.ansible_vars_oracle_db["database_sid"]}_TAF)))")
 }
 
+output "cpu_core_count" {
+  value = "delius-db-1.${local.cpu_core_count}"
+}
