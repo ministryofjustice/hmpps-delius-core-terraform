@@ -24,6 +24,7 @@ module "weblogic" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id
   ]
 
-  enable_response_time_alarms = false # Response times can exceed 1s during normal use (e.g. during the daily DSS import)
+  health_check_grace_period_seconds = 600
+  enable_response_time_alarms       = false # Response times can exceed 1s during normal use (e.g. during the daily DSS import)
 }
 
