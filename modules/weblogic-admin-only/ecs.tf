@@ -62,7 +62,7 @@ module "ecs" {
   health_check_path                 = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
   health_check_timeout              = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
   health_check_unhealthy_threshold  = 10 # Increased unhealthy threshold to allow longer for recovery, due to instances being stateful
-  health_check_grace_period_seconds = 480
+  health_check_grace_period_seconds = var.health_check_grace_period_seconds
   security_groups = concat(var.security_groups_instances, [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id
   ])
