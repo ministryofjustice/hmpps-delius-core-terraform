@@ -58,6 +58,10 @@ resource "aws_batch_compute_environment" "batch_ce" {
 
     type = "EC2"
 
+    ec2_configuration {
+      image_type = "ECS_AL2"
+    }
+
     tags = var.ce_tags
   }
 
