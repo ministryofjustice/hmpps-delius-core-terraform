@@ -151,6 +151,16 @@ resource "aws_security_group_rule" "community_api_instances_out_to_delius_ldap" 
   description              = "Out to Delius LDAP"
 }
 
+resource "aws_security_group_rule" "community_api_instances_out_to_delius_ldap_mp" {
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 389
+  to_port                  = 389
+  security_group_id        = aws_security_group.community_api_instances.id
+  cidr_blocks              = [var.mp_corresponding_vpc_cidr]
+  description              = "LDAP out to MP"
+}
+
 resource "aws_security_group_rule" "community_api_instances_out_to_delius_interface" {
   type                     = "egress"
   protocol                 = "tcp"
