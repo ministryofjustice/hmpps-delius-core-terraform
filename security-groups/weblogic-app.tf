@@ -110,6 +110,16 @@ resource "aws_security_group_rule" "ndelius_instances_egress_to_ldap" {
   description              = "LDAP ELB out"
 }
 
+resource "aws_security_group_rule" "ndelius_instances_egress_to_ldap_mp" {
+  security_group_id        = aws_security_group.weblogic_ndelius_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 389
+  to_port                  = 389
+  cidr_blocks              = [var.mp_corresponding_vpc_cidr]
+  description              = "LDAP out to MP"
+}
+
 resource "aws_security_group_rule" "ndelius_instances_egress_to_delius_api" {
   security_group_id        = aws_security_group.weblogic_ndelius_instances.id
   type                     = "egress"
