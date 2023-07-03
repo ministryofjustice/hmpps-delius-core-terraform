@@ -11,10 +11,12 @@ module "service" {
   container_definitions = [{ image = "${local.app_config["image_url"]}:${local.app_config["version"]}" }]
   environment = {
     CONFIG_XML_BASE64 = base64encode(templatefile("${path.module}/templates/PwmConfiguration.xml.tpl", {
-      region             = var.region
-      ldap_url           = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
-      ldap_user          = data.terraform_remote_state.ldap.outputs.ldap_bind_user
-      user_base          = data.terraform_remote_state.ldap.outputs.ldap_base_users
+      region = var.region
+      # ldap_url           = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
+      ldap_url  = "ldap://${data.aws_ssm_parameter.mp_ldap_host.value}:389"
+      ldap_user = data.terraform_remote_state.ldap.outputs.ldap_bind_user
+      # user_base          = data.terraform_remote_state.ldap.outputs.ldap_base_users
+      user_base          = data.aws_ssm_parameter.mp_ldap_principal.value
       site_url           = "https://${aws_route53_record.public_dns.fqdn}"
       email_smtp_address = "smtp.${data.terraform_remote_state.vpc.outputs.private_zone_name}"
       email_from_address = "no-reply@${data.terraform_remote_state.vpc.outputs.public_zone_name}"
@@ -23,7 +25,8 @@ module "service" {
   secrets = {
     SECURITY_KEY    = "/${var.environment_name}/${var.project_name}/pwm/pwm/security_key"
     CONFIG_PASSWORD = "/${var.environment_name}/${var.project_name}/pwm/pwm/config_password"
-    LDAP_PASSWORD   = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
+    # LDAP_PASSWORD   = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
+    LDAP_PASSWORD = data.aws_ssm_parameter.mp_ldap_password.name
   }
 
   # Security & Networking
