@@ -43,7 +43,8 @@ module "ecs" {
     JWT_SECRET                 = "/${var.environment_name}/${var.project_name}/umt/umt/jwt_secret"
     DELIUS_SECRET              = "/${var.environment_name}/${var.project_name}/umt/umt/delius_secret"
     SPRING_DATASOURCE_PASSWORD = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_app_schema_password"
-    SPRING_LDAP_PASSWORD       = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
+    # SPRING_LDAP_PASSWORD       = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
+    SPRING_LDAP_PASSWORD = data.aws_ssm_parameter.mp_ldap_password
   }
 
   # Security/Networking
