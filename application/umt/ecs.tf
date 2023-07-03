@@ -22,22 +22,23 @@ module "ecs" {
     SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE = "50"
     SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT    = "org.hibernate.dialect.Oracle12cDialect"
     SPRING_JPA_HIBERNATE_DDL-AUTO              = "none"
-    SPRING_LDAP_URLS                           = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
-    SPRING_LDAP_EXPORT_USERNAME                = "cn=root,${local.ldap_config["base_root"]}"
-    SPRING_LDAP_USERNAME                       = "cn=root,${local.ldap_config["base_root"]}"
-    SPRING_LDAP_BASE                           = local.ldap_config["base_root"]
-    SPRING_LDAP_USEORACLEATTRIBUTES            = "false"
-    SPRING_REDIS_HOST                          = aws_route53_record.token_store_private_dns.fqdn
-    SPRING_REDIS_PORT                          = aws_elasticache_replication_group.token_store_replication_group.port
-    SPRING_REDIS_CLUSTER_NODES                 = "${aws_route53_record.token_store_private_dns.fqdn}:${aws_elasticache_replication_group.token_store_replication_group.port}"
-    REDIS_CONFIGURE_NO-OP                      = "true"
-    DELIUS_PASSWORD-RESET_URL                  = data.terraform_remote_state.pwm.outputs.url
-    DELIUS_LDAP_BASE_USERS                     = replace(local.ldap_config["base_users"], ",${local.ldap_config["base_root"]}", "")
-    DELIUS_LDAP_BASE_CLIENTS                   = replace(local.ldap_config["base_service_users"], ",${local.ldap_config["base_root"]}", "")
-    DELIUS_LDAP_BASE_ROLES                     = replace(local.ldap_config["base_roles"], ",${local.ldap_config["base_root"]}", "")
-    DELIUS_LDAP_BASE_ROLE-GROUPS               = replace(local.ldap_config["base_role_groups"], ",${local.ldap_config["base_root"]}", "")
-    DELIUS_LDAP_BASE_GROUPS                    = replace(local.ldap_config["base_groups"], ",${local.ldap_config["base_root"]}", "")
-    LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS       = local.delius_app_config["env_LOG_LEVEL_NDELIUS"]
+    # SPRING_LDAP_URLS                           = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
+    SPRING_LDAP_URLS                     = "ldap://${data.aws_ssm_parameter.mp_ldap_host.value}:389"
+    SPRING_LDAP_EXPORT_USERNAME          = "cn=root,${local.ldap_config["base_root"]}"
+    SPRING_LDAP_USERNAME                 = "cn=root,${local.ldap_config["base_root"]}"
+    SPRING_LDAP_BASE                     = local.ldap_config["base_root"]
+    SPRING_LDAP_USEORACLEATTRIBUTES      = "false"
+    SPRING_REDIS_HOST                    = aws_route53_record.token_store_private_dns.fqdn
+    SPRING_REDIS_PORT                    = aws_elasticache_replication_group.token_store_replication_group.port
+    SPRING_REDIS_CLUSTER_NODES           = "${aws_route53_record.token_store_private_dns.fqdn}:${aws_elasticache_replication_group.token_store_replication_group.port}"
+    REDIS_CONFIGURE_NO-OP                = "true"
+    DELIUS_PASSWORD-RESET_URL            = data.terraform_remote_state.pwm.outputs.url
+    DELIUS_LDAP_BASE_USERS               = replace(local.ldap_config["base_users"], ",${local.ldap_config["base_root"]}", "")
+    DELIUS_LDAP_BASE_CLIENTS             = replace(local.ldap_config["base_service_users"], ",${local.ldap_config["base_root"]}", "")
+    DELIUS_LDAP_BASE_ROLES               = replace(local.ldap_config["base_roles"], ",${local.ldap_config["base_root"]}", "")
+    DELIUS_LDAP_BASE_ROLE-GROUPS         = replace(local.ldap_config["base_role_groups"], ",${local.ldap_config["base_root"]}", "")
+    DELIUS_LDAP_BASE_GROUPS              = replace(local.ldap_config["base_groups"], ",${local.ldap_config["base_root"]}", "")
+    LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS = local.delius_app_config["env_LOG_LEVEL_NDELIUS"]
   }
   secrets = {
     JWT_SECRET                 = "/${var.environment_name}/${var.project_name}/umt/umt/jwt_secret"

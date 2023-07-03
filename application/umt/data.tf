@@ -72,3 +72,7 @@ data "aws_ssm_parameter" "mp_ldap_password" {
 data "aws_ssm_parameter" "mp_ldap_principal" {
   name = "/mp/ldap/principal"
 }
+
+data "aws_ssm_parameter" "mp_ldap_host" {
+  name = "/mp/ldap/host"
+}

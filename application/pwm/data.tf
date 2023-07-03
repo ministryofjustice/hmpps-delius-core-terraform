@@ -91,3 +91,11 @@ data "aws_acm_certificate" "strategic_cert" {
 
   most_recent = true
 }
+
+data "aws_ssm_parameter" "mp_ldap_password" {
+  name = "/mp/ldap/root_pw"
+}
+
+data "aws_ssm_parameter" "mp_ldap_principal" {
+  name = "/mp/ldap/principal"
+}
