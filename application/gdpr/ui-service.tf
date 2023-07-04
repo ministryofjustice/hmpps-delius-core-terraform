@@ -15,6 +15,7 @@ module "ui" {
     command = ["sh", "-c", <<-EOT
       echo '${replace(file("nginx/default.conf"), "\n", "")}' > /etc/nginx/conf.d/default.conf && \
       echo "${replace(file("angular/config.js"), "\n", "")}" > /usr/share/nginx/html/assets/config/config.js && \
+      chmod +r -R /usr/share/nginx/html && \
       exec nginx -g 'daemon off;'
       EOT
     ]
