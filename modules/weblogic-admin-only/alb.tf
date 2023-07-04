@@ -3,6 +3,9 @@ resource "aws_lb" "alb" {
   name            = substr("${var.short_environment_name}-${var.app_name}-alb", 0, 32)
   internal        = false
   security_groups = var.security_groups_lb
+
+  idle_timeout = 25
+
   subnets = [
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
     data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
