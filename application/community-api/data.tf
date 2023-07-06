@@ -99,19 +99,3 @@ data "terraform_remote_state" "alerts" {
   }
 }
 
-
-data "aws_ssm_parameter" "mp_ldap_password" {
-  name = "/mp/ldap/root_pw"
-}
-
-data "aws_ssm_parameter" "mp_ldap_principal" {
-  name = "/mp/ldap/principal"
-}
-
-data "aws_ssm_parameter" "mp_ldap_host" {
-  name = "/mp/ldap/host"
-}
-
-data "aws_ssm_parameter" "mp_ldap_user_base" {
-  name = "/mp/ldap/user_base"
-}

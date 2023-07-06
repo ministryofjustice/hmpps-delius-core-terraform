@@ -64,15 +64,3 @@ data "terraform_remote_state" "alerts" {
 data "aws_route53_zone" "private" {
   zone_id = data.terraform_remote_state.vpc.outputs.private_zone_id
 }
-
-data "aws_ssm_parameter" "mp_ldap_password" {
-  name = "/mp/ldap/root_pw"
-}
-
-data "aws_ssm_parameter" "mp_ldap_principal" {
-  name = "/mp/ldap/principal"
-}
-
-data "aws_ssm_parameter" "mp_ldap_host" {
-  name = "/mp/ldap/host"
-}
