@@ -12,7 +12,7 @@ module "weblogic" {
   delius_core_public_zone  = var.delius_core_public_zone
   tags                     = var.tags
 
-  idle_timeout = 25
+  idle_timeout = 59
 
   dns_name   = "ndelius"
   app_name   = "weblogic-app"
