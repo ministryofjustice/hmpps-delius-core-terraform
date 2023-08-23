@@ -31,6 +31,7 @@ module "api" {
     SCHEDULE_ELIGIBLEFORDELETION            = local.app_config["cron_eligiblefordeletion"]
     SCHEDULE_DELETEOFFENDERS                = local.app_config["cron_deleteoffenders"]
     SCHEDULE_DESTRUCTIONLOGCLEARING         = local.app_config["cron_destructionlogclearing"]
+    SCHEDULE_ELIGIBLEFORDELETIONSOFTDELETED = local.app_config["cron_eligiblefordeletionsoftdeleted"]
     SECURITY_OAUTH2_RESOURCE_ID             = "NDelius"
     SECURITY_OAUTH2_CLIENT_CLIENT-ID        = "GDPR-API"
     SECURITY_OAUTH2_RESOURCE_TOKEN-INFO-URI = "http://usermanagement.ecs.cluster:8080/umt/oauth/check_token"
