@@ -103,7 +103,6 @@
         "metrics": [
           [ "ECS/ContainerInsights", "RunningTaskCount", "ServiceName", "${short_environment_name}-weblogic-app-service", "ClusterName", "${ecs_cluster}", { "label": "Delius UI" } ],
           [ "...", "${short_environment_name}-weblogic-eis-service", ".", ".", { "label": "Delius Interfaces" } ],
-          [ "...", "${short_environment_name}-delius-api-service", ".", ".", { "label": "Delius API" } ],
           [ "...", "${short_environment_name}-community-api-service", ".", ".", { "label": "Community API" } ],
           [ "...", "${short_environment_name}-usermanagement-service", ".", ".", { "label": "User Management" } ],
           [ "...", "${short_environment_name}-password-reset-service", ".", ".", { "label": "Password Reset" } ],
@@ -151,7 +150,6 @@
           [ "...", "${short_environment_name}-new-tech-service", { "id": "mm0m4", "visible": false } ],
           [ "...", "${short_environment_name}-password-reset-service", { "id": "mm0m5", "visible": false } ],
           [ "...", "${short_environment_name}-delius-gdpr-ui-service", { "id": "mm0m6", "visible": false } ],
-          [ "...", "${short_environment_name}-delius-api-service", { "id": "mm0m7", "visible": false } ],
           [ "...", "${short_environment_name}-weblogic-app-service", { "id": "mm0m8", "visible": false } ],
           [ ".", "CpuUtilized", ".", ".", ".", "${short_environment_name}-weblogic-eis-service", { "id": "mm1m0", "visible": false } ],
           [ "...", "${short_environment_name}-community-api-service", { "id": "mm1m1", "visible": false } ],
@@ -159,7 +157,6 @@
           [ "...", "${short_environment_name}-usermanagement-service", { "id": "mm1m3", "visible": false } ],
           [ "...", "${short_environment_name}-new-tech-service", { "id": "mm1m4", "visible": false } ],
           [ "...", "${short_environment_name}-password-reset-service", { "id": "mm1m5", "visible": false } ],
-          [ "...", "${short_environment_name}-delius-api-service", { "id": "mm1m7", "visible": false } ],
           [ "...", "${short_environment_name}-delius-gdpr-ui-service", { "id": "mm1m6", "visible": false } ],
           [ "...", "${short_environment_name}-weblogic-app-service", { "id": "mm1m8", "visible": false } ]
         ],
@@ -211,7 +208,6 @@
         "metrics": [
           [ "${environment_name}/weblogic-app", "LoggedErrors", { "id": "m2", "label": "Delius UI" } ],
           [ "${environment_name}/weblogic-eis", "LoggedErrors", { "id": "m1", "label": "Delius Interfaces", "color": "#ff7f0e" } ],
-          [ "${environment_name}/delius-api", "LoggedErrors", { "id": "m4", "color": "#2ca02c", "label": "Delius API" } ],
           [ "${environment_name}/community-api", "LoggedErrors", { "id": "m3", "color": "#92a500", "label": "Community API" } ],
           [ "${environment_name}/new-tech", "LoggedErrors", { "id": "m5", "color": "#8c564b", "label": "New Tech" } ],
           [ "${environment_name}/usermanagement", "LoggedErrors", { "id": "m7", "color": "#9467bd", "label": "User Management" } ],
@@ -240,7 +236,6 @@
           "arn:aws:cloudwatch:${region}:${account_id}:alarm:${environment_name}-weblogic-app-healthy-hosts-cwa--fatal",
           "arn:aws:cloudwatch:${region}:${account_id}:alarm:${environment_name}-weblogic-eis-healthy-hosts-cwa--fatal",
           "arn:aws:cloudwatch:${region}:${account_id}:alarm:${environment_name}-ldap-healthy-hosts-cwa--fatal",
-          "arn:aws:cloudwatch:${region}:${account_id}:alarm:${environment_name}-delius-api-healthy-hosts-cwa--fatal",
           "arn:aws:cloudwatch:${region}:${account_id}:alarm:${environment_name}-community-api-healthy-hosts-cwa--fatal",
           "arn:aws:cloudwatch:${region}:${account_id}:alarm:${environment_name}-new-tech-healthy-hosts-cwa--fatal",
           "arn:aws:cloudwatch:${region}:${account_id}:alarm:${environment_name}-usermanagement-healthy-hosts-cwa--fatal",
