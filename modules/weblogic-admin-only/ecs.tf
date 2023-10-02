@@ -31,6 +31,7 @@ module "ecs" {
     DMS_OFFICE_URI_HOST = "alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}"
     DMS_OFFICE_URI_PORT = 443
     PASSWORD_RESET_URL  = data.terraform_remote_state.pwm.outputs.url
+    COOKIE_SECURE       = true
 
     ELASTICSEARCH_URL     = "/newTech"
     DELIUS_API_URL        = "http://delius-api.ecs.cluster:8080"
