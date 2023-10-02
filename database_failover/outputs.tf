@@ -58,11 +58,16 @@ locals {
    }
 }
 
+# Reading from the database endpoint may optionally done on the standby
+# Writing must always be done on the primary
 output "dms_endpoint_details" {
    value = {
-    database_server    = local.source_server_map[var.oracle_audited_interaction.source_server]
-    database_port      = "1521"
-    database_name      = local.source_database_map[var.oracle_audited_interaction.source_server]
+    database_server_for_reads   = local.source_server_map[var.oracle_audited_interaction.source_server]
+    database_port_for_reads     = "1521"
+    database_name_for_reads     = local.source_database_map[var.oracle_audited_interaction.source_server]
+    database_server_for_writes  = local.source_server_map["delius_primarydb"]
+    database_port_for_writes    = "1521"
+    database_name_for_writes    = local.source_database_map["delius_primarydb"]
     bastion_inventory  = var.bastion_inventory
     password_path      = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_audit_dms_pool_password"
     target_environment = var.oracle_audited_interaction.target_environment
