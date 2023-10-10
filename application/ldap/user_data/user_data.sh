@@ -42,7 +42,8 @@ cat << EOF > ~/requirements.yml
   src: https://github.com/ministryofjustice/hmpps-bootstrap
   version: centos
 - name: users
-  src: singleplatform-eng.users
+  src: https://github.com/singleplatform-eng/ansible-users
+  version: v1.2.6
 - name: "${app_bootstrap_name}"
   src: "${app_bootstrap_src}"
   version: "${app_bootstrap_version}"
