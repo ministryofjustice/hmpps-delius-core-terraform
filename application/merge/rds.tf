@@ -24,7 +24,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 resource "aws_db_instance" "primary" {
   identifier     = "${var.environment_name}-${local.app_name}-primary-db"
   engine         = "postgres"
-  engine_version = "11.10"
+  engine_version = "14.7"
   instance_class = local.app_config["db_instance_class"]
 
   allocated_storage = local.app_config["db_storage"]
