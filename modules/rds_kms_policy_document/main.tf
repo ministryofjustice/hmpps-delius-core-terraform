@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "rds_kms_policy_document" {
     principals {
       type        = "AWS"
       identifiers = concat(["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/terraform"],
-                     var.environment_name == "delius-test" ? ["arn:aws:iam::${var.aws_account_ids["delius-core-non-prod"]}:role/terraform"]:[],
+                     var.environment_name == "delius-test" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-mis-dev"]}:role/terraform"]:[],
                      var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-pre-prod"]}:role/terraform"]:[],
                      var.environment_name == "delius-prod" ? ["arn:aws:iam::${var.aws_account_ids["hmpps-delius-stage"]}:role/terraform"]:[])
     }
