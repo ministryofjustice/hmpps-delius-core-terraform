@@ -53,9 +53,6 @@ resource "aws_db_instance" "primary" {
   final_snapshot_identifier = "${var.environment_name}-final-snapshot"
 
   tags = merge(var.tags, { Name = "${local.app_name}-primary-db", "autostop-${var.environment_type}" = "Phase1" })
-
-  lifecycle {
-    ignore_changes = [engine_version] # Allow automated minor version upgrades
-  }
+  
 }
 
