@@ -24,7 +24,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 resource "aws_db_instance" "primary" {
   identifier     = "${var.environment_name}-${local.app_name}-primary-db"
   engine         = "postgres"
-  engine_version = "14.7"
+  engine_version = "15"
   instance_class = local.app_config["db_instance_class"]
 
   allocated_storage = local.app_config["db_storage"]
@@ -51,9 +51,5 @@ resource "aws_db_instance" "primary" {
   final_snapshot_identifier = "${var.environment_name}-final-snapshot"
 
   tags = merge(var.tags, { Name = "${local.app_name}-primary-db", "autostop-${var.environment_type}" = "Phase1" })
-
-  lifecycle {
-    ignore_changes = [engine_version] # Allow automated minor version upgrades
-  }
 }
 
