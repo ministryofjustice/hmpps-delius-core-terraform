@@ -57,13 +57,32 @@ resource "aws_lb_listener" "http_listener" {
 }
 
 # Listener rules
+resource "aws_lb_listener_rule" "homepage_listener_rule" {
+  listener_arn = aws_lb_listener.https_listener.arn
+  condition {
+    path_pattern {
+      values = ["/"]
+    }
+  }
+  action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
+      path        = "/NDelius-war/delius/JSP/homepage.jsp"
+    }
+  }
+  depends_on = [aws_lb_listener_rule.blocked_paths_listener_rule]
+}
 
 resource "aws_lb_listener_rule" "allowed_paths_listener_rule" {
   listener_arn = aws_lb_listener.https_listener.arn
   condition {
     path_pattern {
       values = [
-        "/*"
+        "/NDelius*",
+        "/jspellhtml/*"
       ]
     }
   }
