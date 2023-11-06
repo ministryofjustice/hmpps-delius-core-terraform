@@ -47,9 +47,20 @@ variable "enable_response_time_alarms" {
   default     = true
 }
 
+
+variable "health_check_grace_period_seconds" {
+  description = "Health check grace period. Increase this if tasks are stopped before they have time to start up."
+  default     = 480
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
+}
+
+variable "idle_timeout" {
+  description = "ALB idle timeout in seconds"
+  default     = 60
 }
 
 variable "health_check_path" {

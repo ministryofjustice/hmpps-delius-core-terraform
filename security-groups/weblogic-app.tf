@@ -43,13 +43,12 @@ resource "aws_security_group_rule" "ndelius_lb_egress_to_instances" {
 
 resource "aws_security_group_rule" "ndelius_lb_egress_to_services" {
   for_each = {
-    "User Management"               = [aws_security_group.umt_instances.id, 8080]
-    "New Tech Web"                  = [aws_security_group.new_tech_instances.id, 9000]
-    "Approved Premises Tracker API" = [aws_security_group.aptracker_api.id, 8080]
-    "GDPR API"                      = [aws_security_group.gdpr_api.id, 8080]
-    "GDPR UI"                       = [aws_security_group.gdpr_ui.id, 80]
-    "Merge API"                     = [aws_security_group.merge_api.id, 8080]
-    "Merge UI"                      = [aws_security_group.merge_ui.id, 80]
+    "User Management" = [aws_security_group.umt_instances.id, 8080]
+    "New Tech Web"    = [aws_security_group.new_tech_instances.id, 9000]
+    "GDPR API"        = [aws_security_group.gdpr_api.id, 8080]
+    "GDPR UI"         = [aws_security_group.gdpr_ui.id, 80]
+    "Merge API"       = [aws_security_group.merge_api.id, 8080]
+    "Merge UI"        = [aws_security_group.merge_ui.id, 80]
   }
   security_group_id        = aws_security_group.weblogic_ndelius_lb.id
   type                     = "egress"
@@ -111,14 +110,14 @@ resource "aws_security_group_rule" "ndelius_instances_egress_to_ldap" {
   description              = "LDAP ELB out"
 }
 
-resource "aws_security_group_rule" "ndelius_instances_egress_to_delius_api" {
+resource "aws_security_group_rule" "ndelius_instances_egress_to_ldap_mp" {
   security_group_id        = aws_security_group.weblogic_ndelius_instances.id
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = 8080
-  to_port                  = 8080
-  source_security_group_id = aws_security_group.delius_api_instances.id
-  description              = "Delius API out"
+  from_port                = 389
+  to_port                  = 389
+  cidr_blocks              = [var.mp_corresponding_vpc_cidr]
+  description              = "LDAP out to MP"
 }
 
 resource "aws_security_group_rule" "ndelius_instances_egress_to_merge_api" {

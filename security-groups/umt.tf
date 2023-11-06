@@ -96,6 +96,16 @@ resource "aws_security_group_rule" "umt_instances_egress_ldap" {
   description              = "LDAP out"
 }
 
+resource "aws_security_group_rule" "umt_instances_egress_ldap_mp" {
+  security_group_id        = aws_security_group.umt_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 389
+  to_port                  = 389
+  cidr_blocks              = [var.mp_corresponding_vpc_cidr]
+  description              = "LDAP out to MP"
+}
+
 resource "aws_security_group_rule" "umt_instances_egress_db" {
   security_group_id        = aws_security_group.umt_instances.id
   type                     = "egress"

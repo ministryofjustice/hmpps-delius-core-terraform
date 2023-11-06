@@ -13,10 +13,6 @@ cd ../community-api
 rm -rf .terraform/terraform.tfstate
 terragrunt import -compact-warnings -input=true module.ecs.aws_cloudwatch_log_group.log_group[0] "${ENVIRONMENT}/community-api"
 
-cd ../delius-api
-rm -rf .terraform/terraform.tfstate
-terragrunt import -compact-warnings -input=true module.ecs.aws_cloudwatch_log_group.log_group[0] "${ENVIRONMENT}/delius-api"
-
 cd ../pwm
 rm -rf .terraform/terraform.tfstate
 terragrunt import -compact-warnings -input=true module.service.aws_cloudwatch_log_group.log_group[0] "${ENVIRONMENT}/password-reset"

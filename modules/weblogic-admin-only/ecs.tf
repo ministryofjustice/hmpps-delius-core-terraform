@@ -31,8 +31,8 @@ module "ecs" {
     DMS_OFFICE_URI_HOST = "alfresco.${data.terraform_remote_state.vpc.outputs.public_zone_name}"
     DMS_OFFICE_URI_PORT = 443
     PASSWORD_RESET_URL  = data.terraform_remote_state.pwm.outputs.url
+    COOKIE_SECURE       = true
 
-    APTRACKER_ERRORS_URL  = "/aptracker-api/errors"
     ELASTICSEARCH_URL     = "/newTech"
     DELIUS_API_URL        = "http://delius-api.ecs.cluster:8080"
     GDPR_URL              = "/gdpr/ui/homepage"
@@ -64,7 +64,7 @@ module "ecs" {
   health_check_matcher              = var.health_check_matcher
   health_check_timeout              = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
   health_check_unhealthy_threshold  = 10 # Increased unhealthy threshold to allow longer for recovery, due to instances being stateful
-  health_check_grace_period_seconds = 480
+  health_check_grace_period_seconds = var.health_check_grace_period_seconds
   security_groups = concat(var.security_groups_instances, [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id
   ])

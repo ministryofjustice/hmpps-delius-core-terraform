@@ -20,12 +20,10 @@ The following applications run as containerized services on the shared [ECS clus
 * [application/pwm](application/pwm) - Password Reset Tool - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2116092086/PWM+-+Password+Reset)
 * [application/umt](application/umt) - User Management Tool
 * [application/community-api](application/community-api)
-* [application/delius-api](application/delius-api)
 * [application/new-tech](application/new-tech)
 * [application/pdf-generator](application/pdf-generator)
 * [application/gdpr](application/gdpr)
 * [application/merge](application/merge)
-* [application/aptracker-api](application/aptracker-api)
 ### Integrations
 * [lambda](lambda) - Lambda functions to handle HMPPS domain events
 * [batch/dss](batch/dss) - NOMIS/OFFLOC Data Share System - [Confluence Page](https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/1488486513/Data+Share+System+DSS)

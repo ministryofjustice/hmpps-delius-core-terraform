@@ -94,24 +94,14 @@ resource "aws_security_group_rule" "umt_db_in" {
   description              = "User Management Tool in"
 }
 
-resource "aws_security_group_rule" "aptracker_api_db_in" {
-  security_group_id        = aws_security_group.delius_db_in.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "1521"
-  to_port                  = "1521"
-  source_security_group_id = aws_security_group.aptracker_api.id
-  description              = "Approved Premises Tracker API in"
-}
-
 resource "aws_security_group_rule" "eng_rman_catalog_db_in" {
   security_group_id        = aws_security_group.delius_db_in.id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "1521"
-  to_port                  = "1521"
+  to_port                  = "1522"
   source_security_group_id = data.terraform_remote_state.ora_db_op_security_groups.outputs.sg_map_ids.rman_catalog
-  description              = "RMAN Catalog in"
+  description              = "RMAN Catalog in on TCP(1521) and TCPS(1522)"
 }
 
 resource "aws_security_group_rule" "eng_oem_db_in_22" {
@@ -129,9 +119,9 @@ resource "aws_security_group_rule" "eng_oem_db_in_1521" {
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "1521"
-  to_port                  = "1521"
+  to_port                  = "1522"
   source_security_group_id = data.terraform_remote_state.ora_db_op_security_groups.outputs.sg_map_ids.oem
-  description              = "OEM in 1521"
+  description              = "OEM in on TCP(1521) and TCPS(1522)"
 }
 
 resource "aws_security_group_rule" "eng_oem_db_in_3872" {
@@ -175,17 +165,6 @@ resource "aws_security_group_rule" "merge_api_db_in" {
   to_port                  = "1521"
   source_security_group_id = aws_security_group.merge_api.id
   description              = "Merge API In"
-}
-
-# Allow Delius API in
-resource "aws_security_group_rule" "delius_api_db_in" {
-  security_group_id        = aws_security_group.delius_db_in.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = "1521"
-  to_port                  = "1521"
-  source_security_group_id = aws_security_group.delius_api_instances.id
-  description              = "Delius API In"
 }
 
 # Allow access from the generic "delius_db_access" group
@@ -266,28 +245,6 @@ resource "aws_security_group_rule" "delius_int_smoke_test_ci_db_in_1521" {
   description              = "CI - Delius Integration Smoke Tests in 1521"
 }
 
-resource "aws_security_group_rule" "delius_api_test_ci_db_in_1521" {
-  count                    = var.ci_db_ingress_1521 ? 1 : 0
-  security_group_id        = aws_security_group.delius_db_in.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 1521
-  to_port                  = 1521
-  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.test_delius_api["security_group"]["id"]
-  description              = "CI - Delius API Tests in 1521"
-}
-
-resource "aws_security_group_rule" "delius_api_test_ndelius_integration_ci_db_in_1521" {
-  count                    = var.ci_db_ingress_1521 ? 1 : 0
-  security_group_id        = aws_security_group.delius_db_in.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 1521
-  to_port                  = 1521
-  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.test_delius_api_ndelius_integration["security_group"]["id"]
-  description              = "CI - Delius API Integration Tests in 1521"
-}
-
 resource "aws_security_group_rule" "delius_serenity_test_ci_db_in_1521" {
   count                    = var.ci_db_ingress_1521 ? 1 : 0
   security_group_id        = aws_security_group.delius_db_in.id
@@ -310,12 +267,33 @@ resource "aws_security_group_rule" "delius_performance_test_ci_db_in_1521" {
   description              = "CI - Delius Performance Tests in 1521"
 }
 
-resource "aws_security_group_rule" "cloud_platform_db_in_1521" {
+resource "aws_security_group_rule" "delius_java_performance_test_ci_db_in_1521" {
+  count                    = contains(["delius-test", "delius-stage", "delius-pre-prod"], var.environment_name) ? 1 : 0
   security_group_id        = aws_security_group.delius_db_in.id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 1521
   to_port                  = 1521
-  cidr_blocks              = [var.cloudplatform_data.cidr_range]
-  description              = "Ingress from Cloud Platform to Delius DB"
+  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.delius_java_performance_tests["security_group"]["id"]
+  description              = "CI - Delius Performance Tests in 1521"
+}
+
+resource "aws_security_group_rule" "cloud_platform_db_in_1521" {
+  security_group_id = aws_security_group.delius_db_in.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 1521
+  to_port           = 1521
+  cidr_blocks       = [var.cloudplatform_data.cidr_range]
+  description       = "Ingress from Cloud Platform to Delius DB"
+}
+resource "aws_security_group_rule" "delius_ui_automation_tests_ci_db_in_1521" {
+  count                    = var.ci_db_ingress_1521 ? 1 : 0
+  security_group_id        = aws_security_group.delius_db_in.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1521
+  source_security_group_id = data.terraform_remote_state.ci_delius_core.outputs.ui_automation_tests["security_group"]["id"]
+  description              = "CI - Delius UI Automation Tests in 1521"
 }

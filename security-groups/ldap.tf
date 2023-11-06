@@ -125,6 +125,54 @@ resource "aws_security_group_rule" "ldap_lb_newtech_ingress" {
   description              = "Community API In"
 }
 
+resource "aws_security_group_rule" "ldap_lb_access_ingress" {
+  security_group_id        = aws_security_group.apacheds_ldap_private_elb.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = var.ldap_ports["ldap"]
+  to_port                  = var.ldap_ports["ldap"]
+  source_security_group_id = aws_security_group.delius_ldap_access.id
+  description              = "Delius LDAP Access In"
+}
+
+# Allow ingress from full Cloud Platform CIDR range
+resource "aws_security_group_rule" "ldap_lb_cloud_platform_ingress" {
+  security_group_id        = aws_security_group.apacheds_ldap_private_elb.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = var.ldap_ports["ldap"]
+  to_port                  = var.ldap_ports["ldap"]
+  cidr_blocks              = [var.cloudplatform_data.cidr_range]
+  description              = "Cloud Platform In"
+}
+
+################################################################################
+## Generic "delius_ldap_access" group
+################################################################################
+resource "aws_security_group" "delius_ldap_access" {
+  name        = "${var.environment_name}-delius-ldap-access"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
+  description = "Access to the Delius LDAP"
+  tags        = merge(var.tags, { Name = "${var.environment_name}-delius-ldap-access" })
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+output "sg_delius_ldap_access_id" {
+  value = aws_security_group.delius_ldap_access.id
+}
+
+resource "aws_security_group_rule" "delius_ldap_access_to_ldap" {
+  security_group_id        = aws_security_group.delius_ldap_access.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = var.ldap_ports["ldap"]
+  to_port                  = var.ldap_ports["ldap"]
+  source_security_group_id = aws_security_group.apacheds_ldap_private_elb.id
+  description              = "Out to Delius LDAP"
+}
+
 ################################################################################
 ## Instances
 ################################################################################

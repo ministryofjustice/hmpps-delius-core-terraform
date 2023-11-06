@@ -64,3 +64,16 @@ variable "database_high_availability_count" {
 variable "delius_overide_autostop_tags" {
   default = "Phase1"
 }
+
+variable "bastion_inventory" {
+  type = string
+}
+
+variable "oracle_audited_interaction" {
+  description = "Configuration of source and targets for audit preservation"
+  type        = map(string)
+  default     = {
+       source_server      = "delius_primarydb"
+       target_environment = "unset"
+  }
+}

@@ -39,6 +39,11 @@ variable "user_access_cidr_blocks" {
   type        = list(string)
 }
 
+variable "mp_corresponding_vpc_cidr" {
+  description = "CIDR of corresponding Modernisation Platform VPC"
+  type        = string
+}
+
 variable "env_user_access_cidr_blocks" {
   description = "Environment-specific CIDRS for access via public/user network"
   type        = list(string)
