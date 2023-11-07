@@ -110,3 +110,24 @@ resource "aws_security_group_rule" "SR28_instances_ingress_to_ldap" {
   source_security_group_id = aws_security_group.weblogic_SR28_instances.id
   description              = "SR28 in"
 }
+
+resource "aws_security_group_rule" "ndelius_instances_egress_to_merge_api" {
+  security_group_id        = aws_security_group.weblogic_SR28_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_api_id
+  description              = "Merge API out"
+}
+
+## NOTE this one is for MERGE, so INTO MERGE from WebLogic SR28
+resource "aws_security_group_rule" "merge_api_in_from_ndelius_instances" {
+  security_group_id        = data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_api_id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = aws_security_group.weblogic_SR28_instances.id
+  description              = "In from NDelius SR28 instances (for API calls)"
+}
