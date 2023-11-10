@@ -77,3 +77,15 @@ variable "oracle_audited_interaction" {
        target_environment = "unset"
   }
 }
+
+variable "self_signed_ca_algorithm" {}
+
+variable "self_signed_ca_rsa_bits" {}
+
+variable "self_signed_ca_validity_period_hours" {}
+
+variable "self_signed_ca_early_renewal_hours" {}
+
+variable "is_ca_certificate" {
+  default = false
+}
