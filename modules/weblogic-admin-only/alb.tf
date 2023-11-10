@@ -70,7 +70,7 @@ resource "aws_lb_listener_rule" "homepage_listener_rule" {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_302"
-      path        = "/NDelius-war/delius/JSP/homepage.jsp"
+      path        = var.environment_name == "delius-test" ? "/NDelius-war/delius/JSP/homepage.xhtml" : "/NDelius-war/delius/JSP/homepage.jsp"
     }
   }
   depends_on = [aws_lb_listener_rule.blocked_paths_listener_rule]
