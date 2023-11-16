@@ -54,3 +54,22 @@ resource "aws_security_group_rule" "common_out_53" {
   description       = "DNS Out"
 }
 
+resource "aws_security_group_rule" "common_out_53" {
+  security_group_id = aws_security_group.common_out.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 389
+  to_port           = 389
+  cidr_blocks       = ["10.27.0.0/21", "10.27.8.0/21", "10.26.8.0/21", "10.26.24.0/21"]
+  description       = "LDAP out to MP tcp"
+}
+
+resource "aws_security_group_rule" "common_out_53" {
+  security_group_id = aws_security_group.common_out.id
+  type              = "egress"
+  protocol          = "udp"
+  from_port         = 389
+  to_port           = 389
+  cidr_blocks       = ["10.27.0.0/21", "10.27.8.0/21", "10.26.8.0/21", "10.26.24.0/21"]
+  description       = "LDAP out to MP udp"
+}
