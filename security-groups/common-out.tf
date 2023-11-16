@@ -54,7 +54,7 @@ resource "aws_security_group_rule" "common_out_53" {
   description       = "DNS Out"
 }
 
-resource "aws_security_group_rule" "common_out_53" {
+resource "aws_security_group_rule" "common_out_ldap_tcp" {
   security_group_id = aws_security_group.common_out.id
   type              = "egress"
   protocol          = "tcp"
@@ -64,7 +64,7 @@ resource "aws_security_group_rule" "common_out_53" {
   description       = "LDAP out to MP tcp"
 }
 
-resource "aws_security_group_rule" "common_out_53" {
+resource "aws_security_group_rule" "common_out_ldap_udp" {
   security_group_id = aws_security_group.common_out.id
   type              = "egress"
   protocol          = "udp"
