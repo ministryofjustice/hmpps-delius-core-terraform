@@ -6,8 +6,8 @@ locals {
 
 # migration parameter
 resource "aws_ssm_parameter" "mp_ldap" {
-  name = "/migration/ldap"
-  type = "string"
+  name = "/migration/mp_ldap"
+  type = "String"
   value = "to_be_set"
   lifecycle {
     ignore_changes = [value]
