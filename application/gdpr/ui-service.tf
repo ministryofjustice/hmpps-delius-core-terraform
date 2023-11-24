@@ -22,7 +22,11 @@ module "ui" {
   }]
 
   # Security & Networking
-  lb_listener_arn   = data.terraform_remote_state.ndelius.outputs.lb_listener_arn # Attach to NDelius load balancer
+  target_group_count = 0 # Attach to NDelius load balancer
+  lb_listener_arns = [
+    data.terraform_remote_state.ndelius.outputs.lb_listener_arn,
+    data.terraform_remote_state.ndelius_sr28.outputs.lb_listener_arn
+  ]
   lb_path_patterns  = ["/gdpr/ui", "/gdpr/ui/*"]
   health_check_path = "/gdpr/ui/homepage"
   security_groups = [

@@ -43,6 +43,15 @@ data "terraform_remote_state" "ndelius" {
   }
 }
 
+data "terraform_remote_state" "ndelius_sr28" {
+  backend = "s3"
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "delius-core/application/weblogic-SR28/terraform.tfstate"
+    region = var.region
+  }
+}
+
 data "terraform_remote_state" "pwm" {
   backend = "s3"
   config = {

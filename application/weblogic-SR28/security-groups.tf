@@ -41,6 +41,42 @@ resource "aws_security_group_rule" "SR28_lb_egress_to_instances" {
   description              = "Out to WebLogic instances"
 }
 
+resource "aws_security_group_rule" "SR28_lb_egress_to_services" {
+  for_each = {
+    "User Management" = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_instances_id, 8080]
+    "New Tech Web"    = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_new_tech_instances_id, 9000]
+    "GDPR API"        = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_gdpr_api_id, 8080]
+    "GDPR UI"         = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_gdpr_ui_id, 80]
+    "Merge API"       = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_api_id, 8080]
+    "Merge UI"        = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_ui_id, 80]
+  }
+  security_group_id        = aws_security_group.weblogic_SR28_lb.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = each.value[1]
+  to_port                  = each.value[1]
+  source_security_group_id = each.value[0]
+  description              = "Out to ${each.key}"
+}
+
+resource "aws_security_group_rule" "services_ingress_from_SR28_lb" {
+  for_each = {
+    "User Management" = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_instances_id, 8080]
+    "New Tech Web"    = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_new_tech_instances_id, 9000]
+    "GDPR API"        = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_gdpr_api_id, 8080]
+    "GDPR UI"         = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_gdpr_ui_id, 80]
+    "Merge API"       = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_api_id, 8080]
+    "Merge UI"        = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_ui_id, 80]
+  }
+  security_group_id        = each.value[0]
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = each.value[1]
+  to_port                  = each.value[1]
+  source_security_group_id = aws_security_group.weblogic_SR28_lb.id
+  description              = "In from NDelius SR28 LB"
+}
+
 ################################################################################
 ## Instances
 ################################################################################

@@ -27,7 +27,11 @@ module "ecs" {
   })
 
   # Security/Networking
-  lb_listener_arn   = data.terraform_remote_state.ndelius.outputs.lb_listener_arn # Attach to NDelius load balancer
+  target_group_count = 0 # Attach to NDelius load balancer
+  lb_listener_arns = [
+    data.terraform_remote_state.ndelius.outputs.lb_listener_arn,
+    data.terraform_remote_state.ndelius_sr28.outputs.lb_listener_arn
+  ]
   lb_path_patterns  = ["/newTech", "/newTech/*"]
   health_check_path = "/newTech/healthcheck"
   security_groups = [
