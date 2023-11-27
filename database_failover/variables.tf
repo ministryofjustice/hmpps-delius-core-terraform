@@ -78,13 +78,21 @@ variable "oracle_audited_interaction" {
   }
 }
 
-variable "self_signed_ca_algorithm" {}
+variable "self_signed_ca_algorithm" {
+  default = "RSA"
+}
 
-variable "self_signed_ca_rsa_bits" {}
+variable "self_signed_ca_rsa_bits" {
+  default = 0
+}
 
-variable "self_signed_ca_validity_period_hours" {}
+variable "self_signed_ca_validity_period_hours" {
+  default = 0
+}
 
-variable "self_signed_ca_early_renewal_hours" {}
+variable "self_signed_ca_early_renewal_hours" {
+  default = 0
+}
 
 variable "is_ca_certificate" {
   default = false
