@@ -83,7 +83,7 @@ variable "self_signed_ca_algorithm" {
 }
 
 variable "self_signed_ca_rsa_bits" {
-  default = 0
+  default = 2048
 }
 
 variable "self_signed_ca_validity_period_hours" {
