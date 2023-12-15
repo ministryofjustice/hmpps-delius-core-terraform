@@ -4,19 +4,22 @@
 resource "aws_ssm_parameter" "mp_ldap" {
   name = "/migration/mp_ldap"
   type = "String"
-  value = "dev-ldap-nlb-15d91684ef4c1666.elb.eu-west-2.amazonaws.com"
+  value = "initial value"
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
-#data "aws_ssm_parameter" "mp_ldap" {
-#  name = aws_ssm_parameter.mp_ldap.name
-#}
+data "aws_ssm_parameter" "mp_ldap" {
+  name = aws_ssm_parameter.mp_ldap.name
+}
 
 resource "aws_route53_record" "ldap_elb_private" {
   zone_id = data.terraform_remote_state.vpc.outputs.private_zone_id
   name    = "ldap"
   type    = "CNAME"
   ttl     = "300"
-  records = contains(local.migrated_envs, var.environment_name) ? [aws_ssm_parameter.mp_ldap.value] : [aws_elb.lb[0].dns_name]
+  records = contains(local.migrated_envs, var.environment_name) ? [data.aws_ssm_parameter.mp_ldap.value] : [aws_elb.lb[0].dns_name]
 }
 
 # Create record in public hosted zone, i.e. useful for name resolution between accounts connected through TGW
@@ -25,6 +28,6 @@ resource "aws_route53_record" "ldap_elb_public" {
   name    = "ldap"
   type    = "CNAME"
   ttl     = "300"
-  records = contains(local.migrated_envs, var.environment_name) ? [aws_ssm_parameter.mp_ldap.value] : [aws_elb.lb[0].dns_name]
+  records = contains(local.migrated_envs, var.environment_name) ? [data.aws_ssm_parameter.mp_ldap.value] : [aws_elb.lb[0].dns_name]
 }
 
