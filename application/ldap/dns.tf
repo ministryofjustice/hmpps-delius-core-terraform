@@ -7,9 +7,9 @@ resource "aws_ssm_parameter" "mp_ldap" {
   value = "to_be_set"
 }
 
-data "aws_ssm_parameter" "mp_ldap" {
-  name = aws_ssm_parameter.mp_ldap.name
-}
+#data "aws_ssm_parameter" "mp_ldap" {
+#  name = aws_ssm_parameter.mp_ldap.name
+#}
 
 resource "aws_route53_record" "ldap_elb_private" {
   zone_id = data.terraform_remote_state.vpc.outputs.private_zone_id
