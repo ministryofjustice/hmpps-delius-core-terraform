@@ -32,8 +32,8 @@ resource "aws_security_group_rule" "ndelius_lb_ingress_from_users" {
 }
 
 # Allow Uservision users into the external LB
-resource "aws_security_group_rule" "ndelius_lb_ingress_from_users" {
-  count             = var.environment_name = "delius-test" ? 1 : 0
+resource "aws_security_group_rule" "ndelius_lb_ingress_from_uservision_users" {
+  count             = var.environment_name == "delius-test" ? 1 : 0
   for_each          = toset(["80", "443"])
   security_group_id = aws_security_group.weblogic_ndelius_lb.id
   type              = "ingress"
