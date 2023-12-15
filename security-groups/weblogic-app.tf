@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "ndelius_lb_ingress_from_uservision_users" {
   from_port         = toset(["80", "443"])[count.index]
   to_port           = toset(["80", "443"])[count.index]
   cidr_blocks       = ["5.181.59.114"] # Uservision IP see https://mojdt.slack.com/archives/C6C1KGRME/p1702559900527159?thread_ts=1702031639.455009&cid=C6C1KGRME
-  description       = "User access - Uservision"
+  description       = "User access only for test - Uservision"
 }
 
 resource "aws_security_group_rule" "ndelius_lb_egress_to_instances" {
