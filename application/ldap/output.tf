@@ -32,9 +32,9 @@ output "asg" {
 
 output "lb" {
   value = {
-    "id"   = aws_elb.lb.id
-    "arn"  = aws_elb.lb.arn
-    "name" = aws_elb.lb.name
+    "id"   = contains(local.migrated_envs, var.environment_name) ? null : aws_elb.lb[0].id
+    "arn"  = contains(local.migrated_envs, var.environment_name) ? null : aws_elb.lb[0].arn
+    "name" = contains(local.migrated_envs, var.environment_name) ? null : aws_elb.lb[0].name
   }
 }
 
@@ -48,6 +48,6 @@ output "efs" {
 }
 
 output "healthy_hosts_alarm_arn" {
-  value = aws_cloudwatch_metric_alarm.ldap_healthy_hosts_fatal_alarm.arn
+  value = contains(local.migrated_envs, var.environment_name) ? null : aws_cloudwatch_metric_alarm.ldap_healthy_hosts_fatal_alarm[0].arn
 }
 
