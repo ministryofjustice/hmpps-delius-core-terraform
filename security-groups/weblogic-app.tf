@@ -33,13 +33,13 @@ resource "aws_security_group_rule" "ndelius_lb_ingress_from_users" {
 
 # Allow Uservision users into the external LB
 resource "aws_security_group_rule" "ndelius_lb_ingress_from_uservision_users" {
-  count             = var.environment_name == "delius-test" ? length(toset(["80", "443"])) : 0
+  for_each          = var.environment_name == "delius-test" ? toset(["80", "443"]) : []
   security_group_id = aws_security_group.weblogic_ndelius_lb.id
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = toset(["80", "443"])[count.index]
-  to_port           = toset(["80", "443"])[count.index]
-  cidr_blocks       = ["5.181.59.114"] # Uservision IP see https://mojdt.slack.com/archives/C6C1KGRME/p1702559900527159?thread_ts=1702031639.455009&cid=C6C1KGRME
+  from_port         = each.value
+  to_port           = each.value
+  cidr_blocks       = ["5.181.59.114/32"] # Uservision IP see https://mojdt.slack.com/archives/C6C1KGRME/p1702559900527159?thread_ts=1702031639.455009&cid=C6C1KGRME
   description       = "User access only for test - Uservision"
 }
 
