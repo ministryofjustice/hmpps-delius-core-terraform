@@ -70,3 +70,7 @@ variable "health_check_path" {
 variable "health_check_matcher" {
   default = 200
 }
+
+variable "homepage_path" {
+  default = "/NDelius-war/delius/JSP/homepage.jsp"
+}
