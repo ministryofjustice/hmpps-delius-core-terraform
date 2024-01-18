@@ -101,7 +101,7 @@ resource "aws_security_group_rule" "eng_rman_catalog_db_in" {
   from_port                = "1521"
   to_port                  = "1522"
   source_security_group_id = data.terraform_remote_state.ora_db_op_security_groups.outputs.sg_map_ids.rman_catalog
-  description              = "RMAN Catalog in on TCP(1521) and TCPS(1522)"
+  description              = "RMAN Catalog in on 1521 (TCP) and 1522 (TCPS)"
 }
 
 resource "aws_security_group_rule" "eng_oem_db_in_22" {
@@ -121,7 +121,7 @@ resource "aws_security_group_rule" "eng_oem_db_in_1521" {
   from_port                = "1521"
   to_port                  = "1522"
   source_security_group_id = data.terraform_remote_state.ora_db_op_security_groups.outputs.sg_map_ids.oem
-  description              = "OEM in on TCP(1521) and TCPS(1522)"
+  description              = "OEM in 1521 (TCP) and 1522 (TCPS)"
 }
 
 resource "aws_security_group_rule" "eng_oem_db_in_3872" {

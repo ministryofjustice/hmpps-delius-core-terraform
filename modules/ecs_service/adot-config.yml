@@ -26,6 +26,13 @@ processors:
   batch/traces:
     timeout: 1s
     send_batch_size: 50
+  filter/metrics:
+    metrics:
+      exclude:
+        match_type: regexp
+        metric_names:
+          - http.*
+          - net.*
   batch/metrics:
     timeout: 60s
   resource:
@@ -72,7 +79,7 @@ service:
       exporters: [awsxray]
     metrics/otlp:
       receivers: [otlp]
-      processors: [batch/metrics]
+      processors: [filter/metrics, batch/metrics]
       exporters: [awsemf/default]
     metrics/prometheus:
       receivers: [prometheus]

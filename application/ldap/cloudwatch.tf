@@ -33,6 +33,7 @@ resource "aws_cloudwatch_metric_alarm" "ldap_cpu_critical_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ldap_healthy_hosts_fatal_alarm" {
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
   alarm_name          = "${var.environment_name}-ldap-healthy-hosts-cwa--fatal"
   alarm_description   = "All LDAP instances stopped responding."
   namespace           = "AWS/ELB"
@@ -45,7 +46,7 @@ resource "aws_cloudwatch_metric_alarm" "ldap_healthy_hosts_fatal_alarm" {
   alarm_actions       = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
   ok_actions          = [data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn]
   dimensions = {
-    LoadBalancerName = aws_elb.lb.name
+    LoadBalancerName = aws_elb.lb[0].name
   }
 }
 

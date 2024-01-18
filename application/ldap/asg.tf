@@ -69,11 +69,11 @@ resource "aws_autoscaling_group" "asg" {
     data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az2,
     data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az3,
   ]
-  min_size             = local.ldap_config["instance_count"]
-  desired_capacity     = local.ldap_config["instance_count"]
-  max_size             = local.ldap_config["instance_count"]
+  min_size             = contains(local.migrated_envs, var.environment_name) ? 0 : local.ldap_config["instance_count"]
+  desired_capacity     = contains(local.migrated_envs, var.environment_name) ? 0 : local.ldap_config["instance_count"]
+  max_size             = contains(local.migrated_envs, var.environment_name) ? 0 : local.ldap_config["instance_count"]
   launch_configuration = aws_launch_configuration.launch_cfg.id
-  load_balancers       = [aws_elb.lb.id]
+  load_balancers       = contains(local.migrated_envs, var.environment_name) ? [] : [aws_elb.lb[0].id]
   health_check_type    = "EC2"
   enabled_metrics = [
     "GroupMinSize",

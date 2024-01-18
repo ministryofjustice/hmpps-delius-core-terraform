@@ -1,4 +1,5 @@
 resource "aws_elb" "lb" {
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
   name     = "${var.short_environment_name}-ldap-lb"
   internal = true
   subnets = [
