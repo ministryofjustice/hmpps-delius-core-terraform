@@ -57,3 +57,9 @@ variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
 }
+
+variable "dual_run_with_sr28" {
+  description = "Temporary variable to determine whether the environment is dual-running SR28 and SR29. Will be removed once SR29 is live."
+  type        = bool
+  default     = false
+}

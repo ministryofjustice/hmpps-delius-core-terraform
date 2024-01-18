@@ -44,6 +44,7 @@ data "terraform_remote_state" "ndelius" {
 }
 
 data "terraform_remote_state" "ndelius_sr28" {
+  count   = var.dual_run_with_sr28 ? 1 : 0
   backend = "s3"
   config = {
     bucket = var.remote_state_bucket_name
