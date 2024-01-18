@@ -24,8 +24,7 @@ module "weblogic" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id
   ]
 
-
-  health_check_path = "/NDelius-war/delius/JSP/healthcheck.xhtml?ping"
-  homepage_path = "/NDelius-war/delius/JSP/homepage.xhtml"
+  health_check_path = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/healthcheck.xhtml?ping" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+  homepage_path     = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/homepage.xhtml" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
 }
 
