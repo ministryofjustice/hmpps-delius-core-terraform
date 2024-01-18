@@ -8,7 +8,7 @@ module "ecs" {
 
   # Application Container
   service_name                   = var.app_name
-  ignore_task_definition_changes = false # Deployment is managed by Ansible
+  ignore_task_definition_changes = true # Deployment is managed by Ansible
   container_definitions = [{
     image = var.app_config["image_url"]
     user  = "root"
