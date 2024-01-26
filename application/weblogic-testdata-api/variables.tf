@@ -34,13 +34,13 @@ variable "common_ecs_scaling_config" {
   type        = map(string)
 }
 
-variable "default_delius_eis_config" {
+variable "default_delius_testdata_api_config" {
   description = "Application-specific configuration items"
   type        = map(string)
   default     = {}
 }
 
-variable "delius_eis_config" {
+variable "delius_testdata_api_config" {
   description = "Application-specific configuration items"
   type        = map(string)
 }
@@ -50,8 +50,7 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "dual_run_with_sr28" {
-  description = "Temporary variable to determine whether the environment is dual-running SR28 and SR29. Will be removed once SR29 is live."
-  type        = bool
-  default     = false
+variable "internal_moj_access_cidr_blocks" {
+  description = "CIDRs for access via internal MOJ networks / VPNs"
+  type        = list(string)
 }

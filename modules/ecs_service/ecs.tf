@@ -140,7 +140,7 @@ resource "aws_ecs_service" "service" {
   name                              = "${local.name}-service"
   cluster                           = data.terraform_remote_state.ecs_cluster.outputs.shared_ecs_cluster_id
   enable_execute_command            = true
-  health_check_grace_period_seconds = var.target_group_count > 0 ? var.health_check_grace_period_seconds : null
+  health_check_grace_period_seconds = local.target_group_count > 0 ? var.health_check_grace_period_seconds : null
   task_definition                   = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
 
   capacity_provider_strategy {
@@ -153,7 +153,7 @@ resource "aws_ecs_service" "service" {
   }
 
   dynamic "load_balancer" {
-    for_each = toset(var.target_group_count > 0 ? aws_lb_target_group.target_group.*.arn : [])
+    for_each = toset(local.target_group_count > 0 ? aws_lb_target_group.target_group.*.arn : [])
     content {
       # Register this ECS service with the primary load balancer
       target_group_arn = load_balancer.value

@@ -62,3 +62,15 @@ variable "idle_timeout" {
   description = "ALB idle timeout in seconds"
   default     = 60
 }
+
+variable "health_check_path" {
+  default = "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+}
+
+variable "health_check_matcher" {
+  default = 200
+}
+
+variable "homepage_path" {
+  default = "/NDelius-war/delius/JSP/homepage.jsp"
+}

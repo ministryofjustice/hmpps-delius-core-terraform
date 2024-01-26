@@ -8,7 +8,7 @@ module "ecs" {
 
   # Application Container
   service_name                   = var.app_name
-  ignore_task_definition_changes = var.environment_name == "delius-mis-dev" ? false : true # Deployment is managed by Ansible
+  ignore_task_definition_changes = true # Deployment is managed by Ansible
   container_definitions = [{
     image = var.app_config["image_url"]
     user  = "root"
@@ -60,7 +60,8 @@ module "ecs" {
   # Security & Networking
   lb_stickiness_enabled             = true
   lb_algorithm_type                 = "least_outstanding_requests" # to send new sessions to fresh hosts after a scale-out
-  health_check_path                 = var.environment_name == "delius-test" ? "/NDelius-war/delius/JSP/healthcheck.xhtml?ping" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+  health_check_path                 = var.health_check_path
+  health_check_matcher              = var.health_check_matcher
   health_check_timeout              = 15 # Should be greater than WebLogic's "Connection Reserve Timeout", which defaults to 10 seconds
   health_check_unhealthy_threshold  = 10 # Increased unhealthy threshold to allow longer for recovery, due to instances being stateful
   health_check_grace_period_seconds = var.health_check_grace_period_seconds

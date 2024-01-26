@@ -92,6 +92,11 @@ variable "lb_listener_arn" {
   default     = ""
 }
 
+variable "lb_listener_arns" {
+  description = "List of ARNs of the listeners to attach service tasks to for load balancing. Takes priority over lb_listener_arn."
+  default     = []
+}
+
 variable "lb_path_patterns" {
   description = "Load balancer path patterns to use for forwarding traffic"
   default     = ["/*"]
