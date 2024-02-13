@@ -2,7 +2,6 @@
 
 # migration parameter
 resource "aws_ssm_parameter" "mp_ldap" {
-  count = contains(local.migrated_envs, var.environment_name) ? 1 : 0
   name = "/migration/mp_ldap"
   type = "String"
   value = "initial value"
