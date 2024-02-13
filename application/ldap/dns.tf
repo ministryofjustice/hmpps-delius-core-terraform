@@ -11,7 +11,7 @@ resource "aws_ssm_parameter" "mp_ldap" {
 }
 
 data "aws_ssm_parameter" "mp_ldap" {
-  name = aws_ssm_parameter.mp_ldap.name
+  name = "/migration/mp_ldap"
 }
 
 resource "aws_route53_record" "ldap_elb_private" {
