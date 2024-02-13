@@ -11,7 +11,6 @@ resource "aws_ssm_parameter" "mp_ldap" {
 }
 
 data "aws_ssm_parameter" "mp_ldap" {
-  count = contains(local.migrated_envs, var.environment_name) ? 1 : 0
   name = aws_ssm_parameter.mp_ldap.name
 }
 
