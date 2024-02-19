@@ -2,18 +2,16 @@
 
 # migration parameter
 resource "aws_ssm_parameter" "mp_ldap" {
-  count = contains(local.migrated_envs, var.environment_name) ? 1 : 0
   name = "/migration/mp_ldap"
   type = "String"
-  value = "initial value"
+  value = lookup(local.migration_nlb_dns_name, var.environment_name)
   lifecycle {
     ignore_changes = [value]
   }
 }
 
 data "aws_ssm_parameter" "mp_ldap" {
-    count = contains(local.migrated_envs, var.environment_name) ? 1 : 0
-  name = aws_ssm_parameter.mp_ldap[0].name
+  name = "/migration/mp_ldap"
 }
 
 resource "aws_route53_record" "ldap_elb_private" {
@@ -21,7 +19,7 @@ resource "aws_route53_record" "ldap_elb_private" {
   name    = "ldap"
   type    = "CNAME"
   ttl     = "300"
-  records = contains(local.migrated_envs, var.environment_name) ? [data.aws_ssm_parameter.mp_ldap[0].value] : [aws_elb.lb[0].dns_name]
+  records = contains(local.migrated_envs, var.environment_name) ? [data.aws_ssm_parameter.mp_ldap.value] : [aws_elb.lb[0].dns_name]
 }
 
 # Create record in public hosted zone, i.e. useful for name resolution between accounts connected through TGW
@@ -30,6 +28,6 @@ resource "aws_route53_record" "ldap_elb_public" {
   name    = "ldap"
   type    = "CNAME"
   ttl     = "300"
-  records = contains(local.migrated_envs, var.environment_name) ? [data.aws_ssm_parameter.mp_ldap[0].value] : [aws_elb.lb[0].dns_name]
+  records = contains(local.migrated_envs, var.environment_name) ? [data.aws_ssm_parameter.mp_ldap.value] : [aws_elb.lb[0].dns_name]
 }
 
