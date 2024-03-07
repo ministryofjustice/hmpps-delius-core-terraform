@@ -20,6 +20,6 @@ resource "aws_route53_record" "public_dns" {
   name = local.app_name
   type = "CNAME"
   ttl  = "300"
-  records = contains(local.migrated_envs, var.environment_name) ? [local.migration_dns_name[var.environment_name]] : [module.external_nlb.dns_name]
+  records = contains(local.migrated_envs, var.environment_name) ? [aws_lb.alb.dns_name] : [module.external_nlb.dns_name]
 }
 
