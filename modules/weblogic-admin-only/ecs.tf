@@ -70,9 +70,6 @@ module "ecs" {
   ])
 
   # Monitoring
-  enable_jmx_metrics          = true
-  jmx_exporter_config         = "/home/oracle/.jmx-exporter/jmx-exporter.yml"
-  enable_telemetry            = true
   create_lb_alarms            = true
   load_balancer_arn           = aws_lb.alb.arn
   enable_response_code_alarms = false # 500 responses are sometimes returned for normal operations e.g. OASys offender not found
