@@ -1,4 +1,5 @@
 module "external_nlb" {
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
   source               = "../../modules/nlb_to_alb"
   tier_name            = local.short_name
   key_name             = data.terraform_remote_state.vpc.outputs.ssh_deployer_key

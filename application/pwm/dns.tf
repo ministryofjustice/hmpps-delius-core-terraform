@@ -1,4 +1,5 @@
 resource "aws_route53_record" "internal_lb_private_dns" {
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
   zone_id = data.terraform_remote_state.vpc.outputs.private_zone_id
   name    = local.app_name
   type    = "CNAME"
@@ -19,6 +20,6 @@ resource "aws_route53_record" "public_dns" {
   name = local.app_name
   type = "CNAME"
   ttl  = "300"
-  records = [module.external_nlb.dns_name]
+  records = contains(local.migrated_envs, var.environment_name) ? [local.migration_dns_name[var.environment_name]] : [module.external_nlb.dns_name]
 }
 

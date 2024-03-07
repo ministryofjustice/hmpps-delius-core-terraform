@@ -1,4 +1,5 @@
 module "service" {
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
   source                   = "../../modules/ecs_service"
   region                   = var.region
   environment_name         = var.environment_name

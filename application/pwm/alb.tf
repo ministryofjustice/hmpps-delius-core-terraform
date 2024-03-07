@@ -1,6 +1,7 @@
 # Listeners
 resource "aws_lb_listener" "https_listener" {
-  load_balancer_arn = aws_lb.alb.arn
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
+  load_balancer_arn = aws_lb.alb[0].arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
@@ -21,7 +22,8 @@ resource "aws_lb_listener" "https_listener" {
 }
 
 resource "aws_lb_listener" "http_listener" {
-  load_balancer_arn = aws_lb.alb.arn
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
+  load_balancer_arn = aws_lb.alb[0].arn
   protocol          = "HTTP"
   port              = "80"
 
@@ -38,6 +40,7 @@ resource "aws_lb_listener" "http_listener" {
 
 # Load balancer
 resource "aws_lb" "alb" {
+  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
   name     = "${var.short_environment_name}-pwm-alb"
   internal = true
 
