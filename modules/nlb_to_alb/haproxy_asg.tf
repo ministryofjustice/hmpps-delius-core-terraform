@@ -1,5 +1,6 @@
 # HAProxy auto-scaling group, used to filter traffic before it hits the internal ALB
 resource "aws_launch_configuration" "haproxy_launch_cfg" {
+  count                       = var.enabled ? 1 : 0
   name_prefix                 = "${var.short_environment_name}-${var.tier_name}-haproxy-cfg-"
   image_id                    = data.aws_ami.centos.id
   instance_type               = var.haproxy_instance_type
@@ -22,24 +23,25 @@ resource "aws_launch_configuration" "haproxy_launch_cfg" {
 }
 
 resource "aws_autoscaling_attachment" "haproxy_asg_attachment_to_nlb_http" {
-    count                 = var.enabled ? 1 : 0
-  autoscaling_group_name = aws_autoscaling_group.haproxy_asg.id
+  count                  = var.enabled ? 1 : 0
+  autoscaling_group_name = aws_autoscaling_group.haproxy_asg[0].id
   alb_target_group_arn   = aws_lb_target_group.external_nlb_http_target_group[0].arn
 }
 
 resource "aws_autoscaling_attachment" "haproxy_asg_attachment_to_nlb_https" {
-  count                 = var.enabled ? 1 : 0
-  autoscaling_group_name = aws_autoscaling_group.haproxy_asg.id
+  count                  = var.enabled ? 1 : 0
+  autoscaling_group_name = aws_autoscaling_group.haproxy_asg[0].id
   alb_target_group_arn   = aws_lb_target_group.external_nlb_https_target_group[0].arn
 }
 
 resource "aws_autoscaling_group" "haproxy_asg" {
+  count                = var.enabled ? 1 : 0
   name                 = "${var.short_environment_name}-${var.tier_name}-haproxy"
   vpc_zone_identifier  = var.private_subnets
   min_size             = var.haproxy_instance_count
   max_size             = var.haproxy_instance_count
   desired_capacity     = var.enabled ? var.haproxy_instance_count : 0
-  launch_configuration = aws_launch_configuration.haproxy_launch_cfg.id
+  launch_configuration = aws_launch_configuration.haproxy_launch_cfg[0].id
   enabled_metrics = [
     "GroupMinSize",
     "GroupMaxSize",
