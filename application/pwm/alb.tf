@@ -40,7 +40,7 @@ resource "aws_lb_listener" "https_listener_migrated" {
   default_action {
     type = "redirect"
     redirect {
-      host = "https://${local.migration_url[var.environment_name]}"
+      host = "${local.migration_url[var.environment_name]}"
       path        = "/#{path}"
       port        = "443"
       protocol    = "HTTPS"
