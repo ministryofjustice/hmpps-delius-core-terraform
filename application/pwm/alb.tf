@@ -68,15 +68,15 @@ resource "aws_lb_listener" "http_listener" {
 
 # Load balancer
 resource "aws_lb" "alb" {
-  name     = "${var.short_environment_name}-pwm-alb"
-  internal = true
+  name     = contains(local.migrated_envs, var.environment_name) ? "${var.short_environment_name}-pwm-alb-redir" : "${var.short_environment_name}-pwm-alb"
+  internal = contains(local.migrated_envs, var.environment_name) ? false : true
 
   security_groups = [data.terraform_remote_state.delius_core_security_groups.outputs.sg_pwm_lb_id]
 
   subnets = [
-    data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az1,
-    data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az2,
-    data.terraform_remote_state.vpc.outputs.vpc_private-subnet-az3,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az1,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az2,
+    data.terraform_remote_state.vpc.outputs.vpc_public-subnet-az3,
   ]
 
   tags = merge(var.tags, { "Name" = "${var.short_environment_name}-pwm-alb" })
