@@ -1,5 +1,5 @@
 output "private_fqdn_pwm" {
-  value = aws_route53_record.internal_lb_private_dns.fqdn
+  value = contains(local.migrated_envs, var.environment_name) ? null : aws_route53_record.internal_lb_private_dns[0].fqdn
 }
 
 output "public_fqdn_pwm" {
@@ -11,7 +11,7 @@ output "url" {
 }
 
 output "alb" {
-  value = {
+  value = contains(local.migrated_envs, var.environment_name) ? null : {
     "name"       = aws_lb.alb.name
     "arn"        = aws_lb.alb.arn
     "arn_suffix" = aws_lb.alb.arn_suffix
@@ -19,5 +19,9 @@ output "alb" {
 }
 
 output "target_group" {
-  value = module.service.primary_target_group
+  value = contains(local.migrated_envs, var.environment_name) ? null : module.service.primary_target_group
+}
+
+output "migrated" {
+  value = contains(local.migrated_envs, var.environment_name) ? true : false
 }
