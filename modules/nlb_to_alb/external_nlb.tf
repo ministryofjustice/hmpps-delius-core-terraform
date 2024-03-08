@@ -1,5 +1,6 @@
 # External NLB to forward to internal ALB
 resource "aws_lb" "external_nlb" {
+  count              = var.enabled ? 1 : 0
   name               = "${var.short_environment_name}-${var.tier_name}-ext"
   internal           = false
   load_balancer_type = "network"
@@ -25,6 +26,7 @@ resource "aws_lb" "external_nlb" {
 }
 
 resource "aws_lb_target_group" "external_nlb_https_target_group" {
+   count              = var.enabled ? 1 : 0
   name     = "${var.short_environment_name}-${substr(var.tier_name, 0, 3)}-nlb-443"
   vpc_id   = var.vpc_id
   protocol = "TCP"
@@ -40,6 +42,7 @@ resource "aws_lb_target_group" "external_nlb_https_target_group" {
 }
 
 resource "aws_lb_target_group" "external_nlb_http_target_group" {
+   count              = var.enabled ? 1 : 0
   name     = "${var.short_environment_name}-${substr(var.tier_name, 0, 3)}-nlb-80"
   vpc_id   = var.vpc_id
   protocol = "TCP"
@@ -55,21 +58,23 @@ resource "aws_lb_target_group" "external_nlb_http_target_group" {
 }
 
 resource "aws_lb_listener" "external_nlb_https_listener" {
-  load_balancer_arn = aws_lb.external_nlb.arn
+   count              = var.enabled ? 1 : 0
+  load_balancer_arn = aws_lb.external_nlb[0].arn
   port              = "443"
   protocol          = "TCP"
   default_action {
-    target_group_arn = aws_lb_target_group.external_nlb_https_target_group.arn
+    target_group_arn = aws_lb_target_group.external_nlb_https_target_group[0].arn
     type             = "forward"
   }
 }
 
 resource "aws_lb_listener" "external_nlb_http_listener" {
-  load_balancer_arn = aws_lb.external_nlb.arn
+   count              = var.enabled ? 1 : 0
+  load_balancer_arn = aws_lb.external_nlb[0].arn
   port              = "80"
   protocol          = "TCP"
   default_action {
-    target_group_arn = aws_lb_target_group.external_nlb_http_target_group.arn
+    target_group_arn = aws_lb_target_group.external_nlb_http_target_group[0].arn
     type             = "forward"
   }
 }

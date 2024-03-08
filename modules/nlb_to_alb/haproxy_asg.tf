@@ -22,13 +22,15 @@ resource "aws_launch_configuration" "haproxy_launch_cfg" {
 }
 
 resource "aws_autoscaling_attachment" "haproxy_asg_attachment_to_nlb_http" {
+    count                 = var.enabled ? 1 : 0
   autoscaling_group_name = aws_autoscaling_group.haproxy_asg.id
-  alb_target_group_arn   = aws_lb_target_group.external_nlb_http_target_group.arn
+  alb_target_group_arn   = aws_lb_target_group.external_nlb_http_target_group[0].arn
 }
 
 resource "aws_autoscaling_attachment" "haproxy_asg_attachment_to_nlb_https" {
+  count                 = var.enabled ? 1 : 0
   autoscaling_group_name = aws_autoscaling_group.haproxy_asg.id
-  alb_target_group_arn   = aws_lb_target_group.external_nlb_https_target_group.arn
+  alb_target_group_arn   = aws_lb_target_group.external_nlb_https_target_group[0].arn
 }
 
 resource "aws_autoscaling_group" "haproxy_asg" {
@@ -36,7 +38,7 @@ resource "aws_autoscaling_group" "haproxy_asg" {
   vpc_zone_identifier  = var.private_subnets
   min_size             = var.haproxy_instance_count
   max_size             = var.haproxy_instance_count
-  desired_capacity     = var.haproxy_instance_count
+  desired_capacity     = var.enabled ? var.haproxy_instance_count : 0
   launch_configuration = aws_launch_configuration.haproxy_launch_cfg.id
   enabled_metrics = [
     "GroupMinSize",

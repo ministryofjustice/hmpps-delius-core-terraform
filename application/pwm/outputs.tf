@@ -1,5 +1,5 @@
 output "private_fqdn_pwm" {
-  value = contains(local.migrated_envs, var.environment_name) ? null : aws_route53_record.internal_lb_private_dns.fqdn
+  value = contains(local.migrated_envs, var.environment_name) ? null : aws_route53_record.internal_lb_private_dns[0].fqdn
 }
 
 output "public_fqdn_pwm" {
