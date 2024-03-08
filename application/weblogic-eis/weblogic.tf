@@ -28,6 +28,6 @@ module "weblogic" {
   enable_response_time_alarms       = false # Response times can exceed 1s during normal use (e.g. during the daily DSS import)
 
   health_check_path = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/healthcheck.xhtml?ping" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
-  homepage_path     = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/homepage.xhtml" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+  homepage_path     = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/homepage.xhtml" : "/NDelius-war/delius/JSP/homepage.jsp"
 }
 
