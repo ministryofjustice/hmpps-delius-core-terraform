@@ -21,3 +21,7 @@ output "alb" {
 output "target_group" {
   value = contains(local.migrated_envs, var.environment_name) ? null : module.service.primary_target_group
 }
+
+output "migrated" {
+  value = contains(local.migrated_envs, var.environment_name) ? true : false
+}
