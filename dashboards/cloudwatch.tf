@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_dashboard" "delius_service_health" {
   dashboard_name = "${var.environment_name}-ServiceHealth"
-  dashboard_body = templatefile("${path.module}/templates/cloudwatch/delius-service-health.json", {
+  dashboard_body = templatefile("${path.module}/templates/cloudwatch/delius-service-health-${var.environment_name}.json", {
     region                 = var.region
     account_id             = data.aws_caller_identity.current.account_id
     environment_name       = var.environment_name
