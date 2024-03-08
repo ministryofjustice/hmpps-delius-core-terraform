@@ -21,7 +21,7 @@ resource "aws_lb_listener" "https_listener" {
   }
 }
 
-resource "aws_lb_listener" "https_listener" {
+resource "aws_lb_listener" "https_listener_migrated" {
   count = contains(local.migrated_envs, var.environment_name) ? 1 : 0
   load_balancer_arn = aws_lb.alb.arn
   port              = "443"
