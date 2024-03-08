@@ -14,7 +14,7 @@ resource "aws_cloudwatch_dashboard" "delius_service_health" {
     load_balancers = {
       weblogic-app = data.terraform_remote_state.ndelius.outputs.alb["arn_suffix"]
       weblogic-eis = data.terraform_remote_state.interface.outputs.alb["arn_suffix"]
-      pwm          = data.terraform_remote_state.pwm.outputs.alb["arn_suffix"]
+      pwm          = data.terraform_remote_state.pwm.outputs != null ? data.terraform_remote_state.pwm.outputs.alb["arn_suffix"] : null
       community-api = [
         data.terraform_remote_state.community_api.outputs.alb["arn_suffix"],
         data.terraform_remote_state.community_api.outputs.public_alb["arn_suffix"],
