@@ -124,3 +124,7 @@ variable "access_logs_bucket_name" {
   type        = string
 }
 
+variable "enabled" {
+    description = "Enable or disable the deployment"
+    type        = bool
+}

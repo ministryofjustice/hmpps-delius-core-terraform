@@ -1,4 +1,6 @@
 module "external_nlb" {
+  enabled = contains(local.migrated_envs, var.environment_name) ? false : true
+
   source               = "../../modules/nlb_to_alb"
   tier_name            = local.short_name
   key_name             = data.terraform_remote_state.vpc.outputs.ssh_deployer_key
@@ -42,7 +44,7 @@ module "external_nlb" {
   public_zone_id               = data.terraform_remote_state.vpc.outputs.public_zone_id
   private_zone_id              = data.terraform_remote_state.vpc.outputs.private_zone_id
   private_domain               = data.terraform_remote_state.vpc.outputs.private_zone_name
-  alb_fqdn                     = aws_route53_record.internal_lb_private_dns.fqdn
+  alb_fqdn                     = contains(local.migrated_envs, var.environment_name) ? "migrated" : aws_route53_record.internal_lb_private_dns[0].fqdn
   haproxy_instance_type        = var.delius_core_haproxy_instance_type
   haproxy_instance_count       = var.delius_core_haproxy_instance_count
   aws_nameserver               = var.aws_nameserver
