@@ -60,7 +60,7 @@ variable "tags" {
 
 variable "idle_timeout" {
   description = "ALB idle timeout in seconds"
-  default     = 60
+  default     = 120
 }
 
 variable "health_check_path" {
