@@ -12,7 +12,7 @@ module "api" {
     image      = "${local.app_config["api_image_url"]}:${local.app_config["api_version"]}"
     entryPoint = ["java", "-Duser.timezone=Europe/London", "-jar", "/app.jar"]
   }]
-  environment = {
+  environment = merge({
     SERVER_SERVLET_CONTEXT_PATH             = "/gdpr/api/"
     SPRING_DATASOURCE_JDBC-URL              = "jdbc:postgresql://${aws_db_instance.primary.endpoint}/${aws_db_instance.primary.name}"
     SPRING_DATASOURCE_USERNAME              = aws_db_instance.primary.username
@@ -38,12 +38,12 @@ module "api" {
     LOGGING_LEVEL_UK_GOV_JUSTICE            = local.app_config["log_level"]
     SPRING_FLYWAY_ENABLED                   = "true"
     SPRING_FLYWAY_LOCATIONS                 = "classpath:/db"
-  }
-  secrets = {
+  }, local.environment)
+  secrets = merge({
     SPRING_DATASOURCE_PASSWORD           = "/${var.environment_name}/${var.project_name}/delius-gdpr-database/db/admin_password"
     SPRING_SECOND-DATASOURCE_PASSWORD    = "/${var.environment_name}/${var.project_name}/delius-database/db/gdpr_pool_password"
     SECURITY_OAUTH2_CLIENT_CLIENT-SECRET = "/${var.environment_name}/${var.project_name}/gdpr/api/client_secret"
-  }
+  }, local.secrets)
 
   # Security & Networking
   target_group_count = 0 # Attach to NDelius load balancer

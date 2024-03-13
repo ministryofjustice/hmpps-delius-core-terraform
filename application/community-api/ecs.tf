@@ -11,7 +11,7 @@ module "ecs" {
   container_definitions          = [{ image = local.app_config["image_url"] }]
   ignore_task_definition_changes = true # Deployment is managed by Circle CI
   health_check_path              = "/health/ping"
-  environment = merge(local.environment, {
+  environment = merge({
     SPRING_PROFILES_ACTIVE     = "oracle"
     SPRING_DATASOURCE_USERNAME = "delius_pool"
     SPRING_DATASOURCE_URL      = data.terraform_remote_state.database.outputs.jdbc_failover_url
@@ -23,15 +23,15 @@ module "ecs" {
     SENTRY_ENVIRONMENT         = var.environment_name
     # ... Add any environment variables here that should be pulled from Terraform data sources.
     #     Other environment variables are managed by CircleCI. See https://github.com/ministryofjustice/community-api/blob/main/.circleci/config.yml
-  })
-  secrets = merge(local.secrets, {
+  }, local.environment)
+  secrets = merge({
     APPINSIGHTS_INSTRUMENTATIONKEY = "/${var.environment_name}/${var.project_name}/newtech/offenderapi/appinsights_key"
     SPRING_DATASOURCE_PASSWORD     = "/${var.environment_name}/${var.project_name}/delius-database/db/delius_pool_password"
     SPRING_LDAP_PASSWORD           = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/ldap_admin_password"
     DELIUS_USERNAME                = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/casenotes_user"
     DELIUS_PASSWORD                = "/${var.environment_name}/${var.project_name}/apacheds/apacheds/casenotes_password"
     SENTRY_DSN                     = "/${var.environment_name}/${var.project_name}/probation-integration/community-api/sentry-dsn"
-  })
+  }, local.secrets)
 
   # Security & Networking
   security_groups = [
