@@ -27,8 +27,14 @@ resource "aws_security_group_rule" "SR28_lb_ingress_from_users" {
   protocol          = "tcp"
   from_port         = each.value
   to_port           = each.value
-  cidr_blocks       = distinct(concat(var.moj_cloud_platform_cidr_blocks, var.internal_moj_access_cidr_blocks, local.natgateway_public_ips_cidr_blocks))
-  description       = "User access"
+  cidr_blocks = distinct(concat(
+    var.moj_cloud_platform_cidr_blocks,
+    var.internal_moj_access_cidr_blocks,
+    local.natgateway_public_ips_cidr_blocks,
+    var.user_access_cidr_blocks,
+    var.env_user_access_cidr_blocks
+  ))
+  description = "User access"
 }
 
 resource "aws_security_group_rule" "SR28_lb_egress_to_instances" {
