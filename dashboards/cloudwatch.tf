@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_dashboard" "delius_service_health" {
   dashboard_name = "${var.environment_name}-ServiceHealth"
-  dashboard_body = templatefile("${path.module}/templates/cloudwatch/delius-service-health-${var.environment_name}.json", {
+  dashboard_body = templatefile("${path.module}/templates/cloudwatch/delius-service-health.json", {
     region                 = var.region
     account_id             = data.aws_caller_identity.current.account_id
     environment_name       = var.environment_name
@@ -15,7 +15,6 @@ resource "aws_cloudwatch_dashboard" "delius_service_health" {
     load_balancers = {
       weblogic-app = data.terraform_remote_state.ndelius.outputs.alb["arn_suffix"]
       weblogic-eis = data.terraform_remote_state.interface.outputs.alb["arn_suffix"]
-      pwm          = data.terraform_remote_state.pwm.outputs.migrated ? null : data.terraform_remote_state.pwm.outputs.alb["arn_suffix"]
       community-api = [
         data.terraform_remote_state.community_api.outputs.alb["arn_suffix"],
         data.terraform_remote_state.community_api.outputs.public_alb["arn_suffix"],
@@ -27,7 +26,6 @@ resource "aws_cloudwatch_dashboard" "delius_service_health" {
       weblogic-eis = data.terraform_remote_state.interface.outputs.target_group["arn_suffix"]
       new-tech     = data.terraform_remote_state.new_tech.outputs.target_group["arn_suffix"]
       umt          = data.terraform_remote_state.umt.outputs.target_group["arn_suffix"]
-      pwm          = data.terraform_remote_state.pwm.outputs.migrated ? null : data.terraform_remote_state.pwm.outputs.target_group["arn_suffix"]
     }
   })
 }
