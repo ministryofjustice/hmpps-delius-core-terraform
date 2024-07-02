@@ -41,11 +41,8 @@ module "ecs" {
   target_group_count = 3 # Currently there are 3 load balancers - default (community-api), public (community-api-public), and legacy/secure (community-api-secure)
 
   # Monitoring
-  notification_arn            = data.terraform_remote_state.alerts.outputs.aws_sns_topic_alarm_notification_arn
-  load_balancer_arn           = aws_lb.alb.arn
-  create_lb_alarms            = true
-  enable_response_code_alarms = false # Temporarily disabled until 500 errors are resolved by developers
-  log_error_pattern           = "ERROR"
+  load_balancer_arn = aws_lb.alb.arn
+  log_error_pattern = "ERROR"
 
   # Auto-Scaling
   cpu              = lookup(local.app_config, "cpu", var.common_ecs_scaling_config["cpu"])
