@@ -4,7 +4,7 @@ resource "aws_lb_listener_rule" "jsp_redirect_listener_rule" {
   priority     = 2
   condition {
     path_pattern {
-      values = ["/NDelius*.jsp"]
+      values = ["/NDelius*.jsp","/NDelius*login.jsp*"]
     }
   }
   action {
