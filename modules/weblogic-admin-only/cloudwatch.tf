@@ -1,5 +1,5 @@
 locals {
-  alert_on_errors = toset()
+  alert_on_errors = toset([])
 }
 
 # CloudWatch Logs Alarms
