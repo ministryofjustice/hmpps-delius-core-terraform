@@ -92,22 +92,3 @@ resource "aws_lb_listener_rule" "allowed_paths_listener_rule" {
   }
   depends_on = [aws_lb_listener_rule.blocked_paths_listener_rule]
 }
-
-resource "aws_lb_listener_rule" "blocked_paths_listener_rule" {
-  listener_arn = aws_lb_listener.https_listener.arn
-  priority     = 1 # must be before ndelius_allowed_paths_rule
-  condition {
-    path_pattern {
-      values = [
-        "/NDelius*/delius/a4j/g/3_3_3.Final*DATA*", # mitigates CVE-2018-12533
-      ]
-    }
-  }
-  action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      status_code  = "404"
-    }
-  }
-}
