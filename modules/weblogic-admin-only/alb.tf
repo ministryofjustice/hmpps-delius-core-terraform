@@ -73,7 +73,6 @@ resource "aws_lb_listener_rule" "homepage_listener_rule" {
       path        = var.homepage_path
     }
   }
-  depends_on = [aws_lb_listener_rule.blocked_paths_listener_rule]
 }
 
 resource "aws_lb_listener_rule" "allowed_paths_listener_rule" {
@@ -90,5 +89,5 @@ resource "aws_lb_listener_rule" "allowed_paths_listener_rule" {
     type             = "forward"
     target_group_arn = module.ecs.primary_target_group["arn"]
   }
-  depends_on = [aws_lb_listener_rule.blocked_paths_listener_rule]
 }
+
