@@ -1,7 +1,5 @@
 locals {
-  alert_on_errors = toset(compact([
-    "OASYSERR006", // Invalid character in OASYS message
-  ]))
+  alert_on_errors = toset([])
 }
 
 # CloudWatch Logs Alarms
