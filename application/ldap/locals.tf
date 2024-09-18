@@ -5,8 +5,8 @@ locals {
   migrated_envs = ["delius-mis-dev", "delius-test"]
 
   migration_nlb_dns_name = {
-    "delius-mis-dev" = "ldap-dev-nlb-7667124ead573c5a.elb.eu-west-2.amazonaws.com"
-    "delius-test" = "ldap-test-nlb-a54f13004f5f847d.elb.eu-west-2.amazonaws.com"
+    "delius-mis-dev" = "ldap.dev.delius-core.hmpps-development.modernisation-platform.service.justice.gov.uk"
+    "delius-test" = "ldap.test.delius-core.hmpps-test.modernisation-platform.service.justice.gov.uk"
   }
 }
 
