@@ -64,23 +64,23 @@ data "terraform_remote_state" "alerts" {
 
 #-------------------------------------------------------------
 ### test instance AMI
-#-------------------------------------------------------------
-data "aws_ami" "amazon_ami" {
-  owners      = ["895523100917"]
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["HMPPS Base Amazon Linux 2 LTS master *"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-}
+# #-------------------------------------------------------------
+# data "aws_ami" "amazon_ami" {
+#   owners      = ["895523100917"]
+#   most_recent = true
+# 
+#   filter {
+#     name   = "name"
+#     values = ["HMPPS Base Amazon Linux 2 LTS master *"]
+#   }
+# 
+#   filter {
+#     name   = "architecture"
+#     values = ["x86_64"]
+#   }
+# 
+#   filter {
+#     name   = "root-device-type"
+#     values = ["ebs"]
+#   }
+# }
