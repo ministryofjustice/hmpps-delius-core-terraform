@@ -1,9 +1,15 @@
 locals {
-  legacy_to_mp = {
+  legacy_to_mp_env = {
     "delius-mis-dev"  = "dev"
     "delius-test"     = "test"
     "delius-stage"    = "stage"
     "delius-pre-prod" = "preprod"
+  }
+  legacy_to_mp_vpc = {
+    "delius-mis-dev"  = "development"
+    "delius-test"     = "test"
+    "delius-stage"    = "preproduction"
+    "delius-pre-prod" = "preproduction"
   }
 }
 
@@ -13,7 +19,7 @@ resource "aws_route53_record" "db3_migration_internal" {
   name    = "delius-db-3"
   type    = "CNAME"
   ttl     = "300"
-  records = ["delius-core-${local.legacy_to_mp[var.environment_name]}-db-3.modernisation-platform.internal"]
+  records = ["delius-core-${local.legacy_to_mp_env[var.environment_name]}-db-3.delius-core.${local.legacy_to_mp_env[var.environment_name]}.modernisation-platform.service.justice.gov.uk"]
 }
 
 resource "aws_route53_record" "db3_migration_public" {
@@ -21,5 +27,5 @@ resource "aws_route53_record" "db3_migration_public" {
   name    = "delius-db-3"
   type    = "CNAME"
   ttl     = "300"
-  records = ["delius-core-${local.legacy_to_mp[var.environment_name]}-db-3.modernisation-platform.internal"]
+  records = ["delius-core-${local.legacy_to_mp_env[var.environment_name]}-db-3.delius-core.${local.legacy_to_mp_env[var.environment_name]}.modernisation-platform.service.justice.gov.uk"]
 }

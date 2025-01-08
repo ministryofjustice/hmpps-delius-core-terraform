@@ -1,4 +1,5 @@
 module "delius_db_2" {
+  depends_on = ["db2_migration_internal","db2_migration_public"]
   source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.6.0"
   server_name = "delius-db-2"
 

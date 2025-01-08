@@ -9,6 +9,7 @@ locals {
 }
 
 module "delius_db_1" {
+  depends_on = ["db1_migration_internal","db1_migration_public"]
   source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database"
   server_name = "delius-db-1"
 
