@@ -141,3 +141,13 @@ resource "aws_security_group_rule" "ndelius_instances_egress_to_merge_api" {
   source_security_group_id = aws_security_group.merge_api.id
   description              = "Merge API out"
 }
+
+resource "aws_security_group_rule" "ndelius_instances_egress_to_mp_vpc" {
+  security_group_id        = aws_security_group.weblogic_ndelius_instances.id
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 1521
+  to_port                  = 1522
+  cidr_blocks              = ["10.26.24.0/21"]
+  description              = "Oracle outbound to MP"
+}
