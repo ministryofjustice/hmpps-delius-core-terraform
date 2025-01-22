@@ -3,7 +3,7 @@ locals {
 }
 
 module "delius_db_2" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.9.0"
+  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.10.0"
   server_name = "delius-db-2"
 
   ami_id               = data.aws_ami.centos_oracle_db.id
@@ -85,7 +85,7 @@ output "delius_db_2" {
     internal_fqdn = module.delius_db_2.internal_fqdn
     private_ip    = module.delius_db_2.private_ip
     db_disks      = module.delius_db_2.db_size_parameters
-    delius_db_2   = "ssh ${module.delius_db_2.public_fqdn}"
+    delius_db_2   = module.delius_db_2.public_fqdn != null ? "ssh ${module.delius_db_2.public_fqdn}" : ""
   }
 }
 
