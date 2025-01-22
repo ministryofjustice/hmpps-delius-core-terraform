@@ -1,5 +1,7 @@
 #Overide autostop tag
 locals {
+  migrated_envs = ["delius-mis-dev"]
+
   tags = merge(
     var.tags,
     {
@@ -9,7 +11,7 @@ locals {
 }
 
 module "delius_db_1" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database"
+  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git//modules/oracle-database?ref=2.10.0"
   server_name = "delius-db-1"
 
   ami_id               = data.aws_ami.centos_oracle_db.id
@@ -41,6 +43,8 @@ module "delius_db_1" {
   private_domain  = data.terraform_remote_state.vpc.outputs.private_zone_name
   vpc_account_id  = data.terraform_remote_state.vpc.outputs.vpc_account_id
   db_size         = var.db_size_delius_core
+
+  create_dns_records = contains(local.migrated_envs, var.environment_name) ? false : true
 
   ansible_vars = {
     service_user_name             = var.ansible_vars_oracle_db["service_user_name"]
@@ -94,7 +98,7 @@ output "delius_db_1" {
     internal_fqdn = module.delius_db_1.internal_fqdn
     private_ip    = module.delius_db_1.private_ip
     db_disks      = module.delius_db_1.db_size_parameters
-    delius_db_1   = "ssh ${module.delius_db_1.public_fqdn}"
+    delius_db_1   = module.delius_db_1.public_fqdn != null ? "ssh ${module.delius_db_1.public_fqdn}" : ""
   }
 }
 
