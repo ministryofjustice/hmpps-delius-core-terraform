@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "status_check_failed_alarm" {
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_status_check_failed_event" {
-  name        = "EC2StatusCheckFailedEvent"
+  name        = local.alarm_name
   description = "Rule to capture EC2 instance status check failures"
   event_pattern = jsonencode({
     "source" : ["aws.cloudwatch"],
