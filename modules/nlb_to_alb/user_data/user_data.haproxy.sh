@@ -68,7 +68,8 @@ CONFIGURE_SWAP=true ansible-playbook ~/bootstrap.yml
 ### Bodge to fix CentOS 7 repos ###
 # Backup the existing repos
 mkdir /etc/yum.repos.d/backup
-mv /etc/yum.repos.d/CentOS-* /etc/yum.repos.d/backup
+mv /etc/yum.repos.d/CentOS* /etc/yum.repos.d/backup
+mv /etc/yum.repos.d/epel* /etc/yum.repos.d/backup
 
 # Create new repo config targetting archives
 tee /etc/yum.repos.d/CentOS-Vault.repo <<EOF
@@ -117,31 +118,15 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 EOF
 
-tee /etc/yum.repos.d/CentOS-SCLo-Vault.repo <<EOF
-[centos-sclo-rh]
-name=CentOS-7 - SCLo rh
-baseurl=http://vault.centos.org/centos/7/sclo/\$basearch/rh/
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
-[centos-sclo-sclo]
-name=CentOS-7 - SCLo sclo
-baseurl=http://vault.centos.org/centos/7/sclo/\$basearch/sclo/
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-EOF
+# Import SCLo key
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-SCLo
 
 # Clean and update the package cache
 yum clean all
 yum makecache
 
-# Import SCLo key
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-SCLo
-
 # Install HAProxy
-yum install -y centos-release-scl
 yum install -y rh-haproxy18-haproxy rh-haproxy18-haproxy-syspaths
 
 # Configure HAProxy
