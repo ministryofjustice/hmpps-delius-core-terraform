@@ -118,16 +118,28 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 EOF
 
+tee /etc/yum.repos.d/CentOS-SCLo-Vault.repo <<EOF
+[centos-sclo-rh]
+name=CentOS-7 - SCLo rh
+baseurl=http://vault.centos.org/centos/7/sclo/\$basearch/rh/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
-# Import SCLo key
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-SCLo
+[centos-sclo-sclo]
+name=CentOS-7 - SCLo sclo
+baseurl=http://vault.centos.org/centos/7/sclo/\$basearch/sclo/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+EOF
 
 # Clean and update the package cache
 yum clean all
 yum makecache
 
 # Install HAProxy
-yum install -y rh-haproxy18-haproxy rh-haproxy18-haproxy-syspaths
+yum install -y rh-haproxy18-haproxy rh-haproxy18-haproxy-syspaths --nogpgcheck
 
 # Configure HAProxy
 mv /etc/opt/rh/rh-haproxy18/haproxy/haproxy.cfg /etc/opt/rh/rh-haproxy18/haproxy/haproxy.cfg.orig
