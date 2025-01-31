@@ -51,10 +51,11 @@ module "ecs" {
     USERMANAGEMENT_SECRET = "/${var.environment_name}/${var.project_name}/umt/umt/delius_secret"
     MERGE_SECRET          = "/${var.environment_name}/${var.project_name}/weblogic/ndelius-domain/umt_client_secret"
     PDFCREATION_SECRET    = "/${var.environment_name}/${var.project_name}/newtech/web/params_secret_key"
-    ANALYTICS_TAG         = "/${var.environment_name}/${var.project_name}/monitoring/analytics/google_id"
     TOPIC_ARN             = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/topic-arn"
     AWS_ACCESS_KEY_ID     = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/aws-access-key-id"
     AWS_SECRET_ACCESS_KEY = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/aws-secret-access-key"
+    }, contains(["delius-test", "delius-stage"], var.environment_name) ? {} : {
+    ANALYTICS_TAG = "/${var.environment_name}/${var.project_name}/monitoring/analytics/google_id"
   }, local.secrets)
 
   # Security & Networking
