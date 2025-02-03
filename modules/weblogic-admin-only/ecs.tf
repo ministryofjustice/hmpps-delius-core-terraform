@@ -54,7 +54,11 @@ module "ecs" {
     TOPIC_ARN             = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/topic-arn"
     AWS_ACCESS_KEY_ID     = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/aws-access-key-id"
     AWS_SECRET_ACCESS_KEY = "/${var.environment_name}/${var.project_name}/moj-cloud-platform/hmpps-domain-events/aws-secret-access-key"
-    }, contains(["delius-test", "delius-stage"], var.environment_name) ? {} : {
+    }, contains([
+    # Update this and apply changes before deploying Delius 6.2.9 to an environment:
+      "delius-test",
+      "delius-stage"
+    ], var.environment_name) ? {} : {
     ANALYTICS_TAG = "/${var.environment_name}/${var.project_name}/monitoring/analytics/google_id"
   }, local.secrets)
 
