@@ -64,7 +64,7 @@ variable "idle_timeout" {
 }
 
 variable "health_check_path" {
-  default = "/NDelius-war/delius/javax.faces.resources/health/healthcheck.json"
+  default = "/NDelius-war/delius/javax.faces.resource/health/healthcheck.json"
 }
 
 variable "health_check_matcher" {

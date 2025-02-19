@@ -22,7 +22,7 @@ module "weblogic" {
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id
   ]
 
-  health_check_path = var.dual_run_with_sr28 ? "/NDelius-war/delius/javax.faces.resources/health/healthcheck.json" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
+  health_check_path = var.dual_run_with_sr28 ? "/NDelius-war/delius/javax.faces.resource/health/healthcheck.json" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
   homepage_path     = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/homepage.xhtml" : "/NDelius-war/delius/JSP/homepage.jsp"
 }
 
