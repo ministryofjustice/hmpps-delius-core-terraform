@@ -9,6 +9,7 @@ locals {
     "delius-test"     = "ldap.test.delius-core.hmpps-test.modernisation-platform.service.justice.gov.uk"
     "delius-stage"    = "ldap.stage.delius-core.hmpps-preproduction.modernisation-platform.service.justice.gov.uk"
     "delius-pre-prod" = "ldap.preprod.delius-core.hmpps-preproduction.modernisation-platform.service.justice.gov.uk"
+    "delius-prod"     = "ldap.prod.delius-core.hmpps-production.modernisation-platform.service.justice.gov.uk"
   }
 }
 
