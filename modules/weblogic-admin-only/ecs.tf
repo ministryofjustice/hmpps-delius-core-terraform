@@ -58,7 +58,8 @@ module "ecs" {
     # Update this and apply changes before deploying Delius 6.2.9 to an environment:
       "delius-test",
       "delius-stage",
-      "delius-pre-prod"
+      "delius-pre-prod",
+      "delius-prod"
     ], var.environment_name) ? {} : {
     ANALYTICS_TAG = "/${var.environment_name}/${var.project_name}/monitoring/analytics/google_id"
   }, local.secrets)
