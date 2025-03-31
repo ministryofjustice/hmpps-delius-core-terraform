@@ -1,5 +1,12 @@
 locals {
   migrated_envs = ["delius-mis-dev"]
+
+  tags = merge(
+    var.tags,
+    {
+      "autostop-${var.environment_type}" = var.delius_overide_autostop_tags
+    },
+  )
 }
 
 module "delius_db_3" {
