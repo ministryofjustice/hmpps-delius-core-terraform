@@ -56,3 +56,6 @@ variable "db_size_delius_core" {
   type        = map(string)
 }
 
+variable "delius_overide_autostop_tags" {
+  default = "False"
+}
