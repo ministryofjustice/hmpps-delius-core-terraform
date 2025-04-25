@@ -57,6 +57,25 @@ resource "aws_lb_listener" "http_listener" {
 }
 
 # Listener rules
+resource "aws_lb_listener_rule" "deny_mobiles_listener_rule" {
+  listener_arn = aws_lb_listener.https_listener.arn
+  priority     = 1
+  condition {
+    http_header {
+      http_header_name = "User-Agent"
+      values           = ["*Mobile*"]
+    }
+  }
+  action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Access is restricted to MoJ-issued laptops and PCs."
+      status_code  = "403"
+    }
+  }
+}
+
 resource "aws_lb_listener_rule" "homepage_listener_rule" {
   listener_arn = aws_lb_listener.https_listener.arn
   condition {
