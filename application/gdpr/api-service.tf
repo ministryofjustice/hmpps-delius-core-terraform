@@ -60,7 +60,7 @@ module "api" {
   ]
 
   # Monitoring
-  enable_telemetry  = true
+  enable_telemetry  = false
   create_lb_alarms  = true
   load_balancer_arn = data.terraform_remote_state.ndelius.outputs.alb["arn"]
   log_error_pattern = "ERROR"
