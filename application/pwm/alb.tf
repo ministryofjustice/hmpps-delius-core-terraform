@@ -1,25 +1,25 @@
 # Listeners
-resource "aws_lb_listener" "https_listener" {
-  count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
-  load_balancer_arn = aws_lb.alb.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+# resource "aws_lb_listener" "https_listener" {
+#   count = contains(local.migrated_envs, var.environment_name) ? 0 : 1
+#   load_balancer_arn = aws_lb.alb.arn
+#   port              = "443"
+#   protocol          = "HTTPS"
+#   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
-  # NOTE:
-  # This is only in place to support transition from the old public zone (dsd.io) to the strategic public zone (gov.uk).
-  # It allows us to configure which zone to use for public-facing services (eg. NDelius, PWM) on a per-environment
-  # basis. Currently only Prod and Pre-Prod should use the old public zone, once they are transitioned over we should
-  # remove this. Additionally, there are a few services that have DNS records in the public zone that should be moved
-  # over into the private zone before we complete the transition eg. delius-db-1, management.
-  # (see dns.tf)
-  certificate_arn = var.delius_core_public_zone == "strategic" ? data.aws_acm_certificate.strategic_cert.arn : data.aws_acm_certificate.cert.arn
+#   # NOTE:
+#   # This is only in place to support transition from the old public zone (dsd.io) to the strategic public zone (gov.uk).
+#   # It allows us to configure which zone to use for public-facing services (eg. NDelius, PWM) on a per-environment
+#   # basis. Currently only Prod and Pre-Prod should use the old public zone, once they are transitioned over we should
+#   # remove this. Additionally, there are a few services that have DNS records in the public zone that should be moved
+#   # over into the private zone before we complete the transition eg. delius-db-1, management.
+#   # (see dns.tf)
+#   certificate_arn = var.delius_core_public_zone == "strategic" ? data.aws_acm_certificate.strategic_cert.arn : data.aws_acm_certificate.cert.arn
 
-  default_action {
-    target_group_arn = module.service.primary_target_group["arn"]
-    type             = "forward"
-  }
-}
+#   default_action {
+#     target_group_arn = module.service.primary_target_group["arn"]
+#     type             = "forward"
+#   }
+# }
 
 resource "aws_lb_listener" "https_listener_migrated" {
   count = contains(local.migrated_envs, var.environment_name) ? 1 : 0
