@@ -60,7 +60,7 @@ module "ecs" {
   ]
 
   # Monitoring
-  enable_telemetry            = true
+  enable_telemetry            = false
   enable_jmx_metrics          = true
   create_lb_alarms            = true
   enable_response_time_alarms = false # Response times can exceed 1s during normal use (e.g. Exports and Role Searches)
