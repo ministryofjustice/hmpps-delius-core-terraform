@@ -12,6 +12,7 @@ resource "aws_lambda_layer_version" "slack_sdk" {
   layer_name          = "slack_sdk"
   compatible_runtimes = ["python3.9"]
   filename            = "${path.module}/assets/slack_sdk_layer.zip"
+  source_code_hash    = filebase64sha256("${path.module}/assets/slack_sdk_layer.zip")
 }
 
 resource "aws_lambda_function" "task_retirement_lambda" {
@@ -33,7 +34,7 @@ resource "aws_lambda_function" "task_retirement_lambda" {
     variables = {
       ENVIRONMENT   = var.environment_name
       SLACK_TOKEN   = "/alfresco/slack/token"
-      SLACK_CHANNEL = "ask-probation-hosting"
+      SLACK_CHANNEL = "probation-migrations-team"
     }
   }
 }
