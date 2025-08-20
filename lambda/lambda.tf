@@ -30,6 +30,8 @@ resource "aws_lambda_function" "task_retirement_lambda" {
     aws_lambda_layer_version.slack_sdk.arn
   ]
 
+  tags = var.tags
+
   environment {
     variables = {
       ENVIRONMENT   = var.environment_name

@@ -8,6 +8,8 @@ resource "aws_cloudwatch_event_rule" "ecs_task_retirement" {
       "eventTypeCode": ["AWS_ECS_TASK_PATCHING_RETIREMENT"]
     }
   })
+
+  tags = var.tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_target" {
