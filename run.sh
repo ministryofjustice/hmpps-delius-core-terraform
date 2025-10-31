@@ -16,7 +16,7 @@ set -e
 ##  * COMPONENT          Optional. Sub-directory containing the Terraform code to apply.
 ##                                 Defaults to current directory.
 ##  * CONTAINER          Optional. The container to run the Terragrunt commands in. Defaults to
-##                                 mojdigitalstudio/hmpps-terraform-builder-0-12.
+##                                 mojdigitalstudio/hmpps-terraform-builder-0-13.
 ##  * CMD                Optional. The executable to run in the container. Useful for debugging,
 ##                                 for example by setting to 'bash'. Defaults to terragrunt.
 ##
@@ -50,7 +50,7 @@ if [ -z "${TF_IN_AUTOMATION}" ]; then
   fi
 
   heading Starting container...
-  CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-12}
+  CONTAINER=${CONTAINER:-mojdigitalstudio/hmpps-terraform-builder-0-13}
   echo "${CONTAINER}"
   docker run -e COMPONENT -e ENVIRONMENT -e CMD -e SOURCE_REPO_URL \
     $(test -t 0 && echo '-it')                               `# Allocate an interactive terminal if one is available` \
