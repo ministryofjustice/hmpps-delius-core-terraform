@@ -11,7 +11,6 @@ window['app_config'] = {
         'merge-batch_configuration:view merge-merge:view merge-unmerge:view',
     resource: 'Merge',
     responseType: 'code',
-    useHttpBasicAuth: true,
     oidc: false,
     requireHttps: false,
     loginUrl: '/umt/oauth/authorize',

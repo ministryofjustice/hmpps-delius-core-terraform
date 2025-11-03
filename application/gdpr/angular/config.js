@@ -11,7 +11,6 @@ window['app_config'] = {
            'gdpr-destruction:manage gdpr-destruction:view gdpr-destruction:search gdpr-destruction:download',
     resource: 'NDelius',
     responseType: 'code',
-    useHttpBasicAuth: true,
     oidc: false,
     requireHttps: false,
     loginUrl: '/umt/oauth/authorize',
