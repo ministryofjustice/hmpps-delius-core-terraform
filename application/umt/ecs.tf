@@ -26,9 +26,9 @@ module "ecs" {
     SPRING_LDAP_USERNAME                       = "cn=root,${local.ldap_config["base_root"]}"
     SPRING_LDAP_BASE                           = local.ldap_config["base_root"]
     SPRING_LDAP_USEORACLEATTRIBUTES            = "false"
-    SPRING_REDIS_HOST                          = aws_route53_record.token_store_private_dns.fqdn
-    SPRING_REDIS_PORT                          = aws_elasticache_replication_group.token_store_replication_group.port
-    SPRING_REDIS_CLUSTER_NODES                 = "${aws_route53_record.token_store_private_dns.fqdn}:${aws_elasticache_replication_group.token_store_replication_group.port}"
+    SPRING_DATA_REDIS_HOST                          = aws_route53_record.token_store_private_dns.fqdn
+    SPRING_DATA_REDIS_PORT                          = aws_elasticache_replication_group.token_store_replication_group.port
+    SPRING_DATA_REDIS_CLUSTER_NODES                 = "${aws_route53_record.token_store_private_dns.fqdn}:${aws_elasticache_replication_group.token_store_replication_group.port}"
     REDIS_CONFIGURE_NO-OP                      = "true"
     DELIUS_PASSWORD-RESET_URL                  = data.terraform_remote_state.pwm.outputs.url
     DELIUS_LDAP_BASE_USERS                     = replace(local.ldap_config["base_users"], ",${local.ldap_config["base_root"]}", "")
