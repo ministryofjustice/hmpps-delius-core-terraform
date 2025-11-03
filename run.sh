@@ -24,7 +24,7 @@ set -e
 ## Terragrunt container. This enables you to set your AWS credentials/profile on the host, and
 ## also to pass any extra Terraform vars using TF_VAR_xxx=...
 ##
-# Temp
+# Temp - Delete if found
 # Print usage if ENVIRONMENT not set:
 if [ "${ENVIRONMENT}" == "" ]; then grep '^##' "${0}" && exit; fi
 
