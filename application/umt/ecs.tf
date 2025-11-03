@@ -20,7 +20,6 @@ module "ecs" {
     SPRING_DATASOURCE_USERNAME                 = "delius_app_schema"
     SPRING_DATASOURCE_TYPE                     = "com.zaxxer.hikari.HikariDataSource"
     SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE = "50"
-    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT    = "org.hibernate.dialect.Oracle12cDialect"
     SPRING_JPA_HIBERNATE_DDL-AUTO              = "none"
     SPRING_LDAP_URLS                           = "${data.terraform_remote_state.ldap.outputs.ldap_protocol}://${data.terraform_remote_state.ldap.outputs.private_fqdn_ldap_elb}:${data.terraform_remote_state.ldap.outputs.ldap_port}"
     SPRING_LDAP_EXPORT_USERNAME                = "cn=root,${local.ldap_config["base_root"]}"
