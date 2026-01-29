@@ -15,7 +15,7 @@ resource "aws_elasticache_parameter_group" "redis_parameter_group" {
   # See https://github.com/spring-projects/spring-session/issues/124
   parameter {
     name  = "notify-keyspace-events"
-    value = "eA"
+    value = "Ex"
   }
   parameter {
     name  = "cluster-enabled"
