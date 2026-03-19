@@ -91,5 +91,5 @@ module "ecs" {
   memory             = var.app_config["memory"]
   min_capacity       = var.app_config["min_capacity"]
   max_capacity       = var.app_config["max_capacity"]
-  capacity_provider  = data.terraform_remote_state.ecs_cluster.outputs.weblogic_capacity_provider.name
+  capacity_provider  = try(data.terraform_remote_state.ecs_cluster.outputs.weblogic_capacity_provider.name, null)
 }
