@@ -141,6 +141,11 @@ variable "health_check_grace_period_seconds" {
   default     = 300
 }
 
+variable "capacity_provider" {
+  description = "Capcity provider to host the task"
+  default     = null
+}
+
 variable "min_capacity" {
   description = "Minimum number of tasks to run at any one time"
   default     = 1

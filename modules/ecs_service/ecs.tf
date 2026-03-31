@@ -144,7 +144,7 @@ resource "aws_ecs_service" "service" {
   task_definition                   = var.ignore_task_definition_changes && data.external.current_task_definition.result.arn != "" ? data.external.current_task_definition.result.arn : aws_ecs_task_definition.task_definition.arn
 
   capacity_provider_strategy {
-    capacity_provider = data.terraform_remote_state.ecs_cluster.outputs.capacity_provider["name"]
+    capacity_provider = var.capacity_provider != null ? var.capacity_provider : data.terraform_remote_state.ecs_cluster.outputs.capacity_provider["name"]
     weight            = 1
   }
 
