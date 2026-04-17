@@ -17,3 +17,12 @@ data "terraform_remote_state" "alerts" {
   }
 }
 
+data "terraform_remote_state" "ecs_cluster" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket_name
+    key    = "ecs-cluster/terraform.tfstate"
+    region = var.region
+  }
+}

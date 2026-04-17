@@ -142,7 +142,7 @@ variable "health_check_grace_period_seconds" {
 }
 
 variable "capacity_provider" {
-  description = "Capcity provider to host the task"
+  description = "Capacity provider to host the task"
   default     = null
 }
 
