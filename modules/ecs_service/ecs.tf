@@ -173,6 +173,8 @@ resource "aws_ecs_service" "service" {
   service_registries {
     registry_arn   = aws_service_discovery_service.web_svc_record.arn
     container_name = var.service_name
+    container_port = 0
+    port           = 0
   }
 
   network_configuration {

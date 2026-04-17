@@ -29,5 +29,7 @@ module "weblogic" {
 
   health_check_path = var.dual_run_with_sr28 ? "/NDelius-war/delius/javax.faces.resource/health/healthcheck.json" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
   homepage_path     = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/homepage.xhtml" : "/NDelius-war/delius/JSP/homepage.jsp"
+  
+  capacity_provider  = try(data.terraform_remote_state.ecs_cluster.outputs.weblogic_eis_capacity_provider.name, null)
 }
 

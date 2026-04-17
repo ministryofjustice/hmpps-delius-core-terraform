@@ -36,6 +36,12 @@ variable "security_groups_lb" {
   default     = []
 }
 
+variable "capacity_provider" {
+  description = "Capacity provider to host the task"
+  type        = string
+  default     = null
+}
+
 variable "security_groups_instances" {
   description = "Security Groups to apply to the ECS instances"
   type        = list(string)
@@ -46,7 +52,6 @@ variable "enable_response_time_alarms" {
   description = "Enable or disable standard alarms for response times."
   default     = true
 }
-
 
 variable "health_check_grace_period_seconds" {
   description = "Health check grace period. Increase this if tasks are stopped before they have time to start up."
