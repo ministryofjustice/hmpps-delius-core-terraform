@@ -27,9 +27,9 @@ module "weblogic" {
   health_check_grace_period_seconds = 600
   enable_response_time_alarms       = false # Response times can exceed 1s during normal use (e.g. during the daily DSS import)
 
-  health_check_path = var.dual_run_with_sr28 ? "/NDelius-war/delius/javax.faces.resource/health/healthcheck.json" : "/NDelius-war/delius/JSP/healthcheck.jsp?ping"
-  homepage_path     = var.dual_run_with_sr28 ? "/NDelius-war/delius/JSP/homepage.xhtml" : "/NDelius-war/delius/JSP/homepage.jsp"
-  
-  capacity_provider  = try(data.terraform_remote_state.ecs_cluster.outputs.weblogic_eis_capacity_provider.name, null)
+  health_check_path = "/NDelius-war/delius/javax.faces.resource/health/healthcheck.json"
+  homepage_path     = "/NDelius-war/delius/JSP/homepage.xhtml"
+
+  capacity_provider = try(data.terraform_remote_state.ecs_cluster.outputs.weblogic_eis_capacity_provider.name, null)
 }
 

@@ -47,12 +47,9 @@ module "api" {
 
   # Security & Networking
   target_group_count = 0 # Attach to NDelius load balancer
-  lb_listener_arns = concat(
-    [data.terraform_remote_state.ndelius.outputs.lb_listener_arn],
-    (var.dual_run_with_sr28 ? [data.terraform_remote_state.ndelius_sr28.0.outputs.lb_listener_arn] : []),
-  )
-  lb_path_patterns  = ["/gdpr/api", "/gdpr/api/*"]
-  health_check_path = "/gdpr/api/actuator/health"
+  lb_listener_arns   = [data.terraform_remote_state.ndelius.outputs.lb_listener_arn]
+  lb_path_patterns   = ["/gdpr/api", "/gdpr/api/*"]
+  health_check_path  = "/gdpr/api/actuator/health"
   security_groups = [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_common_out_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_gdpr_api_id,
