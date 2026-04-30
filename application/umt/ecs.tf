@@ -47,7 +47,7 @@ module "ecs" {
 
   # Security/Networking
   target_group_count = 0 # Attach to NDelius load balancer
-  lb_listener_arns = [data.terraform_remote_state.ndelius.outputs.lb_listener_arn],
+  lb_listener_arns = [data.terraform_remote_state.ndelius.outputs.lb_listener_arn]
   lb_path_patterns  = ["/umt", "/umt/*"]
   health_check_path = "/umt/actuator/health"
   security_groups = [
