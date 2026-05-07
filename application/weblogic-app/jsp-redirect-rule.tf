@@ -1,6 +1,6 @@
 resource "aws_lb_listener_rule" "jsp_redirect_listener_rule" {
   listener_arn = module.weblogic.lb_listener_arn
-  priority     = 2
+  priority     = 3
   condition {
     path_pattern {
       values = ["/NDelius*.jsp", "/NDelius*login.jsp*"]
