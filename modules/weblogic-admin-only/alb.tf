@@ -59,7 +59,7 @@ resource "aws_lb_listener" "http_listener" {
 # Listener rules
 resource "aws_lb_listener_rule" "deny_mobiles_listener_rule" {
   listener_arn = aws_lb_listener.https_listener.arn
-  priority     = 1
+  priority     = 2
   condition {
     http_header {
       http_header_name = "User-Agent"

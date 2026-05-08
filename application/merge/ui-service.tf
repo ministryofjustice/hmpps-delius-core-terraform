@@ -23,12 +23,9 @@ module "ui" {
 
   # Security & Networking
   target_group_count = 0 # Attach to NDelius load balancer
-  lb_listener_arns = concat(
-    [data.terraform_remote_state.ndelius.outputs.lb_listener_arn],
-    (var.dual_run_with_sr28 ? [data.terraform_remote_state.ndelius_sr28.0.outputs.lb_listener_arn] : []),
-  )
-  lb_path_patterns  = ["/merge/ui", "/merge/ui/*"]
-  health_check_path = "/merge/ui/"
+  lb_listener_arns   = [data.terraform_remote_state.ndelius.outputs.lb_listener_arn]
+  lb_path_patterns   = ["/merge/ui", "/merge/ui/*"]
+  health_check_path  = "/merge/ui/"
   security_groups = [
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_umt_auth_id,
     data.terraform_remote_state.delius_core_security_groups.outputs.sg_merge_ui_id,
