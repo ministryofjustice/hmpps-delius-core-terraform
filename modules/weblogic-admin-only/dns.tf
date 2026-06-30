@@ -10,7 +10,7 @@ resource "aws_route53_record" "public_dns" {
   name    = var.dns_name
   type    = "CNAME"
   ttl     = 300
-  records = [aws_lb.alb.dns_name]
+  records = contains(local.migrated_envs, var.environment_name) ? [local.mp_records[var.environment_name]] : [aws_lb.alb.dns_name]
 }
 
 resource "aws_route53_record" "private_dns" {
