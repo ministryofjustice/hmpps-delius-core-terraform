@@ -97,13 +97,13 @@ resource "aws_security_group_rule" "umt_instances_egress_ldap" {
 }
 
 resource "aws_security_group_rule" "umt_instances_egress_ldap_mp" {
-  security_group_id        = aws_security_group.umt_instances.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 389
-  to_port                  = 389
-  cidr_blocks              = [var.mp_corresponding_vpc_cidr]
-  description              = "LDAP out to MP"
+  security_group_id = aws_security_group.umt_instances.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 389
+  to_port           = 389
+  cidr_blocks       = [var.mp_corresponding_vpc_cidr]
+  description       = "LDAP out to MP"
 }
 
 resource "aws_security_group_rule" "umt_instances_egress_db" {
@@ -168,4 +168,14 @@ resource "aws_security_group_rule" "umt_tokenstore_ingress_bastion" {
   to_port           = 6379
   cidr_blocks       = values(data.terraform_remote_state.bastion-vpc.outputs.bastion_public_cidr)
   description       = "Bastion access"
+}
+
+resource "aws_security_group_rule" "umt_instances_egress_to_mp_vpc" {
+  security_group_id = aws_security_group.umt_instances.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 1521
+  to_port           = 1521
+  cidr_blocks       = [local.counterpart_mp_env_cidr[var.environment_name]]
+  description       = "DB out to MP"
 }
