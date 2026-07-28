@@ -129,6 +129,17 @@ resource "aws_security_group_rule" "gdpr_db_in_from_bastion" {
   description       = "Bastion In"
 }
 
+# Necessary for data migration workflow: https://github.com/ministryofjustice/hmpps-delius-operational-automation/actions/workflows/db-migration.yml
+resource "aws_security_group_rule" "gdpr_db_in_from_cp" {
+  security_group_id = aws_security_group.gdpr_db.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 5432
+  to_port           = 5432
+  cidr_blocks       = var.cloudplatform_data.cidr_range
+  description       = "CP In"
+}
+
 output "sg_gdpr_db_id" {
   value = aws_security_group.gdpr_db.id
 }
