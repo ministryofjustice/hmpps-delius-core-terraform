@@ -1,5 +1,5 @@
 locals {
-  migrated_envs = ["delius-mis-dev", "delius-test", "delius-stage"]
+  migrated_envs = ["delius-mis-dev", "delius-test", "delius-stage", "delius-pre-prod"]
   mp_domain     = "modernisation-platform.service.justice.gov.uk"
   mp_records    = {
                     "delius-mis-dev"  = "${var.dns_name}.dev.delius-core.hmpps-development.${local.mp_domain}"
