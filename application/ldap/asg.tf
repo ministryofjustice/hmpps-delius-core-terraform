@@ -31,7 +31,6 @@ data "template_file" "user_data" {
     backup_frequency   = local.ldap_config["backup_frequency"]
     query_time_limit   = local.ldap_config["query_time_limit"]
     db_max_size        = local.ldap_config["db_max_size"]
-    efs_dns_name       = aws_efs_file_system.efs.dns_name
   }
 }
 

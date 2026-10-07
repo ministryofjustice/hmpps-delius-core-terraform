@@ -79,7 +79,6 @@ base_groups: "${base_groups}"
 log_level: "${log_level}"
 cldwatch_log_group: "${cldwatch_log_group}"
 # Storage
-efs_dns_name: "${efs_dns_name}"
 s3_backups_bucket: "${s3_backups_bucket}"
 backup_frequency: "${backup_frequency}"
 # Performance/tuning
