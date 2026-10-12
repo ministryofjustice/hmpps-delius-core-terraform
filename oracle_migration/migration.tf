@@ -4,12 +4,14 @@ locals {
     "delius-test"     = "test"
     "delius-stage"    = "stage"
     "delius-pre-prod" = "preprod"
+    "delius-prod"     = "prod"
   }
   legacy_to_mp_vpc = {
     "delius-mis-dev"  = "development"
     "delius-test"     = "test"
     "delius-stage"    = "preproduction"
     "delius-pre-prod" = "preproduction"
+    "delius-prod"     = "production"
   }
 }
 
