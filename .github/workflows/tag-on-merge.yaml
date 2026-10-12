@@ -7,9 +7,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
     - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.62.0
+      uses: anothrNick/github-tag-action@d77194f92b4ca48b05df5c20709984535a9cd6e0 # 1.62.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         REPO_OWNER: ministryofjustice
