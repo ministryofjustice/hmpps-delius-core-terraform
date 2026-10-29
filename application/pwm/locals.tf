@@ -9,6 +9,6 @@ locals {
     "delius-test"     = "pwm.test.delius-core.hmpps-test.modernisation-platform.service.justice.gov.uk"
     "delius-stage"    = "pwm.stage.delius-core.hmpps-preproduction.modernisation-platform.service.justice.gov.uk"
     "delius-pre-prod" = "pwm.preprod.delius-core.hmpps-preproduction.modernisation-platform.service.justice.gov.uk"
-    "delius-prod" = "pwm.prod.delius-core.hmpps-production.modernisation-platform.service.justice.gov.uk"
+    "delius-prod"     = "pwm.prod.delius-core.hmpps-production.modernisation-platform.service.justice.gov.uk"
   }
 }
